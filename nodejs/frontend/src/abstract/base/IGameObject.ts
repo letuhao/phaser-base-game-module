@@ -32,8 +32,8 @@ export interface IGameObject {
   /** Size of the game object */
   readonly size: { width: number; height: number }
   
-  /** Scale of the game object */
-  readonly scale: { x: number; y: number }
+  /** Scale of the game object - can be number (uniform) or { x: number; y: number } (non-uniform) */
+  readonly scale: number | { x: number; y: number }
   
   /** Rotation of the game object in radians */
   readonly rotation: number

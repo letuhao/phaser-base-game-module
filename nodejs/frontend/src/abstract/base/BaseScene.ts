@@ -287,6 +287,7 @@ export abstract class BaseScene extends Phaser.Scene {
 
   /**
    * Create game objects recursively from configuration using Factory Pattern
+   * FIXED: Creates containers first, then children to ensure proper sizing
    */
   private async createGameObjectsFromConfig(gameObjects: any[], parent?: Phaser.GameObjects.Container): Promise<void> {
     this.logger.debug('BaseScene', 'Creating game objects recursively', {
@@ -298,6 +299,9 @@ export abstract class BaseScene extends Phaser.Scene {
     let successCount = 0
     let failureCount = 0
 
+    // PHASE 1: Create all containers first (without children)
+    const containers: Array<{ config: any; gameObject: any; phaserContainer: any }> = [];
+    
     for (const objConfig of gameObjects) {
       try {
         this.logger.debug('BaseScene', 'Starting creation of game object', {
@@ -328,15 +332,8 @@ export abstract class BaseScene extends Phaser.Scene {
             totalGameObjects: this.gameObjects.size
           })
 
-          // Create children recursively
+          // Check if this is a container and store for later child creation
           if (objConfig.children && objConfig.children.length > 0) {
-            this.logger.debug('BaseScene', 'Creating children for object', {
-              objectId: objConfig.id,
-              childCount: objConfig.children.length,
-              childIds: objConfig.children.map((child: any) => child.id)
-            })
-
-            // Check if this is a container (either Phaser container or our wrapper)
             if (gameObject instanceof Phaser.GameObjects.Container ||
               (gameObject as any).phaserObject instanceof Phaser.GameObjects.Container) {
 
@@ -345,13 +342,14 @@ export abstract class BaseScene extends Phaser.Scene {
                 ? gameObject
                 : (gameObject as any).phaserObject
 
-              this.logger.debug('BaseScene', 'Adding children to container', {
+              containers.push({ config: objConfig, gameObject, phaserContainer });
+              
+              this.logger.debug('BaseScene', 'Container stored for later child creation', {
                 objectId: objConfig.id,
                 containerType: gameObject.constructor.name,
-                phaserContainerType: phaserContainer.constructor.name
+                phaserContainerType: phaserContainer.constructor.name,
+                childCount: objConfig.children.length
               })
-
-              await this.createGameObjectsFromConfig(objConfig.children, phaserContainer)
             } else {
               this.logger.warn('BaseScene', `Cannot add children to non-container object: ${objConfig.id}`, {
                 objectType: objConfig.type,
@@ -373,6 +371,27 @@ export abstract class BaseScene extends Phaser.Scene {
       } catch (error) {
         failureCount++
         this.logger.error('BaseScene', `Exception during game object creation: ${objConfig.id}`, {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+          objectId: objConfig.id,
+          objectType: objConfig.type
+        })
+      }
+    }
+
+    // PHASE 2: Create all children after containers are ready
+    for (const { config: objConfig, phaserContainer } of containers) {
+      try {
+        this.logger.debug('BaseScene', 'Creating children for container', {
+          objectId: objConfig.id,
+          childCount: objConfig.children.length,
+          childIds: objConfig.children.map((child: any) => child.id)
+        })
+
+        await this.createGameObjectsFromConfig(objConfig.children, phaserContainer)
+        
+      } catch (error) {
+        this.logger.error('BaseScene', `Exception during child creation for container: ${objConfig.id}`, {
           error: error instanceof Error ? error.message : String(error),
           stack: error instanceof Error ? error.stack : undefined,
           objectId: objConfig.id,
@@ -419,11 +438,22 @@ export abstract class BaseScene extends Phaser.Scene {
             this.logger.debug('BaseScene', 'Triggering resize for wrapper object', {
               objectId,
               objectType: gameObject.constructor.name,
-              hasResizeMethod: true
+              hasResizeMethod: true,
+              hasResponsiveResizeMethod: false
             }, 'triggerInitialResize');
 
             // Call resize with current game dimensions
             (gameObject as any).resize(gameWidth, gameHeight)
+          } else if ((gameObject as any).handleResponsiveResize && typeof (gameObject as any).handleResponsiveResize === 'function') {
+            // Check if the game object has a responsive resize method (shapes like Rectangle)
+            this.logger.debug('BaseScene', 'Triggering responsive resize for shape object', {
+              objectId,
+              objectType: gameObject.constructor.name,
+              hasResponsiveResizeMethod: true
+            }, 'triggerInitialResize');
+
+            // Call handleResponsiveResize with current game dimensions
+            (gameObject as any).handleResponsiveResize(gameWidth, gameHeight)
           } else if (gameObject instanceof Phaser.GameObjects.Container) {
             this.logger.debug('BaseScene', 'Skipping resize for Phaser container (no wrapper)', {
               objectId,
@@ -434,7 +464,8 @@ export abstract class BaseScene extends Phaser.Scene {
             this.logger.debug('BaseScene', 'Skipping resize for non-container object', {
               objectId,
               objectType: gameObject.constructor.name,
-              hasResizeMethod: false
+              hasResizeMethod: false,
+              hasResponsiveResizeMethod: false
             }, 'triggerInitialResize')
           }
         } catch (error) {
@@ -519,29 +550,29 @@ export abstract class BaseScene extends Phaser.Scene {
         // Set position and size
         this.setGameObjectProperties(gameObject, objConfig)
 
-        // Add to parent if specified
-        if (parent && parent instanceof Phaser.GameObjects.Container) {
-          // Check if this is a wrapper object that needs to be added to scene instead
-          if ((gameObject as any).phaserObject && (gameObject as any).phaserObject instanceof Phaser.GameObjects.Container) {
-            this.logger.debug('BaseScene', 'Adding wrapper object to scene (not to parent container)', {
-              objectId: objConfig.id,
-              parentId: parent.name,
-              reason: 'Wrapper objects should be added to scene, not parent containers'
-            })
-            this.add.existing(gameObject)
-          } else {
+                                   // Add to parent if specified
+          if (parent && parent instanceof Phaser.GameObjects.Container) {
+            // ALL objects (including wrapper objects) should be added to parent containers
+            // This maintains the proper hierarchy: background-container > footer-container > footer-rectangle
             this.logger.debug('BaseScene', 'Adding game object to parent container', {
               objectId: objConfig.id,
-              parentId: parent.name
+              parentId: parent.name,
+              objectType: gameObject.constructor.name,
+              isWrapperObject: !!(gameObject as any).phaserObject
             })
-            parent.add(gameObject)
+            
+            // Use our custom addChild method if the parent has it, otherwise fall back to Phaser's add
+            if ((parent as any).addChild && typeof (parent as any).addChild === 'function') {
+              (parent as any).addChild(gameObject)
+            } else {
+              parent.add(gameObject)
+            }
+          } else {
+            this.logger.debug('BaseScene', 'Adding game object to scene', {
+              objectId: objConfig.id
+            })
+            this.add.existing(gameObject)
           }
-        } else {
-          this.logger.debug('BaseScene', 'Adding game object to scene', {
-            objectId: objConfig.id
-          })
-          this.add.existing(gameObject)
-        }
 
         this.logger.info('BaseScene', 'Game object fully created and added to scene', {
           objectId: objConfig.id,
@@ -592,122 +623,23 @@ export abstract class BaseScene extends Phaser.Scene {
         createMethod
       })
 
-      // Import the concrete class dynamically
-      let ConcreteClass: any
+      // Use the factory manager to create the game object
+      // This delegates the responsibility to the proper factory system
+      const gameObject = await this.factoryManager.createGameObjectWithStaticFactory(objConfig, this, parent)
 
-      switch (className) {
-        case 'BackgroundContainer':
-          this.logger.debug('BaseScene', 'Loading BackgroundContainer class')
-          try {
-            // Use dynamic import for browser environment
-            const BackgroundContainerModule = await import('../../object/container/BackgroundContainer')
-            this.logger.debug('BaseScene', 'BackgroundContainer module loaded', {
-              objectId: objConfig.id,
-              moduleKeys: Object.keys(BackgroundContainerModule),
-              hasBackgroundContainer: 'BackgroundContainer' in BackgroundContainerModule
-            })
-            ConcreteClass = BackgroundContainerModule.BackgroundContainer
-            this.logger.debug('BaseScene', 'BackgroundContainer class extracted', {
-              objectId: objConfig.id,
-              hasClass: !!ConcreteClass,
-              classType: typeof ConcreteClass,
-              isConstructor: typeof ConcreteClass === 'function'
-            })
-          } catch (importError) {
-            this.logger.error('BaseScene', 'Failed to import BackgroundContainer module', {
-              objectId: objConfig.id,
-              error: importError instanceof Error ? importError.message : String(importError)
-            })
-            return null
-          }
-          break
-
-        case 'ConcreteContainer':
-          this.logger.debug('BaseScene', 'Loading ConcreteContainer class')
-          try {
-            // Use dynamic import for browser environment
-            const ConcreteContainerModule = await import('../../object/container/ConcreteContainer')
-            this.logger.debug('BaseScene', 'ConcreteContainer module loaded', {
-              objectId: objConfig.id,
-              moduleKeys: Object.keys(ConcreteContainerModule),
-              hasConcreteContainer: 'ConcreteContainer' in ConcreteContainerModule
-            })
-            ConcreteClass = ConcreteContainerModule.ConcreteContainer
-            this.logger.debug('BaseScene', 'ConcreteContainer class extracted', {
-              objectId: objConfig.id,
-              hasClass: !!ConcreteClass,
-              classType: typeof ConcreteClass,
-              isConstructor: typeof ConcreteClass === 'function'
-            })
-          } catch (importError) {
-            this.logger.error('BaseScene', 'Failed to import ConcreteContainer module', {
-              objectId: objConfig.id,
-              error: importError instanceof Error ? importError.message : String(importError)
-            })
-            return null
-          }
-          break
-
-        default:
-          this.logger.warn('BaseScene', `Unknown factory class: ${className}`, {
-            objectId: objConfig.id,
-            availableClasses: ['BackgroundContainer', 'ConcreteContainer']
-          })
-          return null
-      }
-
-      this.logger.debug('BaseScene', 'Concrete class loaded successfully', {
+      this.logger.debug('BaseScene', 'Static factory method completed', {
         objectId: objConfig.id,
-        className,
-        hasClass: !!ConcreteClass,
-        hasCreateMethod: typeof ConcreteClass[createMethod] === 'function',
-        classMethods: Object.getOwnPropertyNames(ConcreteClass).filter(name => typeof ConcreteClass[name] === 'function')
+        hasResult: !!gameObject,
+        resultType: gameObject?.constructor.name,
+        result: gameObject ? {
+          name: gameObject.name,
+          type: gameObject.constructor.name,
+          visible: (gameObject as any).visible,
+          active: (gameObject as any).active
+        } : null
       })
 
-      // Check if the class has the create method
-      if (typeof ConcreteClass[createMethod] === 'function') {
-        this.logger.debug('BaseScene', 'Calling static factory method', {
-          objectId: objConfig.id,
-          className,
-          createMethod,
-          config: objConfig,
-          parent: parent ? { name: parent.name, type: parent.constructor.name } : null
-        })
-
-        try {
-          const result = ConcreteClass[createMethod](objConfig, this, parent)
-
-          this.logger.debug('BaseScene', 'Static factory method executed successfully', {
-            objectId: objConfig.id,
-            hasResult: !!result,
-            resultType: result?.constructor.name,
-            result: result ? {
-              name: result.name,
-              type: result.constructor.name,
-              visible: result.visible,
-              active: result.active
-            } : null
-          })
-
-          return result
-        } catch (methodError) {
-          this.logger.error('BaseScene', 'Static factory method execution failed', {
-            objectId: objConfig.id,
-            className,
-            createMethod,
-            error: methodError instanceof Error ? methodError.message : String(methodError),
-            stack: methodError instanceof Error ? methodError.stack : undefined
-          })
-          return null
-        }
-      } else {
-        this.logger.warn('BaseScene', `Factory method '${createMethod}' not found in ${className}`, {
-          objectId: objConfig.id,
-          availableMethods: Object.getOwnPropertyNames(ConcreteClass).filter(name => typeof ConcreteClass[name] === 'function'),
-          staticMethods: Object.getOwnPropertyNames(ConcreteClass).filter(name => typeof ConcreteClass[name] === 'function' && ConcreteClass[name].prototype === undefined)
-        })
-        return null
-      }
+      return gameObject
 
     } catch (error) {
       this.logger.error('BaseScene', `Critical error using static factory for ${objConfig.id}:`, {
@@ -740,12 +672,37 @@ export abstract class BaseScene extends Phaser.Scene {
 
     // Set position if the object supports it
     if (objConfig.x !== undefined && 'setPosition' in gameObject) {
+      let x = objConfig.x;
+      let y = objConfig.y || 0;
+      
+             // Handle "fill" positioning for y coordinate
+       if (typeof y === 'string' && y === 'fill') {
+         // Position at the bottom of the parent or scene
+         const parentContainer = this.getParentContainer(gameObject);
+         if (parentContainer) {
+           // For "fill" y, position at the bottom of the parent container
+           y = parentContainer.height;
+           this.logger.debug('BaseScene', 'Resolved fill y position from parent', {
+             objectId: objConfig.id,
+             parentHeight: parentContainer.height,
+             resolvedY: y
+           });
+         } else {
+           // Fallback to scene height
+           y = this.game.config.height as number;
+           this.logger.debug('BaseScene', 'Using scene height for fill y position', {
+             objectId: objConfig.id,
+             sceneHeight: y
+           });
+         }
+       }
+      
       this.logger.debug('BaseScene', 'Setting position', {
         objectId: objConfig.id,
-        x: objConfig.x,
-        y: objConfig.y || 0
+        x: x,
+        y: y
       });
-      (gameObject as any).setPosition(objConfig.x, objConfig.y || 0)
+      (gameObject as any).setPosition(x, y)
     }
 
     // Set size if supported
@@ -766,6 +723,15 @@ export abstract class BaseScene extends Phaser.Scene {
       objectId: objConfig.id,
       name: gameObject.name
     });
+
+    // Set z-order if specified
+    if (objConfig.zOrder !== undefined && 'setDepth' in gameObject) {
+      this.logger.debug('BaseScene', 'Setting z-order', {
+        objectId: objConfig.id,
+        zOrder: objConfig.zOrder
+      });
+      (gameObject as any).setDepth(objConfig.zOrder);
+    }
   }
 
   /**
@@ -807,19 +773,31 @@ export abstract class BaseScene extends Phaser.Scene {
       const newWidth = window.innerWidth
       const newHeight = window.innerHeight
 
-      // Check if we have responsive config
-      if (this.sceneConfigs.responsive) {
-        const deviceType = newWidth >= this.sceneConfigs.responsive.breakpoints.desktop ? 'desktop' : 'mobile'
-        const behavior = this.sceneConfigs.responsive[deviceType]
+      this.logger.debug('BaseScene', 'Screen resize detected', {
+        newDimensions: { width: newWidth, height: newHeight },
+        gameObjectCount: this.gameObjects.size
+      })
 
-        this.logger.debug('BaseScene', 'Resize with responsive config', {
-          deviceType,
-          behavior,
-          newDimensions: { width: newWidth, height: newHeight }
+      // Find the root container (the one without a parent)
+      const rootContainer = this.findRootContainer()
+      
+      if (rootContainer) {
+        this.logger.debug('BaseScene', 'Found root container, triggering resize', {
+          rootContainerId: rootContainer.name || 'unnamed',
+          rootContainerType: rootContainer.constructor.name
         })
 
-        // TODO: Apply responsive behavior to game objects
-        // This will be implemented when responsive object handling is ready
+        // Call resize on the root container
+        if (typeof (rootContainer as any).resize === 'function') {
+          (rootContainer as any).resize(newWidth, newHeight)
+        } else {
+          this.logger.warn('BaseScene', 'Root container does not have resize method', {
+            rootContainerId: rootContainer.name || 'unnamed',
+            rootContainerType: rootContainer.constructor.name
+          })
+        }
+      } else {
+        this.logger.warn('BaseScene', 'No root container found for resize propagation')
       }
 
       // Log resize event
@@ -888,5 +866,50 @@ export abstract class BaseScene extends Phaser.Scene {
    */
   protected hasGameObject(id: string): boolean {
     return this.gameObjects.has(id)
+  }
+
+  /**
+   * Find the root container (the one without a parent)
+   */
+  private findRootContainer(): Phaser.GameObjects.Container | null {
+    // Look for a container that has no parent
+    for (const gameObject of this.gameObjects.values()) {
+      if (gameObject instanceof Phaser.GameObjects.Container) {
+        // Check if this container has no parent
+        if (!(gameObject as any).parent) {
+          this.logger.debug('BaseScene', 'Found root container', {
+            rootContainerId: gameObject.name || 'unnamed',
+            rootContainerType: gameObject.constructor.name
+          })
+          return gameObject
+        }
+      }
+    }
+    
+    this.logger.warn('BaseScene', 'No root container found')
+    return null
+  }
+
+  /**
+   * Get the parent container for a game object
+   */
+  private getParentContainer(gameObject: Phaser.GameObjects.GameObject): Phaser.GameObjects.Container | null {
+    // Check if the game object has a parent property
+    if ((gameObject as any).parent) {
+      return (gameObject as any).parent;
+    }
+    
+    // Check if the game object is a child of any container in the scene
+    for (const [_, sceneGameObject] of this.gameObjects) {
+      if (sceneGameObject instanceof Phaser.GameObjects.Container) {
+        // Check if the game object is a child of this container
+        const children = (sceneGameObject as any).list || [];
+        if (children.includes(gameObject)) {
+          return sceneGameObject;
+        }
+      }
+    }
+    
+    return null;
   }
 }

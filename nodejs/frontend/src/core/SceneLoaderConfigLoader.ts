@@ -5,10 +5,10 @@ import { logger } from './Logger'
  */
 export interface GameObjectConfig {
   id: string
-  type: 'container' | 'image' | 'text' | 'button' | 'background-container'
+  type: 'container' | 'image' | 'text' | 'button' | 'background-container' | 'shape'
   name: string
-  x: number
-  y: number
+  x: number | 'fill'
+  y: number | 'fill'
   width: number | 'fill'
   height: number | 'fill'
   children: GameObjectConfig[]

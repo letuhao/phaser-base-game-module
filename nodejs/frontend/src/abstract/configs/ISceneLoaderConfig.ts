@@ -146,7 +146,7 @@ export interface IGameObjectConfig extends IConfiguration {
   readonly id: string
   
   /** Object type (like HTML tag) */
-  readonly type: 'container' | 'image' | 'text' | 'button' | 'input' | 'sprite' | 'animation' | 'audio' | 'video' | 'particle' | 'light' | 'camera' | 'physics' | 'custom'
+  readonly type: 'container' | 'image' | 'text' | 'button' | 'input' | 'sprite' | 'animation' | 'audio' | 'video' | 'particle' | 'light' | 'camera' | 'physics' | 'shape' | 'custom'
   
   /** Object name for display/debugging */
   readonly name: string
@@ -427,6 +427,24 @@ export interface IGameObjectProperties {
     collisionGroup: number
     /** Physics collision mask */
     collisionMask: number
+  }
+  
+  /** Shape properties */
+  shape?: {
+    /** Shape type */
+    shapeType: 'rectangle' | 'circle' | 'ellipse' | 'triangle' | 'polygon'
+    /** Fill color (hex number) */
+    fillColor: number
+    /** Stroke color (hex number) */
+    strokeColor?: number
+    /** Stroke width */
+    strokeWidth?: number
+    /** Corner radius (for rectangles) */
+    cornerRadius?: number
+    /** Whether shape is filled */
+    filled: boolean
+    /** Whether shape has stroke */
+    stroked: boolean
   }
   
   /** Custom properties */

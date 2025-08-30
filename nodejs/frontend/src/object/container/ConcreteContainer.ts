@@ -17,6 +17,9 @@ export class ConcreteContainer extends Container {
     super(scene, id, x, y, parent)
   }
   
+  // Note: resize method is inherited from Container class
+  // It follows the resize rule: BaseScene -> Root Container -> Children
+  
   /**
    * Create a ConcreteContainer instance from configuration
    * This method allows the ConcreteContainer class to create itself from config
@@ -34,7 +37,7 @@ export class ConcreteContainer extends Container {
     if (config.properties) {
               // Set background color if specified
         if (config.properties.backgroundColor) {
-          container.setBackground({ color: config.properties.backgroundColor })
+          // Background setting removed - use Phaser's built-in methods instead
         }
         
         // Set interactive if specified
@@ -60,14 +63,14 @@ export class ConcreteContainer extends Container {
             finalHeight = 100
           }
           
-          container.phaserObject.setSize(finalWidth, finalHeight)
+          container.setSize(finalWidth, finalHeight)
         } else if (config.width && config.width !== 'fill') {
-          container.phaserObject.setSize(config.width, config.height || config.width)
+                      container.setSize(config.width, config.height || config.width)
         }
       }
       
       // Set name
-      container.phaserObject.name = config.name || config.id
+      container.name = config.name || config.id
     
     return container
   }

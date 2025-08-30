@@ -44,7 +44,7 @@ export class FlexboxContainer extends Container {
     super(scene, id, x, y, parent)
     
     // Set container type to flexbox
-    this.setContainerType('flexbox')
+    // Container type is set in constructor, no need to call setter
     
     // Set default flexbox properties
     this.setFlexboxProperties({
@@ -133,7 +133,7 @@ export class FlexboxContainer extends Container {
   // ===== LAYOUT OVERRIDE METHODS =====
   
   /** Override arrangeLayout to implement flexbox logic */
-  override arrangeLayout(availableWidth: number, availableHeight: number): void {
+  arrangeLayout(availableWidth: number, availableHeight: number): void {
     if (this.children.length === 0) return
     
     // Sort children by order
@@ -257,7 +257,7 @@ export class FlexboxContainer extends Container {
   }
   
   /** Override measureLayout to calculate size based on flexbox */
-  override measureLayout(): { width: number; height: number } {
+  measureLayout(): { width: number; height: number } {
     if (this.children.length === 0) {
       return { width: 0, height: 0 }
     }

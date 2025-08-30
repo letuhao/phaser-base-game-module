@@ -593,7 +593,7 @@ export const generatedButtonConfig = createResponsiveConfig(
       vhToPx: (vh: number) => (vh / 100) * 1080, 
       getResponsiveValue: <T>(values: { [breakpoint: string]: T }, defaultValue: T): T => defaultValue, 
       interpolateResponsiveValue: <T>(values: { [breakpoint: string]: T }, defaultValue: T): T => defaultValue, 
-      createMediaQuery: (breakpoint: number) => `@media (min-width: ${breakpoint}px)`, 
+      createMediaQuery: (breakpoint: string) => `@media (min-width: ${breakpoint}px)`, 
       validateResponsiveConfig: () => [] 
     }
   }

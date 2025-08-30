@@ -30,8 +30,8 @@ export interface Levis2025R3WheelResponsiveConfig {
 
 export const levis2025r3wheelResponsiveConfig: Levis2025R3WheelResponsiveConfig = {
   breakpoints: {
-    desktop: 2000, // Temporarily raised to test mobile behavior with current game resolution
-    mobile: 1999
+    desktop: 1025, // Temporarily raised to test mobile behavior with current game resolution
+    mobile: 1024
   },
   
   desktop: {
