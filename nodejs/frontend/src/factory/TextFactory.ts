@@ -1,10 +1,13 @@
 import * as Phaser from 'phaser'
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory'
+import { Logger } from '../core/Logger'
 
 /**
  * Factory for creating text game objects
  */
 export class TextFactory extends BaseGameObjectFactory {
+  private logger: Logger = Logger.getInstance()
+  
   constructor() {
     super(['text'])
   }
@@ -45,7 +48,7 @@ export class TextFactory extends BaseGameObjectFactory {
       return text
       
     } catch (error) {
-      console.error(`TextFactory: Error creating text '${config.id}':`, error)
+      this.logger.error('TextFactory', `Error creating text '${config.id}':`, error, 'createGameObject')
       return null
     }
   }

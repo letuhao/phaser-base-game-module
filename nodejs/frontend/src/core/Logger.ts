@@ -328,27 +328,242 @@ export class Logger {
     if (data === null || data === undefined) return data
     
     try {
-      // Handle circular references
+      // Handle circular references and complex objects
       const seen = new WeakSet()
-      const sanitized = JSON.parse(JSON.stringify(data, (key, value) => {
-        if (typeof value === 'object' && value !== null) {
-          if (seen.has(value)) {
-            return '[Circular Reference]'
-          }
-          seen.add(value)
-        }
-        
-        // Remove sensitive fields
-        if (typeof key === 'string' && this.isSensitiveField(key)) {
-          return '[REDACTED]'
-        }
-        
-        return value
-      }))
+      const sanitized = this.deepCloneAndSanitize(data, seen)
       
-      return sanitized
+      // Ensure we return an object, not a string
+      if (typeof sanitized === 'object' && sanitized !== null) {
+        return sanitized
+      } else {
+        return { sanitizedValue: sanitized }
+      }
     } catch (error) {
-      return `[Data sanitization error: ${error}]`
+      // Return an object with error information instead of a string
+      return { 
+        error: 'Data sanitization failed',
+        errorMessage: error instanceof Error ? error.message : String(error),
+        originalDataType: typeof data,
+        fallbackValue: this.createSafeFallback(data)
+      }
+    }
+  }
+
+  /**
+   * Deep clone and sanitize data while handling circular references
+   */
+  private deepCloneAndSanitize(data: any, seen: WeakSet<any>): any {
+    // Handle primitive types
+    if (data === null || typeof data !== 'object') {
+      return data
+    }
+    
+    // Handle circular references
+    if (seen.has(data)) {
+      return '[Circular Reference]'
+    }
+    
+    // Handle special object types
+    if (data instanceof Date) {
+      return { type: 'Date', value: data.toISOString() }
+    }
+    
+    if (data instanceof Error) {
+      return { 
+        type: 'Error', 
+        name: data.name, 
+        message: data.message,
+        stack: data.stack?.split('\n').slice(0, 3).join('\n') // Limit stack trace
+      }
+    }
+    
+    // Handle Phaser objects and other complex objects
+    if (this.isPhaserObject(data)) {
+      return this.sanitizePhaserObject(data)
+    }
+    
+    // Handle arrays
+    if (Array.isArray(data)) {
+      seen.add(data)
+      const sanitizedArray = data.map((item, index) => {
+        try {
+          return this.deepCloneAndSanitize(item, seen)
+        } catch (error) {
+          return `[Array item ${index} sanitization failed: ${error}]`
+        }
+      })
+      seen.delete(data)
+      return sanitizedArray
+    }
+    
+    // Handle plain objects
+    if (data.constructor === Object) {
+      seen.add(data)
+      const sanitizedObject: any = {}
+      
+      for (const [key, value] of Object.entries(data)) {
+        // Skip sensitive fields
+        if (this.isSensitiveField(key)) {
+          sanitizedObject[key] = '[REDACTED]'
+          continue
+        }
+        
+        try {
+          sanitizedObject[key] = this.deepCloneAndSanitize(value, seen)
+        } catch (error) {
+          sanitizedObject[key] = `[Field sanitization failed: ${error}]`
+        }
+      }
+      
+      seen.delete(data)
+      return sanitizedObject
+    }
+    
+    // Handle other object types
+    try {
+      return { 
+        type: data.constructor?.name || 'Unknown Object',
+        stringified: String(data),
+        properties: this.extractSafeProperties(data)
+      }
+    } catch (error) {
+      return { 
+        type: 'Unserializable Object',
+        error: `Failed to serialize: ${error}`,
+        fallback: this.createSafeFallback(data)
+      }
+    }
+  }
+
+  /**
+   * Check if object is a Phaser object
+   */
+  private isPhaserObject(obj: any): boolean {
+    return obj && (
+      obj.constructor?.name?.includes('Phaser') ||
+      obj.constructor?.name?.includes('GameObject') ||
+      obj.constructor?.name?.includes('Container') ||
+      obj.constructor?.name?.includes('Scene') ||
+      obj.constructor?.name?.includes('Texture') ||
+      obj.constructor?.name?.includes('Image') ||
+      obj.constructor?.name?.includes('Text') ||
+      obj.constructor?.name?.includes('Button') ||
+      typeof obj.x === 'number' && typeof obj.y === 'number' && 
+      (typeof obj.width === 'number' || typeof obj.height === 'number')
+    )
+  }
+
+  /**
+   * Sanitize Phaser objects
+   */
+  private sanitizePhaserObject(obj: any): any {
+    const sanitized: any = {
+      type: obj.constructor?.name || 'Phaser Object',
+      id: obj.id || obj.name || 'unknown',
+      position: { x: obj.x, y: obj.y },
+      size: { width: obj.width, height: obj.height },
+      scale: { x: obj.scaleX, y: obj.scaleY },
+      alpha: obj.alpha,
+      visible: obj.visible,
+      active: obj.active,
+      interactive: obj.interactive
+    }
+    
+    // Add additional properties if they exist
+    if (obj.texture) {
+      sanitized.texture = { key: obj.texture.key, frame: obj.texture.frame }
+    }
+    
+    if (obj.text) {
+      sanitized.text = obj.text
+    }
+    
+    if (obj.children) {
+      sanitized.childCount = Array.isArray(obj.children) ? obj.children.length : 0
+    }
+    
+    return sanitized
+  }
+
+  /**
+   * Extract safe properties from an object
+   */
+  private extractSafeProperties(obj: any): any {
+    const safeProps: any = {}
+    const maxProps = 10
+    
+    try {
+      let propCount = 0
+      for (const [key, value] of Object.entries(obj)) {
+        if (propCount >= maxProps) break
+        
+        if (this.isSafeProperty(key, value)) {
+          try {
+            safeProps[key] = typeof value === 'object' && value !== null 
+              ? this.deepCloneAndSanitize(value, new WeakSet())
+              : value
+          } catch (error) {
+            safeProps[key] = `[Property serialization failed: ${error}]`
+          }
+          propCount++
+        }
+      }
+    } catch (error) {
+      safeProps.error = `Failed to extract properties: ${error}`
+    }
+    
+    return safeProps
+  }
+
+  /**
+   * Check if a property is safe to serialize
+   */
+  private isSafeProperty(key: string, value: any): boolean {
+    // Skip functions, symbols, and complex objects
+    if (typeof value === 'function' || typeof value === 'symbol') {
+      return false
+    }
+    
+    // Skip sensitive fields
+    if (this.isSensitiveField(key)) {
+      return false
+    }
+    
+    // Skip very large objects
+    if (typeof value === 'object' && value !== null) {
+      try {
+        const size = JSON.stringify(value).length
+        if (size > 10000) { // 10KB limit
+          return false
+        }
+      } catch (error) {
+        return false
+      }
+    }
+    
+    return true
+  }
+
+  /**
+   * Create a safe fallback representation
+   */
+  private createSafeFallback(data: any): any {
+    if (data === null) return null
+    if (typeof data === 'undefined') return undefined
+    
+    try {
+      return {
+        type: typeof data,
+        constructor: data.constructor?.name || 'Unknown',
+        stringified: String(data),
+        length: data.length,
+        keys: typeof data === 'object' ? Object.keys(data).slice(0, 5) : undefined
+      }
+    } catch (error) {
+      return {
+        type: 'Unserializable',
+        error: `Fallback creation failed: ${error}`
+      }
     }
   }
   

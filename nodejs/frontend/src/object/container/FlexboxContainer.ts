@@ -352,7 +352,7 @@ export class FlexboxContainer extends Container {
   
   /** Debug flexbox layout */
   debugFlexboxLayout(): void {
-    console.log('Flexbox Container Debug:', {
+    this.logger.debug('FlexboxContainer', 'Flexbox Container Debug:', {
       id: this.id,
       flexbox: this.flexbox,
       children: this.children.map(child => ({

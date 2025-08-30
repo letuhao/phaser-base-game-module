@@ -2,7 +2,9 @@ import * as Phaser from 'phaser'
 import type { IContainer } from '../../abstract/objects/IContainer'
 import type { IGameObject } from '../../abstract/base/IGameObject'
 import type { IBounds, IBoundAlignment } from '../../abstract/objects/IBound'
-import type { IScale, IScaleConstraints } from '../../abstract/objects/IScalable'
+import type { IScale } from '../../abstract/objects/IScalable'
+import { ScalableGameObject } from '../../abstract/base/ScalableGameObject'
+import { Logger } from '../../core/Logger'
 
 /**
  * Container Class
@@ -14,8 +16,10 @@ import type { IScale, IScaleConstraints } from '../../abstract/objects/IScalable
  * 
  * Layout classes can inherit from this and override the logic to control
  * positioning and sizing for different layout systems
+ * 
+ * Inheritance: ScalableGameObject > Container > BackgroundContainer/ConcreteContainer/FlexboxContainer
  */
-export abstract class Container implements IContainer {
+export class Container extends ScalableGameObject implements IContainer {
   // ===== PROPERTIES =====
   
   /** Unique identifier for this container */
@@ -159,6 +163,9 @@ export abstract class Container implements IContainer {
     y: number = 0,
     parent: IContainer | null = null
   ) {
+    // Call super() first since we're extending ScalableGameObject
+    super()
+    
     this.id = id
     this.parent = parent
     
@@ -168,6 +175,9 @@ export abstract class Container implements IContainer {
     // Set up the container
     this.setupContainer()
   }
+  
+  /** Logger instance */
+  protected logger: Logger = Logger.getInstance()
   
   // ===== SETUP METHODS =====
   
@@ -341,143 +351,7 @@ export abstract class Container implements IContainer {
     this.setPosition(x, y)
   }
   
-  // ===== IScalable IMPLEMENTATION =====
-  
-  getScale(): IScale {
-    return { x: this.phaserObject.scaleX, y: this.phaserObject.scaleY }
-  }
-  
-  setScale(scale: IScale): void {
-    this.phaserObject.setScale(scale.x, scale.y)
-  }
-  
-  getScaleX(): number { return this.phaserObject.scaleX }
-  getScaleY(): number { return this.phaserObject.scaleY }
-  
-  setScaleX(scaleX: number): void { this.phaserObject.setScale(scaleX, this.phaserObject.scaleY) }
-  setScaleY(scaleY: number): void { this.phaserObject.setScale(this.phaserObject.scaleX, scaleY) }
-  
-  setUniformScale(scale: number): void { this.phaserObject.setScale(scale) }
-  
-  scaleBy(factor: number): void {
-    this.phaserObject.setScale(
-      this.phaserObject.scaleX * factor,
-      this.phaserObject.scaleY * factor
-    )
-  }
-  
-  scaleByXY(factorX: number, factorY: number): void {
-    this.phaserObject.setScale(
-      this.phaserObject.scaleX * factorX,
-      this.phaserObject.scaleY * factorY
-    )
-  }
-  
-  resetScale(): void { this.phaserObject.setScale(1) }
-  
-  getScaledBounds(): IBounds {
-    const scale = this.getScale()
-    return {
-      x: this.phaserObject.x,
-      y: this.phaserObject.y,
-      width: this.phaserObject.width * scale.x,
-      height: this.phaserObject.height * scale.y
-    }
-  }
-  
-  getScaledSize(): { width: number; height: number } {
-    const scale = this.getScale()
-    return {
-      width: this.phaserObject.width * scale.x,
-      height: this.phaserObject.height * scale.y
-    }
-  }
-  
-  isScaled(): boolean {
-    return this.phaserObject.scaleX !== 1 || this.phaserObject.scaleY !== 1
-  }
-  
-  hasUniformScale(): boolean {
-    return this.phaserObject.scaleX === this.phaserObject.scaleY
-  }
-  
-  getScaleToFit(bounds: IBounds, maintainAspectRatio: boolean = false): IScale {
-    const currentBounds = this.getBounds()
-    const scaleX = bounds.width / currentBounds.width
-    const scaleY = bounds.height / currentBounds.height
-    
-    if (maintainAspectRatio) {
-      const scale = Math.min(scaleX, scaleY)
-      return { x: scale, y: scale }
-    }
-    
-    return { x: scaleX, y: scaleY }
-  }
-  
-  getScaleToFill(bounds: IBounds, maintainAspectRatio: boolean = false): IScale {
-    const currentBounds = this.getBounds()
-    const scaleX = bounds.width / currentBounds.width
-    const scaleY = bounds.height / currentBounds.height
-    
-    if (maintainAspectRatio) {
-      const scale = Math.max(scaleX, scaleY)
-      return { x: scale, y: scale }
-    }
-    
-    return { x: scaleX, y: scaleY }
-  }
-  
-  scaleToFit(bounds: IBounds, maintainAspectRatio: boolean = false): void {
-    const scale = this.getScaleToFit(bounds, maintainAspectRatio)
-    this.setScale(scale)
-  }
-  
-  scaleToFill(bounds: IBounds, maintainAspectRatio: boolean = false): void {
-    const scale = this.getScaleToFill(bounds, maintainAspectRatio)
-    this.setScale(scale)
-  }
-  
-  animateScale(targetScale: IScale, duration: number, _easing?: string): void {
-    // Basic implementation - would use Phaser tweens in a real implementation
-    console.log(`Animating scale to ${targetScale.x}, ${targetScale.y} over ${duration}ms`)
-    this.setScale(targetScale)
-  }
-  
-  animateScaleBy(factor: number, duration: number, _easing?: string): void {
-    // Basic implementation - would use Phaser tweens in a real implementation
-    const currentScale = this.getScale()
-    const targetScale = { x: currentScale.x * factor, y: currentScale.y * factor }
-    console.log(`Animating scale by factor ${factor} over ${duration}ms`)
-    this.setScale(targetScale)
-  }
-  
-  getMinScale(): IScale { return { x: 0.1, y: 0.1 } }
-  getMaxScale(): IScale { return { x: 10, y: 10 } }
-  
-  setScaleConstraints(_constraints: IScaleConstraints): void {
-    // Implementation for scale constraints
-  }
-  
-  isScaleValid(scale: IScale): boolean {
-    const min = this.getMinScale()
-    const max = this.getMaxScale()
-    return scale.x >= min.x && scale.x <= max.x && scale.y >= min.y && scale.y <= max.y
-  }
-  
-  clampScale(scale: IScale): IScale {
-    const min = this.getMinScale()
-    const max = this.getMaxScale()
-    return {
-      x: Math.max(min.x, Math.min(max.x, scale.x)),
-      y: Math.max(min.y, Math.min(max.y, scale.y))
-    }
-  }
-  
-  getScaleOrigin(): { x: number; y: number } { return { x: 0.5, y: 0.5 } }
-  setScaleOrigin(_origin: { x: number; y: number }): void { /* Implementation */ }
-  scaleAroundPoint(_scale: IScale, _point: { x: number; y: number }): void { /* Implementation */ }
-  getScaleMatrix(): number[] { return [1, 0, 0, 1, 0, 0] }
-  applyScaleMatrix(_matrix: number[]): void { /* Implementation */ }
+
   
   // ===== CHILDREN MANAGEMENT METHODS =====
   
@@ -812,6 +686,10 @@ export abstract class Container implements IContainer {
   // ===== RESPONSIVE METHODS =====
   
   resize(width: number, height: number): void {
+    // Handle responsive behavior first
+    this.handleResponsiveResize(width, height)
+    
+    // Set size and calculate layout
     this.setWidth(width)
     this.setHeight(height)
     this.calculateLayout()
@@ -842,68 +720,7 @@ export abstract class Container implements IContainer {
     // Default implementation - can be overridden
   }
   
-  // ===== IGameObject METHODS =====
-  
-  initialize(): void {
-    // Default implementation
-  }
-  
-  update(time: number, delta: number): void {
-    // Default implementation
-    this.children.forEach(child => {
-      if ('update' in child) {
-        child.update(time, delta)
-      }
-    })
-  }
-  
-  activate(): void {
-    this.phaserObject.setActive(true)
-  }
-  
-  deactivate(): void {
-    this.phaserObject.setActive(false)
-  }
-  
-  show(): void {
-    this.phaserObject.setVisible(true)
-  }
-  
-  hide(): void {
-    this.phaserObject.setVisible(false)
-  }
-  
-  setPosition(x: number, y: number): void {
-    this.phaserObject.setPosition(x, y)
-  }
-  
 
-  
-  setRotation(rotation: number): void {
-    this.phaserObject.setRotation(rotation)
-  }
-  
-  setAlpha(alpha: number): void {
-    this.phaserObject.setAlpha(alpha)
-  }
-  
-  setInteractive(interactive: boolean): void {
-    if (interactive) {
-      this.phaserObject.setInteractive()
-    } else {
-      this.phaserObject.disableInteractive()
-    }
-  }
-  
-  destroy(): void {
-    this.removeAllChildren()
-    this.phaserObject.destroy()
-  }
-  
-  clone(): IGameObject {
-    // Implementation for cloning
-    return this.cloneWithoutChildren()
-  }
   
   // ===== UTILITY METHODS =====
   
@@ -976,4 +793,261 @@ export abstract class Container implements IContainer {
       hasShadow: this.shadow.enabled
     }
   }
+  
+  // ===== SCALABLEGAMEOBJECT ABSTRACT METHOD IMPLEMENTATIONS =====
+  
+  /**
+   * Handle responsive behavior changes
+   */
+  protected onResponsiveBehaviorChanged(oldBehavior: any, newBehavior: any): void {
+    this.logger.debug('Container', 'Responsive behavior changed', {
+      objectId: this.id,
+      oldBehavior,
+      newBehavior
+    })
+    
+    // Handle container-specific responsive behavior changes
+    if (newBehavior.deviceType !== oldBehavior.deviceType) {
+      // Device type changed, update container layout if needed
+      this.updateLayoutForDeviceType(newBehavior.deviceType)
+    }
+  }
+  
+  /**
+   * Handle responsive layout changes
+   */
+  protected onResponsiveLayoutChanged(_oldLayout: any, newLayout: any): void {
+    // Use actual current dimensions from phaserObject instead of the passed oldLayout
+    const currentDimensions = {
+      width: this.phaserObject.width,
+      height: this.phaserObject.height
+    }
+    
+    this.logger.debug('Container', 'Responsive layout changed', {
+      objectId: this.id,
+      oldLayout: currentDimensions,
+      newLayout
+    })
+    
+    // Handle container-specific layout changes
+    this.updateLayoutForNewDimensions(newLayout.width, newLayout.height)
+  }
+  
+  /**
+   * Update container layout for new device type
+   */
+  private updateLayoutForDeviceType(deviceType: 'desktop' | 'mobile'): void {
+    // Update container layout based on device type
+    if (deviceType === 'mobile') {
+      // Mobile-specific layout adjustments
+      this.updateMobileLayout()
+    } else {
+      // Desktop-specific layout adjustments
+      this.updateDesktopLayout()
+    }
+  }
+  
+  /**
+   * Update container layout for new dimensions
+   */
+  private updateLayoutForNewDimensions(width: number, height: number): void {
+    // Update container size and position
+    this.setSize(width, height)
+    
+    // Update children layout
+    this.updateChildrenLayout()
+  }
+  
+  /**
+   * Update mobile layout
+   */
+  private updateMobileLayout(): void {
+    // Mobile-specific layout logic
+    // This can be overridden by concrete containers
+  }
+  
+  /**
+   * Update desktop layout
+   */
+  private updateDesktopLayout(): void {
+    // Desktop-specific layout logic
+    // This can be overridden by concrete containers
+  }
+  
+  /**
+   * Update children layout
+   */
+  private updateChildrenLayout(): void {
+    // Loop through children and call their resize method
+    for (const child of this.children) {
+      // Check if child is a ScalableGameObject (has responsive behavior)
+      if ('handleResponsiveResize' in child && typeof (child as any).handleResponsiveResize === 'function') {
+        try {
+          // Call the child's responsive resize method
+          (child as any).handleResponsiveResize(this.phaserObject.width, this.phaserObject.height)
+        } catch (error) {
+          this.logger.warn('Container', `Error resizing child ${child.id}:`, error, 'updateChildrenLayout')
+        }
+      }
+      // For regular game objects, just update their position/size if they have those methods
+      else if ('setPosition' in child && 'setSize' in child) {
+        try {
+          (child as any).setPosition(this.phaserObject.x, this.phaserObject.y)
+          (child as any).setSize(this.phaserObject.width, this.phaserObject.height)
+        } catch (error) {
+          this.logger.warn('Container', `Error updating child ${child.id}:`, error, 'updateChildrenLayout')
+        }
+      }
+    }
+  }
+  
+  // ===== SCALABLEGAMEOBJECT ABSTRACT METHOD IMPLEMENTATIONS =====
+  
+  // IGameObject abstract properties
+  get isVisible(): boolean { return this.phaserObject.visible }
+  get isInteractive(): boolean { return this.phaserObject.input?.enabled || false }
+  get active(): boolean { return this.phaserObject.active }
+  get input(): any { return this.phaserObject.input }
+  get body(): any { return (this.phaserObject as any).body }
+  get bounds(): any { return this.getBounds() }
+  
+  // IGameObject abstract methods
+  initialize(): void { /* Default implementation */ }
+  update(time: number, delta: number): void { 
+    this.children.forEach(child => {
+      if ('update' in child) {
+        (child as any).update(time, delta)
+      }
+    })
+  }
+  activate(): void { this.phaserObject.setActive(true) }
+  deactivate(): void { this.phaserObject.setActive(false) }
+  destroy(): void { 
+    this.removeAllChildren()
+    this.phaserObject.destroy()
+  }
+  setActive(value: boolean): void { this.phaserObject.setActive(value) }
+  setVisible(value: boolean): void { this.phaserObject.setVisible(value) }
+  setInteractive(value: boolean): void { 
+    if (value) this.phaserObject.setInteractive()
+    else this.phaserObject.disableInteractive()
+  }
+  setPosition(x: number, y: number): void { this.phaserObject.setPosition(x, y) }
+  setSize(width: number, height: number): void { this.phaserObject.setSize(width, height) }
+  setAlpha(value: number): void { this.phaserObject.setAlpha(value) }
+  setRotation(value: number): void { this.phaserObject.setRotation(value) }
+  show(): void { this.phaserObject.setVisible(true) }
+  hide(): void { this.phaserObject.setVisible(false) }
+  clone(): any { return this.cloneWithoutChildren() }
+  
+  // IScalable abstract methods
+  getScale(): any { return { x: this.phaserObject.scaleX, y: this.phaserObject.scaleY } }
+  setScale(scale: any): void { 
+    if (typeof scale === 'number') {
+      this.phaserObject.setScale(scale)
+    } else if (scale && typeof scale === 'object' && 'x' in scale && 'y' in scale) {
+      this.phaserObject.setScale(scale.x, scale.y)
+    }
+  }
+  getScaleX(): number { return this.phaserObject.scaleX }
+  getScaleY(): number { return this.phaserObject.scaleY }
+  setScaleX(scale: number): void { this.phaserObject.setScale(scale, this.phaserObject.scaleY) }
+  setScaleY(scale: number): void { this.phaserObject.setScale(this.phaserObject.scaleX, scale) }
+  setScaleXAndY(scaleX: number, scaleY: number): void { this.phaserObject.setScale(scaleX, scaleY) }
+  setUniformScale(scale: number): void { this.phaserObject.setScale(scale) }
+  scaleBy(scale: number): void { 
+    this.phaserObject.setScale(
+      this.phaserObject.scaleX * scale,
+      this.phaserObject.scaleY * scale
+    )
+  }
+  scaleByXY(scaleX: number, scaleY: number): void { 
+    this.phaserObject.setScale(
+      this.phaserObject.scaleX * scaleX,
+      this.phaserObject.scaleY * scaleY
+    )
+  }
+  resetScale(): void { this.phaserObject.setScale(1) }
+  getScaledBounds(): any { return this.getBounds() }
+  getScaledSize(): any { return { width: this.phaserObject.width, height: this.phaserObject.height } }
+  isScaled(): boolean { return this.phaserObject.scaleX !== 1 || this.phaserObject.scaleY !== 1 }
+  hasUniformScale(): boolean { return this.phaserObject.scaleX === this.phaserObject.scaleY }
+  getScaleFactor(): number { return Math.max(this.phaserObject.scaleX, this.phaserObject.scaleY) }
+  getScaleRatio(): number { return this.phaserObject.scaleX / this.phaserObject.scaleY }
+  applyScale(scale: number): void { this.phaserObject.setScale(scale) }
+  normalizeScale(): void { this.phaserObject.setScale(1) }
+  getScaleToFit(bounds: any, maintainAspectRatio?: boolean): any { 
+    const currentBounds = this.getBounds()
+    const scaleX = bounds.width / currentBounds.width
+    const scaleY = bounds.height / currentBounds.height
+    if (maintainAspectRatio) {
+      const scale = Math.min(scaleX, scaleY)
+      return { x: scale, y: scale }
+    }
+    return { x: scaleX, y: scaleY }
+  }
+  getScaleToFill(bounds: any, maintainAspectRatio?: boolean): any { 
+    const currentBounds = this.getBounds()
+    const scaleX = bounds.width / currentBounds.width
+    const scaleY = bounds.height / currentBounds.height
+    if (maintainAspectRatio) {
+      const scale = Math.max(scaleX, scaleY)
+      return { x: scale, y: scale }
+    }
+    return { x: scaleX, y: scaleY }
+  }
+  scaleToFit(bounds: any, maintainAspectRatio?: boolean): void { 
+    const scale = this.getScaleToFit(bounds, maintainAspectRatio)
+    this.setScale(scale)
+  }
+  scaleToFill(bounds: any, maintainAspectRatio?: boolean): void { 
+    const scale = this.getScaleToFill(bounds, maintainAspectRatio)
+    this.setScale(scale)
+  }
+  getScaleToFitX(bounds: any): any { return { x: bounds.width / this.phaserObject.width, y: 1 } }
+  getScaleToFitY(bounds: any): any { return { x: 1, y: bounds.height / this.phaserObject.height } }
+  scaleToFitX(bounds: any): void { this.phaserObject.setScale(bounds.width / this.phaserObject.width, this.phaserObject.scaleY) }
+  scaleToFitY(bounds: any): void { this.phaserObject.setScale(this.phaserObject.scaleX, bounds.height / this.phaserObject.height) }
+  getScaleToFillX(bounds: any): any { return { x: bounds.width / this.phaserObject.width, y: 1 } }
+  getScaleToFillY(bounds: any): any { return { x: 1, y: bounds.height / this.phaserObject.height } }
+  scaleToFillX(bounds: any): void { this.phaserObject.setScale(bounds.width / this.phaserObject.width, this.phaserObject.scaleY) }
+  scaleToFillY(bounds: any): void { this.phaserObject.setScale(this.phaserObject.scaleX, bounds.height / this.phaserObject.height) }
+  animateScale(targetScale: any, duration: number, _ease?: string): void { 
+    this.logger.debug('Container', `Animating scale to ${targetScale.x}, ${targetScale.y} over ${duration}ms`)
+    this.setScale(targetScale)
+  }
+  animateScaleBy(scaleDelta: any, duration: number, _ease?: string): void { 
+    const currentScale = this.getScale()
+    const targetScale = { x: currentScale.x * scaleDelta, y: currentScale.y * scaleDelta }
+    this.logger.debug('Container', `Animating scale by factor ${scaleDelta} over ${duration}ms`)
+    this.setScale(targetScale)
+  }
+  getMinScale(): any { return { x: 0.1, y: 0.1 } }
+  getMaxScale(): any { return { x: 10, y: 10 } }
+  setMinScale(_scale: any): void { /* Implementation */ }
+  setMaxScale(_scale: any): void { /* Implementation */ }
+  clampScale(scale: any): any { 
+    const min = this.getMinScale()
+    const max = this.getMaxScale()
+    return {
+      x: Math.max(min.x, Math.min(max.x, scale.x)),
+      y: Math.max(min.y, Math.min(max.y, scale.y))
+    }
+  }
+  getScaleAnimation(): any { return null }
+  stopScaleAnimation(): void { /* Implementation */ }
+  setScaleConstraints(_constraints: any): void { /* Implementation */ }
+  isScaleValid(scale: any): boolean { 
+    const min = this.getMinScale()
+    const max = this.getMaxScale()
+    return scale.x >= min.x && scale.x <= max.x && scale.y >= min.y && scale.y <= max.y
+  }
+  getScaleOrigin(): any { return { x: 0.5, y: 0.5 } }
+  setScaleOrigin(_origin: any): void { /* Implementation */ }
+  getScaleCenter(): any { return { x: 0.5, y: 0.5 } }
+  setScaleCenter(_center: any): void { /* Implementation */ }
+  getScaleMode(): string { return 'uniform' }
+  scaleAroundPoint(_point: any, _scale: any): void { /* Implementation */ }
+  getScaleMatrix(): any { return [1, 0, 0, 1, 0, 0] }
+  applyScaleMatrix(_matrix: any): void { /* Implementation */ }
 }

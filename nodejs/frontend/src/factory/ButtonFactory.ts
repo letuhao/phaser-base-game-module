@@ -1,10 +1,13 @@
 import * as Phaser from 'phaser'
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory'
+import { Logger } from '../core/Logger'
 
 /**
  * Factory for creating button game objects
  */
 export class ButtonFactory extends BaseGameObjectFactory {
+  private logger: Logger = Logger.getInstance()
+  
   constructor() {
     super(['button'])
   }
@@ -78,7 +81,7 @@ export class ButtonFactory extends BaseGameObjectFactory {
       return button
       
     } catch (error) {
-      console.error(`ButtonFactory: Error creating button '${config.id}':`, error)
+      this.logger.error('ButtonFactory', `Error creating button '${config.id}':`, error, 'createGameObject')
       return null
     }
   }

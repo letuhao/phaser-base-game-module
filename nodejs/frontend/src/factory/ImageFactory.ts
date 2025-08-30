@@ -1,10 +1,13 @@
 import * as Phaser from 'phaser'
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory'
+import { Logger } from '../core/Logger'
 
 /**
  * Factory for creating image game objects
  */
 export class ImageFactory extends BaseGameObjectFactory {
+  private logger: Logger = Logger.getInstance()
+  
   constructor() {
     super(['image'])
   }
@@ -16,7 +19,7 @@ export class ImageFactory extends BaseGameObjectFactory {
     try {
       // Check if the texture key exists
       if (!config.textureKey || !scene.textures.exists(config.textureKey)) {
-        console.warn(`ImageFactory: Texture key '${config.textureKey}' not found for image: ${config.id}`)
+        this.logger.warn('ImageFactory', `Texture key '${config.textureKey}' not found for image: ${config.id}`, null, 'createGameObject')
         return null
       }
       
@@ -47,7 +50,7 @@ export class ImageFactory extends BaseGameObjectFactory {
       return image
       
     } catch (error) {
-      console.error(`ImageFactory: Error creating image '${config.id}':`, error)
+      this.logger.error('ImageFactory', `Error creating image '${config.id}':`, error, 'createGameObject')
       return null
     }
   }

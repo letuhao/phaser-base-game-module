@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser'
 import type { IContainer } from '../../abstract/objects/IContainer'
-
 import { Container } from './Container'
+import { Logger } from '../../core/Logger'
 
 /**
  * BackgroundContainer Class
@@ -13,6 +13,11 @@ import { Container } from './Container'
  * - Responsive positioning and sizing for multiple devices
  * - Phaser container automatically follows background image dimensions
  * - Handles device orientation changes and window resizing
+ * 
+ * Architecture:
+ * - Inherits responsive behavior from Container (which extends ScalableGameObject)
+ * - Implements only background-specific logic
+ * - Delegates responsive logic to parent class
  */
 export class BackgroundContainer extends Container {
   // ===== STATIC FACTORY METHOD =====
@@ -22,12 +27,13 @@ export class BackgroundContainer extends Container {
    * This method allows the BackgroundContainer class to create itself from config
    */
   public static createFromConfig(config: any, scene: Phaser.Scene, parent?: IContainer): BackgroundContainer {
-    console.log('BackgroundContainer', 'createFromConfig called', {
+    const logger = Logger.getInstance()
+    logger.debug('BackgroundContainer', 'createFromConfig called', {
       objectId: config.id,
       config: config,
       sceneKey: scene.scene.key,
       hasParent: !!parent
-    })
+    }, 'createFromConfig')
     
     try {
       const container = new BackgroundContainer(
@@ -38,52 +44,73 @@ export class BackgroundContainer extends Container {
         parent || null
       )
       
-      console.log('BackgroundContainer', 'BackgroundContainer instance created', {
+      logger.debug('BackgroundContainer', 'BackgroundContainer instance created', {
         objectId: config.id,
         phaserObjectType: container.phaserObject.constructor.name,
         position: { x: container.phaserObject.x, y: container.phaserObject.y }
-      })
+      }, 'createFromConfig')
       
-      // Apply configuration properties
-      if (config.properties) {
-        console.log('BackgroundContainer', 'Applying properties from config', {
-          objectId: config.id,
-          properties: config.properties
-        })
-        
-        // Set background image if specified
-        if (config.properties.textureKey) {
-          console.log('BackgroundContainer', 'Setting background image', {
+        // Apply configuration properties
+        if (config.properties) {
+          logger.debug('BackgroundContainer', 'Applying properties from config', {
             objectId: config.id,
-            textureKey: config.properties.textureKey
-          })
-          container.setBackgroundImage(config.properties.textureKey)
-        }
+            properties: config.properties
+          }, 'createFromConfig')
         
-        // Set background color if specified
-        if (config.properties.backgroundColor) {
-          console.log('BackgroundContainer', 'Setting background color', {
-            objectId: config.id,
-            backgroundColor: config.properties.backgroundColor
-          })
+                             // Set background image if specified
+            if (config.properties.textureKey) {
+              logger.debug('BackgroundContainer', 'Setting background image', {
+                objectId: config.id,
+                textureKey: config.properties.textureKey
+              }, 'createFromConfig')
+           
+                         // Check if we have responsive background images
+              if (config.properties.desktopTextureKey && config.properties.mobileTextureKey) {
+                logger.debug('BackgroundContainer', 'Using responsive background images', {
+                  objectId: config.id,
+                  desktopTextureKey: config.properties.desktopTextureKey,
+                  mobileTextureKey: config.properties.mobileTextureKey
+                }, 'createFromConfig')
+             
+             container.setResponsiveBackgroundImage(
+               config.properties.desktopTextureKey,
+               config.properties.mobileTextureKey,
+               {
+                 maintainAspectRatio: config.properties.maintainAspectRatio,
+                 scalingMode: config.properties.scalingMode || 'fit',
+                 alignment: config.properties.alignment || { x: 'center', y: 'center' }
+               }
+             )
+           } else {
+             // Use single texture key (fallback)
+             container.setBackgroundImage(config.properties.textureKey)
+           }
+         }
+        
+                 // Set background color if specified
+         if (config.properties.backgroundColor) {
+                       logger.debug('BackgroundContainer', 'Setting background color', {
+              objectId: config.id,
+              backgroundColor: config.properties.backgroundColor
+            }, 'createFromConfig')
           container.setBackground({ color: config.properties.backgroundColor })
         }
         
-        // Set maintain aspect ratio if specified
-        if (config.properties.maintainAspectRatio !== undefined) {
-          console.log('BackgroundContainer', 'Setting maintain aspect ratio', {
-            objectId: config.id,
-            maintainAspectRatio: config.properties.maintainAspectRatio
-          })
+                 // Set maintain aspect ratio if specified
+         if (config.properties.maintainAspectRatio !== undefined) {
+                       logger.debug('BackgroundContainer', 'Setting maintain aspect ratio', {
+              objectId: config.id,
+              maintainAspectRatio: config.properties.maintainAspectRatio
+            }, 'createFromConfig')
           container.setConstraints({ maintainAspectRatio: config.properties.maintainAspectRatio })
         }
         
-        // Set interactive if specified
-        if (config.properties.interactive !== undefined) {
-          console.log('BackgroundContainer', 'Setting interactive', {
-            objectId: config.id,
-            interactive: config.properties.interactive
-          })
+                 // Set interactive if specified
+         if (config.properties.interactive !== undefined) {
+                       logger.debug('BackgroundContainer', 'Setting interactive', {
+              objectId: config.id,
+              interactive: config.properties.interactive
+            }, 'createFromConfig')
           container.setInteractive(config.properties.interactive)
         }
       }
@@ -97,40 +124,40 @@ export class BackgroundContainer extends Container {
         let finalWidth = config.width === 'fill' ? sceneWidth : (config.width as number)
         let finalHeight = config.height === 'fill' ? sceneHeight : (config.height as number)
         
-        console.log('BackgroundContainer', 'Setting fill size from scene dimensions', {
-          objectId: config.id,
-          sceneWidth,
-          sceneHeight,
-          finalWidth,
-          finalHeight
-        })
+                                   logger.debug('BackgroundContainer', 'Setting fill size from scene dimensions', {
+            objectId: config.id,
+            sceneWidth,
+            sceneHeight,
+            finalWidth,
+            finalHeight
+          }, 'createFromConfig')
         
         container.phaserObject.setSize(finalWidth, finalHeight)
-      } else if (config.width && config.width !== 'fill') {
-        console.log('BackgroundContainer', 'Setting size from config', {
-          objectId: config.id,
-          width: config.width,
-          height: config.height || config.width
-        })
+             } else if (config.width && config.width !== 'fill') {
+                   logger.debug('BackgroundContainer', 'Setting size from config', {
+            objectId: config.id,
+            width: config.width,
+            height: config.height || config.width
+          }, 'createFromConfig')
         container.phaserObject.setSize(config.width, config.height || config.width)
       }
       
       // Set name
       container.phaserObject.name = config.name || config.id
       
-      console.log('BackgroundContainer', 'BackgroundContainer configured successfully', {
-        objectId: config.id,
-        finalSize: { width: container.phaserObject.width, height: container.phaserObject.height },
-        finalPosition: { x: container.phaserObject.x, y: container.phaserObject.y },
-        finalName: container.phaserObject.name
-      })
+             logger.debug('BackgroundContainer', 'BackgroundContainer configured successfully', {
+         objectId: config.id,
+         finalSize: { width: container.phaserObject.width, height: container.phaserObject.height },
+         finalPosition: { x: container.phaserObject.x, y: container.phaserObject.y },
+         finalName: container.phaserObject.name
+       }, 'createFromConfig')
       
       return container
       
-    } catch (error) {
-      console.error('BackgroundContainer', `Error in createFromConfig for ${config.id}:`, error)
-      throw error
-    }
+         } catch (error) {
+       logger.error('BackgroundContainer', `Error in createFromConfig for ${config.id}:`, error)
+       throw error
+     }
   }
   
   /** Background image key/texture */
@@ -163,6 +190,9 @@ export class BackgroundContainer extends Container {
   /** Resize event handler */
   private resizeHandler: (() => void) | null = null
   
+  /** Logger instance */
+  protected logger: Logger = Logger.getInstance()
+  
   constructor(
     scene: Phaser.Scene,
     id: string,
@@ -172,13 +202,13 @@ export class BackgroundContainer extends Container {
   ) {
     super(scene, id, x, y, parent)
     
-    console.log('BackgroundContainer', 'BackgroundContainer constructor called', {
-      id,
-      x,
-      y,
-      hasParent: !!parent,
-      sceneKey: scene.scene.key
-    })
+                 this.logger.debug('BackgroundContainer', 'BackgroundContainer constructor called', {
+        id,
+        x,
+        y,
+        hasParent: !!parent,
+        sceneKey: scene.scene.key
+      }, 'constructor')
     
     // Set container type to background
     this.setContainerType('div')
@@ -212,12 +242,12 @@ export class BackgroundContainer extends Container {
       alignment?: { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' }
       backgroundColor?: string
     } = {}
-  ): void {
-    console.log('BackgroundContainer', 'setBackgroundImage called', {
-      objectId: this.id,
-      textureKey: imageKey,
-      hasTexture: this.scene.textures.exists(imageKey)
-    })
+     ): void {
+           this.logger.debug('BackgroundContainer', 'setBackgroundImage called', {
+        objectId: this.id,
+        textureKey: imageKey,
+        hasTexture: this.scene.textures.exists(imageKey)
+      }, 'setBackgroundImage')
     this.backgroundImageKey = imageKey
     this.maintainAspectRatio = options.maintainAspectRatio ?? true
     this.scalingMode = options.scalingMode ?? 'fit'
@@ -229,6 +259,47 @@ export class BackgroundContainer extends Container {
   }
   
   /**
+   * Set responsive background image based on current device type
+   * @param desktopImageKey - Phaser texture key for desktop background
+   * @param mobileImageKey - Phaser texture key for mobile background
+   * @param options - Background loading options
+   */
+  setResponsiveBackgroundImage(
+    desktopImageKey: string,
+    mobileImageKey: string,
+    options: {
+      maintainAspectRatio?: boolean
+      scalingMode?: 'fit' | 'fill' | 'stretch'
+      alignment?: { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' }
+      backgroundColor?: string
+    } = {}
+     ): void {
+           this.logger.debug('BackgroundContainer', 'setResponsiveBackgroundImage called', {
+        objectId: this.id,
+        desktopImageKey,
+        mobileImageKey,
+        currentWidth: this.scene.game.scale.width
+      }, 'setResponsiveBackgroundImage')
+    
+    // Determine current device type
+    const currentWidth = this.scene.game.scale.width
+    const isDesktop = currentWidth >= 1024
+    
+         // Select appropriate image based on device type
+     const selectedImageKey = isDesktop ? desktopImageKey : mobileImageKey
+     
+           this.logger.debug('BackgroundContainer', 'Selected background image', {
+        objectId: this.id,
+        deviceType: isDesktop ? 'desktop' : 'mobile',
+        selectedImageKey,
+        currentWidth
+      }, 'setResponsiveBackgroundImage')
+    
+    // Set the selected background image
+    this.setBackgroundImage(selectedImageKey, options)
+  }
+  
+  /**
    * Load background image from texture
    */
   private loadBackgroundImage(): void {
@@ -236,19 +307,19 @@ export class BackgroundContainer extends Container {
     
     try {
       // Check if texture exists
-      if (!this.scene.textures.exists(this.backgroundImageKey)) {
-        console.warn('BackgroundContainer', `Background texture "${this.backgroundImageKey}" not found`, {
-          objectId: this.id,
-          availableTextures: Object.keys(this.scene.textures.list)
-        })
+             if (!this.scene.textures.exists(this.backgroundImageKey)) {
+         this.logger.warn('BackgroundContainer', `Background texture "${this.backgroundImageKey}" not found`, {
+           objectId: this.id,
+           availableTextures: Object.keys(this.scene.textures.list)
+         }, 'loadBackgroundImage')
         return
       }
       
-      // Remove existing background image
-      if (this.backgroundImage) {
-        console.log('BackgroundContainer', 'Removing existing background image', {
-          objectId: this.id
-        })
+             // Remove existing background image
+       if (this.backgroundImage) {
+                   this.logger.debug('BackgroundContainer', 'Removing existing background image', {
+            objectId: this.id
+          }, 'loadBackgroundImage')
         this.backgroundImage.destroy()
         this.backgroundImage = null
       }
@@ -258,38 +329,38 @@ export class BackgroundContainer extends Container {
       
       // Get background dimensions
       this.backgroundDimensions = {
-        width: this.backgroundImage.width,
-        height: this.backgroundImage.height
+        width: this.backgroundImage!.width,
+        height: this.backgroundImage!.height
       }
       
       // Add to Phaser container
       this.phaserObject.add(this.backgroundImage)
       
-      // Mark as loaded
-      this.isBackgroundLoaded = true
+             // Mark as loaded
+       this.isBackgroundLoaded = true
+       
+       // Apply responsive sizing
+       this.applyResponsiveSizing()
+       
+               this.logger.debug('BackgroundContainer', `Background image loaded: ${this.backgroundImageKey}`, {
+          objectId: this.id,
+          imageSize: { width: this.backgroundImage!.width, height: this.backgroundImage!.height }
+        }, 'loadBackgroundImage')
       
-      // Apply responsive sizing
-      this.applyResponsiveSizing()
-      
-      console.log('BackgroundContainer', `Background image loaded: ${this.backgroundImageKey}`, {
-        objectId: this.id,
-        imageSize: { width: this.backgroundImage.width, height: this.backgroundImage.height }
-      })
-      
-    } catch (error) {
-      console.error('BackgroundContainer', 'Failed to load background image:', error)
-      this.isBackgroundLoaded = false
-    }
+         } catch (error) {
+       this.logger.error('BackgroundContainer', 'Failed to load background image:', error)
+       this.isBackgroundLoaded = false
+     }
   }
   
   /**
    * Remove background image
    */
-  removeBackgroundImage(): void {
-    if (this.backgroundImage) {
-      console.log('BackgroundContainer', 'Removing background image', {
+     removeBackgroundImage(): void {
+     if (this.backgroundImage) {
+             this.logger.debug('BackgroundContainer', 'Removing background image', {
         objectId: this.id
-      })
+      }, 'removeBackgroundImage')
       this.backgroundImage.destroy()
       this.backgroundImage = null
     }
@@ -319,7 +390,7 @@ export class BackgroundContainer extends Container {
    */
   private createBackgroundRectangle(): void {
     // Remove existing background graphics
-    this.phaserObject.list.forEach(child => {
+    this.phaserObject.list.forEach((child: any) => {
       if (child instanceof Phaser.GameObjects.Graphics) {
         child.destroy()
       }
@@ -337,38 +408,62 @@ export class BackgroundContainer extends Container {
   // ===== RESPONSIVE SIZING =====
   
   /**
-   * Override resize method to handle background-specific logic
+   * Override resize method to handle background-specific logic with responsive behavior
    */
   override resize(width: number, height: number): void {
-    console.log('BackgroundContainer', 'resize called', {
-      objectId: this.id,
-      newDimensions: { width, height },
-      currentDimensions: { width: this.phaserObject.width, height: this.phaserObject.height },
-      hasBackgroundImage: !!this.backgroundImage
-    })
+         this.logger.debug('BackgroundContainer', 'resize called', {
+       objectId: this.id,
+       newDimensions: { width, height },
+       currentDimensions: { width: this.phaserObject.width, height: this.phaserObject.height },
+       hasBackgroundImage: !!this.backgroundImage
+     }, 'resize')
+    
     // Store new dimensions
     const newWidth = width
     const newHeight = height
     
-    // Calculate new position and size based on background image
+    // Call parent (Container) resize method for responsive behavior and children handling
+    super.resize(newWidth, newHeight)
+    
+    // Handle background-specific logic after responsive behavior is processed
     if (this.isBackgroundLoaded && this.backgroundDimensions) {
-      const { position, size } = this.calculateBackgroundLayout(newWidth, newHeight)
+      // Get the responsive behavior that was determined by parent
+      const responsiveBehavior = this.getCurrentResponsiveBehavior()
       
-      // Update Phaser container position and size
-      this.phaserObject.setPosition(position.x, position.y)
-      this.phaserObject.setSize(size.width, size.height)
-      
-      // Update background image position and size
-      if (this.backgroundImage) {
-        this.backgroundImage.setPosition(size.width / 2, size.height / 2)
-        this.backgroundImage.setDisplaySize(size.width, size.height)
+      if (responsiveBehavior) {
+                 this.logger.debug('BackgroundContainer', 'Applying background-specific responsive logic', {
+           objectId: this.id,
+           responsiveBehavior
+         }, 'resize')
+        
+        // Calculate new position and size based on background image and responsive config
+        const { position, size } = this.calculateResponsiveBackgroundLayout(
+          newWidth, 
+          newHeight, 
+          responsiveBehavior
+        )
+        
+        // The container should always be at (0,0) in the scene
+        // Only update the container size, not position
+        this.phaserObject.setSize(size.width, size.height)
+        
+        // Update background image position and size
+        if (this.backgroundImage) {
+          // Position the background image within the container based on the calculated position
+          // The position is relative to the container, so we need to account for the container's size
+          const imageX = position.x + (size.width / 2)
+          const imageY = position.y + (size.height / 2)
+          this.backgroundImage.setPosition(imageX, imageY)
+          this.backgroundImage.setDisplaySize(size.width, size.height)
+        }
+        
+                 this.logger.debug('BackgroundContainer', `Background container resized: ${size.width}x${size.height} at (${position.x}, ${position.y})`, {
+           objectId: this.id,
+           finalSize: { width: size.width, height: size.height },
+           finalPosition: { x: position.x, y: position.y },
+           responsiveBehavior
+         }, 'resize')
       }
-      
-      console.log('BackgroundContainer', `Background container resized: ${size.width}x${size.height} at (${position.x}, ${position.y})`, {
-        objectId: this.id,
-        finalSize: { width: size.width, height: size.height },
-        finalPosition: { x: position.x, y: position.y }
-      })
     } else {
       // No background image, use default sizing
       this.phaserObject.setSize(newWidth, newHeight)
@@ -377,22 +472,30 @@ export class BackgroundContainer extends Container {
       if (!this.isBackgroundLoaded) {
         this.createBackgroundRectangle()
       }
-      console.log('BackgroundContainer', 'Background container resized (no image): default sizing', {
-        objectId: this.id,
-        finalSize: { width: newWidth, height: newHeight }
-      })
+             this.logger.debug('BackgroundContainer', 'Background container resized (no image): default sizing', {
+         objectId: this.id,
+         finalSize: { width: newWidth, height: newHeight }
+       }, 'resize')
     }
-    
-    // Call parent resize method for layout updates
-    super.resize(newWidth, newHeight)
   }
   
+
+  
+  // Note: getResponsiveBehavior is now handled by ScalableGameObject
+  // which should get the responsive config from the scene
+  
   /**
-   * Calculate background layout based on container size and scaling mode
+   * Calculate responsive background layout based on responsive behavior
    */
-  private calculateBackgroundLayout(
+  private calculateResponsiveBackgroundLayout(
     containerWidth: number,
-    containerHeight: number
+    containerHeight: number,
+    responsiveBehavior: {
+      deviceType: 'desktop' | 'mobile'
+      maintainAspectRatio: boolean
+      scaleStrategy: 'fit' | 'stretch' | 'fill'
+      alignment: { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' }
+    }
   ): { position: { x: number; y: number }; size: { width: number; height: number } } {
     if (!this.backgroundDimensions) {
       return { position: { x: 0, y: 0 }, size: { width: containerWidth, height: containerHeight } }
@@ -405,31 +508,24 @@ export class BackgroundContainer extends Container {
     let finalWidth: number
     let finalHeight: number
     
-    // Calculate size based on scaling mode
-    switch (this.scalingMode) {
+    // Calculate size based on responsive scale strategy
+    switch (responsiveBehavior.scaleStrategy) {
       case 'fit':
         // Fit background within container while maintaining aspect ratio
-        if (containerAspectRatio > bgAspectRatio) {
-          // Container is wider, fit by height
-          finalHeight = containerHeight
-          finalWidth = finalHeight * bgAspectRatio
+        if (responsiveBehavior.maintainAspectRatio) {
+          if (containerAspectRatio > bgAspectRatio) {
+            // Container is wider, fit by height
+            finalHeight = containerHeight
+            finalWidth = finalHeight * bgAspectRatio
+          } else {
+            // Container is taller, fit by width
+            finalWidth = containerWidth
+            finalHeight = finalWidth / bgAspectRatio
+          }
         } else {
-          // Container is taller, fit by width
+          // Don't maintain aspect ratio, fit to container
           finalWidth = containerWidth
-          finalHeight = finalWidth / bgAspectRatio
-        }
-        break
-        
-      case 'fill':
-        // Fill container while maintaining aspect ratio (may crop)
-        if (containerAspectRatio > bgAspectRatio) {
-          // Container is wider, fill by width
-          finalWidth = containerWidth
-          finalHeight = finalWidth / bgAspectRatio
-        } else {
-          // Container is taller, fill by height
           finalHeight = containerHeight
-          finalWidth = finalHeight * bgAspectRatio
         }
         break
         
@@ -444,11 +540,11 @@ export class BackgroundContainer extends Container {
         finalHeight = containerHeight
     }
     
-    // Calculate position based on alignment
+    // Calculate position based on responsive alignment
     let x: number
     let y: number
     
-    switch (this.alignment.x) {
+    switch (responsiveBehavior.alignment.x) {
       case 'left':
         x = 0
         break
@@ -462,7 +558,7 @@ export class BackgroundContainer extends Container {
         x = 0
     }
     
-    switch (this.alignment.y) {
+    switch (responsiveBehavior.alignment.y) {
       case 'top':
         y = 0
         break
@@ -511,10 +607,10 @@ export class BackgroundContainer extends Container {
     // Apply responsive sizing with new dimensions
     this.resize(gameWidth, gameHeight)
     
-    console.log('BackgroundContainer', `Orientation change handled: ${gameWidth}x${gameHeight}`, {
-      objectId: this.id,
-      newDimensions: { width: gameWidth, height: gameHeight }
-    })
+         this.logger.debug('BackgroundContainer', `Orientation change handled: ${gameWidth}x${gameHeight}`, {
+       objectId: this.id,
+       newDimensions: { width: gameWidth, height: gameHeight }
+     }, 'handleOrientationChange')
   }
   
   /**
@@ -527,13 +623,31 @@ export class BackgroundContainer extends Container {
     const gameWidth = this.scene.game.scale.width
     const gameHeight = this.scene.game.scale.height
     
+    // Check if device type changed (desktop <-> mobile)
+    const wasDesktop = this.phaserObject.width >= 1024
+    const isNowDesktop = gameWidth >= 1024
+    
+    if (wasDesktop !== isNowDesktop) {
+             this.logger.debug('BackgroundContainer', 'Device type changed, switching background image', {
+         objectId: this.id,
+         wasDesktop,
+         isNowDesktop,
+         oldDimensions: { width: this.phaserObject.width, height: this.phaserObject.height },
+         newDimensions: { width: gameWidth, height: gameHeight }
+       }, 'handleWindowResize')
+      
+      // Switch background image based on new device type
+      this.switchBackgroundImageForDeviceType(gameWidth, gameHeight)
+    }
+    
     // Apply responsive sizing
     this.resize(gameWidth, gameHeight)
     
-    console.log('BackgroundContainer', `Window resize handled: ${gameWidth}x${gameHeight}`, {
-      objectId: this.id,
-      newDimensions: { width: gameWidth, height: gameHeight }
-    })
+         this.logger.debug('BackgroundContainer', 'Window resize handled: ${gameWidth}x${gameHeight}', {
+       objectId: this.id,
+       newDimensions: { width: gameWidth, height: gameHeight },
+       deviceTypeChanged: wasDesktop !== isNowDesktop
+     }, 'handleWindowResize')
   }
   
   // ===== SETUP METHODS =====
@@ -562,8 +676,8 @@ export class BackgroundContainer extends Container {
       this.resizeHandler = null
     }
     
-    // Call parent cleanup
-    super.destroy()
+    // Clean up parent resources
+    // Note: super.destroy() is not available since we're not extending Container directly
   }
   
   // ===== OVERRIDE METHODS =====
@@ -573,6 +687,7 @@ export class BackgroundContainer extends Container {
    */
   override destroy(): void {
     this.cleanup()
+    super.destroy()
   }
   
   /**
@@ -639,24 +754,155 @@ export class BackgroundContainer extends Container {
   }
   
   /**
+   * Switch background image based on device type
+   */
+  private switchBackgroundImageForDeviceType(width: number, _height: number): void {
+    if (!this.backgroundImageKey) return
+    
+    const isDesktop = width >= 1024
+    
+    // Determine which background image to use
+    let newImageKey: string
+    
+    if (isDesktop) {
+      // Use desktop background
+             if (this.scene.textures.exists('levis2025r3wheel-desktop-bg')) {
+         newImageKey = 'levis2025r3wheel-desktop-bg'
+       } else {
+         this.logger.warn('BackgroundContainer', 'Desktop background texture not found', {
+           objectId: this.id,
+           availableTextures: Object.keys(this.scene.textures.list)
+         }, 'switchBackgroundImageForDeviceType')
+        return
+      }
+    } else {
+      // Use mobile background
+             if (this.scene.textures.exists('levis2025r3wheel-mobile-bg')) {
+         newImageKey = 'levis2025r3wheel-mobile-bg'
+       } else {
+         this.logger.warn('BackgroundContainer', 'Mobile background texture not found', {
+           objectId: this.id,
+           availableTextures: Object.keys(this.scene.textures.list)
+         }, 'switchBackgroundImageForDeviceType')
+        return
+      }
+    }
+    
+    // Only switch if the image key is different
+    if (newImageKey !== this.backgroundImageKey) {
+             this.logger.debug('BackgroundContainer', 'Switching background image', {
+         objectId: this.id,
+         oldImageKey: this.backgroundImageKey,
+         newImageKey,
+         deviceType: isDesktop ? 'desktop' : 'mobile'
+       }, 'switchBackgroundImageForDeviceType')
+      
+      // Update the background image key and reload
+      this.backgroundImageKey = newImageKey
+      this.loadBackgroundImage()
+    }
+  }
+  
+  /**
    * Debug background container state
    */
   debugBackgroundState(): void {
-    console.log('Background Container Debug:', {
-      id: this.id,
-      backgroundInfo: this.getBackgroundInfo(),
-      containerBounds: this.getBounds(),
-      phaserObjectBounds: {
-        x: this.phaserObject.x,
-        y: this.phaserObject.y,
-        width: this.phaserObject.width,
-        height: this.phaserObject.height
-      },
-      children: this.children.length,
-      gameDimensions: {
-        width: this.scene.game.scale.width,
-        height: this.scene.game.scale.height
-      }
-    })
+         this.logger.debug('BackgroundContainer', 'Background Container Debug:', {
+       id: this.id,
+       backgroundInfo: this.getBackgroundInfo(),
+       containerBounds: { x: this.phaserObject.x, y: this.phaserObject.y, width: this.phaserObject.width, height: this.phaserObject.height },
+       phaserObjectBounds: {
+         x: this.phaserObject.x,
+         y: this.phaserObject.y,
+         width: this.phaserObject.width,
+         height: this.phaserObject.height
+       },
+       children: this.children.length,
+       gameDimensions: {
+         width: this.scene.game.scale.width,
+         height: this.scene.game.scale.height
+       }
+     }, 'debugBackgroundState')
+  }
+  
+  // ===== SCALABLEGAMEOBJECT ABSTRACT METHOD IMPLEMENTATIONS =====
+  
+  /**
+   * Handle responsive behavior changes
+   */
+  protected onResponsiveBehaviorChanged(oldBehavior: any, newBehavior: any): void {
+         this.logger.debug('BackgroundContainer', 'Responsive behavior changed', {
+       objectId: this.id,
+       oldBehavior,
+       newBehavior
+     }, 'onResponsiveBehaviorChanged')
+    
+    // Handle background-specific responsive behavior changes
+    if (newBehavior.deviceType !== oldBehavior.deviceType) {
+      // Device type changed, switch background image if needed
+      this.switchBackgroundImageForDeviceType(
+        this.scene.game.scale.width,
+        this.scene.game.scale.height
+      )
+    }
+  }
+  
+  /**
+   * Handle responsive layout changes
+   */
+  protected onResponsiveLayoutChanged(oldLayout: any, newLayout: any): void {
+         this.logger.debug('BackgroundContainer', 'Responsive layout changed', {
+       objectId: this.id,
+       oldLayout,
+       newLayout
+     }, 'onResponsiveLayoutChanged')
+    
+    // Handle background-specific layout changes
+    if (this.isBackgroundLoaded && this.backgroundDimensions) {
+      // Apply new layout to background image
+      this.applyResponsiveSizing()
+    }
+  }
+  
+  // ===== MISSING METHOD IMPLEMENTATIONS =====
+  
+  /**
+   * Set background properties
+   */
+  setBackground(background: any): void {
+    // Implementation for setting background
+    if (background.color) {
+      this.setBackgroundColor(background.color)
+    }
+  }
+  
+  /**
+   * Set container constraints
+   */
+  setConstraints(constraints: any): void {
+    // Implementation for setting constraints
+    if (constraints.maintainAspectRatio !== undefined) {
+      this.maintainAspectRatio = constraints.maintainAspectRatio
+    }
+  }
+  
+  /**
+   * Set container type
+   */
+  setContainerType(type: string): void {
+    // Implementation for setting container type
+    (this as any).containerType = type
+  }
+  
+  /**
+   * Set interactive state
+   */
+  setInteractive(interactive: boolean): void {
+    // Implementation for setting interactive state
+    if (interactive) {
+      this.phaserObject.setInteractive()
+    } else {
+      this.phaserObject.disableInteractive()
+    }
   }
 }

@@ -66,11 +66,15 @@ export const levis2025r3wheelSceneLoaderConfig: Levis2025R3WheelSceneConfig = {
         className: 'BackgroundContainer',
         createMethod: 'createFromConfig'
       },
-      properties: {
-        backgroundColor: '#1a1a2e',
-        textureKey: 'levis2025r3wheel-desktop-bg', // Default to desktop background
-        maintainAspectRatio: true
-      },
+             properties: {
+         backgroundColor: '#1a1a2e',
+         textureKey: 'levis2025r3wheel-desktop-bg', // Fallback texture key
+         desktopTextureKey: 'levis2025r3wheel-desktop-bg', // Desktop background
+         mobileTextureKey: 'levis2025r3wheel-mobile-bg', // Mobile background
+         maintainAspectRatio: true,
+         scalingMode: 'fit',
+         alignment: { x: 'center', y: 'center' }
+       },
       children: [
         {
           id: 'header-container',

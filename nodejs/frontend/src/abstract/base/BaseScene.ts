@@ -167,7 +167,7 @@ export abstract class BaseScene extends Phaser.Scene {
         gameWidth: this.game.config.width,
         gameHeight: this.game.config.height,
         timestamp: Date.now()
-      })
+      }, 'create')
       
       // Initialize scene based on configuration
       await this.initializeSceneFromConfig()
@@ -180,13 +180,13 @@ export abstract class BaseScene extends Phaser.Scene {
         gameSize: { width: Number(this.game.config.width), height: Number(this.game.config.height) },
         scaleMode: this.game.scale.scaleMode,
         gameObjectCount: this.gameObjects.size
-      })
+      }, 'create')
       
       // Flush logs to ensure they're sent to server
       await logger.flushLogs()
       
     } catch (error) {
-      logger.error('BaseScene', 'Critical error in scene creation', error)
+      logger.error('BaseScene', 'Critical error in scene creation', error, 'create')
       await logger.flushLogs()
       throw error
     }
@@ -196,7 +196,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Load all scene configurations
    */
   private loadSceneConfigs(): void {
-    logger.debug('BaseScene', 'Starting to load scene configurations')
+    logger.debug('BaseScene', 'Starting to load scene configurations', undefined, 'loadSceneConfigs')
     
     try {
       const sceneName = this.getSceneName()
@@ -208,25 +208,25 @@ export abstract class BaseScene extends Phaser.Scene {
         sceneName,
         sceneConfigs: this.sceneConfigs,
         configKeys: Object.keys(this.sceneConfigs)
-      })
+      }, 'loadSceneConfigs')
       
       if (this.sceneConfigs.logging) {
-        logger.info('BaseScene', 'All scene configurations loaded successfully')
+        logger.info('BaseScene', 'All scene configurations loaded successfully', undefined, 'loadSceneConfigs')
       } else {
-        logger.warn('BaseScene', 'Failed to load some scene configurations')
+        logger.warn('BaseScene', 'Failed to load some scene configurations', undefined, 'loadSceneConfigs')
       }
       
-    } catch (error) {
-      logger.error('BaseScene', 'Error loading scene configurations', error)
-      throw error
-    }
+          } catch (error) {
+        logger.error('BaseScene', 'Error loading scene configurations', error, 'loadSceneConfigs')
+        throw error
+      }
   }
   
   /**
    * Initialize scene purely from configuration
    */
   private async initializeSceneFromConfig(): Promise<void> {
-    logger.debug('BaseScene', 'Starting scene initialization from config')
+    logger.debug('BaseScene', 'Starting scene initialization from config', undefined, 'initializeSceneFromConfig')
     
     try {
       if (!this.sceneConfigs.scene) {
@@ -241,13 +241,13 @@ export abstract class BaseScene extends Phaser.Scene {
         sceneName: sceneConfig.sceneName,
         gameObjectCount: sceneConfig.gameObjects?.length || 0,
         backgroundColor: sceneConfig.backgroundColor
-      })
+      }, 'initializeSceneFromConfig')
       
       // Set scene background color from config
       if (sceneConfig.backgroundColor) {
         logger.debug('BaseScene', 'Setting scene background color', {
           backgroundColor: sceneConfig.backgroundColor
-        })
+        }, 'initializeSceneFromConfig')
         this.cameras.main.setBackgroundColor(sceneConfig.backgroundColor)
       }
       
@@ -256,10 +256,10 @@ export abstract class BaseScene extends Phaser.Scene {
         logger.debug('BaseScene', 'Creating game objects from config', {
           gameObjectCount: sceneConfig.gameObjects.length,
           gameObjectIds: sceneConfig.gameObjects.map((obj: any) => obj.id)
-        })
+        }, 'initializeSceneFromConfig')
         await this.createGameObjectsFromConfig(sceneConfig.gameObjects)
       } else {
-        logger.warn('BaseScene', 'No game objects found in scene config')
+        logger.warn('BaseScene', 'No game objects found in scene config', undefined, 'initializeSceneFromConfig')
       }
       
       logger.info('BaseScene', 'Scene initialized from configuration', {
