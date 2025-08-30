@@ -540,11 +540,15 @@ export class BackgroundContainer extends Container {
         finalHeight = containerHeight
     }
     
-    // Calculate position based on responsive alignment
+    // Use the BackgroundContainer's own alignment configuration instead of responsive behavior
+    // This ensures the object's specific alignment preferences are respected
+    const alignment = this.alignment
+    
+    // Calculate position based on object's alignment configuration
     let x: number
     let y: number
     
-    switch (responsiveBehavior.alignment.x) {
+    switch (alignment.x) {
       case 'left':
         x = 0
         break
@@ -558,7 +562,7 @@ export class BackgroundContainer extends Container {
         x = 0
     }
     
-    switch (responsiveBehavior.alignment.y) {
+    switch (alignment.y) {
       case 'top':
         y = 0
         break
@@ -571,6 +575,15 @@ export class BackgroundContainer extends Container {
       default:
         y = 0
     }
+    
+    this.logger.debug('BackgroundContainer', 'Alignment calculation completed', {
+      objectId: this.id,
+      objectAlignment: alignment,
+      responsiveAlignment: responsiveBehavior.alignment,
+      finalPosition: { x, y },
+      finalSize: { width: finalWidth, height: finalHeight },
+      containerDimensions: { width: containerWidth, height: containerHeight }
+    }, 'calculateResponsiveBackgroundLayout')
     
     return {
       position: { x, y },
@@ -588,8 +601,38 @@ export class BackgroundContainer extends Container {
     const gameWidth = this.scene.game.scale.width
     const gameHeight = this.scene.game.scale.height
     
-    // Resize container
-    this.resize(gameWidth, gameHeight)
+    // Apply sizing directly without calling resize to avoid infinite loop
+    // Only update the container size and background image positioning
+    if (this.backgroundDimensions) {
+      const responsiveBehavior = this.getCurrentResponsiveBehavior()
+      
+      if (responsiveBehavior) {
+        // Calculate new position and size based on background image and responsive config
+        const { position, size } = this.calculateResponsiveBackgroundLayout(
+          gameWidth, 
+          gameHeight, 
+          responsiveBehavior
+        )
+        
+        // Update container size
+        this.phaserObject.setSize(size.width, size.height)
+        
+        // Update background image position and size
+        if (this.backgroundImage) {
+          const imageX = position.x + (size.width / 2)
+          const imageY = position.y + (size.height / 2)
+          this.backgroundImage.setPosition(imageX, imageY)
+          this.backgroundImage.setDisplaySize(size.width, size.height)
+        }
+        
+        this.logger.debug('BackgroundContainer', 'Responsive sizing applied directly', {
+          objectId: this.id,
+          finalSize: { width: size.width, height: size.height },
+          finalPosition: { x: position.x, y: position.y },
+          responsiveBehavior
+        }, 'applyResponsiveSizing')
+      }
+    }
   }
   
   // ===== DEVICE ORIENTATION HANDLING =====
@@ -741,6 +784,11 @@ export class BackgroundContainer extends Container {
     
     if (properties.alignment) {
       this.alignment = properties.alignment
+      this.logger.debug('BackgroundContainer', 'Alignment updated', {
+        objectId: this.id,
+        newAlignment: properties.alignment,
+        oldAlignment: this.alignment
+      }, 'updateBackgroundProperties')
     }
     
     if (properties.maintainAspectRatio !== undefined) {
@@ -751,6 +799,32 @@ export class BackgroundContainer extends Container {
     if (this.isBackgroundLoaded) {
       this.applyResponsiveSizing()
     }
+  }
+  
+  /**
+   * Set alignment for the background image
+   * @param alignment - New alignment configuration
+   */
+  setAlignment(alignment: { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' }): void {
+    this.logger.debug('BackgroundContainer', 'Setting alignment', {
+      objectId: this.id,
+      oldAlignment: this.alignment,
+      newAlignment: alignment
+    }, 'setAlignment')
+    
+    this.alignment = alignment
+    
+    // Apply the new alignment immediately if background is loaded
+    if (this.isBackgroundLoaded) {
+      this.applyResponsiveSizing()
+    }
+  }
+  
+  /**
+   * Get current alignment
+   */
+  getAlignment(): { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' } {
+    return { ...this.alignment }
   }
   
   /**
@@ -821,8 +895,42 @@ export class BackgroundContainer extends Container {
        gameDimensions: {
          width: this.scene.game.scale.width,
          height: this.scene.game.scale.height
-       }
+       },
+       currentAlignment: this.alignment
      }, 'debugBackgroundState')
+  }
+  
+  /**
+   * Test different alignment configurations
+   * Useful for debugging and testing alignment behavior
+   */
+  testAlignments(): void {
+    const alignments = [
+      { x: 'left', y: 'top' },
+      { x: 'center', y: 'top' },
+      { x: 'right', y: 'top' },
+      { x: 'left', y: 'center' },
+      { x: 'center', y: 'center' },
+      { x: 'right', y: 'center' },
+      { x: 'left', y: 'bottom' },
+      { x: 'center', y: 'bottom' },
+      { x: 'right', y: 'bottom' }
+    ]
+    
+    this.logger.debug('BackgroundContainer', 'Testing all alignment configurations', {
+      objectId: this.id,
+      alignments
+    }, 'testAlignments')
+    
+    // Test center alignment first (most common use case)
+    this.setAlignment({ x: 'center', y: 'center' })
+    
+    // You can uncomment the following lines to cycle through all alignments
+    // let currentIndex = 0
+    // const interval = setInterval(() => {
+    //   this.setAlignment(alignments[currentIndex])
+    //   currentIndex = (currentIndex + 1) % alignments.length
+    // }, 2000) // Change alignment every 2 seconds
   }
   
   // ===== SCALABLEGAMEOBJECT ABSTRACT METHOD IMPLEMENTATIONS =====
