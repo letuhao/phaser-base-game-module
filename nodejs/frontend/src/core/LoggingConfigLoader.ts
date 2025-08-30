@@ -1,18 +1,104 @@
 import { logger } from './Logger'
-import { LoggerConfig } from '../types/logging/LoggerTypes'
-import { LEVIS2025R3_LOGGING_CONFIG } from '../runtime/scene/levis2025R3.logging.config'
+
+// Generic LoggerConfig interface that any scene can implement
+export interface LoggerConfig {
+  id: string
+  name: string
+  version: string
+  isActive: boolean
+  lastModified: Date
+  metadata: Record<string, any>
+  globalLevel: any // Generic type to avoid conflicts
+  objects: Array<{
+    name: string
+    level: any
+    enabled: boolean
+    includePerformance: boolean
+    includeStackTrace: boolean
+  }>
+  server: {
+    enabled: boolean
+    endpoint: string
+    apiKey?: string
+    batchSize: number
+    retryAttempts: number
+    retryDelay: number
+    timeout: number
+    sendErrorsImmediately: boolean
+    sendGameEventsImmediately: boolean
+    includePerformanceData: boolean
+    includeUserAgent: boolean
+    includeSessionData: boolean
+  }
+  console: {
+    enabled: boolean
+    colors: boolean
+    showData: boolean
+    showStackTrace: boolean
+    maxDataDepth: number
+  }
+  formatOptions: {
+    showTimestamp: boolean
+    showLogLevel: boolean
+    showObjectName: boolean
+    useJsonStringify: boolean
+    maxMessageLength: number
+  }
+  performance: {
+    enabled: boolean
+    fpsThreshold: number
+    memoryThreshold: number
+    networkMonitoring: boolean
+    customMetrics: string[]
+  }
+  buffering: {
+    enabled: boolean
+    maxBufferSize: number
+    flushInterval: number
+    persistOnUnload: boolean
+  }
+  errorTracking: {
+    enabled: boolean
+    includeStackTrace: boolean
+    trackUnhandledErrors: boolean
+    trackPromiseRejections: boolean
+    maxErrorHistory: number
+  }
+  session: {
+    enabled: boolean
+    generateSessionId: boolean
+    includeUserInfo: boolean
+    trackPageViews: boolean
+  }
+  validate(): string[]
+  clone(overrides?: Partial<LoggerConfig>): LoggerConfig
+  toJSON(): string
+  fromJSON(json: string): LoggerConfig
+  isValid(): boolean
+  getSummary(): {
+    id: string
+    name: string
+    version: string
+    isActive: boolean
+    lastModified: Date
+    isValid: boolean
+    validationErrors: string[]
+    metadataKeys: string[]
+  }
+}
 
 /**
  * Logging configuration loader for scenes
  * Loads and applies scene-specific logging configurations
  * Common utility that can be used by all scenes
+ * Follows SOLID principles - no direct dependencies on specific scene configs
  */
 export class LoggingConfigLoader {
   private static instance: LoggingConfigLoader
   private loadedConfigs: Map<string, LoggerConfig> = new Map()
   
   private constructor() {
-    this.initializeDefaultConfigs()
+    // No default configs - scenes must register their own configs
   }
   
   /**
@@ -23,17 +109,6 @@ export class LoggingConfigLoader {
       LoggingConfigLoader.instance = new LoggingConfigLoader()
     }
     return LoggingConfigLoader.instance
-  }
-  
-  /**
-   * Initialize default configurations
-   */
-  private initializeDefaultConfigs(): void {
-    // Register default scene configurations
-    this.registerConfig('levis2025R3', LEVIS2025R3_LOGGING_CONFIG)
-    
-    // You can add more scene configs here
-    // this.registerConfig('otherScene', OTHER_SCENE_CONFIG)
   }
   
   /**

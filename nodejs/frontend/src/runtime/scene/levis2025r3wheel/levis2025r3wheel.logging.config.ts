@@ -1,5 +1,97 @@
-import { LogLevel } from '../../types/logging/LoggerTypes'
-import { LoggerConfig } from '../../types/logging/LoggerTypes'
+// Define LogLevel enum locally since the import path doesn't exist
+export enum LogLevel {
+  ERROR = 'error',
+  WARN = 'warn',
+  INFO = 'info',
+  DEBUG = 'debug'
+}
+
+// Define LoggerConfig interface locally since the import path doesn't exist
+export interface LoggerConfig {
+  id: string
+  name: string
+  version: string
+  isActive: boolean
+  lastModified: Date
+  metadata: Record<string, any>
+  globalLevel: LogLevel
+  objects: Array<{
+    name: string
+    level: LogLevel
+    enabled: boolean
+    includePerformance: boolean
+    includeStackTrace: boolean
+  }>
+  server: {
+    enabled: boolean
+    endpoint: string
+    apiKey?: string
+    batchSize: number
+    retryAttempts: number
+    retryDelay: number
+    timeout: number
+    sendErrorsImmediately: boolean
+    sendGameEventsImmediately: boolean
+    includePerformanceData: boolean
+    includeUserAgent: boolean
+    includeSessionData: boolean
+  }
+  console: {
+    enabled: boolean
+    colors: boolean
+    showData: boolean
+    showStackTrace: boolean
+    maxDataDepth: number
+  }
+  formatOptions: {
+    showTimestamp: boolean
+    showLogLevel: boolean
+    showObjectName: boolean
+    useJsonStringify: boolean
+    maxMessageLength: number
+  }
+  performance: {
+    enabled: boolean
+    fpsThreshold: number
+    memoryThreshold: number
+    networkMonitoring: boolean
+    customMetrics: string[]
+  }
+  buffering: {
+    enabled: boolean
+    maxBufferSize: number
+    flushInterval: number
+    persistOnUnload: boolean
+  }
+  errorTracking: {
+    enabled: boolean
+    includeStackTrace: boolean
+    trackUnhandledErrors: boolean
+    trackPromiseRejections: boolean
+    maxErrorHistory: number
+  }
+  session: {
+    enabled: boolean
+    generateSessionId: boolean
+    includeUserInfo: boolean
+    trackPageViews: boolean
+  }
+  validate(): string[]
+  clone(overrides?: Partial<LoggerConfig>): LoggerConfig
+  toJSON(): string
+  fromJSON(json: string): LoggerConfig
+  isValid(): boolean
+  getSummary(): {
+    id: string
+    name: string
+    version: string
+    isActive: boolean
+    lastModified: Date
+    isValid: boolean
+    validationErrors: string[]
+    metadataKeys: string[]
+  }
+}
 
 /**
  * Logging configuration for Levis2025R3 scene
@@ -157,5 +249,5 @@ const createLevis2025R3LoggingConfig = (): LoggerConfig => {
   return config
 }
 
-export const LEVIS2025R3_LOGGING_CONFIG = createLevis2025R3LoggingConfig()
-export default LEVIS2025R3_LOGGING_CONFIG
+export const levis2025r3wheelLoggingConfig = createLevis2025R3LoggingConfig()
+export default levis2025r3wheelLoggingConfig

@@ -15,11 +15,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
   "include": ["src", "index.html"],
+  "exclude": ["src/abstract/configs/example-configs.ts", "src/abstract/configs/scene-loader-examples.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

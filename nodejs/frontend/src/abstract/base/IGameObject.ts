@@ -1,12 +1,18 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
+import type { IContainer } from '../objects/IContainer'
 
 /**
  * Base interface for all game objects in the Phaser game
  * Provides common properties and methods that all game objects should implement
+ * 
+ * Inspired by XML node structure where objects can have parent-child relationships
  */
 export interface IGameObject {
   /** Unique identifier for this game object */
   readonly id: string
+  
+  /** Parent container (null if root node) */
+  readonly parent: IContainer | null
   
   /** The underlying Phaser game object */
   readonly phaserObject: Phaser.GameObjects.GameObject
@@ -61,9 +67,6 @@ export interface IGameObject {
   
   /** Set the position of the game object */
   setPosition(x: number, y: number): void
-  
-  /** Set the scale of the game object */
-  setScale(x: number, y?: number): void
   
   /** Set the rotation of the game object */
   setRotation(rotation: number): void
