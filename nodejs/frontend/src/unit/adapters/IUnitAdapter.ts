@@ -1,17 +1,18 @@
 import type { IUnit } from '../interfaces/IUnit';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { ILegacyUnit } from '../interfaces/ILegacyUnit';
 import { UnitType } from '../enums/UnitType';
 
 /**
  * Unit Adapter Interface
  * Allows legacy unit types to work with the new unit system
  */
-export interface IUnitAdapter<T = any> extends IUnit {
+export interface IUnitAdapter<T = ILegacyUnit> extends IUnit {
   /** Get the adapted legacy unit */
   getAdaptedUnit(): T;
 
   /** Check if the adapter can handle the legacy unit type */
-  canAdapt(legacyUnit: any): boolean;
+  canAdapt(legacyUnit: ILegacyUnit): boolean;
 
   /** Get the legacy unit type name */
   getLegacyTypeName(): string;
@@ -23,14 +24,14 @@ export interface IUnitAdapter<T = any> extends IUnit {
   isBidirectional(): boolean;
 
   /** Convert back to legacy format if possible */
-  toLegacyFormat(): any;
+  toLegacyFormat(): ILegacyUnit;
 }
 
 /**
  * Base Unit Adapter Implementation
  * Provides common functionality for unit adapters
  */
-export abstract class BaseUnitAdapter<T = any> implements IUnitAdapter<T> {
+export abstract class BaseUnitAdapter<T = ILegacyUnit> implements IUnitAdapter<T> {
   protected readonly conversionFactor: number = 1;
   protected readonly bidirectional: boolean = false;
 
@@ -68,7 +69,7 @@ export abstract class BaseUnitAdapter<T = any> implements IUnitAdapter<T> {
     return this.adaptedUnit;
   }
 
-  canAdapt(legacyUnit: any): boolean {
+  canAdapt(legacyUnit: ILegacyUnit): boolean {
     return this.getLegacyTypeName() === legacyUnit?.constructor?.name;
   }
 
@@ -84,7 +85,7 @@ export abstract class BaseUnitAdapter<T = any> implements IUnitAdapter<T> {
     return this.bidirectional;
   }
 
-  toLegacyFormat(): any {
+  toLegacyFormat(): ILegacyUnit {
     if (!this.bidirectional) {
       throw new Error('This adapter does not support bidirectional conversion');
     }
@@ -94,7 +95,7 @@ export abstract class BaseUnitAdapter<T = any> implements IUnitAdapter<T> {
   /**
    * Abstract method for converting back to legacy format
    */
-  protected abstract convertToLegacyFormat(): any;
+  protected abstract convertToLegacyFormat(): ILegacyUnit;
 }
 
 /**
@@ -103,19 +104,19 @@ export abstract class BaseUnitAdapter<T = any> implements IUnitAdapter<T> {
  */
 export interface IUnitAdapterFactory {
   /** Create an adapter for a legacy unit */
-  createAdapter(legacyUnit: any): IUnitAdapter | undefined;
+  createAdapter(legacyUnit: ILegacyUnit): IUnitAdapter | undefined;
 
   /** Register a new adapter type */
-  registerAdapter(adapterType: string, adapterClass: new (...args: any[]) => IUnitAdapter): void;
+  registerAdapter(adapterType: string, adapterClass: new (...args: unknown[]) => IUnitAdapter): void;
 
   /** Get all registered adapter types */
   getRegisteredAdapterTypes(): string[];
 
   /** Check if an adapter exists for a legacy unit type */
-  hasAdapter(legacyUnit: any): boolean;
+  hasAdapter(legacyUnit: ILegacyUnit): boolean;
 
   /** Get the best adapter for a legacy unit */
-  getBestAdapter(legacyUnit: any): IUnitAdapter | undefined;
+  getBestAdapter(legacyUnit: ILegacyUnit): IUnitAdapter | undefined;
 }
 
 /**

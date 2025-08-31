@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { logger } from '../core/Logger';
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
+import type { IFactoryInput, IContainerFactoryInput } from './interfaces/IFactoryInput';
 import { Container } from '../object/container/Container';
 
 /**
@@ -19,10 +20,22 @@ export class ContainerFactory extends BaseGameObjectFactory {
    * Create a container game object from configuration
    * Now creates custom Container wrapper with injected configurations
    */
-  createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.Container | null {
+  createGameObject(input: IFactoryInput): Phaser.GameObjects.Container | null {
+    // Type guard to ensure we have a container factory input
+    if (input.type !== 'container') {
+      logger.error('ContainerFactory', 'createGameObject', 'Invalid input type for container factory', {
+        expectedType: 'container',
+        actualType: input.type,
+      });
+      return null;
+    }
+
+    const config = input.config;
+    const scene = input.scene;
+
     logger.debug('ContainerFactory', 'createGameObject', 'Creating container game object', {
       objectId: config.id,
-      objectType: config.type,
+      objectType: input.type,
       config: {
         x: config.x,
         y: config.y,
@@ -39,7 +52,7 @@ export class ContainerFactory extends BaseGameObjectFactory {
         config.id,
         config.x || 0,
         config.y || 0,
-        null // parent will be set later
+        input.parent || null // parent from input
       );
 
       logger.debug('ContainerFactory', 'createGameObject', 'Custom Container wrapper created', {
@@ -95,7 +108,7 @@ export class ContainerFactory extends BaseGameObjectFactory {
       }
 
       // Set common properties
-      this.setCommonProperties(container, config);
+      this.setCommonProperties(container, input);
 
       // Set container size
       if (config.width && config.width !== 'fill') {

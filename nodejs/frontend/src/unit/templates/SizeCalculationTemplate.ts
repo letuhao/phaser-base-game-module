@@ -1,5 +1,6 @@
 import type { IUnitCalculationTemplate } from './IUnitCalculationTemplate';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { ITemplateInput } from '../interfaces/ITemplateInput';
 import { SizeUnitStrategy } from '../strategies/SizeUnitStrategy';
 import { RangeValidator } from '../validators/RangeValidator';
 import { TypeValidator } from '../validators/TypeValidator';
@@ -27,7 +28,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Template method for size calculation
    * Defines the algorithm structure with customizable hooks
    */
-  public calculate(input: any): number {
+  public calculate(input: ITemplateInput): number {
     try {
       // Step 1: Pre-calculation validation
       if (!this.preCalculationValidation(input)) {
@@ -79,7 +80,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Pre-calculation validation
    * Hook method that can be overridden
    */
-  protected preCalculationValidation(input: any): boolean {
+  protected preCalculationValidation(input: ITemplateInput): boolean {
     // Run all validators
     for (const validator of this.validators) {
       if (!validator.validate(input, this.context)) {
@@ -98,7 +99,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Pre-calculation processing
    * Hook method that can be overridden
    */
-  protected preCalculationProcessing(input: any): any {
+  protected preCalculationProcessing(input: ITemplateInput): ITemplateInput {
     // Default implementation: return input as-is
     return input;
   }
@@ -107,7 +108,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Perform the actual calculation using strategy
    * Hook method that can be overridden
    */
-  protected performCalculation(input: any): number {
+  protected performCalculation(input: ITemplateInput): number {
     return this.strategy.calculate(input, this.context);
   }
 
@@ -133,7 +134,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Log calculation completion
    * Hook method that can be overridden
    */
-  protected logCalculationCompletion(input: any, result: number): void {
+  protected logCalculationCompletion(input: ITemplateInput, result: number): void {
     Logger.getInstance().debug(
       'SizeCalculationTemplate',
       'logCalculationCompletion',
@@ -150,16 +151,19 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Handle calculation errors
    * Hook method that can be overridden
    */
-  protected handleCalculationError(error: any, input: any): void {
+  protected handleCalculationError(error: unknown, input: ITemplateInput): void {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
     Logger.getInstance().error(
       'SizeCalculationTemplate',
       'handleCalculationError',
       'Calculation error',
       {
-        error: error.message,
+        error: errorMessage,
         input,
         context: this.context,
-        stack: error.stack,
+        stack: errorStack,
       }
     );
   }
@@ -257,9 +261,9 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
   /**
    * Check if the template can handle the input
    */
-  public canHandle(input: any): boolean {
+  public canHandle(input: ITemplateInput): boolean {
     return this.getSupportedInputs().some(
-      type => typeof input === type || input?.constructor?.name === type
+      type => input.type === type || input?.constructor?.name === type
     );
   }
 

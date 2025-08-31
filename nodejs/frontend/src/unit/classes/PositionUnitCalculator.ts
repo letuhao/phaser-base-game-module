@@ -382,4 +382,55 @@ export class PositionUnitCalculator implements IPositionUnit {
     }
     return this.offset;
   }
+
+  /**
+   * Get position information for debugging
+   */
+  getPositionInfo(): {
+    axis: Dimension.X | Dimension.Y | Dimension.XY;
+    alignment?: string;
+    offset: number;
+    isResponsive: boolean;
+  } {
+    return {
+      axis: this.axis,
+      alignment: this.alignment,
+      offset: this.offset,
+      isResponsive: this.isResponsive()
+    };
+  }
+
+  /**
+   * Check if position is within bounds
+   */
+  isWithinBounds(position: number, context: UnitContext): boolean {
+    if (this.axis === Dimension.X) {
+      const maxX = context.scene?.width ?? context.viewport?.width ?? 800;
+      return position >= 0 && position <= maxX;
+    }
+    if (this.axis === Dimension.Y) {
+      const maxY = context.scene?.height ?? context.viewport?.height ?? 600;
+      return position >= 0 && position <= maxY;
+    }
+    return true;
+  }
+
+  /**
+   * Get the range of possible positions for this unit
+   */
+  getPositionRange(context: UnitContext): { min: number; max: number } {
+    if (this.axis === Dimension.X) {
+      return {
+        min: 0,
+        max: context.scene?.width ?? context.viewport?.width ?? 800
+      };
+    }
+    if (this.axis === Dimension.Y) {
+      return {
+        min: 0,
+        max: context.scene?.height ?? context.viewport?.height ?? 600
+      };
+    }
+    return { min: 0, max: 0 };
+  }
 }

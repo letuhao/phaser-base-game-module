@@ -83,7 +83,7 @@ export class LoggingObserver implements IUnitObserver {
   /**
    * Log an event using the project's Logger system
    */
-  private log(level: string, event: string, data: any): void {
+  private log(level: string, event: string, data: Record<string, unknown>): void {
     // Check if we should log this level
     if (!this.shouldLog(level)) {
       return;
@@ -95,19 +95,19 @@ export class LoggingObserver implements IUnitObserver {
     try {
       switch (level) {
         case 'debug':
-          this.logger.debug(objectName, message, data, 'LoggingObserver');
+          this.logger.debug(objectName, 'LoggingObserver', message, data);
           break;
         case 'info':
-          this.logger.info(objectName, message, data, 'LoggingObserver');
+          this.logger.info(objectName, 'LoggingObserver', message, data);
           break;
         case 'warn':
-          this.logger.warn(objectName, message, data, 'LoggingObserver');
+          this.logger.warn(objectName, 'LoggingObserver', message, data);
           break;
         case 'error':
-          this.logger.error(objectName, message, data, 'LoggingObserver');
+          this.logger.error(objectName, 'LoggingObserver', message, data);
           break;
         default:
-          this.logger.info(objectName, message, data, 'LoggingObserver');
+          this.logger.info(objectName, 'LoggingObserver', message, data);
       }
     } catch (error) {
       // Fallback to logger if project logger fails

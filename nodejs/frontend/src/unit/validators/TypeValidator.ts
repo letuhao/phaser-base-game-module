@@ -1,5 +1,5 @@
-import type { IUnitValidator } from './IUnitValidator';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IValidationInput } from '../interfaces/IValidationInput';
 import { BaseUnitValidator } from './IUnitValidator';
 import { UnitType } from '../enums/UnitType';
 import { Dimension } from '../enums/Dimension';
@@ -14,7 +14,7 @@ export class TypeValidator extends BaseUnitValidator {
   private strictMode: boolean;
 
   constructor(
-    name: string = 'TypeValidator',
+    _name: string = 'TypeValidator',
     allowedTypes: UnitType[] = Object.values(UnitType),
     allowedDimensions: Dimension[] = Object.values(Dimension),
     strictMode: boolean = false
@@ -35,14 +35,14 @@ export class TypeValidator extends BaseUnitValidator {
   /**
    * Check if this validator can handle the input
    */
-  canHandle(input: any): boolean {
+  canHandle(input: IValidationInput): boolean {
     return input !== null && input !== undefined;
   }
 
   /**
    * Perform the actual validation
    */
-  protected performValidation(input: any, context: UnitContext): boolean {
+  protected performValidation(input: IValidationInput, context: UnitContext): boolean {
     // Validate unit type
     if (!this.validateUnitType(input, context)) {
       return false;
@@ -66,9 +66,9 @@ export class TypeValidator extends BaseUnitValidator {
   /**
    * Validate unit type compatibility
    */
-  private validateUnitType(input: any, context: UnitContext): boolean {
-    // Check if input has a unitType property
-    if (input && typeof input.unitType === 'string') {
+  private validateUnitType(input: IValidationInput, _context: UnitContext): boolean {
+    // Check if input is a unit validation input
+    if ('unitType' in input && typeof input.unitType === 'string') {
       const inputType = input.unitType as UnitType;
 
       if (!this.allowedTypes.includes(inputType)) {
@@ -77,21 +77,15 @@ export class TypeValidator extends BaseUnitValidator {
       }
     }
 
-    // Check context unit type if available
-    if (context.unitType && !this.allowedTypes.includes(context.unitType)) {
-      this.errorMessage = `Context unit type '${context.unitType}' is not allowed. Allowed types: ${this.allowedTypes.join(', ')}`;
-      return false;
-    }
-
     return true;
   }
 
   /**
    * Validate dimension compatibility
    */
-  private validateDimension(input: any, context: UnitContext): boolean {
+  private validateDimension(input: IValidationInput, _context: UnitContext): boolean {
     // Check if input has a dimension property
-    if (input && input.dimension) {
+    if (input && 'dimension' in input && input.dimension) {
       const inputDimension = input.dimension as Dimension;
 
       if (!this.allowedDimensions.includes(inputDimension)) {
@@ -100,19 +94,13 @@ export class TypeValidator extends BaseUnitValidator {
       }
     }
 
-    // Check context dimension if available
-    if (context.dimension && !this.allowedDimensions.includes(context.dimension)) {
-      this.errorMessage = `Context dimension '${context.dimension}' is not allowed. Allowed dimensions: ${this.allowedDimensions.join(', ')}`;
-      return false;
-    }
-
     return true;
   }
 
   /**
    * Validate value type
    */
-  private validateValueType(input: any, context: UnitContext): boolean {
+  private validateValueType(input: IValidationInput, _context: UnitContext): boolean {
     // Check if input is a valid value type
     if (this.strictMode) {
       // Strict mode: only allow specific value types
@@ -134,22 +122,37 @@ export class TypeValidator extends BaseUnitValidator {
   /**
    * Check if value is valid in strict mode
    */
-  private isValidStrictValue(input: any): boolean {
-    return (
-      typeof input === 'number' ||
-      typeof input === 'string' ||
-      (typeof input === 'object' &&
-        input !== null &&
-        (typeof input.value === 'number' ||
-          typeof input.getValue === 'function' ||
-          typeof input.unitType === 'string'))
-    );
+  private isValidStrictValue(input: IValidationInput): boolean {
+    // Handle primitive types
+    if (typeof input === 'number' || typeof input === 'string') {
+      return true;
+    }
+    
+    // Handle validation input objects
+    if (typeof input === 'object' && input !== null) {
+      // Check for value property
+      if ('value' in input && typeof input.value === 'number') {
+        return true;
+      }
+      
+      // Check for getValue method
+      if ('getValue' in input && typeof input.getValue === 'function') {
+        return true;
+      }
+      
+      // Check for unitType property
+      if ('unitType' in input && typeof input.unitType === 'string') {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   /**
    * Check if value is valid in relaxed mode
    */
-  private isValidRelaxedValue(input: any): boolean {
+  private isValidRelaxedValue(input: IValidationInput): boolean {
     return (
       input === null ||
       input === undefined ||

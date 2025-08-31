@@ -1,5 +1,5 @@
-import type { IUnitCommand } from './IUnitCommand';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { BaseUnitCommand } from './IUnitCommand';
 import { SizeUnitStrategy } from '../strategies/SizeUnitStrategy';
 
@@ -8,11 +8,11 @@ import { SizeUnitStrategy } from '../strategies/SizeUnitStrategy';
  * Implements the Command pattern for size calculations
  */
 export class CalculateSizeCommand extends BaseUnitCommand {
-  private readonly input: any;
+  private readonly input: IStrategyInput;
   private readonly context: UnitContext;
   private readonly strategy: SizeUnitStrategy;
 
-  constructor(input: any, context: UnitContext) {
+  constructor(input: IStrategyInput, context: UnitContext) {
     super(`calculate-size-${Date.now()}`);
     this.input = input;
     this.context = context;
@@ -56,7 +56,7 @@ export class CalculateSizeCommand extends BaseUnitCommand {
   /**
    * Get input data
    */
-  getInput(): any {
+  getInput(): IStrategyInput {
     return this.input;
   }
 

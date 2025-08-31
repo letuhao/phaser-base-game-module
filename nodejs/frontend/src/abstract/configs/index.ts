@@ -21,7 +21,6 @@ export * from './ISceneLoaderConfig';
 // Unit System Integration
 // Export the comprehensive unit system for use in configurations
 export * from '../../unit';
-export * from './IUnitConfig';
 
 // Examples and utilities
 export * from './scene-loader-examples';

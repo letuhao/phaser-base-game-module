@@ -269,4 +269,39 @@ export class SizeUnitCalculator implements ISizeUnit {
     }
     return value;
   }
+
+
+
+  /**
+   * Get the aspect ratio if maintaining aspect ratio
+   */
+  getAspectRatio(): number | undefined {
+    if (!this.maintainAspectRatio) return undefined;
+    
+    // If we have both width and height constraints, calculate aspect ratio
+    if (this.minSize !== undefined && this.maxSize !== undefined) {
+      return this.maxSize / this.minSize;
+    }
+    
+    return undefined;
+  }
+
+  /**
+   * Check if the unit has size constraints
+   */
+  hasConstraints(): boolean {
+    return this.minSize !== undefined || this.maxSize !== undefined;
+  }
+
+  /**
+   * Get constraint information
+   */
+  getConstraintInfo(): { min?: number; max?: number; hasConstraints: boolean } {
+    return {
+      min: this.minSize,
+      max: this.maxSize,
+      hasConstraints: this.hasConstraints()
+    };
+  }
+
 }

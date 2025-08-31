@@ -8,6 +8,7 @@ export * from './enums/AxisUnit';
 export * from './enums/SizeValue';
 export * from './enums/PositionValue';
 export * from './enums/ScaleValue';
+export * from './enums/TemplateInputType';
 
 // Core interfaces
 export * from './interfaces/IUnit';
@@ -15,6 +16,11 @@ export * from './interfaces/ISizeUnit';
 export * from './interfaces/IPositionUnit';
 export * from './interfaces/IScaleUnit';
 export * from './interfaces/IRandomValue';
+export * from './interfaces/ITemplateInput';
+export * from './interfaces/IUnitConfig';
+export * from './interfaces/IValidationInput';
+export * from './interfaces/ILegacyUnit';
+export * from './interfaces/IStrategyInput';
 
 // Core calculator classes
 export * from './classes/SizeUnitCalculator';

@@ -1,8 +1,8 @@
 import type { IUnitStrategy } from './IUnitStrategy';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { ScaleValue } from '../enums/ScaleValue';
 import { ScaleUnit } from '../enums/ScaleUnit';
-import { Dimension } from '../enums/Dimension';
 import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
 
 /**
@@ -26,7 +26,7 @@ export class ScaleUnitStrategy implements IUnitStrategy {
   /**
    * Calculate scale value using the appropriate strategy
    */
-  calculate(input: any, context: UnitContext): number {
+  calculate(input: IStrategyInput, context: UnitContext): number {
     // Handle direct numbers
     if (typeof input === 'number') {
       return input;
@@ -64,7 +64,7 @@ export class ScaleUnitStrategy implements IUnitStrategy {
   /**
    * Check if this strategy can handle the input
    */
-  canHandle(input: any): boolean {
+  canHandle(input: IStrategyInput): boolean {
     return (
       typeof input === 'number' ||
       typeof input === 'string' ||
@@ -158,9 +158,15 @@ export class ScaleUnitStrategy implements IUnitStrategy {
   /**
    * Calculate scale from parent scale classes
    */
-  private calculateParentScale(input: any, context: UnitContext): number {
-    if (context.parent && typeof input.getValue === 'function') {
-      return input.getValue(context.parent);
+  private calculateParentScale(input: unknown, context: UnitContext): number {
+    if (
+      context.parent && 
+      typeof input === 'object' && 
+      input !== null && 
+      'getValue' in input && 
+      typeof (input as { getValue(parent: unknown): number }).getValue === 'function'
+    ) {
+      return (input as { getValue(parent: unknown): number }).getValue(context.parent);
     }
     return 1;
   }
@@ -215,19 +221,52 @@ export class ScaleUnitStrategy implements IUnitStrategy {
   /**
    * Type guards
    */
-  private isScaleValue(input: any): input is ScaleValue {
-    return Object.values(ScaleValue).includes(input);
+  private isScaleValue(input: unknown): input is ScaleValue {
+    return Object.values(ScaleValue).includes(input as ScaleValue);
   }
 
-  private isScaleUnit(input: any): input is ScaleUnit {
-    return Object.values(ScaleUnit).includes(input);
+  private isScaleUnit(input: unknown): input is ScaleUnit {
+    return Object.values(ScaleUnit).includes(input as ScaleUnit);
   }
 
-  private isRandomValue(input: any): input is { getRandomValue(): number } {
-    return input && typeof input.getRandomValue === 'function';
+  private isRandomValue(input: unknown): input is { getRandomValue(): number } {
+    return input !== null && input !== undefined && typeof (input as { getRandomValue(): number }).getRandomValue === 'function';
   }
 
-  private isParentScale(input: any): input is { getValue(parent: any): number } {
-    return input && typeof input.getValue === 'function';
+  private isParentScale(input: unknown): input is { getValue(parent: unknown): number } {
+    return input !== null && input !== undefined && typeof (input as { getValue(parent: unknown): number }).getValue === 'function';
+  }
+
+
+
+
+
+
+
+  /**
+   * Get scale strategy information
+   */
+  getStrategyInfo(): {
+    unitType: string;
+    priority: number;
+    supportedInputs: string[];
+    capabilities: string[];
+  } {
+    return {
+      unitType: this.unitType,
+      priority: this.getPriority(),
+      supportedInputs: ['number', 'string', 'ScaleValue', 'ScaleUnit', 'array', 'object'],
+      capabilities: [
+        'direct numeric values',
+        'string keywords',
+        'enum values',
+        'array expressions',
+        'configuration objects',
+        'CSS-like strings',
+        'parent-relative scaling',
+        'aspect ratio preservation',
+        'constraint-based scaling'
+      ]
+    };
   }
 }

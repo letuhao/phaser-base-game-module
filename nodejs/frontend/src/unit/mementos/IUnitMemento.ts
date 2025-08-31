@@ -4,7 +4,7 @@
  */
 export interface IUnitMemento {
   /** Get the saved state */
-  getState(): any;
+  getState(): unknown;
 
   /** Get the timestamp when the memento was created */
   getTimestamp(): Date;
@@ -35,7 +35,7 @@ export interface IUnitMemento {
  * Concrete implementation of the memento pattern
  */
 export class UnitMemento implements IUnitMemento {
-  private readonly state: any;
+  private readonly state: unknown;
   private readonly timestamp: Date;
   private readonly unitId: string;
   private readonly version: string;
@@ -47,7 +47,7 @@ export class UnitMemento implements IUnitMemento {
   };
 
   constructor(
-    state: any,
+    state: unknown,
     unitId: string,
     unitType: string,
     description: string = '',
@@ -68,7 +68,7 @@ export class UnitMemento implements IUnitMemento {
     };
   }
 
-  getState(): any {
+  getState(): unknown {
     return this.state;
   }
 
@@ -143,5 +143,23 @@ export interface IUnitMementoCaretaker {
     unitsWithMementos: number;
     oldestMemento: Date | undefined;
     newestMemento: Date | undefined;
+  };
+
+  /** Undo last operation for a unit */
+  undo(unitId: string): IUnitMemento | undefined;
+
+  /** Redo last undone operation for a unit */
+  redo(unitId: string): IUnitMemento | undefined;
+
+  /** Check if undo is available for a unit */
+  canUndo(unitId: string): boolean;
+
+  /** Check if redo is available for a unit */
+  canRedo(unitId: string): boolean;
+
+  /** Get undo/redo history for a unit */
+  getHistory(unitId: string): {
+    undo: IUnitMemento[];
+    redo: IUnitMemento[];
   };
 }

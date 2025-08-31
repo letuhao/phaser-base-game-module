@@ -1,6 +1,13 @@
-import type { IUnitValidator } from './IUnitValidator';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IValidationInput } from '../interfaces/IValidationInput';
 import { BaseUnitValidator } from './IUnitValidator';
+import { 
+  isValueValidationInput, 
+  isSizeValidationInput, 
+  isPositionValidationInput, 
+  isScaleValidationInput,
+  isLegacyValidationInput 
+} from '../interfaces/IValidationInput';
 
 /**
  * Range Validator
@@ -12,7 +19,7 @@ export class RangeValidator extends BaseUnitValidator {
   private inclusive: boolean;
 
   constructor(
-    name: string = 'RangeValidator',
+    _name: string = 'RangeValidator',
     minValue: number = -Infinity,
     maxValue: number = Infinity,
     inclusive: boolean = true
@@ -33,17 +40,33 @@ export class RangeValidator extends BaseUnitValidator {
   /**
    * Check if this validator can handle the input
    */
-  canHandle(input: any): boolean {
-    return (
-      typeof input === 'number' ||
-      (typeof input === 'object' && input !== null && typeof input.value === 'number')
-    );
+  canHandle(input: IValidationInput): boolean {
+    // Handle numeric inputs directly
+    if (typeof input === 'number') {
+      return true;
+    }
+    
+    // Handle validation inputs with value properties
+    if (isValueValidationInput(input) || isSizeValidationInput(input) || 
+        isPositionValidationInput(input) || isScaleValidationInput(input)) {
+      return true;
+    }
+    
+    // Handle legacy inputs that might have a value property
+    if (isLegacyValidationInput(input)) {
+      const legacyInput = input.input;
+      if (legacyInput && typeof legacyInput === 'object' && 'value' in legacyInput) {
+        return typeof (legacyInput as { value: unknown }).value === 'number';
+      }
+    }
+    
+    return false;
   }
 
   /**
    * Perform the actual validation
    */
-  protected performValidation(input: any, context: UnitContext): boolean {
+  protected performValidation(input: IValidationInput, _context: UnitContext): boolean {
     const value = this.extractValue(input);
 
     if (this.inclusive) {
@@ -66,18 +89,35 @@ export class RangeValidator extends BaseUnitValidator {
   /**
    * Extract numeric value from input
    */
-  private extractValue(input: any): number {
+  private extractValue(input: IValidationInput): number {
+    // Handle numeric inputs directly
     if (typeof input === 'number') {
       return input;
     }
 
-    if (typeof input === 'object' && input !== null) {
-      if (typeof input.value === 'number') {
-        return input.value;
-      }
+    // Handle validation inputs with value properties
+    if (isValueValidationInput(input)) {
+      return input.value;
+    }
 
-      if (typeof input.getValue === 'function') {
-        return input.getValue();
+    if (isSizeValidationInput(input)) {
+      return typeof input.value === 'number' ? input.value : 0;
+    }
+
+    if (isPositionValidationInput(input)) {
+      return typeof input.value === 'number' ? input.value : 0;
+    }
+
+    if (isScaleValidationInput(input)) {
+      return typeof input.value === 'number' ? input.value : 0;
+    }
+
+    // Handle legacy inputs
+    if (isLegacyValidationInput(input)) {
+      const legacyInput = input.input;
+      if (legacyInput && typeof legacyInput === 'object' && 'value' in legacyInput) {
+        const value = (legacyInput as { value: unknown }).value;
+        return typeof value === 'number' ? value : 0;
       }
     }
 

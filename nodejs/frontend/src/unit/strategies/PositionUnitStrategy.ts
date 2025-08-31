@@ -1,9 +1,11 @@
 import type { IUnitStrategy } from './IUnitStrategy';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IStrategyInput, IPositionStrategyInput } from '../interfaces/IStrategyInput';
 import { PositionValue } from '../enums/PositionValue';
 import { PositionUnit } from '../enums/PositionUnit';
 import { Dimension } from '../enums/Dimension';
 import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
+import { convertToStrategyInput } from '../interfaces/IStrategyInput';
 
 /**
  * Position Unit Strategy
@@ -13,47 +15,61 @@ export class PositionUnitStrategy implements IUnitStrategy {
   readonly unitType = 'position';
   private readonly factory = UnitCalculatorFactory.getInstance();
 
-  // String position mappings using enums
-  private readonly STRING_POSITION_MAP = {
-    [PositionValue.CENTER]: PositionValue.CENTER,
-    [PositionValue.LEFT]: PositionValue.LEFT,
-    [PositionValue.RIGHT]: PositionValue.RIGHT,
-    [PositionValue.TOP]: PositionValue.TOP,
-    [PositionValue.BOTTOM]: PositionValue.BOTTOM,
-  } as const;
+
 
   /**
    * Calculate position value using the appropriate strategy
    */
-  calculate(input: any, context: UnitContext): number {
-    // Handle direct numbers
-    if (typeof input === 'number') {
-      return input;
-    }
+  calculate(input: IStrategyInput, context: UnitContext): number {
+    // Convert legacy input to strategy input format
+    const strategyInput = convertToStrategyInput(input);
+    
+    // Handle position strategy input specifically
+    if ('value' in strategyInput && strategyInput.value !== undefined) {
+      // Handle direct numbers
+      if (typeof strategyInput.value === 'number') {
+        return strategyInput.value;
+      }
 
-    // Handle string keywords
-    if (typeof input === 'string') {
-      return this.calculateStringPosition(input, context);
-    }
+      // Handle string keywords
+      if (typeof strategyInput.value === 'string') {
+        return this.calculateStringPosition(strategyInput.value, context);
+      }
 
-    // Handle PositionValue enum
-    if (this.isPositionValue(input)) {
-      return this.calculatePositionValue(input, context);
-    }
+      // Handle PositionValue enum
+      if (this.isPositionValue(strategyInput.value)) {
+        return this.calculatePositionValue(strategyInput.value, context);
+      }
 
-    // Handle PositionUnit enum
-    if (this.isPositionUnit(input)) {
-      return this.calculatePositionUnit(input, context);
+      // Handle PositionUnit enum
+      if (this.isPositionUnit(strategyInput.value)) {
+        return this.calculatePositionUnit(strategyInput.value, context);
+      }
     }
 
     // Handle random values
-    if (this.isRandomValue(input)) {
-      return input.getRandomValue();
+    if ('randomValue' in strategyInput && strategyInput.randomValue) {
+      return strategyInput.randomValue.getRandomValue();
     }
 
     // Handle legacy ParentPositionX/ParentPositionY
-    if (this.isParentPosition(input)) {
-      return this.calculateParentPosition(input, context);
+    if ('parentPosition' in strategyInput && strategyInput.parentPosition) {
+      return this.calculateParentPosition(strategyInput as IPositionStrategyInput, context);
+    }
+
+    // Handle position arrays
+    if ('positionArray' in strategyInput && strategyInput.positionArray) {
+      return this.calculatePositionArray(strategyInput.positionArray, context);
+    }
+
+    // Handle position objects
+    if ('positionObject' in strategyInput && strategyInput.positionObject) {
+      return this.calculatePositionObject(strategyInput.positionObject, context);
+    }
+
+    // Handle position strings
+    if ('positionString' in strategyInput && strategyInput.positionString) {
+      return this.calculateStringPosition(strategyInput.positionString, context);
     }
 
     // Default fallback
@@ -63,14 +79,17 @@ export class PositionUnitStrategy implements IUnitStrategy {
   /**
    * Check if this strategy can handle the input
    */
-  canHandle(input: any): boolean {
+  canHandle(input: IStrategyInput): boolean {
+    // Convert legacy input to strategy input format
+    const strategyInput = convertToStrategyInput(input);
+    
     return (
-      typeof input === 'number' ||
-      typeof input === 'string' ||
-      this.isPositionValue(input) ||
-      this.isPositionUnit(input) ||
-      this.isRandomValue(input) ||
-      this.isParentPosition(input)
+      ('value' in strategyInput && strategyInput.value !== undefined) ||
+      ('randomValue' in strategyInput && strategyInput.randomValue !== undefined) ||
+      ('parentPosition' in strategyInput && strategyInput.parentPosition !== undefined) ||
+      ('positionArray' in strategyInput && strategyInput.positionArray !== undefined) ||
+      ('positionObject' in strategyInput && strategyInput.positionObject !== undefined) ||
+      ('positionString' in strategyInput && strategyInput.positionString !== undefined)
     );
   }
 
@@ -153,9 +172,9 @@ export class PositionUnitStrategy implements IUnitStrategy {
   /**
    * Calculate position from parent position classes
    */
-  private calculateParentPosition(input: any, context: UnitContext): number {
-    if (context.parent && typeof input.getValue === 'function') {
-      return input.getValue(context.parent);
+  private calculateParentPosition(input: IPositionStrategyInput, context: UnitContext): number {
+    if (context.parent && input.parentPosition && typeof input.parentPosition.getValue === 'function') {
+      return input.parentPosition.getValue(context.parent);
     }
     return 0;
   }
@@ -173,7 +192,7 @@ export class PositionUnitStrategy implements IUnitStrategy {
     return 0;
   }
 
-  private calculateLeftPosition(context: UnitContext): number {
+  private calculateLeftPosition(_context: UnitContext): number {
     return 0;
   }
 
@@ -181,12 +200,12 @@ export class PositionUnitStrategy implements IUnitStrategy {
     return context.scene?.width ?? context.viewport?.width ?? 800;
   }
 
-  private calculateTopPosition(context: UnitContext): number {
+  private calculateTopPosition(_context: UnitContext): number {
     return 0;
   }
 
-  private calculateBottomPosition(context: UnitContext): number {
-    return context.scene?.height ?? context.viewport?.height ?? 600;
+  private calculateBottomPosition(_context: UnitContext): number {
+    return _context.scene?.height ?? _context.viewport?.height ?? 600;
   }
 
   /**
@@ -207,25 +226,134 @@ export class PositionUnitStrategy implements IUnitStrategy {
    * Get dimension from context or default to X
    */
   private getDimensionFromContext(context: UnitContext): Dimension.X | Dimension.Y | Dimension.XY {
-    return context.dimension || Dimension.X;
+    // Check if context has a valid dimension property
+    if (context.dimension && 
+        (context.dimension === Dimension.X || 
+         context.dimension === Dimension.Y || 
+         context.dimension === Dimension.XY)) {
+      return context.dimension;
+    }
+    return Dimension.X;
   }
 
   /**
    * Type guards
    */
-  private isPositionValue(input: any): input is PositionValue {
-    return Object.values(PositionValue).includes(input);
+  private isPositionValue(input: unknown): input is PositionValue {
+    return Object.values(PositionValue).includes(input as PositionValue);
   }
 
-  private isPositionUnit(input: any): input is PositionUnit {
-    return Object.values(PositionUnit).includes(input);
+  private isPositionUnit(input: unknown): input is PositionUnit {
+    return Object.values(PositionUnit).includes(input as PositionUnit);
   }
 
-  private isRandomValue(input: any): input is { getRandomValue(): number } {
-    return input && typeof input.getRandomValue === 'function';
+
+
+  /**
+   * Calculate position from array input
+   */
+  private calculatePositionArray(input: unknown[], context: UnitContext): number {
+    if (input.length === 0) return 0;
+    
+    // Handle pattern: ['position', 'center', 10] (position type, alignment, offset)
+    if (input.length === 3 && input[0] === 'position') {
+      const alignment = input[1];
+      const offset = input[2];
+      const basePosition = this.calculate(alignment as IStrategyInput, context);
+      return basePosition + (typeof offset === 'number' ? offset : 0);
+    }
+    
+    // Handle pattern: ['center', 10] (alignment, offset)
+    if (input.length === 2 && typeof input[1] === 'number') {
+      const alignment = input[0];
+      const offset = input[1];
+      const basePosition = this.calculate(alignment as IStrategyInput, context);
+      return basePosition + offset;
+    }
+    
+    // Default: calculate average of all values
+    const results = input.map(item => this.calculate(item as IStrategyInput, context));
+    return results.reduce((sum, val) => sum + val, 0) / results.length;
   }
 
-  private isParentPosition(input: any): input is { getValue(parent: any): number } {
-    return input && typeof input.getValue === 'function';
+  /**
+   * Calculate position from object input
+   */
+  private calculatePositionObject(input: unknown, context: UnitContext): number {
+    // Handle configuration objects
+    if (
+      typeof input === 'object' && 
+      input !== null && 
+      'positionUnit' in input && 
+      'baseValue' in input
+    ) {
+      const config = input as {
+        positionUnit: unknown;
+        baseValue: unknown;
+        id?: unknown;
+        name?: unknown;
+        axis?: unknown;
+        alignment?: unknown;
+        offset?: unknown;
+      };
+      
+      if (config.positionUnit && config.baseValue) {
+        const calculator = this.factory.createPositionUnit(
+          (config.id as string) || 'dynamic',
+          (config.name as string) || 'dynamic-position',
+          config.positionUnit as PositionUnit,
+          this.getDimensionFromContext(context),
+          config.baseValue as number
+        );
+        
+        if (config.alignment) calculator.setAlignment(config.alignment as string);
+        if (config.offset !== undefined) calculator.setOffset(config.offset as number);
+        
+        return calculator.calculate(context);
+      }
+    }
+    
+    // Handle CSS-like objects
+    if (
+      typeof input === 'object' && 
+      input !== null && 
+      'value' in input
+    ) {
+      const cssInput = input as { value: unknown };
+      if (cssInput.value !== undefined) {
+        return this.calculate(cssInput.value as IStrategyInput, context);
+      }
+    }
+    
+    // Default fallback
+    return 0;
+  }
+
+
+
+  /**
+   * Get position strategy information
+   */
+  getStrategyInfo(): {
+    unitType: string;
+    priority: number;
+    supportedInputs: string[];
+    capabilities: string[];
+  } {
+    return {
+      unitType: this.unitType,
+      priority: this.getPriority(),
+      supportedInputs: ['number', 'string', 'PositionValue', 'PositionUnit', 'array', 'object'],
+      capabilities: [
+        'direct numeric values',
+        'string keywords',
+        'enum values',
+        'array expressions',
+        'configuration objects',
+        'CSS-like strings',
+        'parent-relative positioning',
+        'alignment with offsets'
+      ]
+    };
   }
 }

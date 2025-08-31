@@ -1,5 +1,4 @@
 import type { IUnitObserver } from './IUnitObserver';
-import type { UnitContext } from '../interfaces/IUnit';
 import { Logger } from '../../core/Logger';
 
 /**
@@ -35,7 +34,7 @@ export class PerformanceObserver implements IUnitObserver {
    */
   onUnitValueChanged(unitId: string, oldValue: number, newValue: number): void {
     // Performance monitoring for value changes
-    const changeTime = performance.now();
+    //const _changeTime = performance.now();
 
     // Update general metrics
     this.performanceMetrics.totalCalculations++;
@@ -62,7 +61,7 @@ export class PerformanceObserver implements IUnitObserver {
   /**
    * Called when a unit is created
    */
-  onUnitCreated(unitId: string, unitType: string): void {
+  onUnitCreated(_unitId: string, unitType: string): void {
     // Initialize performance tracking for new unit type
     if (!this.performanceMetrics.unitTypeStats.has(unitType)) {
       this.performanceMetrics.unitTypeStats.set(unitType, {
@@ -81,10 +80,10 @@ export class PerformanceObserver implements IUnitObserver {
   /**
    * Called when a unit is destroyed
    */
-  onUnitDestroyed(unitId: string): void {
+  onUnitDestroyed(_unitId: string): void {
     // Clean up performance data if needed
     // For now, just log the destruction
-    this.logger.debug('PerformanceObserver', 'onUnitDestroyed', `Unit destroyed: ${unitId}`);
+    this.logger.debug('PerformanceObserver', 'onUnitDestroyed', `Unit destroyed: ${_unitId}`);
   }
 
   /**
@@ -104,7 +103,7 @@ export class PerformanceObserver implements IUnitObserver {
   /**
    * Called when unit calculation completes
    */
-  onUnitCalculationCompleted(unitId: string, result: number, duration: number): void {
+  onUnitCalculationCompleted(unitId: string, _result: number, duration: number): void {
     // Update performance metrics
     this.updatePerformanceMetrics(duration);
 

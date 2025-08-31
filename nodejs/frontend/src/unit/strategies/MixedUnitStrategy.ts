@@ -1,8 +1,7 @@
 import type { IUnitStrategy } from './IUnitStrategy';
 import type { UnitContext } from '../interfaces/IUnit';
-import { UnitType } from '../enums/UnitType';
+import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { Dimension } from '../enums/Dimension';
-import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
 import { Logger } from '../../core/Logger';
 
 /**
@@ -12,13 +11,12 @@ import { Logger } from '../../core/Logger';
  */
 export class MixedUnitStrategy implements IUnitStrategy {
   readonly unitType = 'mixed';
-  private readonly factory = UnitCalculatorFactory.getInstance();
   private readonly logger: Logger = Logger.getInstance();
 
   /**
    * Calculate mixed unit value using the appropriate strategy
    */
-  calculate(input: any, context: UnitContext): number {
+  calculate(input: IStrategyInput, context: UnitContext): number {
     // Handle arrays of mixed units
     if (Array.isArray(input)) {
       return this.calculateMixedArray(input, context);
@@ -41,7 +39,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Check if this strategy can handle the input
    */
-  canHandle(input: any): boolean {
+  canHandle(input: IStrategyInput): boolean {
     return (
       Array.isArray(input) ||
       (typeof input === 'object' && input !== null && !this.isSimpleValue(input)) ||
@@ -59,22 +57,22 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate from array of mixed units
    */
-  private calculateMixedArray(input: any[], context: UnitContext): number {
+  private calculateMixedArray(input: unknown[], _context: UnitContext): number {
     if (input.length === 0) return 0;
 
     // Handle different array patterns
     if (input.length === 2 && typeof input[0] === 'string' && typeof input[1] === 'number') {
       // Pattern: ['unit-type', value]
-      return this.calculateTypedValue(input[0], input[1], context);
+      return this.calculateTypedValue(input[0], input[1], _context);
     }
 
     if (input.length === 3 && input.every(item => typeof item === 'string')) {
       // Pattern: ['unit-type', 'dimension', 'value']
-      return this.calculateTypedDimensionValue(input[0], input[1], input[2], context);
+      return this.calculateTypedDimensionValue(input[0], input[1], input[2], _context);
     }
 
     // Default: calculate average of all values
-    const results = input.map(item => this.calculateSingleValue(item, context));
+    const results = input.map(item => this.calculateSingleValue(item, _context));
     return results.reduce((sum, val) => sum + val, 0) / results.length;
   }
 
@@ -100,27 +98,41 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate from object with mixed unit properties
    */
-  private calculateMixedObject(input: any, context: UnitContext): number {
-    const { unitType, dimension, value, ...otherProps } = input;
+  private calculateMixedObject(input: unknown, _context: UnitContext): number {
+    // Check if input is an object with the expected properties
+    if (
+      typeof input === 'object' && 
+      input !== null && 
+      ('unitType' in input || 'dimension' in input || 'value' in input)
+    ) {
+      const obj = input as {
+        unitType?: unknown;
+        dimension?: unknown;
+        value?: unknown;
+        [key: string]: unknown;
+      };
 
-    // Handle explicit unit type specification
-    if (unitType && value !== undefined) {
-      return this.calculateTypedValue(unitType, value, context);
-    }
+      const { unitType, dimension, value } = obj;
 
-    // Handle dimension-specific calculations
-    if (dimension && value !== undefined) {
-      return this.calculateDimensionValue(dimension, value, context);
+      // Handle explicit unit type specification
+      if (unitType && value !== undefined) {
+        return this.calculateTypedValue(unitType as string, value, _context);
+      }
+
+      // Handle dimension-specific calculations
+      if (dimension && value !== undefined) {
+        return this.calculateDimensionValue(dimension as string, value, _context);
+      }
     }
 
     // Handle responsive breakpoint objects
     if (this.isResponsiveObject(input)) {
-      return this.calculateResponsiveValue(input, context);
+      return this.calculateResponsiveValue(input, _context);
     }
 
     // Handle theme class objects
     if (this.isThemeObject(input)) {
-      return this.calculateThemeValue(input, context);
+      return this.calculateThemeValue(input, _context);
     }
 
     // Default: try to extract numeric value
@@ -130,10 +142,10 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate from string expression
    */
-  private calculateStringExpression(input: string, context: UnitContext): number {
+  private calculateStringExpression(input: string, _context: UnitContext): number {
     // Handle mathematical expressions
     if (input.includes('+') || input.includes('-') || input.includes('*') || input.includes('/')) {
-      return this.calculateMathExpression(input, context);
+      return this.calculateMathExpression(input, _context);
     }
 
     // Handle unit conversions
@@ -143,49 +155,49 @@ export class MixedUnitStrategy implements IUnitStrategy {
       input.includes('vw') ||
       input.includes('vh')
     ) {
-      return this.calculateUnitConversion(input, context);
+      return this.calculateUnitConversion(input, _context);
     }
 
     // Handle CSS-like expressions
     if (input.includes('calc(') || input.includes('var(')) {
-      return this.calculateCSSExpression(input, context);
+      return this.calculateCSSExpression(input, _context);
     }
 
     // Default: treat as simple value
-    return this.calculateSingleValue(input, context);
+    return this.calculateSingleValue(input, _context);
   }
 
   /**
    * Calculate typed value with unit type
    */
-  private calculateTypedValue(unitType: string, value: any, context: UnitContext): number {
+  private calculateTypedValue(unitType: string, value: unknown, _context: UnitContext): number {
     switch (unitType.toLowerCase()) {
       case 'size':
-        return this.calculateSizeValue(value, context);
+        return this.calculateSizeValue(value, _context);
       case 'position':
-        return this.calculatePositionValue(value, context);
+        return this.calculatePositionValue(value, _context);
       case 'scale':
-        return this.calculateScaleValue(value, context);
+        return this.calculateScaleValue(value, _context);
       default:
-        return this.calculateSingleValue(value, context);
+        return this.calculateSingleValue(value, _context);
     }
   }
 
   /**
    * Calculate dimension-specific value
    */
-  private calculateDimensionValue(dimension: string, value: any, context: UnitContext): number {
+  private calculateDimensionValue(dimension: string, value: unknown, _context: UnitContext): number {
     const dim = this.mapDimension(dimension);
     if (dim) {
-      context.dimension = dim;
+      _context.dimension = dim;
     }
-    return this.calculateSingleValue(value, context);
+    return this.calculateSingleValue(value, _context);
   }
 
   /**
    * Calculate responsive value
    */
-  private calculateResponsiveValue(input: any, context: UnitContext): number {
+  private calculateResponsiveValue(_input: unknown, _context: UnitContext): number {
     // This would integrate with responsive config system
     // For now, return a default value
     return 0;
@@ -194,7 +206,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate theme value
    */
-  private calculateThemeValue(input: any, context: UnitContext): number {
+  private calculateThemeValue(_input: unknown, _context: UnitContext): number {
     // This would integrate with theme system
     // For now, return a default value
     return 0;
@@ -203,12 +215,12 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate mathematical expression
    */
-  private calculateMathExpression(expression: string, context: UnitContext): number {
+  private calculateMathExpression(expression: string, _context: UnitContext): number {
     // Simple math expression evaluation
     // In production, use a proper expression parser
     try {
       // Replace unit references with calculated values
-      const processedExpression = this.processMathExpression(expression, context);
+      const processedExpression = this.processMathExpression(expression, _context);
       return eval(processedExpression); // Note: eval is used for simplicity, consider using a safer parser
     } catch (error) {
       this.logger.warn(
@@ -227,7 +239,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate unit conversion
    */
-  private calculateUnitConversion(input: string, context: UnitContext): number {
+  private calculateUnitConversion(input: string, _context: UnitContext): number {
     // Extract numeric value and unit
     const match = input.match(/^([\d.]+)(\w+)$/);
     if (!match) return 0;
@@ -239,11 +251,11 @@ export class MixedUnitStrategy implements IUnitStrategy {
       case 'px':
         return numericValue;
       case '%':
-        return this.calculatePercentage(numericValue, context);
+        return this.calculatePercentage(numericValue, _context);
       case 'vw':
-        return this.calculateViewportWidth(numericValue, context);
+        return this.calculateViewportWidth(numericValue, _context);
       case 'vh':
-        return this.calculateViewportHeight(numericValue, context);
+        return this.calculateViewportHeight(numericValue, _context);
       default:
         return numericValue;
     }
@@ -252,7 +264,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate CSS expression
    */
-  private calculateCSSExpression(input: string, context: UnitContext): number {
+  private calculateCSSExpression(_input: string, _context: UnitContext): number {
     // Handle CSS calc() and var() functions
     // For now, return a default value
     return 0;
@@ -261,34 +273,34 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Helper methods
    */
-  private calculateSingleValue(value: any, context: UnitContext): number {
+  private calculateSingleValue(value: unknown, _context: UnitContext): number {
     if (typeof value === 'number') return value;
     if (typeof value === 'string') return parseFloat(value) || 0;
     return 0;
   }
 
-  private calculateSizeValue(value: any, context: UnitContext): number {
+  private calculateSizeValue(_value: unknown, _context: UnitContext): number {
     // Delegate to size strategy
     return 0; // Placeholder
   }
 
-  private calculatePositionValue(value: any, context: UnitContext): number {
+  private calculatePositionValue(_value: unknown, _context: UnitContext): number {
     // Delegate to position strategy
     return 0; // Placeholder
   }
 
-  private calculateScaleValue(value: any, context: UnitContext): number {
+  private calculateScaleValue(_value: unknown, _context: UnitContext): number {
     // Delegate to scale strategy
     return 0; // Placeholder
   }
 
-  private calculatePercentage(value: number, context: UnitContext): number {
-    const parentSize = context.parent?.width || context.scene?.width || 800;
+  private calculatePercentage(value: number, _context: UnitContext): number {
+    const parentSize = _context.parent?.width || _context.scene?.width || 800;
     return (value / 100) * parentSize;
   }
 
-  private calculateViewportWidth(value: number, context: UnitContext): number {
-    const viewportWidth = context.viewport?.width || context.scene?.width || 800;
+  private calculateViewportWidth(value: number, _context: UnitContext): number {
+    const viewportWidth = _context.viewport?.width || _context.scene?.width || 800;
     return (value / 100) * viewportWidth;
   }
 
@@ -318,26 +330,41 @@ export class MixedUnitStrategy implements IUnitStrategy {
       .replace(/\bscene\.height\b/g, String(context.scene?.height || 600));
   }
 
-  private isSimpleValue(input: any): boolean {
+  private isSimpleValue(input: unknown): boolean {
     return typeof input === 'number' || typeof input === 'string' || input === null;
   }
 
-  private isResponsiveObject(input: any): boolean {
-    return input.default !== undefined || input.breakpoints !== undefined;
+  private isResponsiveObject(input: unknown): boolean {
+    return (
+      typeof input === 'object' && 
+      input !== null && 
+      ('default' in input || 'breakpoints' in input)
+    );
   }
 
-  private isThemeObject(input: any): boolean {
-    return input.theme !== undefined || input.classes !== undefined;
+  private isThemeObject(input: unknown): boolean {
+    return (
+      typeof input === 'object' && 
+      input !== null && 
+      ('theme' in input || 'classes' in input)
+    );
   }
 
   private containsMixedExpressions(input: string): boolean {
     return /[+\-*/]/.test(input) || /px|%|vw|vh|calc\(|var\(/.test(input);
   }
 
-  private extractNumericValue(input: any): number {
+  private extractNumericValue(input: unknown): number {
     if (typeof input === 'number') return input;
     if (typeof input === 'string') return parseFloat(input) || 0;
-    if (input && typeof input.value === 'number') return input.value;
+    if (
+      typeof input === 'object' && 
+      input !== null && 
+      'value' in input && 
+      typeof (input as { value: unknown }).value === 'number'
+    ) {
+      return (input as { value: number }).value;
+    }
     return 0;
   }
 }

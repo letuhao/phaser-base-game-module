@@ -1,5 +1,6 @@
 import type { UnitContext } from '../interfaces/IUnit';
 import type { IUnitValidationResult } from '../validators/IUnitValidator';
+import type { ITemplateInput } from '../interfaces/ITemplateInput';
 
 /**
  * Unit Calculation Template Interface
@@ -7,7 +8,7 @@ import type { IUnitValidationResult } from '../validators/IUnitValidator';
  */
 export interface IUnitCalculationTemplate {
   /** Execute the complete calculation process */
-  calculate(input: any, context: UnitContext): number;
+  calculate(input: ITemplateInput, context: UnitContext): number;
 
   /** Get calculation metadata */
   getCalculationMetadata(): {
@@ -18,7 +19,7 @@ export interface IUnitCalculationTemplate {
   };
 
   /** Check if the template can handle the input */
-  canHandle(input: any): boolean;
+  canHandle(input: ITemplateInput): boolean;
 
   /** Get calculation performance metrics */
   getPerformanceMetrics(): {
@@ -40,7 +41,7 @@ export abstract class BaseUnitCalculationTemplate implements IUnitCalculationTem
   /**
    * Template method - defines the algorithm structure
    */
-  calculate(input: any, context: UnitContext): number {
+  calculate(input: ITemplateInput, context: UnitContext): number {
     this.startTime = performance.now();
 
     try {
@@ -89,16 +90,16 @@ export abstract class BaseUnitCalculationTemplate implements IUnitCalculationTem
   /**
    * Abstract methods that subclasses must implement
    */
-  protected abstract validateInput(input: any, context: UnitContext): IUnitValidationResult;
-  protected abstract preprocessInput(input: any, context: UnitContext): any;
-  protected abstract performCalculation(input: any, context: UnitContext): number;
+  protected abstract validateInput(input: ITemplateInput, context: UnitContext): IUnitValidationResult;
+  protected abstract preprocessInput(input: ITemplateInput, context: UnitContext): ITemplateInput;
+  protected abstract performCalculation(input: ITemplateInput, context: UnitContext): number;
   protected abstract postprocessResult(result: number, context: UnitContext): number;
   protected abstract validateResult(result: number, context: UnitContext): void;
 
   /**
    * Hook methods that subclasses can override
    */
-  protected onCalculationStart(_input: any, _context: UnitContext): void {
+  protected onCalculationStart(_input: ITemplateInput, _context: UnitContext): void {
     // Default implementation - can be overridden
   }
 
@@ -106,7 +107,7 @@ export abstract class BaseUnitCalculationTemplate implements IUnitCalculationTem
     // Default implementation - can be overridden
   }
 
-  protected onCalculationError(_error: Error, _input: any, _context: UnitContext): void {
+  protected onCalculationError(_error: Error, _input: ITemplateInput, _context: UnitContext): void {
     // Default implementation - can be overridden
   }
 
@@ -132,7 +133,7 @@ export abstract class BaseUnitCalculationTemplate implements IUnitCalculationTem
   /**
    * Error handling
    */
-  private handleCalculationError(error: Error, input: any, context: UnitContext): void {
+  private handleCalculationError(error: Error, input: ITemplateInput, context: UnitContext): void {
     this.onCalculationError(error, input, context);
   }
 
@@ -179,9 +180,9 @@ export abstract class BaseUnitCalculationTemplate implements IUnitCalculationTem
   /**
    * Default implementation for canHandle
    */
-  canHandle(input: any): boolean {
+  canHandle(input: ITemplateInput): boolean {
     return this.getSupportedInputs().some(
-      type => typeof input === type || input?.constructor?.name === type
+      type => input.type === type || input?.constructor?.name === type
     );
   }
 }

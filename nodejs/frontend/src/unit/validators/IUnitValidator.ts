@@ -1,4 +1,5 @@
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IValidationInput } from '../interfaces/IValidationInput';
 
 /**
  * Unit Validator Interface
@@ -12,7 +13,7 @@ export interface IUnitValidator {
   getNext(): IUnitValidator | undefined;
 
   /** Validate the input and pass to next validator if valid */
-  validate(input: any, context: UnitContext): boolean;
+  validate(input: IValidationInput, context: UnitContext): boolean;
 
   /** Get the validator name for debugging */
   getName(): string;
@@ -21,7 +22,7 @@ export interface IUnitValidator {
   getErrorMessage(): string | undefined;
 
   /** Check if this validator can handle the input type */
-  canHandle(input: any): boolean;
+  canHandle(input: IValidationInput): boolean;
 }
 
 /**
@@ -41,7 +42,7 @@ export abstract class BaseUnitValidator implements IUnitValidator {
     return this.nextValidator;
   }
 
-  validate(input: any, context: UnitContext): boolean {
+  validate(input: IValidationInput, context: UnitContext): boolean {
     // Check if this validator can handle the input
     if (!this.canHandle(input)) {
       // Pass to next validator if we can't handle it
@@ -64,8 +65,8 @@ export abstract class BaseUnitValidator implements IUnitValidator {
   }
 
   abstract getName(): string;
-  abstract canHandle(input: any): boolean;
-  protected abstract performValidation(input: any, context: UnitContext): boolean;
+  abstract canHandle(input: IValidationInput): boolean;
+  protected abstract performValidation(input: IValidationInput, context: UnitContext): boolean;
 }
 
 /**
@@ -83,7 +84,7 @@ export interface IUnitValidationChain {
   getValidators(): IUnitValidator[];
 
   /** Validate input using the entire chain */
-  validate(input: any, context: UnitContext): boolean;
+  validate(input: IValidationInput, context: UnitContext): boolean;
 
   /** Get all validation errors from the chain */
   getValidationErrors(): string[];

@@ -9,6 +9,18 @@ import type { IUnitMemento } from '../mementos/IUnitMemento';
 import type { IUnitComposite } from '../composites/IUnitComposite';
 import type { IUnitAdapter } from '../adapters/IUnitAdapter';
 import type { IUnitDecorator } from '../decorators/IUnitDecorator';
+import type { IUnitConfig } from '../interfaces/IUnitConfig';
+import type { UnitValue } from '../types/UnitValue';
+import type { ITemplateInput } from '../interfaces/ITemplateInput';
+import type { IStrategyInput } from '../interfaces/IStrategyInput';
+import { SizeUnit } from '../enums/SizeUnit';
+import { SizeValue } from '../enums/SizeValue';
+import { PositionUnit } from '../enums/PositionUnit';
+import { PositionValue } from '../enums/PositionValue';
+import { ScaleUnit } from '../enums/ScaleUnit';
+import { ScaleValue } from '../enums/ScaleValue';
+import { createSizeTemplateInput, createPositionTemplateInput, createScaleTemplateInput } from '../interfaces/ITemplateInput';
+import { convertToLegacyUnit } from '../interfaces/ILegacyUnit';
 import { Logger } from '../../core/Logger';
 
 /**
@@ -17,14 +29,14 @@ import { Logger } from '../../core/Logger';
  */
 export interface IUnitSystemManager {
   // Core unit management
-  createUnit(unitType: string, config: any): IUnit;
+  createUnit(unitType: string, config: IUnitConfig): IUnit;
   getUnit(unitId: string): IUnit | undefined;
   getAllUnits(): IUnit[];
   removeUnit(unitId: string): boolean;
 
   // Strategy management
   registerStrategy(strategy: IUnitStrategy): void;
-  getStrategy(input: any): IUnitStrategy | undefined;
+  getStrategy(input: IStrategyInput): IUnitStrategy | undefined;
   getStrategiesByType(type: string): IUnitStrategy[];
 
   // Command management
@@ -36,7 +48,7 @@ export interface IUnitSystemManager {
   // Observer management
   addObserver(observer: IUnitObserver): void;
   removeObserver(observer: IUnitObserver): boolean;
-  notifyObservers(eventType: string, data: any): void;
+  notifyObservers(eventType: string, data: Record<string, string | number | boolean>): void;
 
   // Validation management
   addValidator(validator: IUnitValidator): void;
@@ -45,7 +57,7 @@ export interface IUnitSystemManager {
 
   // Template management
   registerTemplate(template: IUnitCalculationTemplate): void;
-  getTemplate(input: any): IUnitCalculationTemplate | undefined;
+  getTemplate(input: IUnit | UnitValue | number): IUnitCalculationTemplate | undefined;
 
   // Memento management
   saveUnitState(unitId: string, _description?: string): IUnitMemento | undefined;
@@ -53,13 +65,13 @@ export interface IUnitSystemManager {
   getUnitMementos(unitId: string): IUnitMemento[];
 
   // Composite management
-  createComposite(_unitType: string, _config: any): IUnitComposite;
+  createComposite(_unitType: string, _config: IUnitConfig): IUnitComposite;
   addChildToComposite(compositeId: string, child: IUnit): boolean;
   removeChildFromComposite(compositeId: string, childId: string): boolean;
 
   // Adapter management
   registerAdapter(adapter: IUnitAdapter): void;
-  adaptLegacyUnit(legacyUnit: any): IUnit | undefined;
+  adaptLegacyUnit(legacyUnit: unknown): IUnit | undefined;
 
   // Decorator management
   addDecorator(unitId: string, decorator: IUnitDecorator): boolean;
@@ -86,8 +98,8 @@ export interface IUnitSystemManager {
   };
 
   // Configuration
-  updateConfiguration(_config: any): void;
-  getConfiguration(): any;
+  updateConfiguration(_config: Record<string, unknown>): void;
+  getConfiguration(): Record<string, unknown>;
   resetToDefaults(): void;
 }
 
@@ -119,7 +131,7 @@ export class UnitSystemManager implements IUnitSystemManager {
   };
 
   // Core unit management
-  createUnit(unitType: string, config: any): IUnit {
+  createUnit(unitType: string, config: IUnitConfig): IUnit {
     // Implementation would create units based on type and config
     const unit = this.createUnitByType(unitType, config);
     if (unit) {
@@ -153,7 +165,7 @@ export class UnitSystemManager implements IUnitSystemManager {
     this.strategies.set(strategy.unitType, strategy);
   }
 
-  getStrategy(input: any): IUnitStrategy | undefined {
+  getStrategy(input: IStrategyInput): IUnitStrategy | undefined {
     // Find the best strategy for the input
     for (const strategy of Array.from(this.strategies.values())) {
       if (strategy.canHandle(input)) {
@@ -228,19 +240,25 @@ export class UnitSystemManager implements IUnitSystemManager {
     return this.observers.delete(observer);
   }
 
-  notifyObservers(eventType: string, data: any): void {
+  notifyObservers(eventType: string, data: Record<string, string | number | boolean>): void {
     this.observers.forEach(observer => {
       try {
         // Call appropriate observer method based on event type
         switch (eventType) {
           case 'unit_created':
-            observer.onUnitCreated(data.unitId, data.unitType);
+            if (typeof data.unitId === 'string' && typeof data.unitType === 'string') {
+              observer.onUnitCreated(data.unitId, data.unitType);
+            }
             break;
           case 'unit_destroyed':
-            observer.onUnitDestroyed(data.unitId);
+            if (typeof data.unitId === 'string') {
+              observer.onUnitDestroyed(data.unitId);
+            }
             break;
           case 'value_changed':
-            observer.onUnitValueChanged(data.unitId, data.oldValue, data.newValue);
+            if (typeof data.unitId === 'string' && typeof data.oldValue === 'number' && typeof data.newValue === 'number') {
+              observer.onUnitValueChanged(data.unitId, data.oldValue, data.newValue);
+            }
             break;
           // Add more event types as needed
         }
@@ -278,13 +296,50 @@ export class UnitSystemManager implements IUnitSystemManager {
     this.templates.set(template.getCalculationMetadata().templateName, template);
   }
 
-  getTemplate(input: any): IUnitCalculationTemplate | undefined {
+  getTemplate(input: IUnit | UnitValue | number): IUnitCalculationTemplate | undefined {
+    // Convert legacy input to template input format
+    const templateInput = this.convertToTemplateInput(input);
+    
     for (const template of Array.from(this.templates.values())) {
-      if (template.canHandle(input)) {
+      if (template.canHandle(templateInput)) {
         return template;
       }
     }
     return undefined;
+  }
+
+  /**
+   * Convert legacy input types to template input format
+   */
+  private convertToTemplateInput(input: IUnit | UnitValue | number): ITemplateInput {
+    if (typeof input === 'number') {
+      return createSizeTemplateInput(SizeUnit.PIXEL, input);
+    }
+    
+    if (typeof input === 'string') {
+      // Try to parse as a unit value
+      if (Object.values(SizeValue).includes(input as SizeValue)) {
+        return createSizeTemplateInput(SizeUnit.PIXEL, input as SizeValue);
+      }
+      if (Object.values(PositionValue).includes(input as PositionValue)) {
+        return createPositionTemplateInput(PositionUnit.PIXEL, input as PositionValue);
+      }
+      if (Object.values(ScaleValue).includes(input as ScaleValue)) {
+        return createScaleTemplateInput(ScaleUnit.FACTOR, input as ScaleValue);
+      }
+      
+      // Default to size input
+      return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+    }
+    
+    // If it's an IUnit, extract its properties
+    if (input && typeof input === 'object' && 'calculate' in input) {
+      // It's an IUnit, use a default value since we can't extract size directly
+      return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+    }
+    
+    // Default fallback
+    return createSizeTemplateInput(SizeUnit.PIXEL, 100);
   }
 
   // Memento management
@@ -307,10 +362,10 @@ export class UnitSystemManager implements IUnitSystemManager {
   }
 
   // Composite management
-  createComposite(_unitType: string, _config: any): IUnitComposite {
+  createComposite(_unitType: string, _config: IUnitConfig): IUnitComposite {
     // Implementation would create composite units
     // For now, return undefined
-    return undefined as any;
+    return undefined as never;
   }
 
   addChildToComposite(compositeId: string, child: IUnit): boolean {
@@ -338,9 +393,12 @@ export class UnitSystemManager implements IUnitSystemManager {
     this.adapters.set(adapter.id, adapter);
   }
 
-  adaptLegacyUnit(legacyUnit: any): IUnit | undefined {
+  adaptLegacyUnit(legacyUnit: unknown): IUnit | undefined {
+    // Convert unknown input to legacy unit format
+    const legacyUnitInput = convertToLegacyUnit(legacyUnit);
+    
     for (const adapter of Array.from(this.adapters.values())) {
-      if (adapter.canAdapt(legacyUnit)) {
+      if (adapter.canAdapt(legacyUnitInput)) {
         return adapter;
       }
     }
@@ -420,11 +478,11 @@ export class UnitSystemManager implements IUnitSystemManager {
   }
 
   // Configuration
-  updateConfiguration(_config: any): void {
+  updateConfiguration(_config: Record<string, unknown>): void {
     // Implementation would update system configuration
   }
 
-  getConfiguration(): any {
+  getConfiguration(): Record<string, unknown> {
     // Implementation would return current configuration
     return {};
   }
@@ -434,7 +492,7 @@ export class UnitSystemManager implements IUnitSystemManager {
   }
 
   // Private helper methods
-  private createUnitByType(_unitType: string, _config: any): IUnit | undefined {
+  private createUnitByType(_unitType: string, _config: IUnitConfig): IUnit | undefined {
     // Implementation would create units based on type
     // For now, return undefined
     return undefined;

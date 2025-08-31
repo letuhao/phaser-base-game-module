@@ -179,10 +179,10 @@ export interface IUnitDecoratorChain {
  */
 export interface IUnitDecoratorRegistry {
   /** Register a decorator type */
-  registerDecoratorType(type: string, decoratorClass: new (...args: any[]) => IUnitDecorator): void;
+  registerDecoratorType(type: string, decoratorClass: new (...args: unknown[]) => IUnitDecorator): void;
 
   /** Create a decorator instance */
-  createDecorator(type: string, unit: IUnit, ...args: any[]): IUnitDecorator | undefined;
+  createDecorator(type: string, unit: IUnit, ...args: unknown[]): IUnitDecorator | undefined;
 
   /** Get all registered decorator types */
   getRegisteredTypes(): string[];
@@ -191,5 +191,5 @@ export interface IUnitDecoratorRegistry {
   hasDecoratorType(type: string): boolean;
 
   /** Get decorator metadata */
-  getDecoratorMetadata(type: string): any;
+  getDecoratorMetadata(type: string): Record<string, unknown>;
 }

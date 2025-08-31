@@ -1,8 +1,6 @@
 import type { IUnitCommand } from './IUnitCommand';
 import type { UnitContext } from '../interfaces/IUnit';
 import { BaseUnitCommand } from './IUnitCommand';
-import { CalculateSizeCommand } from './CalculateSizeCommand';
-import { CalculatePositionCommand } from './CalculatePositionCommand';
 import { Logger } from '../../core/Logger';
 
 /**
@@ -11,15 +9,13 @@ import { Logger } from '../../core/Logger';
  */
 export class BatchCalculationCommand extends BaseUnitCommand {
   private readonly commands: IUnitCommand[];
-  private readonly context: UnitContext;
   private executionResults: number[] = [];
   private previousResults: number[] = [];
   private readonly logger: Logger = Logger.getInstance();
 
-  constructor(commands: IUnitCommand[], context: UnitContext) {
+  constructor(commands: IUnitCommand[], _context: UnitContext) {
     super(`batch-calculation-${Date.now()}`);
     this.commands = commands;
-    this.context = context;
   }
 
   /**

@@ -14,6 +14,8 @@ import { SizeValue } from '../enums/SizeValue';
 import { PositionValue } from '../enums/PositionValue';
 import { ScaleValue } from '../enums/ScaleValue';
 import { UnitType } from '../enums/UnitType';
+import type { IUnitConfig } from '../interfaces/IUnitConfig';
+import { isSizeUnitConfig, isPositionUnitConfig, isScaleUnitConfig } from '../interfaces/IUnitConfig';
 
 /**
  * UnitCalculatorFactory class
@@ -94,33 +96,42 @@ export class UnitCalculatorFactory {
   /**
    * Create a unit calculator based on type
    */
-  createUnit(type: UnitType, id: string, name: string, config: any): IUnit {
+  createUnit(type: UnitType, id: string, name: string, config: IUnitConfig): IUnit {
     switch (type) {
       case UnitType.SIZE:
+        if (!isSizeUnitConfig(config)) {
+          throw new Error(`Invalid config for size unit: ${id}`);
+        }
         return this.createSizeUnit(
           id,
           name,
           config.sizeUnit ?? SizeUnit.PIXEL,
           config.dimension ?? Dimension.WIDTH,
-          config.baseValue ?? 100,
+          config.baseValue,
           config.maintainAspectRatio ?? false
         );
 
       case UnitType.POSITION:
+        if (!isPositionUnitConfig(config)) {
+          throw new Error(`Invalid config for position unit: ${id}`);
+        }
         return this.createPositionUnit(
           id,
           name,
           config.positionUnit ?? PositionUnit.PIXEL,
           config.axis ?? Dimension.X,
-          config.baseValue ?? 0
+          config.baseValue
         );
 
       case UnitType.SCALE:
+        if (!isScaleUnitConfig(config)) {
+          throw new Error(`Invalid config for scale unit: ${id}`);
+        }
         return this.createScaleUnit(
           id,
           name,
           config.scaleUnit ?? ScaleUnit.FACTOR,
-          config.baseValue ?? 1,
+          config.baseValue,
           config.maintainAspectRatio ?? false
         );
 

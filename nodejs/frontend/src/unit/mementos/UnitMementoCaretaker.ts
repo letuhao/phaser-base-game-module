@@ -364,14 +364,14 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
    * Enforce maximum mementos per unit limit
    */
   private enforceMementosPerUnitLimit(): void {
-    for (const [unitId, unitMementos] of this.mementos.entries()) {
+    for (const [_unitId, unitMementos] of this.mementos.entries()) {
       while (unitMementos.length > this.maxMementosPerUnit) {
         const removed = unitMementos.shift();
         if (removed) {
           this.logger.debug(
             'UnitMementoCaretaker',
             'enforceMementosPerUnitLimit',
-            `Enforced limit: removed memento for unit ${unitId}`
+            'Enforced limit: removed memento'
           );
         }
       }
@@ -403,7 +403,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     // Remove oldest mementos
     const toRemove = allMementos.slice(0, stats.totalMementos - this.maxTotalMementos);
 
-    for (const { unitId, memento } of toRemove) {
+    for (const { memento } of toRemove) {
       this.deleteMemento(memento);
     }
 

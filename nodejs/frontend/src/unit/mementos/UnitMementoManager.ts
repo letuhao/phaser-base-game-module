@@ -3,6 +3,7 @@ import { UnitMementoCaretaker } from './UnitMementoCaretaker';
 import { UnitCalculationMemento } from './UnitCalculationMemento';
 import type { UnitContext } from '../interfaces/IUnit';
 import type { IUnitCalculationTemplate } from '../templates/IUnitCalculationTemplate';
+import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { Logger } from '../../core/Logger';
 
 /**
@@ -12,9 +13,9 @@ import { Logger } from '../../core/Logger';
  */
 export class UnitMementoManager {
   private readonly caretaker: IUnitMementoCaretaker;
-  private readonly autoSaveEnabled: boolean = true;
-  private readonly autoSaveThreshold: number = 100; // ms
-  private readonly significantChangeThresholds = {
+  private autoSaveEnabled: boolean = true;
+  private autoSaveThreshold: number = 100; // ms
+  private significantChangeThresholds = {
     timeThreshold: 50, // ms
     resultThreshold: 0.01, // 1% change
   };
@@ -70,7 +71,7 @@ export class UnitMementoManager {
    */
   autoSaveCalculation(
     template: IUnitCalculationTemplate,
-    input: any,
+    input: IStrategyInput,
     context: UnitContext,
     result: number,
     performanceMetrics: {
@@ -113,7 +114,7 @@ export class UnitMementoManager {
    */
   saveCalculationMemento(
     template: IUnitCalculationTemplate,
-    input: any,
+    input: IStrategyInput,
     context: UnitContext,
     result: number,
     performanceMetrics: {
@@ -385,7 +386,7 @@ export class UnitMementoManager {
   /**
    * Get the strategy name from the template
    */
-  private getStrategyName(template: IUnitCalculationTemplate): string {
+  private getStrategyName(_template: IUnitCalculationTemplate): string {
     // This would need to be implemented based on the actual template structure
     // For now, return a placeholder
     return 'DefaultStrategy';
@@ -394,7 +395,7 @@ export class UnitMementoManager {
   /**
    * Get the validators used by the template
    */
-  private getValidatorsUsed(template: IUnitCalculationTemplate): string[] {
+  private getValidatorsUsed(_template: IUnitCalculationTemplate): string[] {
     // This would need to be implemented based on the actual template structure
     // For now, return a placeholder
     return ['DefaultValidator'];
@@ -408,34 +409,16 @@ export class UnitMementoManager {
     newResult: number,
     newTime: number
   ): boolean {
-    const comparison = lastMemento.compareWith({
-      getCalculationResult: () => newResult,
-      getPerformanceMetrics: () => ({ totalTime: newTime, stepTimes: {}, memoryUsage: 0 }),
-      getCalculationInput: () => ({}),
-      getCalculationContext: () => ({}),
-      getCalculationMetadata: () => ({}),
-      wasSuccessful: () => true,
-      getErrorMessage: () => undefined,
-      getTemplateName: () => '',
-      getStrategyName: () => '',
-      getValidatorsUsed: () => [],
-      getCalculationSummary: () => ({}),
-      compareWith: () => ({}),
-      isSignificantChange: () => false,
-      getEfficiencyScore: () => 0,
-      exportForAnalysis: () => '',
-      getState: () => ({}),
-      getTimestamp: () => new Date(),
-      getUnitId: () => '',
-      getVersion: () => '',
-      getMetadata: () => ({}),
-      validate: () => true,
-      getSize: () => 0,
-    } as UnitCalculationMemento);
+    // Simple comparison without using compareWith method
+    const lastResult = lastMemento.getCalculationResult();
+    const lastTime = lastMemento.getPerformanceMetrics().totalTime;
+    
+    const resultDifference = Math.abs(newResult - lastResult);
+    const timeDifference = Math.abs(newTime - lastTime);
 
     return (
-      Math.abs(comparison.timeDifference) > this.significantChangeThresholds.timeThreshold ||
-      Math.abs(comparison.resultDifference) > this.significantChangeThresholds.resultThreshold
+      timeDifference > this.significantChangeThresholds.timeThreshold ||
+      resultDifference > this.significantChangeThresholds.resultThreshold
     );
   }
 

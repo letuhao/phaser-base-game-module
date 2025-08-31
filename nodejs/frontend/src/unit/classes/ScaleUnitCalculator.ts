@@ -383,4 +383,72 @@ export class ScaleUnitCalculator implements IScaleUnit {
     }
     return value;
   }
+
+  /**
+   * Check if the scale has constraints
+   */
+  hasConstraints(): boolean {
+    return this.minScale !== undefined || this.maxScale !== undefined;
+  }
+
+  /**
+   * Get constraint information
+   */
+  getConstraintInfo(): { min?: number; max?: number; hasConstraints: boolean } {
+    return {
+      min: this.minScale,
+      max: this.maxScale,
+      hasConstraints: this.hasConstraints()
+    };
+  }
+
+  /**
+   * Validate if scale value is within constraints
+   */
+  validateScale(value: number): boolean {
+    if (this.minScale !== undefined && value < this.minScale) {
+      return false;
+    }
+    if (this.maxScale !== undefined && value > this.maxScale) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Get scale information for debugging
+   */
+  getScaleInfo(): {
+    scaleUnit: ScaleUnit;
+    maintainAspectRatio: boolean;
+    uniformScaling: boolean;
+    hasConstraints: boolean;
+    isResponsive: boolean;
+  } {
+    return {
+      scaleUnit: this.scaleUnit,
+      maintainAspectRatio: this.maintainAspectRatio,
+      uniformScaling: this.uniformScaling,
+      hasConstraints: this.hasConstraints(),
+      isResponsive: this.isResponsive()
+    };
+  }
+
+  /**
+   * Calculate the optimal scale for a given content and container
+   */
+  calculateOptimalScale(
+    contentWidth: number,
+    contentHeight: number,
+    containerWidth: number,
+    containerHeight: number
+  ): number {
+    const scaleX = containerWidth / contentWidth;
+    const scaleY = containerHeight / contentHeight;
+
+    if (this.maintainAspectRatio) {
+      return Math.min(scaleX, scaleY);
+    }
+    return Math.min(scaleX, scaleY);
+  }
 }

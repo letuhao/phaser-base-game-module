@@ -1,11 +1,12 @@
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IStrategyInput } from '../interfaces/IStrategyInput';
 
 /**
  * Unit Strategy Interface
  * Defines the strategy pattern for unit calculations
  * Each unit type (size, position, scale) implements this interface
  */
-export interface IUnitStrategy<T = any> {
+export interface IUnitStrategy<T = IStrategyInput> {
   /**
    * The type of unit this strategy handles
    */
@@ -50,7 +51,7 @@ export interface IUnitStrategyRegistry {
    * @param input - The input value
    * @returns The best strategy or undefined if none found
    */
-  getStrategy(input: any): IUnitStrategy | undefined;
+  getStrategy(input: IStrategyInput): IUnitStrategy | undefined;
 
   /**
    * Get all strategies for a specific unit type

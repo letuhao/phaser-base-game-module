@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { logger } from '../core/Logger';
 import { IGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
+import type { IFactoryInput, convertToFactoryInput } from './interfaces/IFactoryInput';
 import { ContainerFactory } from './ContainerFactory';
 import { ImageFactory } from './ImageFactory';
 import { TextFactory } from './TextFactory';
@@ -148,25 +149,25 @@ export class GameObjectFactoryManager {
   /**
    * Create a game object using the appropriate factory
    */
-  public createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.GameObject | null {
+  public createGameObject(input: IFactoryInput): Phaser.GameObjects.GameObject | null {
     logger.debug('GameObjectFactoryManager', 'createGameObject', 'Creating game object', {
-      objectId: config.id,
-      objectType: config.type,
-      hasConfig: !!config,
-      configKeys: config ? Object.keys(config) : [],
+      objectId: input.config.id,
+      objectType: input.type,
+      hasConfig: !!input.config,
+      configKeys: input.config ? Object.keys(input.config) : [],
     });
 
     try {
-      if (!config || !config.type) {
-        logger.warn('GameObjectFactoryManager', 'createGameObject', 'Invalid config provided', {
-          hasConfig: !!config,
-          configType: config?.type,
-          config: config,
+      if (!input.config || !input.type) {
+        logger.warn('GameObjectFactoryManager', 'createGameObject', 'Invalid input provided', {
+          hasConfig: !!input.config,
+          inputType: input.type,
+          input: input,
         });
         return null;
       }
 
-      const factory = this.factories.get(config.type);
+      const factory = this.getFactoryForType(input.type);
 
       if (!factory) {
         logger.warn(
@@ -174,9 +175,9 @@ export class GameObjectFactoryManager {
           'createGameObject',
           'No factory found for object type',
           {
-            objectType: config.type,
+            objectType: input.type,
             availableFactories: Array.from(this.factories.keys()),
-            objectId: config.id,
+            objectId: input.config.id,
           }
         );
         return null;
@@ -187,29 +188,29 @@ export class GameObjectFactoryManager {
         'createGameObject',
         'Factory found, creating game object',
         {
-          objectId: config.id,
-          objectType: config.type,
+          objectId: input.config.id,
+          objectType: input.type,
           factoryType: factory.constructor.name,
-          canCreate: factory.canCreate(config.type),
+          canCreate: factory.canCreate(input.type),
         }
       );
 
-      if (!factory.canCreate(config.type)) {
+      if (!factory.canCreate(input.type)) {
         logger.warn(
           'GameObjectFactoryManager',
           'createGameObject',
           'Factory cannot create this object type',
           {
-            objectType: config.type,
+            objectType: input.type,
             factoryType: factory.constructor.name,
             supportedTypes: factory.getSupportedTypes(),
-            objectId: config.id,
+            objectId: input.config.id,
           }
         );
         return null;
       }
 
-      const gameObject = factory.createGameObject(config, scene);
+      const gameObject = factory.createGameObject(input);
 
       if (gameObject) {
         logger.debug(
@@ -217,8 +218,8 @@ export class GameObjectFactoryManager {
           'createGameObject',
           'Game object created successfully',
           {
-            objectId: config.id,
-            objectType: config.type,
+            objectId: input.config.id,
+            objectType: input.type,
             phaserObjectType: gameObject.constructor.name,
             gameObjectName: gameObject.name,
           }
@@ -229,8 +230,8 @@ export class GameObjectFactoryManager {
           'createGameObject',
           'Factory failed to create game object',
           {
-            objectId: config.id,
-            objectType: config.type,
+            objectId: input.config.id,
+            objectType: input.type,
             factoryType: factory.constructor.name,
           }
         );
@@ -241,11 +242,18 @@ export class GameObjectFactoryManager {
       logger.error(
         'GameObjectFactoryManager',
         'createGameObject',
-        `Error creating game object: ${config?.id}`,
+        `Error creating game object: ${input.config?.id}`,
         error
       );
       return null;
     }
+  }
+
+  /**
+   * Get factory for specific type
+   */
+  private getFactoryForType(objectType: string): IGameObjectFactory | undefined {
+    return this.factories.get(objectType);
   }
 
   /**

@@ -109,5 +109,5 @@ export interface UnitContext {
   /**
    * Additional custom context data
    */
-  [key: string]: any;
+  [key: string]: unknown;
 }

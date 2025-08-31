@@ -1,5 +1,5 @@
-import type { IUnitMemento } from './IUnitMemento';
 import type { UnitContext } from '../interfaces/IUnit';
+import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { UnitMemento } from './IUnitMemento';
 
 /**
@@ -8,7 +8,7 @@ import { UnitMemento } from './IUnitMemento';
  * Includes input, context, result, and performance metrics
  */
 export class UnitCalculationMemento extends UnitMemento {
-  private readonly calculationInput: any;
+  private readonly calculationInput: IStrategyInput;
   private readonly calculationContext: UnitContext;
   private readonly calculationResult: number;
   private readonly performanceMetrics: {
@@ -25,7 +25,7 @@ export class UnitCalculationMemento extends UnitMemento {
   };
 
   constructor(
-    calculationInput: any,
+    calculationInput: IStrategyInput,
     calculationContext: UnitContext,
     calculationResult: number,
     unitId: string,
@@ -76,7 +76,7 @@ export class UnitCalculationMemento extends UnitMemento {
   /**
    * Get the calculation input
    */
-  getCalculationInput(): any {
+  getCalculationInput(): IStrategyInput {
     return this.calculationInput;
   }
 
@@ -147,7 +147,7 @@ export class UnitCalculationMemento extends UnitMemento {
    * Get calculation summary
    */
   getCalculationSummary(): {
-    input: any;
+    input: IStrategyInput;
     result: number;
     success: boolean;
     totalTime: number;
@@ -243,7 +243,7 @@ export class UnitCalculationMemento extends UnitMemento {
    * Create a memento from a failed calculation
    */
   static createFromFailedCalculation(
-    calculationInput: any,
+    calculationInput: IStrategyInput,
     calculationContext: UnitContext,
     unitId: string,
     unitType: string,
@@ -278,7 +278,7 @@ export class UnitCalculationMemento extends UnitMemento {
    * Create a memento from a successful calculation
    */
   static createFromSuccessfulCalculation(
-    calculationInput: any,
+    calculationInput: IStrategyInput,
     calculationContext: UnitContext,
     calculationResult: number,
     unitId: string,

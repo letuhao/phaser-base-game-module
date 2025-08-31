@@ -82,5 +82,5 @@ export interface IUnitEvent {
   type: UnitEventType;
   unitId: string;
   timestamp: Date;
-  data: any;
+  data: Record<string, unknown>;
 }
