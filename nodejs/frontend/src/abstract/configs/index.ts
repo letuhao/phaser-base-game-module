@@ -14,5 +14,9 @@ export type { IResponsiveConfig } from './IResponsiveConfig'
 // Configuration interfaces - Level 4 (HTML-like Scene Structure)
 export type { ISceneLoaderConfig } from './ISceneLoaderConfig'
 
+// Style and styling configuration interfaces
+export type { IStyleProperties } from './IStyleProperties'
+export type { IStyle } from './IStyle'
+
 // Re-export all configurations as a namespace for convenience
 export * as Configs from './'

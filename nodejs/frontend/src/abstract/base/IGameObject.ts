@@ -1,11 +1,12 @@
 import * as Phaser from 'phaser'
 import type { IContainer } from '../objects/IContainer'
+import type { CommonIStyleProperties } from '../configs/IStyleProperties'
 
 /**
  * Base interface for all game objects in the Phaser game
  * Provides common properties and methods that all game objects should implement
  * 
- * Inspired by XML node structure where objects can have parent-child relationships
+ * Layout and styling is now handled through layoutProperties and IStyle interface
  */
 export interface IGameObject {
   /** Unique identifier for this game object */
@@ -13,9 +14,6 @@ export interface IGameObject {
   
   /** Parent container (null if root node) */
   readonly parent: IContainer | null
-  
-  /** The underlying Phaser game object */
-  readonly phaserObject: Phaser.GameObjects.GameObject
   
   /** Whether this game object is currently active/visible */
   readonly isActive: boolean
@@ -26,26 +24,14 @@ export interface IGameObject {
   /** The scene this game object belongs to */
   readonly scene: Phaser.Scene
   
-  /** Position of the game object in world coordinates */
-  readonly position: { x: number; y: number }
-  
-  /** Size of the game object */
-  readonly size: { width: number; height: number }
-  
-  /** Scale of the game object - can be number (uniform) or { x: number; y: number } (non-uniform) */
-  readonly scale: number | { x: number; y: number }
-  
-  /** Rotation of the game object in radians */
-  readonly rotation: number
-  
-  /** Alpha/transparency of the game object (0-1) */
-  readonly alpha: number
-  
   /** Whether the game object is visible */
   readonly visible: boolean
   
   /** Whether the game object is interactive */
   readonly interactive: boolean
+  
+  /** Responsive layout properties for this object */
+  layoutProperties: CommonIStyleProperties
   
   /** Initialize the game object */
   initialize(): void
@@ -65,15 +51,6 @@ export interface IGameObject {
   /** Hide the game object */
   hide(): void
   
-  /** Set the position of the game object */
-  setPosition(x: number, y: number): void
-  
-  /** Set the rotation of the game object */
-  setRotation(rotation: number): void
-  
-  /** Set the alpha/transparency of the game object */
-  setAlpha(alpha: number): void
-  
   /** Set whether the game object is interactive */
   setInteractive(interactive: boolean): void
   
@@ -82,4 +59,10 @@ export interface IGameObject {
   
   /** Clone the game object */
   clone(): IGameObject
+  
+  /** Get the size of this game object */
+  getSize(): { width: number; height: number }
+  
+  /** Get the position of this game object */
+  getPosition(): { x: number; y: number }
 }

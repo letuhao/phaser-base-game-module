@@ -57,91 +57,30 @@ export class BackgroundContainer extends Container {
             properties: config.properties
           }, 'createFromConfig')
         
-                             // Set background image if specified
-            if (config.properties.textureKey) {
-              logger.debug('BackgroundContainer', 'Setting background image', {
-                objectId: config.id,
-                textureKey: config.properties.textureKey
-              }, 'createFromConfig')
-           
-                         // Check if we have responsive background images
-              if (config.properties.desktopTextureKey && config.properties.mobileTextureKey) {
-                logger.debug('BackgroundContainer', 'Using responsive background images', {
-                  objectId: config.id,
-                  desktopTextureKey: config.properties.desktopTextureKey,
-                  mobileTextureKey: config.properties.mobileTextureKey
-                }, 'createFromConfig')
-             
-             container.setResponsiveBackgroundImage(
-               config.properties.desktopTextureKey,
-               config.properties.mobileTextureKey,
-               {
-                 maintainAspectRatio: config.properties.maintainAspectRatio,
-                 scalingMode: config.properties.scalingMode || 'fit',
-                 alignment: config.properties.alignment || { x: 'center', y: 'center' }
-               }
-             )
-           } else {
-             // Use single texture key (fallback)
-             container.setBackgroundImage(config.properties.textureKey)
-           }
-         }
-        
-                          // Set background color if specified
-          if (config.properties.backgroundColor) {
-                        logger.debug('BackgroundContainer', 'Setting background color', {
-               objectId: config.id,
-               backgroundColor: config.properties.backgroundColor
-             }, 'createFromConfig')
-           container.setBackground({ color: config.properties.backgroundColor })
-         }
-         
-         // Set original dimensions for responsive sizing
-         if (config.properties.originalWidth !== undefined) {
-           container.setOriginalDimensions(
-             config.properties.originalWidth,
-             config.properties.originalHeight || config.properties.originalWidth * (9/16)
-           )
-         }
-         
-         // Set responsive configuration
-         if (config.properties.responsive) {
-           container.setResponsiveConfig(config.properties.responsive)
-         }
-        
-                 // Set maintain aspect ratio if specified
-         if (config.properties.maintainAspectRatio !== undefined) {
-                       logger.debug('BackgroundContainer', 'Setting maintain aspect ratio', {
-              objectId: config.id,
-              maintainAspectRatio: config.properties.maintainAspectRatio
-            }, 'createFromConfig')
-          container.setConstraints({ maintainAspectRatio: config.properties.maintainAspectRatio })
-        }
-        
-                 // Set interactive if specified
-         if (config.properties.interactive !== undefined) {
-                       logger.debug('BackgroundContainer', 'Setting interactive', {
+          // Set interactive if specified
+          if (config.properties.interactive !== undefined) {
+            logger.debug('BackgroundContainer', 'Setting interactive', {
               objectId: config.id,
               interactive: config.properties.interactive
             }, 'createFromConfig')
-          container.setInteractive(config.properties.interactive)
+            container.setInteractive(config.properties.interactive)
+          }
         }
-      }
-      
-      // Don't set size here - let the parent container control sizing
-      // The BackgroundContainer will resize itself based on background image aspect ratio
-      
-      // Set name
-      container.name = config.name || config.id
-      
-             logger.debug('BackgroundContainer', 'BackgroundContainer configured successfully', {
-         objectId: config.id,
-                 finalSize: { width: container.width, height: container.height },
-        finalPosition: { x: container.x, y: container.y },
-        finalName: container.name
-       }, 'createFromConfig')
-      
-      return container
+        
+        // Don't set size here - let the parent container control sizing
+        // The BackgroundContainer will resize itself based on background image aspect ratio
+        
+        // Set name
+        container.name = config.name || config.id
+        
+        logger.debug('BackgroundContainer', 'BackgroundContainer configured successfully', {
+          objectId: config.id,
+          finalSize: { width: container.width, height: container.height },
+          finalPosition: { x: container.x, y: container.y },
+          finalName: container.name
+        }, 'createFromConfig')
+        
+        return container
       
          } catch (error) {
        logger.error('BackgroundContainer', `Error in createFromConfig for ${config.id}:`, error)
@@ -180,9 +119,8 @@ export class BackgroundContainer extends Container {
    /** Whether background is loaded */
    private isBackgroundLoaded: boolean = false
    
-   /** Responsive background image keys */
-   private desktopTextureKey: string | null = null
-   private mobileTextureKey: string | null = null
+       /** Responsive background image keys - now handled by responsive configuration */
+    private responsiveBackgroundImages: Map<string, string> = new Map() // breakpoint -> textureKey
    
    /** Responsive behavior configuration */
    private responsiveConfig: {
@@ -306,65 +244,69 @@ export class BackgroundContainer extends Container {
     this.loadBackgroundImage(imageKey)
   }
   
-     /**
-    * Check if responsive background images are configured
-    */
-   private hasResponsiveBackgroundImages(): boolean {
-     // Check if we have both desktop and mobile texture keys configured
-     const hasResponsive = !!(this.desktopTextureKey && this.mobileTextureKey)
-     this.logger.debug('BackgroundContainer', 'Checking responsive background images', {
-       objectId: this.id,
-       desktopTextureKey: this.desktopTextureKey,
-       mobileTextureKey: this.mobileTextureKey,
-       hasResponsive
-     }, 'hasResponsiveBackgroundImages')
-     return hasResponsive
-   }
+         /**
+     * Check if responsive background images are configured
+     */
+    private hasResponsiveBackgroundImages(): boolean {
+      // Check if we have responsive background images configured
+      const hasResponsive = this.responsiveBackgroundImages.size > 0
+      this.logger.debug('BackgroundContainer', 'Checking responsive background images', {
+        objectId: this.id,
+        responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries()),
+        hasResponsive
+      }, 'hasResponsiveBackgroundImages')
+      return hasResponsive
+    }
    
-   /**
-    * Set responsive background image based on current device type
-    * @param desktopImageKey - Phaser texture key for desktop background
-    * @param mobileImageKey - Phaser texture key for mobile background
-    * @param options - Background loading options
-    */
-   setResponsiveBackgroundImage(
-     desktopImageKey: string,
-     mobileImageKey: string,
-     options: {
-       maintainAspectRatio?: boolean
-       scalingMode?: 'fit' | 'fill' | 'stretch'
-       alignment?: { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' }
-       backgroundColor?: string
-     } = {}
-      ): void {
-     // Store the responsive background image keys
-     this.desktopTextureKey = desktopImageKey
-     this.mobileTextureKey = mobileImageKey
-           this.logger.debug('BackgroundContainer', 'setResponsiveBackgroundImage called', {
+       /**
+     * Set responsive background image based on current device type
+     * @param desktopImageKey - Phaser texture key for desktop background
+     * @param mobileImageKey - Phaser texture key for mobile background
+     * @param options - Background loading options
+     */
+    setResponsiveBackgroundImage(
+      desktopImageKey: string,
+      mobileImageKey: string,
+      options: {
+        maintainAspectRatio?: boolean
+        scalingMode?: 'fit' | 'fill' | 'stretch'
+        alignment?: { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' }
+        backgroundColor?: string
+      } = {}
+       ): void {
+      // Store the responsive background image keys for backward compatibility
+      this.responsiveBackgroundImages.set('desktop', desktopImageKey)
+      this.responsiveBackgroundImages.set('mobile', mobileImageKey)
+      
+      this.logger.debug('BackgroundContainer', 'setResponsiveBackgroundImage called', {
         objectId: this.id,
         desktopImageKey,
         mobileImageKey,
         currentWidth: this.scene.game.scale.width
       }, 'setResponsiveBackgroundImage')
-    
-         // Determine current device type using scene's responsive configuration
-     const sceneResponsiveConfig = this.getSceneResponsiveConfig()
-     const currentWidth = this.scene.game.scale.width
-     const isDesktop = currentWidth >= sceneResponsiveConfig.breakpoints.desktop
-    
-         // Select appropriate image based on device type
-     const selectedImageKey = isDesktop ? desktopImageKey : mobileImageKey
      
-           this.logger.debug('BackgroundContainer', 'Selected background image', {
+      // Get the appropriate background image from responsive configuration
+      const currentWidth = this.scene.game.scale.width
+      
+      // Try to get background image from responsive config first
+      let selectedImageKey = this.getBackgroundImageFromResponsiveConfig(currentWidth)
+      
+      // Fallback to legacy desktop/mobile logic if no responsive config
+      if (!selectedImageKey) {
+        const isDesktop = currentWidth >= 992 // lg breakpoint
+        selectedImageKey = isDesktop ? desktopImageKey : mobileImageKey
+      }
+      
+      this.logger.debug('BackgroundContainer', 'Selected background image', {
         objectId: this.id,
-        deviceType: isDesktop ? 'desktop' : 'mobile',
         selectedImageKey,
-        currentWidth
+        currentWidth,
+        hasResponsiveConfig: !!selectedImageKey
       }, 'setResponsiveBackgroundImage')
-    
-    // Set the selected background image
-    this.setBackgroundImage(selectedImageKey, options)
-  }
+     
+      // Set the selected background image
+      this.setBackgroundImage(selectedImageKey, options)
+   }
   
      /**
     * Load background image from texture
@@ -490,186 +432,370 @@ export class BackgroundContainer extends Container {
    }
   
   // ===== RESPONSIVE SIZING =====
-  
+   
        /**
-    * Handle resize - now follows background image aspect ratio
-    */
-   resize(width: number, height: number): void {
-     this.logger.debug('BackgroundContainer', 'resize called', {
-       objectId: this.id,
-       newDimensions: { width, height },
-       currentDimensions: { width: this.width, height: this.height },
-       hasBackgroundImage: !!this.backgroundImage,
-       hasParent: !!this.parent
-     }, 'resize')
-     
-     // Check if background image should be switched based on device type
-     if (this.backgroundImageKey && this.hasResponsiveBackgroundImages()) {
-       this.logger.debug('BackgroundContainer', 'Checking if background image should be switched', {
-         objectId: this.id,
-         currentWidth: width,
-         hasBackgroundImageKey: !!this.backgroundImageKey,
-         hasResponsiveBackgroundImages: this.hasResponsiveBackgroundImages(),
-         desktopTextureKey: this.desktopTextureKey,
-         mobileTextureKey: this.mobileTextureKey
-       }, 'resize')
-       this.switchBackgroundImageForDeviceType(width, height)
-     } else {
-       this.logger.debug('BackgroundContainer', 'Skipping background image switch check', {
-         objectId: this.id,
-         hasBackgroundImageKey: !!this.backgroundImageKey,
-         hasResponsiveBackgroundImages: this.hasResponsiveBackgroundImages(),
-         desktopTextureKey: this.desktopTextureKey,
-         mobileTextureKey: this.mobileTextureKey
-       }, 'resize')
-     }
-     
-           if (this.isBackgroundLoaded && this.backgroundDimensions) {
-        // Get current responsive behavior to determine how to handle sizing
-        const responsiveBehavior = this.getCurrentResponsiveBehavior()
-        this.logger.debug('BackgroundContainer', 'Background image loaded, applying responsive behavior', {
-          objectId: this.id,
-          responsiveBehavior,
-          scaleStrategy: responsiveBehavior.scaleStrategy,
-          maintainAspectRatio: responsiveBehavior.maintainAspectRatio
-        }, 'resize')
+     * Get current breakpoint key for a given width
+     */
+    private getCurrentBreakpointKey(width: number): string {
+      try {
+        const responsiveConfig = this.getSceneResponsiveConfig()
         
-        let finalWidth: number
-        let finalHeight: number
-        let finalPosition: { x: number; y: number }
-        
-        // Apply responsive logic based on scene's scaleStrategy
-        switch (responsiveBehavior.scaleStrategy) {
-          case 'fit':
-            if (responsiveBehavior.maintainAspectRatio) {
-              // Fit within available space while maintaining aspect ratio
-              const imageAspectRatio = this.backgroundDimensions.width / this.backgroundDimensions.height
-              const containerAspectRatio = width / height
-              
-              if (containerAspectRatio > imageAspectRatio) {
-                // Container is wider, fit by height
-                finalHeight = height
-                finalWidth = finalHeight * imageAspectRatio
-              } else {
-                // Container is taller, fit by width
-                finalWidth = width
-                finalHeight = finalWidth / imageAspectRatio
-              }
-              
-              // Center the BackgroundContainer within the available space
-              const centerX = width / 2
-              const centerY = height / 2
-              finalPosition = { 
-                x: centerX - (finalWidth / 2), 
-                y: centerY - (finalHeight / 2) 
-              }
-            } else {
-              // Don't maintain aspect ratio, use available dimensions
-              finalWidth = width
-              finalHeight = height
-              finalPosition = { x: 0, y: 0 }
-            }
-            break
+        // First check if we have the new responsive config structure
+        if (responsiveConfig.responsiveSettings) {
+          const breakpoints = responsiveConfig.responsiveSettings
+          for (const [key, layouts] of Object.entries(breakpoints)) {
+            const typedLayouts = layouts as Array<{
+              id: string
+              breakpointCondition: { minWidth: number; maxWidth?: number }
+              layoutProperties: any
+            }>
             
-          case 'stretch':
-          default:
-            // Stretch to fill available space (may distort)
-            finalWidth = width
-            finalHeight = height
-            finalPosition = { x: 0, y: 0 }
-            break
+            // Check if any layout in this breakpoint matches the width
+            const hasMatch = typedLayouts.some(layout => {
+              const { minWidth, maxWidth } = layout.breakpointCondition
+              return width >= minWidth && (maxWidth === undefined || width <= maxWidth)
+            })
+            
+            if (hasMatch) {
+              return key
+            }
+          }
         }
         
-        // Set BackgroundContainer size based on responsive calculations
-        this.setSize(finalWidth, finalHeight)
-        this.setPosition(finalPosition.x, finalPosition.y)
-        
-        // Scale background image to fill this container
-        this.scaleBackgroundImageToFit()
-        
-        this.logger.debug('BackgroundContainer', 'Background container resized with responsive behavior', {
+        // Fallback to legacy structure if new structure not available
+        if (responsiveConfig.breakpoints) {
+          const breakpoints = responsiveConfig.breakpoints
+          for (const [key, breakpoint] of Object.entries(breakpoints)) {
+            const typedBreakpoint = breakpoint as {
+              minWidth: number
+              maxWidth?: number
+              behavior: {
+                maintainAspectRatio: boolean
+                scaleStrategy: 'fit' | 'stretch'
+                alignment: string
+                backgroundImage?: string
+              }
+            }
+            
+            if (width >= typedBreakpoint.minWidth && 
+                (typedBreakpoint.maxWidth === undefined || width <= typedBreakpoint.maxWidth)) {
+              return key
+            }
+          }
+        }
+      } catch (error) {
+        this.logger.warn('BackgroundContainer', 'Failed to get current breakpoint key', {
           objectId: this.id,
-          responsiveBehavior,
-          finalSize: { width: finalWidth, height: finalHeight },
-          finalPosition,
-          backgroundDimensions: this.backgroundDimensions
-        }, 'resize')
-      } else {
-       // No background image, apply responsive logic using scene's responsive configuration
-       const finalSize = this.calculateResponsiveSizeFromSceneConfig(width, height)
-       const finalPosition = this.calculateResponsivePositionFromSceneConfig(width, height, finalSize)
-       
-       // Set BackgroundContainer size based on responsive calculations
-       this.setSize(finalSize.width, finalSize.height)
-       this.setPosition(finalPosition.x, finalPosition.y)
-       
-       // Create or update background rectangle with the new dimensions
-       this.createBackgroundRectangle(finalSize.width, finalSize.height)
-       
-       this.logger.debug('BackgroundContainer', 'Background container resized with scene responsive config (no background)', {
-         objectId: this.id,
-         providedDimensions: { width, height },
-         originalDimensions: { width: this.originalWidth, height: this.originalHeight },
-         sceneResponsiveConfig: this.getSceneResponsiveConfig(),
-         finalSize,
-         finalPosition
-       }, 'resize')
-     }
-   }
+          width,
+          error: error instanceof Error ? error.message : String(error)
+        }, 'getCurrentBreakpointKey')
+      }
+      
+      return 'lg' // fallback to default
+    }
+
+    /**
+     * Get background image key from responsive configuration for a given width
+     */
+    private getBackgroundImageFromResponsiveConfig(width: number): string | undefined {
+      try {
+        const responsiveConfig = this.getSceneResponsiveConfig()
+        const objectId = this.id || 'background-container'
+        
+        // First check if we have the new responsive config structure
+        if (responsiveConfig.responsiveSettings) {
+          const breakpoints = responsiveConfig.responsiveSettings
+          for (const [, layouts] of Object.entries(breakpoints)) {
+            const typedLayouts = layouts as Array<{
+              id: string
+              breakpointCondition: { minWidth: number; maxWidth?: number }
+              layoutProperties: any
+            }>
+            
+            // Find the layout for this object
+            const objectLayout = typedLayouts.find(layout => layout.id === objectId)
+            if (objectLayout) {
+              const { minWidth, maxWidth } = objectLayout.breakpointCondition
+              if (width >= minWidth && (maxWidth === undefined || width <= maxWidth)) {
+                return objectLayout.layoutProperties.backgroundImage
+              }
+            }
+          }
+          
+          // If no responsive breakpoint matches, check default
+          if (responsiveConfig.default) {
+            const defaultLayout = (responsiveConfig.default as Array<{
+              id: string
+              breakpointCondition: { minWidth: number; maxWidth?: number }
+              layoutProperties: any
+            }>).find(layout => layout.id === objectId)
+            
+            if (defaultLayout) {
+              return defaultLayout.layoutProperties.backgroundImage
+            }
+          }
+        }
+        
+        // Fallback to legacy structure if new structure not available
+        if (responsiveConfig.breakpoints) {
+          const breakpoints = responsiveConfig.breakpoints
+          for (const [, breakpoint] of Object.entries(breakpoints)) {
+            const typedBreakpoint = breakpoint as {
+              minWidth: number
+              maxWidth?: number
+              behavior: {
+                maintainAspectRatio: boolean
+                scaleStrategy: 'fit' | 'stretch'
+                alignment: string
+                backgroundImage?: string
+              }
+            }
+            
+            if (width >= typedBreakpoint.minWidth && 
+                (typedBreakpoint.maxWidth === undefined || width <= typedBreakpoint.maxWidth)) {
+              return typedBreakpoint.behavior.backgroundImage
+            }
+          }
+        }
+      } catch (error) {
+        this.logger.warn('BackgroundContainer', 'Failed to get background image from responsive config', {
+          objectId: this.id,
+          width,
+          error: error instanceof Error ? error.message : String(error)
+        }, 'getBackgroundImageFromResponsiveConfig')
+      }
+      
+      return undefined
+    }
+
+    /**
+     * Get responsive configuration from scene
+     */
+    private getSceneResponsiveConfig(): any {
+      // Try to get responsive config from scene
+      const sceneConfigs = (this.scene as any).sceneConfigs
+      if (sceneConfigs?.responsive) {
+        this.logger.debug('BackgroundContainer', 'Found responsive config in scene', {
+          objectId: this.id,
+          responsiveConfig: sceneConfigs.responsive
+        }, 'getSceneResponsiveConfig')
+        return sceneConfigs.responsive
+      }
+      
+      // Try alternative access paths
+      if ((this.scene as any).configManager?.responsiveLoader) {
+        const responsiveConfig = (this.scene as any).configManager.responsiveLoader.getConfig('levis2025r3wheel')
+        if (responsiveConfig) {
+          this.logger.debug('BackgroundContainer', 'Found responsive config via configManager', {
+            objectId: this.id,
+            responsiveConfig
+          }, 'getSceneResponsiveConfig')
+          return responsiveConfig
+        }
+      }
+      
+      this.logger.warn('BackgroundContainer', 'No responsive config found, using fallback', {
+        objectId: this.id,
+        sceneConfigs: sceneConfigs ? Object.keys(sceneConfigs) : 'undefined',
+        hasConfigManager: !!(this.scene as any).configManager
+      }, 'getSceneResponsiveConfig')
+      
+      // Fallback to default config - now using the new responsive config structure
+      return {
+        // New structure
+        responsiveSettings: {
+          xs: [
+            {
+              id: 'background-container',
+              breakpointCondition: { minWidth: 0, maxWidth: 575 },
+              layoutProperties: {
+                maintainAspectRatio: false,
+                scaleStrategy: 'stretch',
+                alignment: 'center'
+              }
+            }
+          ],
+          sm: [
+            {
+              id: 'background-container',
+              breakpointCondition: { minWidth: 576, maxWidth: 767 },
+              layoutProperties: {
+                maintainAspectRatio: false,
+                scaleStrategy: 'stretch',
+                alignment: 'center'
+              }
+            }
+          ],
+          md: [
+            {
+              id: 'background-container',
+              breakpointCondition: { minWidth: 768, maxWidth: 991 },
+              layoutProperties: {
+                maintainAspectRatio: true,
+                scaleStrategy: 'fit',
+                alignment: 'center'
+              }
+            }
+          ],
+          lg: [
+            {
+              id: 'background-container',
+              breakpointCondition: { minWidth: 992, maxWidth: 1199 },
+              layoutProperties: {
+                maintainAspectRatio: true,
+                scaleStrategy: 'fit',
+                alignment: 'center'
+              }
+            }
+          ],
+          xl: [
+            {
+              id: 'background-container',
+              breakpointCondition: { minWidth: 1200, maxWidth: undefined },
+              layoutProperties: {
+                maintainAspectRatio: true,
+                scaleStrategy: 'fit',
+                alignment: 'center'
+              }
+            }
+          ]
+        },
+        default: [
+          {
+            id: 'background-container',
+            breakpointCondition: { minWidth: 0, maxWidth: undefined },
+            layoutProperties: {
+              maintainAspectRatio: true,
+              scaleStrategy: 'fit',
+              alignment: 'center'
+            }
+          }
+        ],
+        // Legacy structure for backward compatibility
+        breakpoints: {
+          xs: { minWidth: 0, maxWidth: 575, behavior: { maintainAspectRatio: false, scaleStrategy: 'stretch', alignment: 'center' } },
+          sm: { minWidth: 576, maxWidth: 767, behavior: { maintainAspectRatio: false, scaleStrategy: 'stretch', alignment: 'center' } },
+          md: { minWidth: 768, maxWidth: 991, behavior: { maintainAspectRatio: true, scaleStrategy: 'fit', alignment: 'center' } },
+          lg: { minWidth: 992, maxWidth: 1199, behavior: { maintainAspectRatio: true, scaleStrategy: 'fit', alignment: 'center' } },
+          xl: { minWidth: 1200, maxWidth: undefined, behavior: { maintainAspectRatio: true, scaleStrategy: 'fit', alignment: 'center' } }
+        },
+        deviceDetection: { enable: true, defaultBreakpoint: 'lg' }
+      }
+    }
    
-   /**
-    * Get responsive configuration from scene
-    */
-   private getSceneResponsiveConfig(): any {
-     // Try to get responsive config from scene
-     const sceneConfigs = (this.scene as any).sceneConfigs
-     if (sceneConfigs?.responsive) {
-       this.logger.debug('BackgroundContainer', 'Found responsive config in scene', {
-         objectId: this.id,
-         responsiveConfig: sceneConfigs.responsive
-       }, 'getSceneResponsiveConfig')
-       return sceneConfigs.responsive
-     }
-     
-     // Try alternative access paths
-     if ((this.scene as any).configManager?.responsiveLoader) {
-       const responsiveConfig = (this.scene as any).configManager.responsiveLoader.getConfig('levis2025r3wheel')
-       if (responsiveConfig) {
-         this.logger.debug('BackgroundContainer', 'Found responsive config via configManager', {
-           objectId: this.id,
-           responsiveConfig
-         }, 'getSceneResponsiveConfig')
-         return responsiveConfig
-       }
-     }
-     
-     this.logger.warn('BackgroundContainer', 'No responsive config found, using fallback', {
-       objectId: this.id,
-       sceneConfigs: sceneConfigs ? Object.keys(sceneConfigs) : 'undefined',
-       hasConfigManager: !!(this.scene as any).configManager
-     }, 'getSceneResponsiveConfig')
-     
-     // Fallback to default config
-     return {
-       breakpoints: { desktop: 1024, mobile: 1023 },
-       desktop: { maintainAspectRatio: true, scaleStrategy: 'fit', alignment: 'center' },
-       mobile: { maintainAspectRatio: false, scaleStrategy: 'stretch', alignment: 'center' }
-     }
-   }
-   
-   /**
-    * Get current responsive behavior based on screen width
-    */
-   private getCurrentResponsiveBehavior(): any {
-     const responsiveConfig = this.getSceneResponsiveConfig()
-     const currentWidth = this.scene.game.scale.width
-     
-     if (currentWidth >= responsiveConfig.breakpoints.desktop) {
-       return responsiveConfig.desktop
-     } else {
-       return responsiveConfig.mobile
-     }
-   }
+       /**
+     * Get current responsive behavior based on screen width
+     * Now works with new responsive config structure
+     */
+    private getCurrentResponsiveBehavior(): any {
+      const responsiveConfig = this.getSceneResponsiveConfig()
+      const currentWidth = this.scene.game.scale.width
+      
+      // First check if we have the new responsive config structure
+      if (responsiveConfig.responsiveSettings && responsiveConfig.default) {
+        // Use the new responsive config structure
+        const objectId = this.id || 'background-container'
+        
+        // Check responsive breakpoints first
+        const breakpoints = responsiveConfig.responsiveSettings
+        for (const [key, layouts] of Object.entries(breakpoints)) {
+          const typedLayouts = layouts as Array<{
+            id: string
+            breakpointCondition: { minWidth: number; maxWidth?: number }
+            layoutProperties: any
+          }>
+          const objectLayout = typedLayouts.find(layout => layout.id === objectId)
+          if (objectLayout) {
+            const { minWidth, maxWidth } = objectLayout.breakpointCondition
+            if (currentWidth >= minWidth && (maxWidth === undefined || currentWidth <= maxWidth)) {
+              this.logger.debug('BackgroundContainer', 'Found matching responsive breakpoint', {
+                objectId,
+                breakpointKey: key,
+                currentWidth,
+                breakpointRange: `${minWidth}-${maxWidth || '∞'}`,
+                layoutProperties: objectLayout.layoutProperties
+              }, 'getCurrentResponsiveBehavior')
+              
+              return {
+                maintainAspectRatio: objectLayout.layoutProperties.maintainAspectRatio ?? true,
+                scaleStrategy: objectLayout.layoutProperties.scaleStrategy ?? 'fit',
+                alignment: objectLayout.layoutProperties.alignment ?? 'center'
+              }
+            }
+          }
+        }
+        
+        // If no responsive breakpoint matches, use default
+        const defaultLayout = (responsiveConfig.default as Array<{
+          id: string
+          breakpointCondition: { minWidth: number; maxWidth?: number }
+          layoutProperties: any
+        }>).find(layout => layout.id === objectId)
+        if (defaultLayout) {
+          this.logger.debug('BackgroundContainer', 'Using default breakpoint', {
+            objectId,
+            layoutProperties: defaultLayout.layoutProperties
+          }, 'getCurrentResponsiveBehavior')
+          
+          return {
+            maintainAspectRatio: defaultLayout.layoutProperties.maintainAspectRatio ?? true,
+            scaleStrategy: defaultLayout.layoutProperties.scaleStrategy ?? 'fit',
+            alignment: defaultLayout.layoutProperties.alignment ?? 'center'
+          }
+        }
+      }
+      
+      // Fallback to legacy behavior if new structure not available
+      if (responsiveConfig.breakpoints) {
+        const breakpoints = responsiveConfig.breakpoints
+        for (const [key, breakpoint] of Object.entries(breakpoints)) {
+          const typedBreakpoint = breakpoint as {
+            minWidth: number
+            maxWidth?: number
+            behavior: {
+              maintainAspectRatio: boolean
+              scaleStrategy: 'fit' | 'stretch'
+              alignment: string
+            }
+          }
+          
+          if (currentWidth >= typedBreakpoint.minWidth && 
+              (typedBreakpoint.maxWidth === undefined || currentWidth <= typedBreakpoint.maxWidth)) {
+            this.logger.debug('BackgroundContainer', 'Found matching legacy breakpoint', {
+              objectId: this.id,
+              breakpointKey: key,
+              currentWidth,
+              breakpointRange: `${typedBreakpoint.minWidth}-${typedBreakpoint.maxWidth || '∞'}`,
+              behavior: typedBreakpoint.behavior
+            }, 'getCurrentResponsiveBehavior')
+            return typedBreakpoint.behavior
+          }
+        }
+        
+        // Fallback to default behavior if no breakpoint matches
+        const defaultKey = responsiveConfig.deviceDetection?.defaultBreakpoint || 'lg'
+        const defaultBreakpoint = breakpoints[defaultKey]
+        this.logger.warn('BackgroundContainer', 'No legacy breakpoint matched, using default', {
+          objectId: this.id,
+          currentWidth,
+          defaultBreakpoint: defaultKey,
+          defaultBehavior: defaultBreakpoint?.behavior
+        }, 'getCurrentResponsiveBehavior')
+        
+        return defaultBreakpoint?.behavior || {
+          maintainAspectRatio: true,
+          scaleStrategy: 'fit',
+          alignment: 'center'
+        }
+      }
+      
+      // Ultimate fallback
+      return {
+        maintainAspectRatio: true,
+        scaleStrategy: 'fit',
+        alignment: 'center'
+      }
+    }
    
    /**
     * Calculate responsive size using scene's responsive configuration
@@ -1143,107 +1269,83 @@ export class BackgroundContainer extends Container {
     return { ...this.alignment }
   }
   
-          /**
-    * Switch background image based on device type
-    */
-   private switchBackgroundImageForDeviceType(width: number, _height: number): void {
-     if (!this.desktopTextureKey || !this.mobileTextureKey) {
-       this.logger.debug('BackgroundContainer', 'No responsive background images configured', {
-         objectId: this.id,
-         desktopTextureKey: this.desktopTextureKey,
-         mobileTextureKey: this.mobileTextureKey
-       }, 'switchBackgroundImageForDeviceType')
-       return
-     }
-     
-     // Get responsive configuration from scene to determine breakpoints
-     const sceneResponsiveConfig = this.getSceneResponsiveConfig()
-     this.logger.debug('BackgroundContainer', 'Got scene responsive config for background switching', {
-       objectId: this.id,
-       sceneResponsiveConfig,
-       currentWidth: width,
-       breakpoints: sceneResponsiveConfig.breakpoints
-     }, 'switchBackgroundImageForDeviceType')
-     
-     const isDesktop = width >= sceneResponsiveConfig.breakpoints.desktop
-     
-     // Determine which background image to use
-     let newImageKey: string
-     
-     if (isDesktop) {
-       // Use desktop background
-       if (this.scene.textures.exists(this.desktopTextureKey)) {
-         newImageKey = this.desktopTextureKey
-         this.logger.debug('BackgroundContainer', 'Selected desktop background', {
-           objectId: this.id,
-           textureKey: this.desktopTextureKey,
-           isDesktop,
-           width,
-           breakpoint: sceneResponsiveConfig.breakpoints.desktop
-         }, 'switchBackgroundImageForDeviceType')
-       } else {
-         this.logger.warn('BackgroundContainer', 'Desktop background texture not found', {
-           objectId: this.id,
-           textureKey: this.desktopTextureKey,
-           availableTextures: Object.keys(this.scene.textures.list)
-         }, 'switchBackgroundImageForDeviceType')
-         return
-       }
-     } else {
-       // Use mobile background
-       if (this.scene.textures.exists(this.mobileTextureKey)) {
-         newImageKey = this.mobileTextureKey
-         this.logger.debug('BackgroundContainer', 'Selected mobile background', {
-           objectId: this.id,
-           textureKey: this.mobileTextureKey,
-           isDesktop,
-           width,
-           breakpoint: sceneResponsiveConfig.breakpoints.desktop
-         }, 'switchBackgroundImageForDeviceType')
-       } else {
-         this.logger.warn('BackgroundContainer', 'Mobile background texture not found', {
-           objectId: this.id,
-           textureKey: this.mobileTextureKey,
-           availableTextures: Object.keys(this.scene.textures.list)
-         }, 'switchBackgroundImageForDeviceType')
-         return
-       }
-     }
-     
-     // Only switch if the image key is different
-     if (newImageKey !== this.backgroundImageKey) {
-       this.logger.debug('BackgroundContainer', 'Switching background image', {
-         objectId: this.id,
-         oldImageKey: this.backgroundImageKey,
-         newImageKey,
-         deviceType: isDesktop ? 'desktop' : 'mobile',
-         width,
-         breakpoint: sceneResponsiveConfig.breakpoints.desktop
-       }, 'switchBackgroundImageForDeviceType')
-       
-       // Update the background image key and reload
-       this.backgroundImageKey = newImageKey
-       this.loadBackgroundImage(newImageKey)
-       
-       // Ensure the new background image has the correct z-order
-       this.ensureBackgroundImageZOrder()
-       
-       // Refresh z-order of all child elements
-       this.refreshChildZOrders()
-       
-       // Force a re-render to ensure proper z-order
-       this.scene.events.emit('backgroundImageSwitched', this.id)
-     } else {
-       this.logger.debug('BackgroundContainer', 'Background image already correct for device type', {
-         objectId: this.id,
-         currentImageKey: this.backgroundImageKey,
-         newImageKey,
-         deviceType: isDesktop ? 'desktop' : 'mobile',
-         width,
-         breakpoint: sceneResponsiveConfig.breakpoints.desktop
-       }, 'switchBackgroundImageForDeviceType')
-     }
-   }
+              /**
+     * Switch background image based on device type using responsive configuration
+     */
+    private switchBackgroundImageForDeviceType(width: number, _height: number): void {
+      if (this.responsiveBackgroundImages.size === 0) {
+        this.logger.debug('BackgroundContainer', 'No responsive background images configured', {
+          objectId: this.id,
+          responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries())
+        }, 'switchBackgroundImageForDeviceType')
+        return
+      }
+      
+      // Get responsive configuration from scene to determine breakpoints
+      const sceneResponsiveConfig = this.getSceneResponsiveConfig()
+      this.logger.debug('BackgroundContainer', 'Got scene responsive config for background switching', {
+        objectId: this.id,
+        sceneResponsiveConfig,
+        currentWidth: width,
+        breakpoints: sceneResponsiveConfig.breakpoints || 'legacy',
+        responsiveSettings: sceneResponsiveConfig.responsiveSettings ? Object.keys(sceneResponsiveConfig.responsiveSettings) : 'none',
+        default: sceneResponsiveConfig.default ? 'available' : 'none'
+      }, 'switchBackgroundImageForDeviceType')
+      
+      // Get the appropriate background image from responsive configuration
+      const newImageKey = this.getBackgroundImageFromResponsiveConfig(width)
+      
+      if (!newImageKey) {
+        this.logger.warn('BackgroundContainer', 'No background image found in responsive config', {
+          objectId: this.id,
+          width,
+          breakpoints: sceneResponsiveConfig.breakpoints ? Object.keys(sceneResponsiveConfig.breakpoints) : 'legacy',
+          responsiveSettings: sceneResponsiveConfig.responsiveSettings ? Object.keys(sceneResponsiveConfig.responsiveSettings) : 'none'
+        }, 'switchBackgroundImageForDeviceType')
+        return
+      }
+      
+      // Check if the texture exists
+      if (!this.scene.textures.exists(newImageKey)) {
+        this.logger.warn('BackgroundContainer', 'Background texture not found', {
+          objectId: this.id,
+          textureKey: newImageKey,
+          availableTextures: Object.keys(this.scene.textures.list)
+        }, 'switchBackgroundImageForDeviceType')
+        return
+      }
+      
+      // Only switch if the image key is different
+      if (newImageKey !== this.backgroundImageKey) {
+        this.logger.debug('BackgroundContainer', 'Switching background image', {
+          objectId: this.id,
+          oldImageKey: this.backgroundImageKey,
+          newImageKey,
+          width,
+          breakpoint: this.getCurrentBreakpointKey(width)
+        }, 'switchBackgroundImageForDeviceType')
+        
+        // Update the background image key and reload
+        this.backgroundImageKey = newImageKey
+        this.loadBackgroundImage(newImageKey)
+        
+        // Ensure the new background image has the correct z-order
+        this.ensureBackgroundImageZOrder()
+        
+        // Refresh z-order of all child elements
+        this.refreshChildZOrders()
+        
+        // Force a re-render to ensure proper z-order
+        this.scene.events.emit('backgroundImageSwitched', this.id)
+      } else {
+        this.logger.debug('BackgroundContainer', 'Background image already correct for device type', {
+          objectId: this.id,
+          currentImageKey: this.backgroundImageKey,
+          newImageKey,
+          width
+        }, 'switchBackgroundImageForDeviceType')
+      }
+    }
   
   /**
    * Debug background container state
@@ -1395,63 +1497,127 @@ export class BackgroundContainer extends Container {
      }
    }
    
-       /**
-     * Force refresh z-order of all child elements
-     * This ensures proper layering after background image changes
-     */
-     private refreshChildZOrders(): void {
-       this.logger.debug('BackgroundContainer', 'Refreshing child z-orders', {
-         objectId: this.id,
-         childCount: this.children.length
-       }, 'refreshChildZOrders')
-       
-       // Get the scene configuration to access z-order values
-       const sceneConfig = (this.scene as any).sceneConfigs?.scene
-       if (!sceneConfig?.gameObjects) {
-         this.logger.warn('BackgroundContainer', 'No scene config available for z-order refresh', {
-           objectId: this.id
-         }, 'refreshChildZOrders')
-         return
-       }
-       
-       // Find the background container config to get child z-orders
-       const backgroundConfig = sceneConfig.gameObjects.find((obj: any) => obj.id === this.id)
-       if (!backgroundConfig?.children) {
-         this.logger.warn('BackgroundContainer', 'No background config found for z-order refresh', {
-           objectId: this.id
-         }, 'refreshChildZOrders')
-         return
-       }
-       
-       // Iterate through all children and ensure they have proper z-order from config
-       this.children.forEach((child: any, index: number) => {
-         if (child && typeof child.setDepth === 'function') {
-           // Find the child config to get its z-order
-           const childConfig = backgroundConfig.children.find((config: any) => config.id === child.name || config.id === child.id)
-           
-           if (childConfig?.zOrder !== undefined) {
-             // Use z-order from scene configuration
-             child.setDepth(childConfig.zOrder)
-             this.logger.debug('BackgroundContainer', 'Child z-order refreshed from config', {
-               objectId: this.id,
-               childName: child.name || child.id || 'unnamed',
-               childIndex: index,
-               configZOrder: childConfig.zOrder
-             }, 'refreshChildZOrders')
-           } else {
-             // Fallback to default z-order if not specified in config
-             const fallbackZOrder = index + 1
-             child.setDepth(fallbackZOrder)
-             this.logger.debug('BackgroundContainer', 'Child z-order set to fallback', {
-               objectId: this.id,
-               childName: child.name || child.id || 'unnamed',
-               childIndex: index,
-               fallbackZOrder: fallbackZOrder
-             }, 'refreshChildZOrders')
-           }
-         }
-       })
-     }
+             /**
+      * Force refresh z-order of all child elements
+      * This ensures proper layering after background image changes
+      */
+      private refreshChildZOrders(): void {
+        this.logger.debug('BackgroundContainer', 'Refreshing child z-orders', {
+          objectId: this.id,
+          childCount: this.children.length
+        }, 'refreshChildZOrders')
+        
+        // Try multiple paths to find scene configuration
+        let sceneConfig: any = null
+        let configPath = 'unknown'
+        
+        // Try different possible paths for scene configuration
+        if ((this.scene as any).sceneConfigs?.scene?.gameObjects) {
+          sceneConfig = (this.scene as any).sceneConfigs.scene
+          configPath = 'sceneConfigs.scene'
+        } else if ((this.scene as any).sceneConfigs?.gameObjects) {
+          sceneConfig = (this.scene as any).sceneConfigs
+          configPath = 'sceneConfigs'
+        } else if ((this.scene as any).configManager?.sceneLoader?.sceneConfig?.gameObjects) {
+          sceneConfig = (this.scene as any).configManager.sceneLoader.sceneConfig
+          configPath = 'configManager.sceneLoader.sceneConfig'
+        } else if ((this.scene as any).configManager?.sceneConfig?.gameObjects) {
+          sceneConfig = (this.scene as any).configManager.sceneConfig
+          configPath = 'configManager.sceneConfig'
+        }
+        
+        if (!sceneConfig?.gameObjects) {
+          this.logger.debug('BackgroundContainer', 'No scene config available for z-order refresh, using fallback', {
+            objectId: this.id,
+            triedPaths: [
+              'sceneConfigs.scene',
+              'sceneConfigs', 
+              'configManager.sceneLoader.sceneConfig',
+              'configManager.sceneConfig'
+            ],
+            availablePaths: Object.keys((this.scene as any) || {}),
+            hasSceneConfigs: !!(this.scene as any).sceneConfigs,
+            hasConfigManager: !!(this.scene as any).configManager
+          }, 'refreshChildZOrders')
+          
+          // Use fallback z-order assignment
+          this.assignFallbackZOrders()
+          return
+        }
+        
+        // Find the background container config to get child z-orders
+        const backgroundConfig = sceneConfig.gameObjects.find((obj: any) => obj.id === this.id)
+        if (!backgroundConfig?.children) {
+          this.logger.debug('BackgroundContainer', 'No background config found for z-order refresh, using fallback', {
+            objectId: this.id,
+            configPath,
+            availableGameObjects: sceneConfig.gameObjects?.map((obj: any) => obj.id) || [],
+            backgroundConfig: backgroundConfig || 'not found'
+          }, 'refreshChildZOrders')
+          
+          // Use fallback z-order assignment
+          this.assignFallbackZOrders()
+          return
+        }
+        
+        // Iterate through all children and ensure they have proper z-order from config
+        this.children.forEach((child: any, index: number) => {
+          if (child && typeof child.setDepth === 'function') {
+            // Find the child config to get its z-order
+            const childConfig = backgroundConfig.children.find((config: any) => 
+              config.id === child.name || config.id === child.id || config.id === child.id
+            )
+            
+            if (childConfig?.zOrder !== undefined) {
+              // Use z-order from scene configuration
+              child.setDepth(childConfig.zOrder)
+              this.logger.debug('BackgroundContainer', 'Child z-order refreshed from config', {
+                objectId: this.id,
+                childName: child.name || child.id || 'unnamed',
+                childIndex: index,
+                configZOrder: childConfig.zOrder,
+                configPath
+              }, 'refreshChildZOrders')
+            } else {
+              // Fallback to default z-order if not specified in config
+              const fallbackZOrder = index + 1
+              child.setDepth(fallbackZOrder)
+              this.logger.debug('BackgroundContainer', 'Child z-order set to fallback', {
+                objectId: this.id,
+                childName: child.name || child.id || 'unnamed',
+                childIndex: index,
+                fallbackZOrder: fallbackZOrder,
+                configPath
+              }, 'refreshChildZOrders')
+            }
+          }
+        })
+      }
+      
+      /**
+       * Assign fallback z-orders when no configuration is available
+       */
+      private assignFallbackZOrders(): void {
+        this.logger.debug('BackgroundContainer', 'Assigning fallback z-orders', {
+          objectId: this.id,
+          childCount: this.children.length
+        }, 'assignFallbackZOrders')
+        
+        // Assign sequential z-orders to children
+        this.children.forEach((child: any, index: number) => {
+          if (child && typeof child.setDepth === 'function') {
+            const fallbackZOrder = index + 1
+            child.setDepth(fallbackZOrder)
+            
+            this.logger.debug('BackgroundContainer', 'Fallback z-order assigned', {
+              objectId: this.id,
+              childName: child.name || child.id || 'unnamed',
+              childIndex: index,
+              fallbackZOrder: fallbackZOrder
+            }, 'assignFallbackZOrders')
+          }
+        })
+      }
    
    /**
     * Set interactive state
@@ -1464,5 +1630,151 @@ export class BackgroundContainer extends Container {
       this.disableInteractive()
     }
     return this
+  }
+
+  /**
+   * Override resizeSelf to implement custom background container resize logic
+   * This is part of the template method pattern from the parent Container class
+   */
+  protected override resizeSelf(width: number, height: number): void {
+    this.logger.debug('BackgroundContainer', 'resizeSelf called', {
+      objectId: this.id,
+      newDimensions: { width, height },
+      currentDimensions: { width: this.width, height: this.height },
+      hasBackgroundImage: !!this.backgroundImage,
+      hasParent: !!this.parent
+    }, 'resizeSelf');
+    
+    // Check if background image should be switched based on device type
+    if (this.backgroundImageKey && this.hasResponsiveBackgroundImages()) {
+      this.logger.debug('BackgroundContainer', 'Checking if background image should be switched', {
+        objectId: this.id,
+        currentWidth: width,
+        hasBackgroundImageKey: !!this.backgroundImageKey,
+        hasResponsiveBackgroundImages: this.hasResponsiveBackgroundImages(),
+        responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries())
+      }, 'resizeSelf');
+      this.switchBackgroundImageForDeviceType(width, height);
+    } else {
+      this.logger.debug('BackgroundContainer', 'Skipping background image switch check', {
+        objectId: this.id,
+        hasBackgroundImageKey: !!this.backgroundImageKey,
+        hasResponsiveBackgroundImages: this.hasResponsiveBackgroundImages(),
+        responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries())
+      }, 'resizeSelf');
+    }
+    
+    if (this.isBackgroundLoaded && this.backgroundDimensions) {
+      // Get current responsive behavior to determine how to handle sizing
+      const responsiveBehavior = this.getCurrentResponsiveBehavior();
+      this.logger.debug('BackgroundContainer', 'Background image loaded, applying responsive behavior', {
+        objectId: this.id,
+        responsiveBehavior,
+        scaleStrategy: responsiveBehavior.scaleStrategy,
+        maintainAspectRatio: responsiveBehavior.maintainAspectRatio
+      }, 'resizeSelf');
+      
+      let finalWidth: number;
+      let finalHeight: number;
+      let finalPosition: { x: number; y: number };
+      
+      // Apply responsive logic based on scene's scaleStrategy
+      switch (responsiveBehavior.scaleStrategy) {
+        case 'fit':
+          if (responsiveBehavior.maintainAspectRatio) {
+            // Fit within available space while maintaining aspect ratio
+            const imageAspectRatio = this.backgroundDimensions.width / this.backgroundDimensions.height;
+            const containerAspectRatio = width / height;
+            
+            if (containerAspectRatio > imageAspectRatio) {
+              // Container is wider, fit by height
+              finalHeight = height;
+              finalWidth = finalHeight * imageAspectRatio;
+            } else {
+              // Container is taller, fit by width
+              finalWidth = width;
+              finalHeight = finalWidth / imageAspectRatio;
+            }
+            
+            // Center the BackgroundContainer within the available space
+            const centerX = width / 2;
+            const centerY = height / 2;
+            finalPosition = { 
+              x: centerX - (finalWidth / 2), 
+              y: centerY - (finalHeight / 2) 
+            };
+          } else {
+            // Don't maintain aspect ratio, use available dimensions
+            finalWidth = width;
+            finalHeight = height;
+            finalPosition = { x: 0, y: 0 };
+          }
+          break;
+          
+        case 'stretch':
+        default:
+          // Stretch to fill available space (may distort)
+          finalWidth = width;
+          finalHeight = height;
+          finalPosition = { x: 0, y: 0 };
+          break;
+      }
+      
+      // Set BackgroundContainer size based on responsive calculations
+      this.setSize(finalWidth, finalHeight);
+      this.setPosition(finalPosition.x, finalPosition.y);
+      
+      // Scale background image to fill this container
+      this.scaleBackgroundImageToFit();
+      
+      this.logger.debug('BackgroundContainer', 'Background container resized with responsive behavior', {
+        objectId: this.id,
+        responsiveBehavior,
+        finalSize: { width: finalWidth, height: finalHeight },
+        finalPosition,
+        backgroundDimensions: this.backgroundDimensions
+      }, 'resizeSelf');
+    } else {
+      // No background image, apply responsive logic using scene's responsive configuration
+      const finalSize = this.calculateResponsiveSizeFromSceneConfig(width, height);
+      const finalPosition = this.calculateResponsivePositionFromSceneConfig(width, height, finalSize);
+      
+      // Set BackgroundContainer size based on responsive calculations
+      this.setSize(finalSize.width, finalSize.height);
+      this.setPosition(finalPosition.x, finalPosition.y);
+      
+      // Create or update background rectangle with the new dimensions
+      this.createBackgroundRectangle(finalSize.width, finalSize.height);
+      
+      this.logger.debug('BackgroundContainer', 'Background container resized with scene responsive config (no background)', {
+        objectId: this.id,
+        providedDimensions: { width, height },
+        originalDimensions: { width: this.originalWidth, height: this.originalHeight },
+        sceneResponsiveConfig: this.getSceneResponsiveConfig(),
+        finalSize,
+        finalPosition
+      }, 'resizeSelf');
+    }
+  }
+  
+  /**
+   * Override resizeAfter to implement post-resize operations specific to background containers
+   * This is part of the template method pattern from the parent Container class
+   */
+  protected override resizeAfter(width: number, height: number): void {
+    this.logger.debug('BackgroundContainer', 'resizeAfter called', {
+      objectId: this.id,
+      newDimensions: { width, height }
+    }, 'resizeAfter');
+    
+    // Ensure background image z-order is correct after resize
+    this.ensureBackgroundImageZOrder();
+    
+    // Refresh z-orders of all children
+    this.refreshChildZOrders();
+    
+    this.logger.debug('BackgroundContainer', 'Post-resize operations completed', {
+      objectId: this.id
+    }, 'resizeAfter');
   }
 }

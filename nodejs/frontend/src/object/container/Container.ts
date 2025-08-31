@@ -2,8 +2,9 @@ import * as Phaser from 'phaser'
 import type { IContainer } from '../../abstract/objects/IContainer'
 import type { IGameObject } from '../../abstract/base/IGameObject'
 import type { IBounds } from '../../abstract/objects/IBound'
+import type { IStyle } from '../../abstract/configs/IStyle'
+import type { CommonIStyleProperties, IRandomValueNumber } from '../../abstract/configs/IStyleProperties'
 import { Logger } from '../../core/Logger'
-import { ScalableHelper } from '../shapes/ScalableHelper'
 
 /**
  * Container Class
@@ -11,11 +12,11 @@ import { ScalableHelper } from '../shapes/ScalableHelper'
  * 
  * Key Features:
  * - Directly extends Phaser.GameObjects.Container for optimal performance
- * - Uses ScalableHelper for responsive behavior
+ * - Implements IStyle for responsive behavior
  * - Implements minimal IContainer interface
  * - Maintains proper Phaser container functionality
  */
-export class Container extends Phaser.GameObjects.Container implements IContainer {
+export class Container extends Phaser.GameObjects.Container implements IContainer, IStyle {
   // ===== ESSENTIAL PROPERTIES =====
   
   /** Unique identifier for this container */
@@ -23,9 +24,6 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   
   /** Parent container (null if root) */
   readonly parent: IContainer | null
-  
-  /** ScalableHelper for responsive behavior */
-  private scalableHelper: ScalableHelper
   
   /** Array of child game objects */
   readonly children: IGameObject[] = []
@@ -42,6 +40,31 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     respectParentBounds: true,
     maintainAspectRatio: false
   }
+  
+  /** Current style properties */
+  private currentStyle: CommonIStyleProperties = {
+    maintainAspectRatio: false,
+    scaleStrategy: 'stretch',
+    alignment: 'center'
+  };
+  
+  /** Responsive layout properties for this object (IGameObject requirement) */
+  layoutProperties: CommonIStyleProperties = {
+    maintainAspectRatio: false,
+    scaleStrategy: 'stretch',
+    alignment: 'center'
+  };
+  
+  /** Spacing properties for layout containers */
+  readonly spacing = {
+    gap: 10,
+    padding: {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0
+    }
+  };
   
   // ===== COMPUTED PROPERTIES =====
   
@@ -95,9 +118,6 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     this.id = id
     this.parent = parent
     
-    // Initialize ScalableHelper for responsive behavior
-    this.scalableHelper = new ScalableHelper(scene, id, parent)
-    
     // Set up the container
     this.setupContainer()
   }
@@ -112,6 +132,128 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     // Set default properties
     this.setSize(100, 100) // Default size
     this.setInteractive()
+  }
+  
+  // ===== IStyle IMPLEMENTATION =====
+  
+  /** Set the style properties for this container */
+  setStyle(layoutProperties: CommonIStyleProperties): void {
+    this.logger.debug('Container', 'Setting style properties', {
+      id: this.id,
+      newStyle: layoutProperties
+    });
+    
+    // Store the new style
+    this.currentStyle = { ...layoutProperties };
+    
+    // Apply position properties
+    this.applyPositionProperties(layoutProperties);
+    
+    // Apply size properties
+    this.applySizeProperties(layoutProperties);
+    
+    // Apply visual properties
+    this.applyVisualProperties(layoutProperties);
+    
+    // Apply background properties
+    this.applyBackgroundProperties(layoutProperties);
+  }
+  
+  /** Get the current style properties */
+  getStyle(): CommonIStyleProperties {
+    return { ...this.currentStyle };
+  }
+  
+  /** Get the object ID for responsive config lookup */
+  getStyleId(): string {
+    return this.id;
+  }
+  
+  // ===== STYLE APPLICATION METHODS =====
+  
+  /** Apply position properties from style */
+  private applyPositionProperties(style: CommonIStyleProperties): void {
+    if (style.positionX !== undefined) {
+      if (typeof style.positionX === 'number') {
+        this.x = style.positionX;
+      } else if (style.positionX === 'center') {
+        // Center horizontally (will be applied when parent bounds are known)
+        this.x = 0; // Placeholder, will be calculated
+      }
+    }
+    
+    if (style.positionY !== undefined) {
+      if (typeof style.positionY === 'number') {
+        this.y = style.positionY;
+      } else if (style.positionY === 'center') {
+        // Center vertically (will be applied when parent bounds are known)
+        this.y = 0; // Placeholder, will be calculated
+      }
+    }
+    
+    if (style.positionZ !== undefined) {
+      this.setDepth(style.positionZ);
+    }
+  }
+  
+  /** Apply size properties from style */
+  private applySizeProperties(style: CommonIStyleProperties): void {
+    if (style.width !== undefined) {
+      if (typeof style.width === 'number') {
+        this.width = style.width;
+      }
+      // 'fill' and 'auto' will be handled during resize
+    }
+    
+    if (style.height !== undefined) {
+      if (typeof style.height === 'number') {
+        this.height = style.height;
+      }
+      // 'fill' and 'auto' will be handled during resize
+    }
+  }
+  
+  /** Apply visual properties from style */
+  private applyVisualProperties(style: CommonIStyleProperties): void {
+    if (style.alpha !== undefined) {
+      if (typeof style.alpha === 'number') {
+        this.setAlpha(style.alpha);
+      } else if (typeof style.alpha === 'object' && 'min' in style.alpha && 'max' in style.alpha) {
+        // Handle RandomValueNumber
+        const randomValue = (style.alpha as IRandomValueNumber).getRandomValue();
+        this.setAlpha(randomValue);
+      }
+    }
+    
+    if (style.rotation !== undefined) {
+      if (typeof style.rotation === 'number') {
+        this.setRotation(style.rotation);
+      } else if (typeof style.rotation === 'object' && 'min' in style.rotation && 'max' in style.rotation) {
+        // Handle RandomValueNumber
+        const randomValue = (style.rotation as IRandomValueNumber).getRandomValue();
+        this.setRotation(randomValue);
+      }
+    }
+    
+    if (style.visible !== undefined) {
+      this.setVisible(style.visible);
+    }
+    
+    if (style.interactive !== undefined) {
+      if (style.interactive) {
+        this.setInteractive();
+      } else {
+        this.disableInteractive();
+      }
+    }
+  }
+  
+  /** Apply background properties from style */
+  private applyBackgroundProperties(style: CommonIStyleProperties): void {
+    if (style.backgroundColor !== undefined) {
+      // For containers, we might need to create a background rectangle
+      // This will be implemented based on specific needs
+    }
   }
   
   // ===== IContainer IMPLEMENTATION =====
@@ -183,19 +325,23 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   
   // ===== RESPONSIVE BEHAVIOR =====
   
-  /** Handle responsive resize from scene */
+  /** Handle responsive resize from scene - now delegates to setStyle */
   handleResponsiveResize(width: number, height: number): void {
     this.logger.debug('Container', 'Handling responsive resize', {
       id: this.id,
       newDimensions: { width, height },
       currentDimensions: this.size
-    })
+    });
     
-    // Use ScalableHelper to handle responsive behavior
-    this.scalableHelper.handleResponsiveResize(width, height)
-    
-    // Apply the new size
-    this.setSize(width, height)
+    // Update layout properties with new dimensions and apply via setStyle
+    if (this.layoutProperties) {
+      this.layoutProperties = {
+        ...this.layoutProperties,
+        width,
+        height
+      };
+      this.setStyle(this.layoutProperties);
+    }
   }
   
   /** Handle resize events and propagate to children */
@@ -204,44 +350,90 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       id: this.id,
       newDimensions: { width, height },
       currentDimensions: this.size
-    })
+    });
     
-    // Set the container size
-    this.setSize(width, height)
+    // Template method pattern: split resize into three phases
     
-    // Propagate resize to all children
-    this.propagateResizeToChildren(width, height)
+    // Phase 1: Resize self (can be overridden by subclasses)
+    this.resizeSelf(width, height);
+    
+    // Phase 2: Propagate resize to children
+    this.propagateResizeToChildren(width, height);
+    
+    // Phase 3: Post-resize operations (can be overridden by subclasses)
+    this.resizeAfter(width, height);
   }
   
   /**
-   * Propagate resize event to all children
+   * Phase 1: Resize the container itself
+   * This method can be overridden by subclasses to implement custom resize logic
+   */
+  protected resizeSelf(width: number, height: number): void {
+    this.logger.debug('Container', 'Resizing self', {
+      id: this.id,
+      newDimensions: { width, height },
+      currentDimensions: this.size
+    });
+    
+    // Apply responsive styling if we have layout properties
+    if (this.layoutProperties) {
+      // Update the layout properties with the new dimensions
+      this.layoutProperties = {
+        ...this.layoutProperties,
+        width,
+        height
+      };
+      
+      // Apply the updated style properties (including size)
+      this.setStyle(this.layoutProperties);
+    }
+    
+    // Note: setSize is now handled by setStyle through applySizeProperties
+  }
+  
+  /**
+   * Phase 2: Propagate resize event to all children
    */
   protected propagateResizeToChildren(width: number, height: number): void {
     this.logger.debug('Container', 'Propagating resize to children', {
       id: this.id,
       newDimensions: { width, height },
       childCount: this.children.length
-    })
+    });
     
     // Loop through all children and call their resize method if available
     this.children.forEach((child: any, index: number) => {
       if (child && typeof child.resize === 'function') {
         try {
-          child.resize(width, height)
+          child.resize(width, height);
           this.logger.debug('Container', 'Child resize called', {
             id: this.id,
             childName: child.name || child.id || `child-${index}`,
             childType: child.constructor.name
-          })
+          });
         } catch (error) {
           this.logger.warn('Container', 'Failed to resize child', {
             id: this.id,
             childName: child.name || child.id || `child-${index}`,
             error: error instanceof Error ? error.message : String(error)
-          })
+          });
         }
       }
-    })
+    });
+  }
+  
+  /**
+   * Phase 3: Post-resize operations
+   * This method can be overridden by subclasses to implement post-resize logic
+   */
+  protected resizeAfter(width: number, height: number): void {
+    this.logger.debug('Container', 'Post-resize operations', {
+      id: this.id,
+      newDimensions: { width, height }
+    });
+    
+    // Default implementation is empty
+    // Subclasses can override this to implement custom post-resize logic
   }
   
   // ===== UTILITY METHODS =====
@@ -288,3 +480,4 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     super.destroy(fromScene)
   }
 }
+

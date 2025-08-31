@@ -1,18 +1,36 @@
 import { logger } from './Logger'
 
 /**
+ * Enum for game object types
+ */
+export enum GameObjectType {
+  CONTAINER = 'container',
+  IMAGE = 'image',
+  TEXT = 'text',
+  BUTTON = 'button',
+  BACKGROUND_CONTAINER = 'background-container',
+  SHAPE = 'shape'
+}
+
+/**
  * Generic game object interface for scene structure
  */
 export interface GameObjectConfig {
   id: string
-  type: 'container' | 'image' | 'text' | 'button' | 'background-container' | 'shape'
+  type: GameObjectType
   name: string
-  x: number | 'fill'
-  y: number | 'fill'
-  width: number | 'fill'
-  height: number | 'fill'
   children: GameObjectConfig[]
   parentId?: string
+  // Factory configuration for custom object creation
+  factory?: {
+    className: string
+    constructorParams?: any
+    createMethod?: string
+  }
+  // Object-specific properties (minimal - styles are in responsive config)
+  properties?: {
+    [key: string]: any
+  }
 }
 
 /**
@@ -28,6 +46,8 @@ export interface SceneConfig {
     preload: boolean
     priority: string[]
   }
+  // Responsive configuration for dynamic styling and positioning
+  responsive?: any
 }
 
 /**

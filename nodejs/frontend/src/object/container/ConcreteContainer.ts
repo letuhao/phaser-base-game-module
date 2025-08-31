@@ -35,42 +35,27 @@ export class ConcreteContainer extends Container {
     
     // Apply configuration properties
     if (config.properties) {
-              // Set background color if specified
-        if (config.properties.backgroundColor) {
-          // Background setting removed - use Phaser's built-in methods instead
-        }
-        
-        // Set interactive if specified
-        if (config.properties.interactive !== undefined) {
-          container.setInteractive(config.properties.interactive)
-        }
-        
-        // Set size if specified
-        if (config.width === 'fill' || config.height === 'fill') {
-          // Handle fill dimensions - use scene dimensions
-          const sceneWidth = scene.game.config.width as number
-          const sceneHeight = scene.game.config.height as number
-          
-          let finalWidth = config.width === 'fill' ? sceneWidth : (config.width as number)
-          let finalHeight = config.height === 'fill' ? (config.height === 'fill' ? sceneHeight : config.height) : (config.height || config.width)
-          
-          // For child containers, calculate relative positions
-          if (config.y === 100) { // Body container
-            finalHeight = sceneHeight - 100 - 80 // scene height - header - footer
-          } else if (config.y === 0 && config.height === 80) { // Footer container
-            finalHeight = 80
-          } else if (config.y === 0 && config.height === 100) { // Header container
-            finalHeight = 100
-          }
-          
-          container.setSize(finalWidth, finalHeight)
-        } else if (config.width && config.width !== 'fill') {
-                      container.setSize(config.width, config.height || config.width)
-        }
+      // Set interactive if specified
+      if (config.properties.interactive !== undefined) {
+        container.setInteractive(config.properties.interactive)
       }
+    }
+    
+    // Handle fill dimensions - use scene dimensions
+    if (config.width === 'fill' || config.height === 'fill') {
+      const sceneWidth = scene.game.config.width as number
+      const sceneHeight = scene.game.config.height as number
       
-      // Set name
-      container.name = config.name || config.id
+      let finalWidth = config.width === 'fill' ? sceneWidth : (config.width as number)
+      let finalHeight = config.height === 'fill' ? (config.height === 'fill' ? sceneHeight : config.height) : (config.height || config.width)
+      
+      container.setSize(finalWidth, finalHeight)
+    } else if (config.width && config.width !== 'fill') {
+      container.setSize(config.width, config.height || config.width)
+    }
+    
+    // Set name
+    container.name = config.name || config.id
     
     return container
   }

@@ -1,62 +1,16 @@
 // Simplified scene loader configuration for levis2025r3wheel scene
 // This focuses on the essential scene structure without complex interface requirements
 
-import type { Levis2025R3WheelResponsiveConfig } from './levis2025r3wheel.responsive.config'
-import type { GameObjectConfig } from '../../../core/SceneLoaderConfigLoader'
+import { levis2025r3wheelResponsiveConfig } from './levis2025r3wheel.responsive.config'
+import type { GameObjectConfig, SceneConfig } from '../../../core/SceneLoaderConfigLoader'
+import { GameObjectType } from '../../../core/SceneLoaderConfigLoader'
 
-// Custom simplified interfaces for this scene
-export interface Levis2025R3WheelGameObject extends GameObjectConfig {
-  id: string
-  type: 'container' | 'image' | 'text' | 'button' | 'background-container' | 'shape'
-  name: string
-  x: number | 'fill'
-  y: number | 'fill'
-  width: number | 'fill'
-  height: number | 'fill'
-  zOrder?: number // Z-order for proper layering
-  responsive: Levis2025R3WheelResponsiveConfig
-  children: Levis2025R3WheelGameObject[]
-  parentId?: string
-  // Factory configuration
-  factory?: {
-    className: string
-    constructorParams?: any
-    createMethod?: string
-  }
-  // Object-specific properties
-  properties?: {
-    backgroundColor?: string
-    textureKey?: string
-    content?: string
-    interactive?: boolean
-    
-    // Original dimensions for responsive sizing
-    originalWidth?: number
-    originalHeight?: number
-    
-    [key: string]: any
-  }
-}
-
-export interface Levis2025R3WheelSceneConfig {
-  sceneId: string
-  sceneName: string
-  version: string
-  backgroundColor: string
-  responsiveConfig: Levis2025R3WheelResponsiveConfig
-  gameObjects: Levis2025R3WheelGameObject[]
-  assetLoading: {
-    preload: boolean
-    priority: string[]
-  }
-}
-
-export const levis2025r3wheelSceneLoaderConfig: Levis2025R3WheelSceneConfig = {
+export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   sceneId: 'levis2025r3wheel',
   sceneName: 'Levis 2025 R3 Wheel Scene',
   version: '1.0.0',
   backgroundColor: '#000000',
-  responsiveConfig: {} as Levis2025R3WheelResponsiveConfig,
+  responsive: levis2025r3wheelResponsiveConfig,
   
   // Root game objects (like HTML body) - COMMENTED OUT FOR DEBUGGING
   // gameObjects: [
@@ -178,48 +132,58 @@ export const levis2025r3wheelSceneLoaderConfig: Levis2025R3WheelSceneConfig = {
   gameObjects: [
     {
       id: 'test-root-container',
-      type: 'container',
+      type: GameObjectType.CONTAINER,
       name: 'Test Root Container',
-      x: 0,
-      y: 0,
-      width: 'fill',
-      height: 'fill',
-      zOrder: 0,
-      responsive: {} as Levis2025R3WheelResponsiveConfig,
       factory: {
         className: 'ConcreteContainer',
         createMethod: 'createFromConfig'
       },
       properties: {
-        backgroundColor: '#000000', // Black color to verify display
         interactive: false
       },
       children: [
         {
           id: 'background-container',
-          type: 'background-container',
+          type: GameObjectType.BACKGROUND_CONTAINER,
           name: 'Background Container',
-          x: 0,
-          y: 0,
-          width: 'fill',
-          height: 'fill',
-          zOrder: -100, // Lowest z-order for background
-          responsive: {} as Levis2025R3WheelResponsiveConfig,
           factory: {
             className: 'BackgroundContainer',
             createMethod: 'createFromConfig'
           },
           properties: {
-            backgroundColor: '#ffffff',
-            textureKey: 'levis2025r3wheel-desktop-bg', // Fallback texture key
-            desktopTextureKey: 'levis2025r3wheel-desktop-bg', // Desktop background
-            mobileTextureKey: 'levis2025r3wheel-mobile-bg', // Mobile background
-            
-            // Original dimensions for responsive sizing
-            // originalWidth: 1920,  // Original design width
-            // originalHeight: 1080  // Original design height
+            interactive: false
           },
-          children: [],
+          children: [
+            {
+              id: 'footer-container',
+              type: GameObjectType.CONTAINER,
+              name: 'Footer Container',
+              factory: {
+                className: 'ConcreteContainer',
+                createMethod: 'createFromConfig'
+              },
+              properties: {
+                interactive: false
+              },
+              children: [
+                {
+                  id: 'footer-rectangle',
+                  type: GameObjectType.SHAPE,
+                  name: 'Footer Rectangle',
+                  factory: {
+                    className: 'Rectangle',
+                    createMethod: 'createFromConfig'
+                  },
+                  properties: {
+                    interactive: false
+                  },
+                  children: [],
+                  parentId: 'footer-container'
+                }
+              ],
+              parentId: 'background-container'
+            }
+          ],
           parentId: 'test-root-container'
         }
       ],
@@ -235,22 +199,28 @@ export const levis2025r3wheelSceneLoaderConfig: Levis2025R3WheelSceneConfig = {
 }
 
 // Helper function to get test root container config
-export const getTestRootContainerConfig = (): Levis2025R3WheelGameObject | undefined => {
+export const getTestRootContainerConfig = (): GameObjectConfig | undefined => {
   return levis2025r3wheelSceneLoaderConfig.gameObjects.find(
     obj => obj.id === 'test-root-container'
   )
 }
 
 // Helper function to get background container config
-export const getBackgroundContainerConfig = (): Levis2025R3WheelGameObject | undefined => {
+export const getBackgroundContainerConfig = (): GameObjectConfig | undefined => {
   const rootContainer = levis2025r3wheelSceneLoaderConfig.gameObjects.find(
     obj => obj.id === 'test-root-container'
   )
   return rootContainer?.children.find(child => child.id === 'background-container')
 }
 
+// Helper function to get footer container config
+export const getFooterContainerConfig = (): GameObjectConfig | undefined => {
+  const backgroundContainer = getBackgroundContainerConfig()
+  return backgroundContainer?.children.find(child => child.id === 'footer-container')
+}
+
 // Helper function to add child to test root container
-export const addChildToTestRoot = (child: Levis2025R3WheelGameObject): void => {
+export const addChildToTestRoot = (child: GameObjectConfig): void => {
   const testRootContainer = levis2025r3wheelSceneLoaderConfig.gameObjects.find(
     obj => obj.id === 'test-root-container'
   )
@@ -262,7 +232,7 @@ export const addChildToTestRoot = (child: Levis2025R3WheelGameObject): void => {
 }
 
 // Helper function to add child to background container
-export const addChildToBackground = (child: Levis2025R3WheelGameObject): void => {
+export const addChildToBackground = (child: GameObjectConfig): void => {
   const backgroundContainer = getBackgroundContainerConfig()
   
   if (backgroundContainer) {
@@ -271,31 +241,22 @@ export const addChildToBackground = (child: Levis2025R3WheelGameObject): void =>
   }
 }
 
-// Helper function to get background container config (commented out for debugging)
-// export const getBackgroundContainerConfig = (): Levis2025R3WheelGameObject | undefined => {
-//   return levis2025r3wheelSceneLoaderConfig.gameObjects.find(
-//     obj => obj.id === 'background-container'
-//   )
-// }
-
-// Helper function to add child to background container (commented out for debugging)
-// export const addChildToBackground = (child: Levis2025R3WheelGameObject): void => {
-//   const backgroundContainer = levis2025r3wheelSceneLoaderConfig.gameObjects.find(
-//     obj => obj.id === 'background-container'
-//   )
-//   
-//   if (backgroundContainer) {
-//     child.parentId = backgroundContainer.id
-//     backgroundContainer.children.push(child)
-//   }
-// }
+// Helper function to add child to footer container
+export const addChildToFooter = (child: GameObjectConfig): void => {
+  const footerContainer = getFooterContainerConfig()
+  
+  if (footerContainer) {
+    child.parentId = footerContainer.id
+    footerContainer.children.push(child)
+  }
+}
 
 // Helper function to get all game objects
-export const getAllGameObjects = (): Levis2025R3WheelGameObject[] => {
+export const getAllGameObjects = (): GameObjectConfig[] => {
   return levis2025r3wheelSceneLoaderConfig.gameObjects
 }
 
 // Helper function to find game object by ID
-export const findGameObject = (id: string): Levis2025R3WheelGameObject | undefined => {
+export const findGameObject = (id: string): GameObjectConfig | undefined => {
   return levis2025r3wheelSceneLoaderConfig.gameObjects.find(obj => obj.id === id)
 }

@@ -235,8 +235,8 @@ export class FlexboxContainer extends Container {
   
   /** Get the size of a child object */
   private getChildSize(child: IGameObject): { width: number; height: number } {
-    if ('size' in child && child.size) {
-      return child.size
+    if ('size' in child && child.size && typeof child.size === 'object' && 'width' in child.size && 'height' in child.size) {
+      return child.size as { width: number; height: number }
     }
     if ('phaserObject' in child && child.phaserObject) {
       return {
@@ -299,7 +299,7 @@ export class FlexboxContainer extends Container {
   }
   
   /** Override needsLayoutRecalculation to check flexbox-specific conditions */
-  override needsLayoutRecalculation(): boolean {
+  needsLayoutRecalculation(): boolean {
     // Check if any flex properties have changed
     return this.children.some(child => {
       const properties = this.getFlexItemProperties(child.id)
@@ -319,6 +319,15 @@ export class FlexboxContainer extends Container {
   override resize(width: number, height: number): void {
     super.resize(width, height)
     this.calculateLayout()
+  }
+  
+  /** Calculate and apply flexbox layout */
+  private calculateLayout(): void {
+    // Implement flexbox layout calculation
+    this.logger.debug('FlexboxContainer', 'Calculating flexbox layout', {
+      id: this.id,
+      childCount: this.children.length
+    })
   }
   
   // ===== UTILITY METHODS =====
@@ -362,5 +371,59 @@ export class FlexboxContainer extends Container {
       })),
       layoutInfo: this.getLayoutInfo()
     })
+  }
+  
+  /** Get the size of this game object */
+  getSize(): { width: number; height: number } {
+    return this.size;
+  }
+  
+  /** Get the position of this game object */
+  getPosition(): { x: number; y: number } {
+    return { x: this.x, y: this.y };
+  }
+  
+  /** Clone the game object */
+  clone(): IGameObject {
+    // Create a new flexbox container with the same properties
+    const cloned = new FlexboxContainer(this.scene, `${this.id}_clone`, this.x, this.y, this.parent)
+    // Copy flexbox properties
+    cloned.setFlexboxProperties(this.flexbox)
+    return cloned
+  }
+  
+  // ===== IGameObject IMPLEMENTATION =====
+  
+  /** Initialize the game object */
+  initialize(): void {
+    this.logger.debug('FlexboxContainer', 'Initializing flexbox container', { id: this.id })
+    // Default implementation - subclasses can override
+  }
+  
+  /** Update the game object (called every frame) */
+  update(_time: number, _delta: number): void {
+    // Default implementation - subclasses can override
+  }
+  
+  /** Activate/enable the game object */
+  activate(): void {
+    this.setActive(true)
+    this.logger.debug('FlexboxContainer', 'Flexbox container activated', { id: this.id })
+  }
+  
+  /** Deactivate/disable the game object */
+  deactivate(): void {
+    this.setActive(false)
+    this.logger.debug('FlexboxContainer', 'Flexbox container deactivated', { id: this.id })
+  }
+  
+  /** Show the game object */
+  show(): void {
+    this.setVisible(true)
+  }
+  
+  /** Hide the game object */
+  hide(): void {
+    this.setVisible(false)
   }
 }

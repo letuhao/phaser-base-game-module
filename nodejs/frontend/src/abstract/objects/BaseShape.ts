@@ -3,6 +3,7 @@ import type { IShape } from './IShape';
 import type { IContainer } from './IContainer';
 import { Logger } from '../../core/Logger';
 import type { IGameObject } from '../base/IGameObject';
+import type { CommonIStyleProperties } from '../configs/IStyleProperties';
 
 
 // Interface for Phaser objects that support positioning and sizing
@@ -36,6 +37,13 @@ export abstract class BaseShape implements IShape {
   
   /** Phaser game object */
   readonly phaserObject: IPositionablePhaserObject;
+  
+  /** Responsive layout properties for this object (IGameObject requirement) */
+  layoutProperties: CommonIStyleProperties = {
+    maintainAspectRatio: false,
+    scaleStrategy: 'fit',
+    alignment: 'center'
+  };
   
   /** Whether the object is active */
   readonly isActive: boolean;
@@ -103,6 +111,16 @@ export abstract class BaseShape implements IShape {
   
   hide(): void {
     this.setVisible(false);
+  }
+  
+  /** Get the size of this game object */
+  getSize(): { width: number; height: number } {
+    return this.size;
+  }
+  
+  /** Get the position of this game object */
+  getPosition(): { x: number; y: number } {
+    return this.position;
   }
   
   setRotation(rotation: number): void {

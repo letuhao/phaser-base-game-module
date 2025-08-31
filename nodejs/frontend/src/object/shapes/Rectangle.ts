@@ -1,21 +1,35 @@
 import * as Phaser from 'phaser';
 import type { IShape } from '../../abstract/objects/IShape';
 import type { IContainer } from '../../abstract/objects/IContainer';
+import type { IStyle } from '../../abstract/configs/IStyle';
+import type { CommonIStyleProperties, IRandomValueNumber } from '../../abstract/configs/IStyleProperties';
 import { Logger } from '../../core/Logger';
 import type { IGameObject } from '../../abstract/base/IGameObject';
-import { ScalableHelper } from './ScalableHelper';
 
 /**
  * Rectangle shape class
  * Creates and manages rectangular shapes with fill and stroke support
- * Extends Phaser.GameObjects.Rectangle and implements IShape interface
+ * Extends Phaser.GameObjects.Rectangle and implements IShape and IStyle interfaces
  */
-export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape {
+export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, IStyle {
   readonly shapeType = 'rectangle';
   private _id: string;
   private _parent: IContainer | null;
   private logger: Logger = Logger.getInstance();
-  private scalableHelper: ScalableHelper;
+  
+  /** Current style properties */
+  private currentStyle: CommonIStyleProperties = {
+    maintainAspectRatio: false,
+    scaleStrategy: 'stretch',
+    alignment: 'center'
+  };
+  
+  /** Responsive layout properties for this object (IGameObject requirement) */
+  layoutProperties: CommonIStyleProperties = {
+    maintainAspectRatio: false,
+    scaleStrategy: 'stretch',
+    alignment: 'center'
+  };
   
   constructor(
     scene: Phaser.Scene,
@@ -33,23 +47,151 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape {
     this._parent = parent;
     this.name = id;
     
-    // Initialize scalable helper for responsive behavior
-    this.scalableHelper = new ScalableHelper(scene, id, parent);
-    
     // Set initial properties
     this.setOrigin(0, 0); // Set origin to top-left for easier positioning
     
-          this.logger.debug('Rectangle', 'Rectangle created', {
-        id,
-        dimensions: { width, height },
-        fillColor,
-        position: { x, y },
-        depth: this.depth,
-        visible: this.visible,
-        active: this.active,
-        alpha: this.alpha,
-        scale: { x: this.scaleX, y: this.scaleY }
-      }, 'constructor');
+    this.logger.debug('Rectangle', 'Rectangle created', {
+      id,
+      dimensions: { width, height },
+      fillColor,
+      position: { x, y },
+      depth: this.depth,
+      visible: this.visible,
+      active: this.active,
+      alpha: this.alpha,
+      scale: { x: this.scaleX, y: this.scaleY }
+    }, 'constructor');
+  }
+  
+  // ===== IStyle IMPLEMENTATION =====
+  
+  /** Set the style properties for this rectangle */
+  setStyle(layoutProperties: CommonIStyleProperties): void {
+    this.logger.debug('Rectangle', 'Setting style properties', {
+      id: this.id,
+      newStyle: layoutProperties
+    });
+    
+    // Store the new style
+    this.currentStyle = { ...layoutProperties };
+    
+    // Apply position properties
+    this.applyPositionProperties(layoutProperties);
+    
+    // Apply size properties
+    this.applySizeProperties(layoutProperties);
+    
+    // Apply visual properties
+    this.applyVisualProperties(layoutProperties);
+    
+    // Apply fill and stroke properties
+    this.applyFillAndStrokeProperties(layoutProperties);
+  }
+  
+  /** Get the current style properties */
+  getStyle(): CommonIStyleProperties {
+    return { ...this.currentStyle };
+  }
+  
+  /** Get the object ID for responsive config lookup */
+  getStyleId(): string {
+    return this.id;
+  }
+  
+  // ===== STYLE APPLICATION METHODS =====
+  
+  /** Apply position properties from style */
+  private applyPositionProperties(style: CommonIStyleProperties): void {
+    if (style.positionX !== undefined) {
+      if (typeof style.positionX === 'number') {
+        this.x = style.positionX;
+      } else if (style.positionX === 'center') {
+        // Center horizontally (will be applied when parent bounds are known)
+        this.x = 0; // Placeholder, will be calculated
+      }
+    }
+    
+    if (style.positionY !== undefined) {
+      if (typeof style.positionY === 'number') {
+        this.y = style.positionY;
+      } else if (style.positionY === 'center') {
+        // Center vertically (will be applied when parent bounds are known)
+        this.y = 0; // Placeholder, will be calculated
+      }
+    }
+    
+    if (style.positionZ !== undefined) {
+      this.setDepth(style.positionZ);
+    }
+  }
+  
+  /** Apply size properties from style */
+  private applySizeProperties(style: CommonIStyleProperties): void {
+    if (style.width !== undefined) {
+      if (typeof style.width === 'number') {
+        this.width = style.width;
+      }
+      // 'fill' and 'auto' will be handled during resize
+    }
+    
+    if (style.height !== undefined) {
+      if (typeof style.height === 'number') {
+        this.height = style.height;
+      }
+      // 'fill' and 'auto' will be handled during resize
+    }
+  }
+  
+  /** Apply visual properties from style */
+  private applyVisualProperties(style: CommonIStyleProperties): void {
+    if (style.alpha !== undefined) {
+      if (typeof style.alpha === 'number') {
+        this.setAlpha(style.alpha);
+      } else if (typeof style.alpha === 'object' && 'min' in style.alpha && 'max' in style.alpha) {
+        // Handle RandomValueNumber
+        const randomValue = (style.alpha as IRandomValueNumber).getRandomValue();
+        this.setAlpha(randomValue);
+      }
+    }
+    
+    if (style.rotation !== undefined) {
+      if (typeof style.rotation === 'number') {
+        this.setRotation(style.rotation);
+      } else if (typeof style.rotation === 'object' && 'min' in style.rotation && 'max' in style.rotation) {
+        // Handle RandomValueNumber
+        const randomValue = (style.rotation as IRandomValueNumber).getRandomValue();
+        this.setRotation(randomValue);
+      }
+    }
+    
+    if (style.visible !== undefined) {
+      this.setVisible(style.visible);
+    }
+    
+    if (style.interactive !== undefined) {
+      if (style.interactive) {
+        this.setInteractive();
+      } else {
+        this.disableInteractive();
+      }
+    }
+  }
+  
+  /** Apply fill and stroke properties from style */
+  private applyFillAndStrokeProperties(style: CommonIStyleProperties): void {
+    if (style.backgroundColor !== undefined) {
+      this.setFillStyle(style.backgroundColor as number);
+    }
+    
+    if (style.borderColor !== undefined && style.borderWidth !== undefined) {
+      if (typeof style.borderWidth === 'number') {
+        this.setStrokeStyle(style.borderWidth, style.borderColor as number);
+      } else if (typeof style.borderWidth === 'object' && 'min' in style.borderWidth && 'max' in style.borderWidth) {
+        // Handle RandomValueNumber
+        const randomWidth = (style.borderWidth as IRandomValueNumber).getRandomValue();
+        this.setStrokeStyle(randomWidth, style.borderColor as number);
+      }
+    }
   }
   
   // ===== IShape IMPLEMENTATION =====
@@ -132,9 +274,6 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape {
     
     // Set the new size
     this.setSize(width, height);
-    
-    // Handle responsive resize through the helper
-    this.scalableHelper.handleResponsiveResize(width, height);
   }
   
   // ===== IGameObject METHOD IMPLEMENTATIONS =====
@@ -200,6 +339,16 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape {
     );
   }
   
+  /** Get the size of this game object */
+  getSize(): { width: number; height: number } {
+    return this.size;
+  }
+  
+  /** Get the position of this game object */
+  getPosition(): { x: number; y: number } {
+    return this.position;
+  }
+  
   // ===== RECTANGLE-SPECIFIC METHODS =====
   
   /**
@@ -219,9 +368,6 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape {
       newDimensions: { width, height },
       currentDimensions: this.dimensions
     }, 'handleResponsiveResize');
-    
-    // Use ScalableHelper to handle responsive behavior
-    this.scalableHelper.handleResponsiveResize(width, height);
     
     // Apply the new size
     this.resize(width, height);
@@ -254,24 +400,30 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape {
    */
   public static createFromConfig(config: any, scene: Phaser.Scene, parent?: IContainer): Rectangle {
     const logger = Logger.getInstance();
-          logger.debug('Rectangle', 'createFromConfig called', {
-        objectId: config.id,
-        config: config,
-        sceneKey: scene.scene.key,
-        hasParent: !!parent,
-        parentInfo: parent ? {
-          id: parent.id,
-          type: parent.constructor.name,
-          bounds: parent.getContainerBounds()
-        } : null
-      }, 'createFromConfig');
+    logger.debug('Rectangle', 'createFromConfig called', {
+      objectId: config.id,
+      config: config,
+      sceneKey: scene.scene.key,
+      hasParent: !!parent,
+      parentInfo: parent ? {
+        id: parent.id,
+        type: parent.constructor.name,
+        bounds: parent.getContainerBounds()
+      } : null
+    }, 'createFromConfig');
     
     try {
-      // Use ScalableHelper to resolve "fill" dimensions
-      const scalableHelper = new ScalableHelper(scene, config.id, parent);
-      const { width, height } = scalableHelper.resolveFillDimensions(config);
+      // Resolve dimensions (handle 'fill' values)
+      let width = config.width || 100;
+      let height = config.height || 100;
       
-      logger.debug('Rectangle', 'Dimensions resolved using ScalableHelper', {
+      if (parent && (width === 'fill' || height === 'fill')) {
+        const parentBounds = parent.getContainerBounds();
+        if (width === 'fill') width = parentBounds.width;
+        if (height === 'fill') height = parentBounds.height;
+      }
+      
+      logger.debug('Rectangle', 'Dimensions resolved', {
         objectId: config.id,
         finalDimensions: { width, height },
         hasParent: !!parent

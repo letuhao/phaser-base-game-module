@@ -1,39 +1,9 @@
 // Simplified asset loader configuration for levis2025r3wheel scene
 // This focuses on the essential asset loading without complex interface requirements
 
-export interface Levis2025R3WheelAsset {
-  key: string
-  path: string
-  type: 'image' | 'audio' | 'sprite' | 'font'
-  preload: boolean
-  responsive: {
-    breakpoint: 'desktop' | 'mobile'
-    minWidth?: number
-    maxWidth?: number
-    maintainAspectRatio: boolean
-    scaleStrategy: 'fit' | 'stretch'
-  }
-}
+import { AssetType, AssetConfig, AssetLoaderConfig } from '../../../core/AssetLoaderConfigLoader'
 
-export interface Levis2025R3WheelAssetLoaderConfig {
-  basePath: string
-  backgrounds: {
-    desktop: Levis2025R3WheelAsset
-    mobile: Levis2025R3WheelAsset
-    mobileOrigin: Levis2025R3WheelAsset
-  }
-  loading: {
-    preload: boolean
-    priority: string[]
-  }
-  validation: {
-    required: string[]
-    optional: string[]
-    fallbacks: Record<string, string>
-  }
-}
-
-export const levis2025r3wheelAssetLoaderConfig: Levis2025R3WheelAssetLoaderConfig = {
+export const levis2025r3wheelAssetLoaderConfig: AssetLoaderConfig = {
   basePath: '/public/assets/levis2025r3wheel',
   
   // Background images
@@ -41,39 +11,21 @@ export const levis2025r3wheelAssetLoaderConfig: Levis2025R3WheelAssetLoaderConfi
     desktop: {
       key: 'levis2025r3wheel-desktop-bg',
       path: '/background/desktop_16x9.png',
-      type: 'image',
-      preload: true,
-      responsive: {
-        breakpoint: 'desktop',
-        minWidth: 1024,
-        maintainAspectRatio: true,
-        scaleStrategy: 'fit'
-      }
-    },
+      type: AssetType.IMAGE,
+      preload: true
+    } as AssetConfig,
     mobile: {
       key: 'levis2025r3wheel-mobile-bg',
       path: '/background/mobile_16x9.png',
-      type: 'image',
-      preload: true,
-      responsive: {
-        breakpoint: 'mobile',
-        maxWidth: 1023,
-        maintainAspectRatio: false,
-        scaleStrategy: 'stretch'
-      }
-    },
+      type: AssetType.IMAGE,
+      preload: true
+    } as AssetConfig,
     mobileOrigin: {
       key: 'levis2025r3wheel-mobile-origin-bg',
       path: '/background/mobile_origin.png',
-      type: 'image',
-      preload: false, // Load on demand for mobile
-      responsive: {
-        breakpoint: 'mobile',
-        maxWidth: 1023,
-        maintainAspectRatio: false,
-        scaleStrategy: 'stretch'
-      }
-    }
+      type: AssetType.IMAGE,
+      preload: false // Load on demand for mobile
+    } as AssetConfig
   },
   
   // Loading configuration
@@ -116,13 +68,13 @@ export const getAssetPath = (key: string): string | undefined => {
   return undefined
 }
 
-// Helper function to get responsive asset config
-export const getResponsiveAssetConfig = (breakpoint: 'desktop' | 'mobile') => {
+// Helper function to get asset by breakpoint
+export const getAssetByBreakpoint = (breakpoint: 'desktop' | 'mobile') => {
   const backgrounds = levis2025r3wheelAssetLoaderConfig.backgrounds
   if (breakpoint === 'desktop') {
-    return backgrounds.desktop.responsive
+    return backgrounds.desktop
   } else {
-    return backgrounds.mobile.responsive
+    return backgrounds.mobile
   }
 }
 

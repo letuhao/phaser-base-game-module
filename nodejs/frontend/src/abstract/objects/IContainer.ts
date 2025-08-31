@@ -34,6 +34,17 @@ export interface IContainer {
   /** Container type for layout systems */
   readonly containerType: 'div' | 'flexbox' | 'grid' | 'stack' | 'dock' | 'flow' | 'absolute'
   
+  /** Spacing properties for layout containers */
+  readonly spacing?: {
+    gap?: number
+    padding?: {
+      left?: number
+      right?: number
+      top?: number
+      bottom?: number
+    }
+  }
+  
   // ===== ESSENTIAL CHILDREN MANAGEMENT METHODS =====
   
   /** Add a child game object to this container */
