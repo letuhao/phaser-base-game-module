@@ -1,8 +1,50 @@
 import type { IGameObject } from '../base/IGameObject'
+// Import the new unit system including random values
+import type { 
+  SizeValue, 
+  PositionValue, 
+  ScaleValue,
+  SizeUnit,
+  PositionUnit,
+  ScaleUnit,
+  Dimension,
+  UnitType,
+  IRandomValueNumber
+} from '../../unit'
 
 /**
- * ParentSize type for responsive sizing relative to parent container
- * Similar to CSS vh/vw units but for parent container dimensions
+ * Unit-based style properties interface
+ * Replaces legacy ParentSize classes with the new unit system
+ * Now includes random values as part of the unit system
+ */
+export interface IUnitStyleProperties {
+  // Size units - now includes random values and legacy types for backward compatibility
+  width?: number | SizeValue | SizeUnit | 'fill' | 'auto' | ParentWidth | IRandomValueNumber
+  height?: number | SizeValue | SizeUnit | 'fill' | 'auto' | ParentHeight | IRandomValueNumber
+  
+  // Position units - now includes random values and legacy types for backward compatibility
+  positionX?: number | PositionValue | PositionUnit | 'center' | 'left' | 'right' | ParentPositionX | IRandomValueNumber
+  positionY?: number | PositionValue | PositionUnit | 'center' | 'top' | 'bottom' | ParentPositionY | IRandomValueNumber
+  positionZ?: number
+  
+  // Scale units - now includes random values
+  scale?: number | ScaleValue | ScaleUnit | IRandomValueNumber
+  scaleX?: number | ScaleValue | ScaleUnit | IRandomValueNumber
+  scaleY?: number | ScaleValue | ScaleUnit | IRandomValueNumber
+  
+  // Unit type specification
+  unitType?: UnitType
+  dimension?: Dimension
+  
+  // Unit constraints
+  minValue?: number
+  maxValue?: number
+  maintainAspectRatio?: boolean
+}
+
+/**
+ * Legacy ParentSize type for backward compatibility
+ * @deprecated Use IUnitStyleProperties with SizeValue/PositionValue instead
  */
 export type IParentSize = {
   /** Float value from 0.0 to 1.0 representing the proportion of parent width */
@@ -12,7 +54,8 @@ export type IParentSize = {
 }
 
 /**
- * ParentWidth class for width calculations relative to parent
+ * Legacy ParentWidth class for backward compatibility
+ * @deprecated Use IUnitStyleProperties with SizeValue.PARENT_WIDTH instead
  */
 export class ParentWidth implements IParentSize {
   constructor(
@@ -23,12 +66,13 @@ export class ParentWidth implements IParentSize {
   getValue(parent: IGameObject): number {
     if (!this.value) return 0;
     const size = parent.getSize();
-    return size.width * this.value; // No need to divide by 100
+    return size.width * this.value;
   }
 }
 
 /**
- * ParentHeight class for height calculations relative to parent
+ * Legacy ParentHeight class for backward compatibility
+ * @deprecated Use IUnitStyleProperties with SizeValue.PARENT_HEIGHT instead
  */
 export class ParentHeight implements IParentSize {
   constructor(
@@ -39,12 +83,13 @@ export class ParentHeight implements IParentSize {
   getValue(parent: IGameObject): number {
     if (!this.value) return 0;
     const size = parent.getSize();
-    return size.height * this.value; // No need to divide by 100
+    return size.height * this.value;
   }
 }
 
 /**
- * ParentPositionX class for X position calculations relative to parent
+ * Legacy ParentPositionX class for backward compatibility
+ * @deprecated Use IUnitStyleProperties with PositionValue.PARENT_LEFT instead
  */
 export class ParentPositionX implements IParentSize {
   constructor(
@@ -55,12 +100,13 @@ export class ParentPositionX implements IParentSize {
   getValue(parent: IGameObject): number {
     if (!this.value) return 0;
     const size = parent.getSize();
-    return size.width * this.value; // No need to divide by 100
+    return size.width * this.value;
   }
 }
 
 /**
- * ParentPositionY class for Y position calculations relative to parent
+ * Legacy ParentPositionY class for backward compatibility
+ * @deprecated Use IUnitStyleProperties with PositionValue.PARENT_TOP instead
  */
 export class ParentPositionY implements IParentSize {
   constructor(
@@ -71,108 +117,32 @@ export class ParentPositionY implements IParentSize {
   getValue(parent: IGameObject): number {
     if (!this.value) return 0;
     const size = parent.getSize();
-    return size.height * this.value; // No need to divide by 100
-  }
-}
-
-/**
- * RandomValue interface for generic random value generation
- */
-export interface IRandomValue<T> {
-  /** Current value */
-  current: T
-  /** Minimum value */
-  min: T
-  /** Maximum value */
-  max: T
-  /** Get a random value between min and max */
-  getRandomValue(): T
-  /** Set the current value */
-  setCurrentValue(value: T): void
-}
-
-/**
- * RandomValueNumber for numeric random values
- */
-export interface IRandomValueNumber extends IRandomValue<number> {
-  /** Current number value */
-  current: number
-  /** Minimum number value */
-  min: number
-  /** Maximum number value */
-  max: number
-  /** Get a random number between min and max */
-  getRandomValue(): number
-  /** Set the current number value */
-  setCurrentValue(value: number): void
-}
-
-/**
- * Concrete implementation of RandomValueNumber
- */
-export class RandomValueNumber implements IRandomValueNumber {
-  constructor(
-    public min: number,
-    public max: number,
-    public current: number = min
-  ) {
-    if (min > max) {
-      throw new Error('min cannot be greater than max')
-    }
-    if (current < min || current > max) {
-      this.current = min
-    }
-  }
-
-  getRandomValue(): number {
-    this.current = Math.random() * (this.max - this.min) + this.min
-    return this.current
-  }
-
-  setCurrentValue(value: number): void {
-    if (value >= this.min && value <= this.max) {
-      this.current = value
-    } else {
-      throw new Error(`Value ${value} is outside the range [${this.min}, ${this.max}]`)
-    }
-  }
-
-  /** Get a random integer value */
-  getRandomInt(): number {
-    this.current = Math.floor(Math.random() * (this.max - this.min + 1)) + this.min
-    return this.current
-  }
-
-  /** Get a random value with specified decimal places */
-  getRandomValueWithDecimals(decimals: number): number {
-    const factor = Math.pow(10, decimals)
-    this.current = Math.round((Math.random() * (this.max - this.min) + this.min) * factor) / factor
-    return this.current
+    return size.height * this.value;
   }
 }
 
 /**
  * IStyleProperties interface
  * Defines all possible style properties for game objects
- * Similar to CSS properties but adapted for game development
+ * Now integrates with the new unit system while maintaining backward compatibility
  */
-export interface IStyleProperties {
+export interface IStyleProperties extends IUnitStyleProperties {
   // ===== LAYOUT PROPERTIES =====
   
-  /** X position - can be number, alignment keyword, parent-relative, or random */
-  positionX?: number | 'center' | 'left' | 'right' | ParentPositionX | IRandomValueNumber
+  /** X position - now supports new unit system */
+  positionX?: number | PositionValue | PositionUnit | 'center' | 'left' | 'right' | ParentPositionX | IRandomValueNumber
   
-  /** Y position - can be number, alignment keyword, parent-relative, or random */
-  positionY?: number | 'center' | 'top' | 'bottom' | ParentPositionY | IRandomValueNumber
+  /** Y position - now supports new unit system */
+  positionY?: number | PositionValue | PositionUnit | 'center' | 'top' | 'bottom' | ParentPositionY | IRandomValueNumber
   
   /** Z position (depth) */
   positionZ?: number
   
-  /** Width - can be number, keyword, parent-relative, or random */
-  width?: number | 'fill' | 'auto' | ParentWidth | IRandomValueNumber
+  /** Width - now supports new unit system */
+  width?: number | SizeValue | SizeUnit | 'fill' | 'auto' | ParentWidth | IRandomValueNumber
   
-  /** Height - can be number, keyword, parent-relative, or random */
-  height?: number | 'fill' | 'auto' | ParentHeight | IRandomValueNumber
+  /** Height - now supports new unit system */
+  height?: number | SizeValue | SizeUnit | 'fill' | 'auto' | ParentHeight | IRandomValueNumber
   
   // ===== POSITIONING PROPERTIES =====
   
@@ -190,14 +160,14 @@ export interface IStyleProperties {
   
   // ===== SCALING PROPERTIES =====
   
-  /** Scale factor - can be number or random */
-  scale?: number | IRandomValueNumber
+  /** Scale factor - now supports new unit system */
+  scale?: number | ScaleValue | ScaleUnit | IRandomValueNumber
   
-  /** Scale X factor */
-  scaleX?: number | IRandomValueNumber
+  /** Scale X factor - now supports new unit system */
+  scaleX?: number | ScaleValue | ScaleUnit | IRandomValueNumber
   
-  /** Scale Y factor */
-  scaleY?: number | IRandomValueNumber
+  /** Scale Y factor - now supports new unit system */
+  scaleY?: number | ScaleValue | ScaleUnit | IRandomValueNumber
   
   /** Whether to maintain aspect ratio */
   maintainAspectRatio?: boolean

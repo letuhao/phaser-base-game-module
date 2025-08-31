@@ -49,7 +49,7 @@ export class ErrorTracker {
     this.errorRateWindow = this.errorRateWindow.filter(timestamp => timestamp > oneMinuteAgo)
     
     // Log error tracking
-    this.logger.debug('ErrorTracker', `Error tracked: ${errorEntry.message}`, {
+    this.logger.debug('ErrorTracker', 'trackError', `Error tracked: ${errorEntry.message}`, {
       level: errorEntry.level,
       objectName: errorEntry.objectName,
       totalErrors: this.errorHistory.length,
@@ -174,7 +174,7 @@ export class ErrorTracker {
     this.objectErrorCounts.clear()
     this.errorRateWindow = []
     
-    this.logger.info('ErrorTracker', 'Error history cleared')
+    this.logger.info('ErrorTracker', 'clearHistory', 'Error history cleared')
   }
   
   /**
@@ -188,7 +188,7 @@ export class ErrorTracker {
       this.errorHistory = this.errorHistory.slice(-size)
     }
     
-    this.logger.debug('ErrorTracker', `Max history size set to ${size}`)
+    this.logger.debug('ErrorTracker', 'setMaxHistorySize', `Max history size set to ${size}`)
   }
   
   /**

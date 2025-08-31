@@ -4,7 +4,7 @@ import { logger } from './Logger'
  * Simplified theme configuration interface for internal use
  * This avoids the complexity of the full IThemeConfig interface
  */
-interface SimpleThemeConfig {
+export interface SimpleThemeConfig {
   // Theme identification
   themeName: string
   

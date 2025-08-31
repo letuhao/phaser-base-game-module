@@ -48,7 +48,7 @@ export class HttpClient implements IHttpClient {
         data: responseData,
         status: response.status,
         statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
+        headers: this.extractHeaders(response.headers),
         ok: response.ok,
         url: response.url
       }
@@ -112,5 +112,13 @@ export class HttpClient implements IHttpClient {
     } catch {
       return false
     }
+  }
+
+  private extractHeaders(headers: Headers): Record<string, string> {
+    const extractedHeaders: Record<string, string> = {}
+    headers.forEach((value, key) => {
+      extractedHeaders[key] = value
+    })
+    return extractedHeaders
   }
 }

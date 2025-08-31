@@ -1,20 +1,23 @@
 import * as Phaser from 'phaser'
 import { logger } from '../core/Logger'
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory'
+import { Container } from '../object/container/Container'
 
 /**
  * Factory for creating container game objects
+ * Now creates custom Container wrapper with injected configurations
  */
 export class ContainerFactory extends BaseGameObjectFactory {
   constructor() {
     super(['container'])
-    logger.debug('ContainerFactory', 'ContainerFactory initialized', {
+    logger.debug('ContainerFactory', 'constructor', 'ContainerFactory initialized', {
       supportedTypes: this.getSupportedTypes()
     })
   }
   
   /**
    * Create a container game object from configuration
+   * Now creates custom Container wrapper with injected configurations
    */
   createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.Container | null {
     logger.debug('ContainerFactory', 'Creating container game object', {
@@ -30,14 +33,51 @@ export class ContainerFactory extends BaseGameObjectFactory {
     })
     
     try {
-      // Create a container for the container
-      const container = scene.add.container(config.x || 0, config.y || 0)
+      // NEW: Create our custom Container wrapper instead of plain Phaser container
+      const container = new Container(
+        scene,
+        config.id,
+        config.x || 0,
+        config.y || 0,
+        null // parent will be set later
+      )
       
-      logger.debug('ContainerFactory', 'Phaser container created', {
+      logger.debug('ContainerFactory', 'Custom Container wrapper created', {
         objectId: config.id,
-        phaserObjectType: container.constructor.name,
+        containerType: container.constructor.name,
         position: { x: container.x, y: container.y }
       })
+      
+      // NEW: Inject responsive and theme configurations from scene
+      if ((scene as any).getGameObjectConfigs) {
+        logger.debug('ContainerFactory', 'Scene supports getGameObjectConfigs, calling it', {
+          objectId: config.id,
+          sceneType: scene.constructor.name
+        })
+        
+        const configs = (scene as any).getGameObjectConfigs(config.id)
+        logger.debug('ContainerFactory', 'Received configs from scene', {
+          objectId: config.id,
+          configs,
+          hasResponsive: !!configs?.responsive,
+          hasTheme: !!configs?.theme,
+          currentBreakpoint: configs?.currentBreakpoint
+        })
+        
+        container.initializeWithConfigs(configs)
+        
+        logger.debug('ContainerFactory', 'Configurations injected into container', {
+          objectId: config.id,
+          hasResponsive: !!configs.responsive,
+          hasTheme: !!configs.theme,
+          currentBreakpoint: configs.currentBreakpoint
+        })
+      } else {
+        logger.warn('ContainerFactory', 'Scene does not support getGameObjectConfigs', {
+          objectId: config.id,
+          sceneType: scene.constructor.name
+        })
+      }
       
       // Set common properties
       this.setCommonProperties(container, config)
@@ -92,9 +132,9 @@ export class ContainerFactory extends BaseGameObjectFactory {
         })
       }
       
-      logger.info('ContainerFactory', 'Container created successfully', {
+      logger.info('ContainerFactory', 'Custom Container created successfully', {
         objectId: config.id,
-        phaserObjectType: container.constructor.name,
+        containerType: container.constructor.name,
         containerName: container.name,
         hasBackground: !!config.backgroundColor,
         size: { width: container.width, height: container.height }
@@ -103,7 +143,7 @@ export class ContainerFactory extends BaseGameObjectFactory {
       return container
       
     } catch (error) {
-      logger.error('ContainerFactory', `Error creating container '${config.id}':`, error)
+      logger.error('ContainerFactory', `Failed to create container: ${config.id}`, error)
       return null
     }
   }

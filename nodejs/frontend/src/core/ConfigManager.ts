@@ -3,6 +3,7 @@ import { LoggingConfigLoader, LoggerConfig } from './LoggingConfigLoader'
 import { ResponsiveConfigLoader, ResponsiveConfig } from './ResponsiveConfigLoader'
 import { SceneLoaderConfigLoader, SceneConfig } from './SceneLoaderConfigLoader'
 import { AssetLoaderConfigLoader, AssetLoaderConfig } from './AssetLoaderConfigLoader'
+import { ThemeConfigLoader, SimpleThemeConfig } from './ThemeConfigLoader'
 
 /**
  * Unified configuration manager for scenes
@@ -14,12 +15,14 @@ export class ConfigManager {
   private responsiveLoader: ResponsiveConfigLoader
   private sceneLoader: SceneLoaderConfigLoader
   private assetLoader: AssetLoaderConfigLoader
+  private themeLoader: ThemeConfigLoader
   
   private constructor() {
     this.loggingLoader = LoggingConfigLoader.getInstance()
     this.responsiveLoader = ResponsiveConfigLoader.getInstance()
     this.sceneLoader = SceneLoaderConfigLoader.getInstance()
     this.assetLoader = AssetLoaderConfigLoader.getInstance()
+    this.themeLoader = ThemeConfigLoader.getInstance()
   }
   
   /**
@@ -40,7 +43,8 @@ export class ConfigManager {
     loggingConfig: LoggerConfig,
     responsiveConfig: ResponsiveConfig,
     sceneConfig: SceneConfig,
-    assetConfig: AssetLoaderConfig
+    assetConfig: AssetLoaderConfig,
+    themeConfig?: SimpleThemeConfig
   ): void {
     try {
       // Register all configs
@@ -48,6 +52,12 @@ export class ConfigManager {
       this.responsiveLoader.registerConfig(sceneName, responsiveConfig)
       this.sceneLoader.registerConfig(sceneName, sceneConfig)
       this.assetLoader.registerConfig(sceneName, assetConfig)
+      
+      // Register theme config if provided
+      if (themeConfig) {
+        this.themeLoader.registerTheme(sceneName, themeConfig)
+        logger.info('ConfigManager', `Registered theme configuration for scene: ${sceneName}`)
+      }
       
       logger.info('ConfigManager', `Registered all configurations for scene: ${sceneName}`)
     } catch (error) {
@@ -63,6 +73,7 @@ export class ConfigManager {
     responsive: ResponsiveConfig | null
     scene: SceneConfig | null
     asset: AssetLoaderConfig | null
+    theme: SimpleThemeConfig | null
   } {
     try {
       // Load logging config
@@ -72,12 +83,14 @@ export class ConfigManager {
       const responsiveConfig = this.responsiveLoader.loadConfig(sceneName)
       const sceneConfig = this.sceneLoader.loadConfig(sceneName)
       const assetConfig = this.assetLoader.loadConfig(sceneName)
+      const themeConfig = this.themeLoader.loadTheme(sceneName)
       
       const result = {
         logging: loggingLoaded,
         responsive: responsiveConfig,
         scene: sceneConfig,
-        asset: assetConfig
+        asset: assetConfig,
+        theme: themeConfig
       }
       
       logger.info('ConfigManager', `Loaded configurations for scene: ${sceneName}`, result)
@@ -89,7 +102,8 @@ export class ConfigManager {
         logging: false,
         responsive: null,
         scene: null,
-        asset: null
+        asset: null,
+        theme: null
       }
     }
   }
@@ -103,6 +117,7 @@ export class ConfigManager {
       this.responsiveLoader.hasConfig(sceneName) &&
       this.sceneLoader.hasConfig(sceneName) &&
       this.assetLoader.hasConfig(sceneName)
+      // Note: Theme config is optional, so we don't check for it here
     )
   }
   
@@ -140,6 +155,10 @@ export class ConfigManager {
   
   public getAssetLoader(): AssetLoaderConfigLoader {
     return this.assetLoader
+  }
+  
+  public getThemeLoader(): ThemeConfigLoader {
+    return this.themeLoader
   }
 }
 

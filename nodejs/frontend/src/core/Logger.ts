@@ -71,9 +71,9 @@ export class Logger {
         const fps = Math.round((frameCount * 1000) / (currentTime - lastTime))
         this.performanceMetrics.set('fps', { value: fps, timestamp: currentTime })
         
-        if (fps < this.config.performance.fpsThreshold) {
-          this.warn('Performance', `Low FPS detected: ${fps}`, { fps, threshold: this.config.performance.fpsThreshold })
-        }
+                 if (fps < this.config.performance.fpsThreshold) {
+           this.warn('Performance', 'startFrameRateMonitoring', `Low FPS detected: ${fps}`, { fps, threshold: this.config.performance.fpsThreshold })
+         }
         
         frameCount = 0
         lastTime = currentTime
@@ -102,9 +102,9 @@ export class Logger {
         })
         
         const memoryUsage = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100
-        if (memoryUsage > this.config.performance.memoryThreshold) {
-          this.warn('Performance', `High memory usage: ${memoryUsage.toFixed(1)}%`, { memoryUsage, threshold: this.config.performance.memoryThreshold })
-        }
+                 if (memoryUsage > this.config.performance.memoryThreshold) {
+           this.warn('Performance', 'startMemoryMonitoring', `High memory usage: ${memoryUsage.toFixed(1)}%`, { memoryUsage, threshold: this.config.performance.memoryThreshold })
+         }
       }, 5000) // Every 5 seconds
     }
   }
@@ -148,23 +148,23 @@ export class Logger {
    */
   private setupErrorTracking(): void {
     if (this.config.errorTracking.enabled) {
-      // Global error handler
-      window.addEventListener('error', (event) => {
-        this.error('GlobalError', event.message, {
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-          error: event.error?.stack
-        })
-      })
-      
-      // Unhandled promise rejections
-      window.addEventListener('unhandledrejection', (event) => {
-        this.error('UnhandledRejection', 'Unhandled promise rejection', {
-          reason: event.reason,
-          stack: event.reason?.stack
-        })
-      })
+             // Global error handler
+       window.addEventListener('error', (event) => {
+         this.error('GlobalError', 'setupErrorTracking', event.message, {
+           filename: event.filename,
+           lineno: event.lineno,
+           colno: event.colno,
+           error: event.error?.stack
+         })
+       })
+       
+       // Unhandled promise rejections
+       window.addEventListener('unhandledrejection', (event) => {
+         this.error('UnhandledRejection', 'setupErrorTracking', 'Unhandled promise rejection', {
+           reason: event.reason,
+           stack: event.reason?.stack
+         })
+       })
     }
   }
   
@@ -674,7 +674,7 @@ export class Logger {
   /**
    * Log error message with enhanced error tracking
    */
-  public error(objectName: string, message: string, data?: any, methodName?: string): void {
+  public error(objectName: string, methodName: string, message: string, data?: any): void {
     if (this.shouldLog(objectName, LogLevel.ERROR)) {
       const entry = this.createLogEntry(objectName, LogLevel.ERROR, message, data, methodName)
       this.outputLog(entry)
@@ -684,51 +684,51 @@ export class Logger {
     }
   }
   
-  /**
+    /**
    * Log warning message
    */
-  public warn(objectName: string, message: string, data?: any, methodName?: string): void {
+  public warn(objectName: string, methodName: string, message: string, data?: any): void {
     if (this.shouldLog(objectName, LogLevel.WARN)) {
       const entry = this.createLogEntry(objectName, LogLevel.WARN, message, data, methodName)
       this.outputLog(entry)
     }
   }
-  
+
   /**
    * Log info message
    */
-  public info(objectName: string, message: string, data?: any, methodName?: string): void {
+  public info(objectName: string, methodName: string, message: string, data?: any): void {
     if (this.shouldLog(objectName, LogLevel.INFO)) {
       const entry = this.createLogEntry(objectName, LogLevel.INFO, message, data, methodName)
       this.outputLog(entry)
     }
   }
-  
+
   /**
    * Log debug message
    */
-  public debug(objectName: string, message: string, data?: any, methodName?: string): void {
+  public debug(objectName: string, methodName: string, message: string, data?: any): void {
     if (this.shouldLog(objectName, LogLevel.DEBUG)) {
       const entry = this.createLogEntry(objectName, LogLevel.DEBUG, message, data, methodName)
       this.outputLog(entry)
     }
   }
-  
+
   /**
    * Log trace message
    */
-  public trace(objectName: string, message: string, data?: any, methodName?: string): void {
+  public trace(objectName: string, methodName: string, message: string, data?: any): void {
     if (this.shouldLog(objectName, LogLevel.TRACE)) {
       const entry = this.createLogEntry(objectName, LogLevel.TRACE, message, data, methodName)
       this.outputLog(entry)
     }
   }
-  
+
   /**
    * Convenience method for logging with current timestamp
    */
-  public log(objectName: string, message: string, data?: any, methodName?: string): void {
-    this.info(objectName, message, data, methodName)
+  public log(objectName: string, methodName: string, message: string, data?: any): void {
+    this.info(objectName, methodName, message, data)
   }
   
   /**
@@ -741,7 +741,7 @@ export class Logger {
         timestamp: performance.now()
       })
       
-      this.debug('Performance', `Metric: ${metricName} = ${value}${unit}`, metadata)
+      this.debug('Performance', 'logPerformance', `Metric: ${metricName} = ${value}${unit}`, metadata)
     }
   }
   
@@ -757,7 +757,7 @@ export class Logger {
       gameState: this.getGameState()
     }
     
-    this.info('GameEvent', `Game event: ${eventName}`, data)
+    this.info('GameEvent', 'logGameEvent', `Game event: ${eventName}`, data)
     
     // Send game events to server immediately
     if (this.config.server.sendGameEventsImmediately) {
@@ -893,7 +893,7 @@ export class Logger {
     try {
       return await this.serverClient.testConnection()
     } catch (error) {
-      this.error('Logger', 'Server connection test failed', error)
+             this.error('Logger', 'testServerConnection', 'Server connection test failed', error)
       return false
     }
   }
@@ -905,7 +905,7 @@ export class Logger {
     try {
       return await this.serverClient.getServerStatus()
     } catch (error) {
-      this.error('Logger', 'Failed to get server status', error)
+             this.error('Logger', 'getServerStatus', 'Failed to get server status', error)
       return {
         online: false,
         endpoint: this.config.server.endpoint,
@@ -919,11 +919,11 @@ export class Logger {
 export const logger = Logger.getInstance()
 
 // Export convenience methods for direct usage
-export const logError = (objectName: string, message: string, data?: any, methodName?: string) => logger.error(objectName, message, data, methodName)
-export const logWarn = (objectName: string, message: string, data?: any, methodName?: string) => logger.warn(objectName, message, data, methodName)
-export const logInfo = (objectName: string, message: string, data?: any, methodName?: string) => logger.info(objectName, message, data, methodName)
-export const logDebug = (objectName: string, message: string, data?: any, methodName?: string) => logger.debug(objectName, message, data, methodName)
-export const logTrace = (objectName: string, message: string, data?: any, methodName?: string) => logger.trace(objectName, message, data, methodName)
-export const log = (objectName: string, message: string, data?: any, methodName?: string) => logger.log(objectName, message, data, methodName)
+export const logError = (objectName: string, methodName: string, message: string, data?: any) => logger.error(objectName, methodName, message, data)
+export const logWarn = (objectName: string, methodName: string, message: string, data?: any) => logger.warn(objectName, methodName, message, data)
+export const logInfo = (objectName: string, methodName: string, message: string, data?: any) => logger.info(objectName, methodName, message, data)
+export const logDebug = (objectName: string, methodName: string, message: string, data?: any) => logger.debug(objectName, methodName, message, data)
+export const logTrace = (objectName: string, methodName: string, message: string, data?: any) => logger.trace(objectName, methodName, message, data)
+export const log = (objectName: string, methodName: string, message: string, data?: any) => logger.log(objectName, methodName, message, data)
 export const logPerformance = (metricName: string, value: number, unit?: string, metadata?: any) => logger.logPerformance(metricName, value, unit, metadata)
 export const logGameEvent = (eventName: string, eventData: any, playerId?: string) => logger.logGameEvent(eventName, eventData, playerId)

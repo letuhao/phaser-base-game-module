@@ -45,45 +45,4 @@ export const levis2025r3wheelAssetLoaderConfig: AssetLoaderConfig = {
   }
 }
 
-// Helper function to get background asset based on device type
-export const getBackgroundAsset = (isDesktop: boolean): string => {
-  if (isDesktop) {
-    return levis2025r3wheelAssetLoaderConfig.backgrounds.desktop.key
-  } else {
-    return levis2025r3wheelAssetLoaderConfig.backgrounds.mobile.key
-  }
-}
 
-// Helper function to get asset path by key
-export const getAssetPath = (key: string): string | undefined => {
-  // Check backgrounds
-  for (const bgKey in levis2025r3wheelAssetLoaderConfig.backgrounds) {
-    const bg = levis2025r3wheelAssetLoaderConfig.backgrounds[bgKey as keyof typeof levis2025r3wheelAssetLoaderConfig.backgrounds]
-    if (bg.key === key) {
-      return levis2025r3wheelAssetLoaderConfig.basePath + bg.path
-    }
-  }
-  
-  // Check other asset types (to be implemented)
-  return undefined
-}
-
-// Helper function to get asset by breakpoint
-export const getAssetByBreakpoint = (breakpoint: 'desktop' | 'mobile') => {
-  const backgrounds = levis2025r3wheelAssetLoaderConfig.backgrounds
-  if (breakpoint === 'desktop') {
-    return backgrounds.desktop
-  } else {
-    return backgrounds.mobile
-  }
-}
-
-// Helper function to check if asset is required
-export const isAssetRequired = (key: string): boolean => {
-  return levis2025r3wheelAssetLoaderConfig.validation.required.includes(key)
-}
-
-// Helper function to get asset fallback
-export const getAssetFallback = (key: string): string | undefined => {
-  return levis2025r3wheelAssetLoaderConfig.validation.fallbacks[key]
-}

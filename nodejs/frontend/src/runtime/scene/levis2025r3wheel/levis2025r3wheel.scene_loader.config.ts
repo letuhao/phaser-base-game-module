@@ -2,7 +2,7 @@
 // This focuses on the essential scene structure without complex interface requirements
 
 import { levis2025r3wheelResponsiveConfig } from './levis2025r3wheel.responsive.config'
-import type { GameObjectConfig, SceneConfig } from '../../../core/SceneLoaderConfigLoader'
+import type { SceneConfig } from '../../../core/SceneLoaderConfigLoader'
 import { GameObjectType } from '../../../core/SceneLoaderConfigLoader'
 
 export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
@@ -49,7 +49,7 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   //         zOrder: 10, // Higher z-order for UI elements
   //         responsive: {} as Levis2025R3WheelResponsiveConfig,
   //         factory: {
-  //           className: 'ConcreteContainer',
+  //           className: 'Container',
   //           createMethod: 'createFromConfig'
   //         },
   //         properties: {
@@ -70,7 +70,7 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   //         zOrder: 20, // Higher z-order for UI elements
   //         responsive: {} as Levis2025R3WheelResponsiveConfig,
   //         factory: {
-  //           className: 'ConcreteContainer',
+  //           className: 'Container',
   //           createMethod: 'createFromConfig'
   //         },
   //         properties: {
@@ -91,7 +91,7 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   //         zOrder: 30, // Highest z-order for footer (top layer)
   //         responsive: {} as Levis2025R3WheelResponsiveConfig,
   //         factory: {
-  //           className: 'ConcreteContainer',
+  //           className: 'Container',
   //           createMethod: 'createFromConfig'
   //         },
   //         properties: {
@@ -128,64 +128,64 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   //   }
   // ],
 
-  // DEBUGGING: Simple test with ConcreteContainer as root + BackgroundContainer as child
+  // DEBUGGING: Simple test with Container as root + BackgroundContainer as child
   gameObjects: [
     {
-      id: 'test-root-container',
+            id: 'root-container',
       type: GameObjectType.CONTAINER,
-      name: 'Test Root Container',
+      name: 'Root Container',
       factory: {
-        className: 'ConcreteContainer',
+        className: 'Container',
         createMethod: 'createFromConfig'
       },
       properties: {
         interactive: false
       },
       children: [
-        {
-          id: 'background-container',
-          type: GameObjectType.BACKGROUND_CONTAINER,
-          name: 'Background Container',
-          factory: {
-            className: 'BackgroundContainer',
-            createMethod: 'createFromConfig'
-          },
-          properties: {
-            interactive: false
-          },
-          children: [
-            {
-              id: 'footer-container',
-              type: GameObjectType.CONTAINER,
-              name: 'Footer Container',
-              factory: {
-                className: 'ConcreteContainer',
-                createMethod: 'createFromConfig'
-              },
-              properties: {
-                interactive: false
-              },
-              children: [
-                {
-                  id: 'footer-rectangle',
-                  type: GameObjectType.SHAPE,
-                  name: 'Footer Rectangle',
-                  factory: {
-                    className: 'Rectangle',
-                    createMethod: 'createFromConfig'
-                  },
-                  properties: {
-                    interactive: false
-                  },
-                  children: [],
-                  parentId: 'footer-container'
-                }
-              ],
-              parentId: 'background-container'
-            }
-          ],
-          parentId: 'test-root-container'
-        }
+        // {
+        //   id: 'background-container',
+        //   type: GameObjectType.BACKGROUND_CONTAINER,
+        //   name: 'Background Container',
+        //   factory: {
+        //     className: 'BackgroundContainer',
+        //     createMethod: 'createFromConfig'
+        //   },
+        //   properties: {
+        //     interactive: false
+        //   },
+        //   children: [
+        //     {
+        //       id: 'footer-container',
+        //       type: GameObjectType.CONTAINER,
+        //       name: 'Footer Container',
+        //       factory: {
+        //         className: 'Container',
+        //         createMethod: 'createFromConfig'
+        //       },
+        //       properties: {
+        //         interactive: false
+        //       },
+        //       children: [
+        //         {
+        //           id: 'footer-rectangle',
+        //           type: GameObjectType.SHAPE,
+        //           name: 'Footer Rectangle',
+        //           factory: {
+        //             className: 'Rectangle',
+        //             createMethod: 'createFromConfig'
+        //           },
+        //           properties: {
+        //             interactive: false
+        //           },
+        //           children: [],
+        //           parentId: 'footer-container'
+        //         }
+        //       ],
+        //       parentId: 'background-container'
+        //     }
+        //   ],
+        //   parentId: 'test-root-container'
+        // }
       ],
       parentId: undefined
     }
@@ -198,65 +198,4 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   }
 }
 
-// Helper function to get test root container config
-export const getTestRootContainerConfig = (): GameObjectConfig | undefined => {
-  return levis2025r3wheelSceneLoaderConfig.gameObjects.find(
-    obj => obj.id === 'test-root-container'
-  )
-}
 
-// Helper function to get background container config
-export const getBackgroundContainerConfig = (): GameObjectConfig | undefined => {
-  const rootContainer = levis2025r3wheelSceneLoaderConfig.gameObjects.find(
-    obj => obj.id === 'test-root-container'
-  )
-  return rootContainer?.children.find(child => child.id === 'background-container')
-}
-
-// Helper function to get footer container config
-export const getFooterContainerConfig = (): GameObjectConfig | undefined => {
-  const backgroundContainer = getBackgroundContainerConfig()
-  return backgroundContainer?.children.find(child => child.id === 'footer-container')
-}
-
-// Helper function to add child to test root container
-export const addChildToTestRoot = (child: GameObjectConfig): void => {
-  const testRootContainer = levis2025r3wheelSceneLoaderConfig.gameObjects.find(
-    obj => obj.id === 'test-root-container'
-  )
-  
-  if (testRootContainer) {
-    child.parentId = testRootContainer.id
-    testRootContainer.children.push(child)
-  }
-}
-
-// Helper function to add child to background container
-export const addChildToBackground = (child: GameObjectConfig): void => {
-  const backgroundContainer = getBackgroundContainerConfig()
-  
-  if (backgroundContainer) {
-    child.parentId = backgroundContainer.id
-    backgroundContainer.children.push(child)
-  }
-}
-
-// Helper function to add child to footer container
-export const addChildToFooter = (child: GameObjectConfig): void => {
-  const footerContainer = getFooterContainerConfig()
-  
-  if (footerContainer) {
-    child.parentId = footerContainer.id
-    footerContainer.children.push(child)
-  }
-}
-
-// Helper function to get all game objects
-export const getAllGameObjects = (): GameObjectConfig[] => {
-  return levis2025r3wheelSceneLoaderConfig.gameObjects
-}
-
-// Helper function to find game object by ID
-export const findGameObject = (id: string): GameObjectConfig | undefined => {
-  return levis2025r3wheelSceneLoaderConfig.gameObjects.find(obj => obj.id === id)
-}

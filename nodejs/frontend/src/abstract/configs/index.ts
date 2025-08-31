@@ -1,22 +1,27 @@
-// Configuration interfaces - Level 1 (Extended from Level 0 IConfiguration)
-export type { IThemeConfig } from './IThemeConfig'
-export type { IPositionConfig } from './IPositionConfig'
-export type { IAssetsConfig } from './IAssetsConfig'
-export type { ISceneConfig } from './ISceneConfig'
-export type { IGameLogicConfig } from './IGameLogicConfig'
+// Configuration System Exports
+// This module provides all configuration interfaces and types for the game engine
 
-// Configuration interfaces - Level 2 (Extended from Level 1 IPositionConfig)
-export type { ILayoutConfig } from './ILayoutConfig'
+// Core configuration interfaces
+export * from '../interfaces/IConfiguration'
+export * from './ISceneConfig'
+export * from './IGameLogicConfig'
+export * from './IAssetsConfig'
+export * from './ILayoutConfig'
+export * from './IPositionConfig'
+export * from './IResponsiveConfig'
+export * from './IThemeConfig'
 
-// Configuration interfaces - Level 3 (Extended from Level 2 ILayoutConfig)
-export type { IResponsiveConfig } from './IResponsiveConfig'
+// Style and styling configuration
+export * from './IStyle'
+export * from './IStyleProperties'
 
-// Configuration interfaces - Level 4 (HTML-like Scene Structure)
-export type { ISceneLoaderConfig } from './ISceneLoaderConfig'
+// Scene loader configuration
+export * from './ISceneLoaderConfig'
 
-// Style and styling configuration interfaces
-export type { IStyleProperties } from './IStyleProperties'
-export type { IStyle } from './IStyle'
+// Unit System Integration
+// Export the comprehensive unit system for use in configurations
+export * from '../../unit'
+export * from './IUnitConfig'
 
-// Re-export all configurations as a namespace for convenience
-export * as Configs from './'
+// Examples and utilities
+export * from './scene-loader-examples'

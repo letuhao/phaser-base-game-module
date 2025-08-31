@@ -17,7 +17,7 @@ export class GameObjectFactoryManager {
   private factories: Map<string, IGameObjectFactory> = new Map();
   
   private constructor() {
-    logger.debug('GameObjectFactoryManager', 'Initializing GameObjectFactoryManager');
+    logger.debug('GameObjectFactoryManager', 'constructor', 'Initializing GameObjectFactoryManager');
     this.registerDefaultFactories();
   }
   
@@ -35,51 +35,51 @@ export class GameObjectFactoryManager {
    * Register default factories
    */
   private registerDefaultFactories(): void {
-    logger.debug('GameObjectFactoryManager', 'Registering default factories');
+    logger.debug('GameObjectFactoryManager', 'registerDefaultFactories', 'Registering default factories');
     
     try {
       // Register container factory
       const containerFactory = new ContainerFactory();
       this.registerFactory('container', containerFactory);
-      logger.debug('GameObjectFactoryManager', 'Container factory registered', {
+      logger.debug('GameObjectFactoryManager', 'registerDefaultFactories', 'Container factory registered', {
         supportedTypes: containerFactory.getSupportedTypes()
       });
       
       // Register image factory
       const imageFactory = new ImageFactory();
       this.registerFactory('image', imageFactory);
-      logger.debug('GameObjectFactoryManager', 'Image factory registered', {
+      logger.debug('GameObjectFactoryManager', 'registerDefaultFactories', 'Image factory registered', {
         supportedTypes: imageFactory.getSupportedTypes()
       });
       
       // Register text factory
       const textFactory = new TextFactory();
       this.registerFactory('text', textFactory);
-      logger.debug('GameObjectFactoryManager', 'Text factory registered', {
+      logger.debug('GameObjectFactoryManager', 'registerDefaultFactories', 'Text factory registered', {
         supportedTypes: textFactory.getSupportedTypes()
       });
       
       // Register button factory
       const buttonFactory = new ButtonFactory();
       this.registerFactory('button', buttonFactory);
-      logger.debug('GameObjectFactoryManager', 'Button factory registered', {
+      logger.debug('GameObjectFactoryManager', 'registerDefaultFactories', 'Button factory registered', {
         supportedTypes: buttonFactory.getSupportedTypes()
       });
       
       // Register shape factory
       const shapeFactory = new ShapeFactory();
       this.registerFactory('shape', shapeFactory);
-      logger.debug('GameObjectFactoryManager', 'Shape factory registered', {
+      logger.debug('GameObjectFactoryManager', 'registerDefaultFactories', 'Shape factory registered', {
         supportedTypes: shapeFactory.getSupportedTypes()
       });
       
-      logger.info('GameObjectFactoryManager', 'All default factories registered successfully', {
+      logger.info('GameObjectFactoryManager', 'registerDefaultFactories', 'All default factories registered successfully', {
         totalFactories: this.factories.size,
         factoryTypes: Array.from(this.factories.keys())
       });
       
     } catch (error) {
-      logger.error('GameObjectFactoryManager', 'Error registering default factories', error);
+      logger.error('GameObjectFactoryManager', 'registerDefaultFactories', 'Error registering default factories', error);
       throw error;
     }
   }
@@ -88,7 +88,7 @@ export class GameObjectFactoryManager {
    * Register a factory for a specific object type
    */
   public registerFactory(objectType: string, factory: IGameObjectFactory): void {
-    logger.debug('GameObjectFactoryManager', 'Registering factory', {
+    logger.debug('GameObjectFactoryManager', 'registerFactory', 'Registering factory', {
       objectType,
       factoryType: factory.constructor.name,
       supportedTypes: factory.getSupportedTypes()
@@ -96,7 +96,7 @@ export class GameObjectFactoryManager {
     
     this.factories.set(objectType, factory);
     
-    logger.debug('GameObjectFactoryManager', 'Factory registered successfully', {
+    logger.debug('GameObjectFactoryManager', 'registerFactory', 'Factory registered successfully', {
       objectType,
       totalFactories: this.factories.size
     });
@@ -106,7 +106,7 @@ export class GameObjectFactoryManager {
    * Create a game object using the appropriate factory
    */
   public createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.GameObject | null {
-    logger.debug('GameObjectFactoryManager', 'Creating game object', {
+    logger.debug('GameObjectFactoryManager', 'createGameObject', 'Creating game object', {
       objectId: config.id,
       objectType: config.type,
       hasConfig: !!config,
@@ -115,7 +115,7 @@ export class GameObjectFactoryManager {
     
     try {
       if (!config || !config.type) {
-        logger.warn('GameObjectFactoryManager', 'Invalid config provided', {
+        logger.warn('GameObjectFactoryManager', 'createGameObject', 'Invalid config provided', {
           hasConfig: !!config,
           configType: config?.type,
           config: config
@@ -126,7 +126,7 @@ export class GameObjectFactoryManager {
       const factory = this.factories.get(config.type);
       
       if (!factory) {
-        logger.warn('GameObjectFactoryManager', 'No factory found for object type', {
+        logger.warn('GameObjectFactoryManager', 'createGameObject', 'No factory found for object type', {
           objectType: config.type,
           availableFactories: Array.from(this.factories.keys()),
           objectId: config.id
@@ -134,7 +134,7 @@ export class GameObjectFactoryManager {
         return null;
       }
       
-      logger.debug('GameObjectFactoryManager', 'Factory found, creating game object', {
+      logger.debug('GameObjectFactoryManager', 'createGameObject', 'Factory found, creating game object', {
         objectId: config.id,
         objectType: config.type,
         factoryType: factory.constructor.name,
@@ -142,7 +142,7 @@ export class GameObjectFactoryManager {
       });
       
       if (!factory.canCreate(config.type)) {
-        logger.warn('GameObjectFactoryManager', 'Factory cannot create this object type', {
+        logger.warn('GameObjectFactoryManager', 'createGameObject', 'Factory cannot create this object type', {
           objectType: config.type,
           factoryType: factory.constructor.name,
           supportedTypes: factory.getSupportedTypes(),
@@ -154,14 +154,14 @@ export class GameObjectFactoryManager {
       const gameObject = factory.createGameObject(config, scene);
       
       if (gameObject) {
-        logger.debug('GameObjectFactoryManager', 'Game object created successfully', {
+        logger.debug('GameObjectFactoryManager', 'createGameObject', 'Game object created successfully', {
           objectId: config.id,
           objectType: config.type,
           phaserObjectType: gameObject.constructor.name,
           gameObjectName: gameObject.name
         });
       } else {
-        logger.error('GameObjectFactoryManager', 'Factory failed to create game object', {
+        logger.error('GameObjectFactoryManager', 'createGameObject', 'Factory failed to create game object', {
           objectId: config.id,
           objectType: config.type,
           factoryType: factory.constructor.name
@@ -171,7 +171,7 @@ export class GameObjectFactoryManager {
       return gameObject;
       
     } catch (error) {
-      logger.error('GameObjectFactoryManager', `Error creating game object: ${config?.id}`, error);
+      logger.error('GameObjectFactoryManager', 'createGameObject', `Error creating game object: ${config?.id}`, error);
       return null;
     }
   }
@@ -185,7 +185,7 @@ export class GameObjectFactoryManager {
     scene: Phaser.Scene, 
     parent?: Phaser.GameObjects.Container
   ): Promise<Phaser.GameObjects.GameObject | null> {
-    logger.debug('GameObjectFactoryManager', 'Creating game object with static factory', {
+    logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Creating game object with static factory', {
       objectId: config.id,
       className: config.factory?.className,
       createMethod: config.factory?.createMethod
@@ -193,7 +193,7 @@ export class GameObjectFactoryManager {
 
     try {
       if (!config.factory?.className) {
-        logger.warn('GameObjectFactoryManager', 'No factory configuration provided', {
+        logger.warn('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'No factory configuration provided', {
           objectId: config.id,
           hasFactory: !!config.factory,
           factoryConfig: config.factory
@@ -208,13 +208,13 @@ export class GameObjectFactoryManager {
 
       switch (className) {
         case 'BackgroundContainer':
-          logger.debug('GameObjectFactoryManager', 'Loading BackgroundContainer class');
+          logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Loading BackgroundContainer class');
           try {
             const BackgroundContainerModule = await import('../object/container/BackgroundContainer');
             ConcreteClass = BackgroundContainerModule.BackgroundContainer;
-            logger.debug('GameObjectFactoryManager', 'BackgroundContainer class loaded successfully');
+            logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'BackgroundContainer class loaded successfully');
           } catch (importError) {
-            logger.error('GameObjectFactoryManager', 'Failed to import BackgroundContainer module', {
+            logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Failed to import BackgroundContainer module', {
               objectId: config.id,
               error: importError instanceof Error ? importError.message : String(importError)
             });
@@ -223,13 +223,13 @@ export class GameObjectFactoryManager {
           break;
 
         case 'ConcreteContainer':
-          logger.debug('GameObjectFactoryManager', 'Loading ConcreteContainer class');
+          logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Loading ConcreteContainer class');
           try {
             const ConcreteContainerModule = await import('../object/container/ConcreteContainer');
             ConcreteClass = ConcreteContainerModule.ConcreteContainer;
-            logger.debug('GameObjectFactoryManager', 'ConcreteContainer class loaded successfully');
+            logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'ConcreteContainer class loaded successfully');
           } catch (importError) {
-            logger.error('GameObjectFactoryManager', 'Failed to import ConcreteContainer module', {
+            logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Failed to import ConcreteContainer module', {
               objectId: config.id,
               error: importError instanceof Error ? importError.message : String(importError)
             });
@@ -238,13 +238,13 @@ export class GameObjectFactoryManager {
           break;
 
         case 'Rectangle':
-          logger.debug('GameObjectFactoryManager', 'Loading Rectangle class');
+          logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Loading Rectangle class');
           try {
             const RectangleModule = await import('../object/shapes/Rectangle');
             ConcreteClass = RectangleModule.Rectangle;
-            logger.debug('GameObjectFactoryManager', 'Rectangle class loaded successfully');
+            logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Rectangle class loaded successfully');
           } catch (importError) {
-            logger.error('GameObjectFactoryManager', 'Failed to import Rectangle module', {
+            logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Failed to import Rectangle module', {
               objectId: config.id,
               error: importError instanceof Error ? importError.message : String(importError)
             });
@@ -253,7 +253,7 @@ export class GameObjectFactoryManager {
           break;
 
         default:
-          logger.warn('GameObjectFactoryManager', `Unknown factory class: ${className}`, {
+          logger.warn('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', `Unknown factory class: ${className}`, {
             objectId: config.id,
             availableClasses: ['BackgroundContainer', 'ConcreteContainer', 'Rectangle']
           });
@@ -262,7 +262,7 @@ export class GameObjectFactoryManager {
 
       // Check if the class has the create method
       if (typeof ConcreteClass[createMethod] === 'function') {
-        logger.debug('GameObjectFactoryManager', 'Calling static factory method', {
+        logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Calling static factory method', {
           objectId: config.id,
           className,
           createMethod
@@ -271,7 +271,7 @@ export class GameObjectFactoryManager {
         try {
           const result = ConcreteClass[createMethod](config, scene, parent);
 
-          logger.debug('GameObjectFactoryManager', 'Static factory method executed successfully', {
+          logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Static factory method executed successfully', {
             objectId: config.id,
             hasResult: !!result,
             resultType: result?.constructor.name
@@ -279,7 +279,7 @@ export class GameObjectFactoryManager {
 
           return result;
         } catch (methodError) {
-          logger.error('GameObjectFactoryManager', 'Static factory method execution failed', {
+          logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Static factory method execution failed', {
             objectId: config.id,
             className,
             createMethod,
@@ -288,7 +288,7 @@ export class GameObjectFactoryManager {
           return null;
         }
       } else {
-        logger.warn('GameObjectFactoryManager', `Factory method '${createMethod}' not found in ${className}`, {
+        logger.warn('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', `Factory method '${createMethod}' not found in ${className}`, {
           objectId: config.id,
           availableMethods: Object.getOwnPropertyNames(ConcreteClass).filter(name => typeof ConcreteClass[name] === 'function')
         });
@@ -296,7 +296,7 @@ export class GameObjectFactoryManager {
       }
 
     } catch (error) {
-      logger.error('GameObjectFactoryManager', `Critical error using static factory for ${config.id}:`, {
+      logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', `Critical error using static factory for ${config.id}:`, {
         error: error instanceof Error ? error.message : String(error),
         objectId: config.id,
         className: config.factory?.className
@@ -310,7 +310,7 @@ export class GameObjectFactoryManager {
    */
   public hasFactory(objectType: string): boolean {
     const hasFactory = this.factories.has(objectType);
-    logger.debug('GameObjectFactoryManager', 'Checking if factory exists', {
+    logger.debug('GameObjectFactoryManager', 'hasFactory', 'Checking if factory exists', {
       objectType,
       hasFactory
     });
@@ -322,7 +322,7 @@ export class GameObjectFactoryManager {
    */
   public getRegisteredTypes(): string[] {
     const types = Array.from(this.factories.keys());
-    logger.debug('GameObjectFactoryManager', 'Getting registered factory types', {
+    logger.debug('GameObjectFactoryManager', 'getRegisteredTypes', 'Getting registered factory types', {
       types,
       count: types.length
     });
@@ -334,7 +334,7 @@ export class GameObjectFactoryManager {
    */
   public getFactory(objectType: string): IGameObjectFactory | undefined {
     const factory = this.factories.get(objectType);
-    logger.debug('GameObjectFactoryManager', 'Getting factory', {
+    logger.debug('GameObjectFactoryManager', 'getFactory', 'Getting factory', {
       objectType,
       hasFactory: !!factory,
       factoryType: factory?.constructor.name
@@ -360,7 +360,7 @@ export class GameObjectFactoryManager {
       }))
     };
     
-    logger.debug('GameObjectFactoryManager', 'Getting factory statistics', stats);
+    logger.debug('GameObjectFactoryManager', 'getStats', 'Getting factory statistics', stats);
     return stats;
   }
 }

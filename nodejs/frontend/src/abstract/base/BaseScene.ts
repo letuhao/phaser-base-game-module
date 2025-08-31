@@ -2,6 +2,8 @@ import Phaser from 'phaser'
 import { ConfigManager } from '../../core/ConfigManager'
 import { Logger } from '../../core/Logger'
 import { GameObjectFactoryManager } from '../../factory/GameObjectFactoryManager'
+import { ResponsiveConfigLoader } from '../../core/ResponsiveConfigLoader'
+import { ThemeConfigLoader } from '../../core/ThemeConfigLoader'
 
 /**
  * Base Scene Class
@@ -17,13 +19,26 @@ export abstract class BaseScene extends Phaser.Scene {
   protected gameObjects: Map<string, Phaser.GameObjects.GameObject> = new Map()
   protected factoryManager: GameObjectFactoryManager
   protected logger: Logger = Logger.getInstance()
+  
+  // NEW: Responsive and theme configuration loaders
+  protected responsiveConfigLoader: ResponsiveConfigLoader
+  protected themeConfigLoader: ThemeConfigLoader
+  
+  // NEW: Cached responsive configurations for performance
+  protected cachedResponsiveConfigs: Map<string, any> = new Map()
+  protected currentBreakpoint: string = 'default'
+  protected lastResizeWidth: number = 0
 
   constructor(sceneKey: string) {
     super({ key: sceneKey })
     this.configManager = ConfigManager.getInstance()
     this.factoryManager = GameObjectFactoryManager.getInstance()
+    
+    // Initialize responsive and theme loaders
+    this.responsiveConfigLoader = ResponsiveConfigLoader.getInstance()
+    this.themeConfigLoader = ThemeConfigLoader.getInstance()
 
-    this.logger.debug('BaseScene', 'Base scene constructor called', {
+    this.logger.debug('BaseScene', 'BaseScene constructor called', {
       sceneKey,
       timestamp: Date.now()
     }, 'constructor')
@@ -243,6 +258,35 @@ export abstract class BaseScene extends Phaser.Scene {
         gameObjectCount: sceneConfig.gameObjects?.length || 0,
         backgroundColor: sceneConfig.backgroundColor
       }, 'initializeSceneFromConfig')
+
+      // NEW: Register responsive config with ResponsiveConfigLoader
+      if (this.sceneConfigs.responsive) {
+        const sceneName = this.getSceneName()
+        this.responsiveConfigLoader.registerConfig(sceneName, this.sceneConfigs.responsive)
+        this.logger.info('BaseScene', 'Responsive config registered', {
+          sceneName,
+          configKeys: Object.keys(this.sceneConfigs.responsive),
+          hasDefault: !!this.sceneConfigs.responsive.default,
+          defaultObjectCount: this.sceneConfigs.responsive.default?.length || 0
+        })
+        
+        // Cache responsive configs for performance
+        this.cacheResponsiveConfigs()
+      } else {
+        this.logger.error('BaseScene', 'No responsive configuration found - scene cannot function properly')
+        throw new Error('Responsive configuration is required for scene functionality')
+      }
+
+      // NEW: Set active theme if specified (now loaded via ConfigManager)
+      if (this.sceneConfigs.theme) {
+        this.themeConfigLoader.setActiveTheme(this.sceneConfigs.theme.themeName)
+        this.logger.info('BaseScene', 'Theme activated', {
+          themeName: this.sceneConfigs.theme.themeName,
+          hasThemeClasses: !!this.sceneConfigs.theme.themeClasses
+        })
+      } else {
+        this.logger.warn('BaseScene', 'No theme configuration found - using default styling')
+      }
 
       // Set scene background color from config
       if (sceneConfig.backgroundColor) {
@@ -869,15 +913,29 @@ export abstract class BaseScene extends Phaser.Scene {
   }
 
   /**
-   * Find the root container (the one without a parent)
+   * Find the root container (the first game object in the scene config)
    */
   private findRootContainer(): Phaser.GameObjects.Container | null {
-    // Look for a container that has no parent
+    // First, try to find the first game object from the scene config
+    if (this.sceneConfigs.scene && this.sceneConfigs.scene.gameObjects && this.sceneConfigs.scene.gameObjects.length > 0) {
+      const firstGameObjectId = this.sceneConfigs.scene.gameObjects[0].id
+      const firstGameObject = this.gameObjects.get(firstGameObjectId)
+      
+      if (firstGameObject && firstGameObject instanceof Phaser.GameObjects.Container) {
+        this.logger.debug('BaseScene', 'Found root container from scene config', {
+          rootContainerId: firstGameObject.name || firstGameObjectId,
+          rootContainerType: firstGameObject.constructor.name
+        })
+        return firstGameObject
+      }
+    }
+    
+    // Fallback: Look for a container that has no parent
     for (const gameObject of this.gameObjects.values()) {
       if (gameObject instanceof Phaser.GameObjects.Container) {
         // Check if this container has no parent
         if (!(gameObject as any).parent) {
-          this.logger.debug('BaseScene', 'Found root container', {
+          this.logger.debug('BaseScene', 'Found root container by parent check', {
             rootContainerId: gameObject.name || 'unnamed',
             rootContainerType: gameObject.constructor.name
           })
@@ -911,5 +969,84 @@ export abstract class BaseScene extends Phaser.Scene {
     }
     
     return null;
+  }
+  
+  /**
+   * Cache responsive configurations for performance
+   * This prevents lag during resize by pre-loading all configs
+   */
+  private cacheResponsiveConfigs(): void {
+    this.logger.debug('BaseScene', 'Caching responsive configurations for performance')
+    
+    try {
+      if (!this.sceneConfigs.responsive) {
+        this.logger.warn('BaseScene', 'No responsive config to cache')
+        return
+      }
+      
+      const responsiveConfig = this.sceneConfigs.responsive
+      
+      // Cache default breakpoint
+      if (responsiveConfig.default) {
+        responsiveConfig.default.forEach((layout: any) => {
+          this.cachedResponsiveConfigs.set(`default-${layout.id}`, layout)
+        })
+      }
+      
+      // Cache all breakpoint configurations
+      Object.entries(responsiveConfig.responsiveSettings).forEach(([breakpointKey, layouts]) => {
+        (layouts as any[]).forEach((layout: any) => {
+          this.cachedResponsiveConfigs.set(`${breakpointKey}-${layout.id}`, layout)
+        })
+      })
+      
+      this.logger.info('BaseScene', 'Responsive configurations cached successfully', {
+        totalCached: this.cachedResponsiveConfigs.size,
+        breakpoints: Object.keys(responsiveConfig.responsiveSettings),
+        defaultCount: responsiveConfig.default?.length || 0
+      })
+      
+    } catch (error) {
+      this.logger.error('BaseScene', 'Error caching responsive configurations', error)
+    }
+  }
+  
+  /**
+   * Get cached responsive configuration for an object and breakpoint
+   */
+  protected getCachedResponsiveConfig(objectId: string, breakpoint: string = 'default'): any {
+    const cacheKey = `${breakpoint}-${objectId}`
+    return this.cachedResponsiveConfigs.get(cacheKey)
+  }
+  
+  /**
+   * Get current breakpoint based on screen width
+   */
+  protected getCurrentBreakpoint(width: number): string {
+    if (width < 576) return 'xs'
+    if (width < 768) return 'sm'
+    if (width < 992) return 'md'
+    if (width < 1200) return 'lg'
+    return 'xl'
+  }
+  
+  /**
+   * Pass responsive and theme configs to game objects
+   * This method is called by game objects to get their configurations
+   */
+  protected getGameObjectConfigs(_objectId: string): {
+    responsive: any
+    theme: any
+    currentBreakpoint: string
+  } {
+    const currentWidth = this.game.config.width as number
+    const currentBreakpoint = this.getCurrentBreakpoint(currentWidth)
+    
+    // Return the full responsive configuration structure that Container expects
+    return {
+      responsive: this.sceneConfigs.responsive,
+      theme: this.sceneConfigs.theme,
+      currentBreakpoint
+    }
   }
 }

@@ -2,7 +2,8 @@ import * as Phaser from 'phaser';
 import type { IShape } from '../../abstract/objects/IShape';
 import type { IContainer } from '../../abstract/objects/IContainer';
 import type { IStyle } from '../../abstract/configs/IStyle';
-import type { CommonIStyleProperties, IRandomValueNumber } from '../../abstract/configs/IStyleProperties';
+import type { CommonIStyleProperties } from '../../abstract/configs/IStyleProperties';
+import type { IRandomValueNumber } from '../../unit';
 import { Logger } from '../../core/Logger';
 import type { IGameObject } from '../../abstract/base/IGameObject';
 

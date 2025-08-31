@@ -3,7 +3,7 @@
  * This shows how to create rich, styled game objects using the enhanced interface
  */
 
-import type { IStyleProperties } from '../../../abstract/configs/IStyleProperties'
+import type { IStyleProperties } from '../../abstract/configs/IStyleProperties'
 
 // Example 1: Text styling with comprehensive font properties
 export const textStyleExample: IStyleProperties = {

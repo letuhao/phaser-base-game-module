@@ -7,7 +7,7 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
   // Default breakpoint that loads first (highest priority)
   default: [
     {
-      id: 'test-root-container',
+      id: 'root-container',
       breakpointCondition: { minWidth: 0, maxWidth: undefined },
       layoutProperties: {
         maintainAspectRatio: false,
@@ -15,11 +15,12 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         alignment: 'center',
         positionX: 0,
         positionY: 0,
-        width: 'auto',
-        height: 'auto',
+        width: 'fill',
+        height: 'fill',
         zOrder: 0,
-        backgroundColor: '#000000',
-        interactive: false
+        backgroundColor: '#1a1a2e',
+        interactive: false,
+        classes: ['container-autumn', 'root-container']
       }
     },
     {
@@ -35,7 +36,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         height: 'auto',
         zOrder: -100,
         backgroundColor: '#ffffff',
-        backgroundImage: 'levis2025r3wheel-desktop-bg'
+        backgroundImage: 'levis2025r3wheel-desktop-bg',
+        classes: ['background-autumn']
       }
     },
     {
@@ -51,7 +53,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         height: 80,
         zOrder: 30,
         backgroundColor: '#ffffff',
-        interactive: false
+        interactive: false,
+        classes: ['footer-autumn']
       }
     },
     {
@@ -67,20 +70,39 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         height: 'auto',
         zOrder: 40,
         backgroundColor: '#ffffff',
-        interactive: false
+        interactive: false,
+        classes: ['footer-autumn']
       }
     }
   ],
   responsiveSettings: {
     xs: [
       {
+        id: 'root-container',
+        breakpointCondition: { minWidth: 0, maxWidth: 575 },
+        layoutProperties: {
+          maintainAspectRatio: false,
+          scaleStrategy: 'stretch',
+          alignment: 'center',
+          positionX: 0,
+          positionY: 0,
+          width: 'fill',
+          height: 'fill',
+          zOrder: 0,
+          backgroundColor: '#2a2a3e',
+          interactive: false,
+          classes: ['container-autumn', 'root-container', 'mobile-root']
+        }
+      },
+      {
         id: 'background-container',
         breakpointCondition: { minWidth: 0, maxWidth: 575 },
         layoutProperties: {
           maintainAspectRatio: false,
           scaleStrategy: 'stretch',
           alignment: 'center',
-          backgroundImage: 'levis2025r3wheel-mobile-bg'
+          backgroundImage: 'levis2025r3wheel-mobile-bg',
+          classes: ['background-autumn', 'mobile-background']
         }
       },
       {
@@ -91,7 +113,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 60,
-          padding: 10
+          padding: 10,
+          classes: ['footer-autumn', 'mobile-footer']
         }
       },
       {
@@ -102,20 +125,39 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 60,
-          padding: 10
+          padding: 10,
+          classes: ['footer-autumn', 'mobile-footer']
         }
       }
     ],
     
     sm: [
       {
+        id: 'root-container',
+        breakpointCondition: { minWidth: 576, maxWidth: 767 },
+        layoutProperties: {
+          maintainAspectRatio: false,
+          scaleStrategy: 'stretch',
+          alignment: 'center',
+          positionX: 0,
+          positionY: 0,
+          width: 'fill',
+          height: 'fill',
+          zOrder: 0,
+          backgroundColor: '#3a3a4e',
+          interactive: false,
+          classes: ['container-autumn', 'root-container', 'small-root']
+        }
+      },
+      {
         id: 'background-container',
         breakpointCondition: { minWidth: 576, maxWidth: 767 },
         layoutProperties: {
           maintainAspectRatio: false,
           scaleStrategy: 'stretch',
           alignment: 'center',
-          backgroundImage: 'levis2025r3wheel-mobile-bg'
+          backgroundImage: 'levis2025r3wheel-mobile-bg',
+          classes: ['background-autumn', 'mobile-background']
         }
       },
       {
@@ -126,7 +168,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 65,
-          padding: 12
+          padding: 12,
+          classes: ['footer-autumn', 'mobile-footer']
         }
       },
       {
@@ -137,12 +180,30 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 65,
-          padding: 12
+          padding: 12,
+          classes: ['footer-autumn', 'mobile-footer']
         }
       }
     ],
     
     md: [
+      {
+        id: 'root-container',
+        breakpointCondition: { minWidth: 768, maxWidth: 991 },
+        layoutProperties: {
+          maintainAspectRatio: false,
+          scaleStrategy: 'stretch',
+          alignment: 'center',
+          positionX: 0,
+          positionY: 0,
+          width: 'fill',
+          height: 'fill',
+          zOrder: 0,
+          backgroundColor: '#4a4a5e',
+          interactive: false,
+          classes: ['container-autumn', 'root-container', 'tablet-root']
+        }
+      },
       {
         id: 'background-container',
         breakpointCondition: { minWidth: 768, maxWidth: 991 },
@@ -150,7 +211,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           maintainAspectRatio: true,
           scaleStrategy: 'fit',
           alignment: 'center',
-          backgroundImage: 'levis2025r3wheel-mobile-bg'
+          backgroundImage: 'levis2025r3wheel-mobile-bg',
+          classes: ['background-autumn', 'tablet-background']
         }
       },
       {
@@ -161,7 +223,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 70,
-          padding: 15
+          padding: 15,
+          classes: ['footer-autumn', 'tablet-footer']
         }
       },
       {
@@ -172,12 +235,30 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 70,
-          padding: 15
+          padding: 15,
+          classes: ['footer-autumn', 'tablet-footer']
         }
       }
     ],
     
     lg: [
+      {
+        id: 'root-container',
+        breakpointCondition: { minWidth: 992, maxWidth: 1199 },
+        layoutProperties: {
+          maintainAspectRatio: false,
+          scaleStrategy: 'stretch',
+          alignment: 'center',
+          positionX: 0,
+          positionY: 0,
+          width: 'fill',
+          height: 'fill',
+          zOrder: 0,
+          backgroundColor: '#5a5a6e',
+          interactive: false,
+          classes: ['container-autumn', 'root-container', 'large-root']
+        }
+      },
       {
         id: 'background-container',
         breakpointCondition: { minWidth: 992, maxWidth: 1199 },
@@ -214,6 +295,23 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
     
     xl: [
       {
+        id: 'root-container',
+        breakpointCondition: { minWidth: 1200, maxWidth: undefined },
+        layoutProperties: {
+          maintainAspectRatio: false,
+          scaleStrategy: 'stretch',
+          alignment: 'center',
+          positionX: 0,
+          positionY: 0,
+          width: 'fill',
+          height: 'fill',
+          zOrder: 0,
+          backgroundColor: '#6a6a7e',
+          interactive: false,
+          classes: ['container-autumn', 'root-container', 'xl-root']
+        }
+      },
+      {
         id: 'background-container',
         breakpointCondition: { minWidth: 1200, maxWidth: undefined },
         layoutProperties: {
@@ -249,170 +347,4 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
   }
 }
 
-// Helper functions for responsive behavior
 
-/**
- * Get the layout properties for a specific object at a given width
- */
-export const getObjectLayout = (width: number, objectId: string): any | null => {
-  // Check default first (highest priority)
-  const defaultLayout = levis2025r3wheelResponsiveConfig.default?.find(
-    layout => layout.id === objectId
-  )
-  if (defaultLayout) {
-    return defaultLayout.layoutProperties
-  }
-  
-  const breakpoints = Object.keys(levis2025r3wheelResponsiveConfig.responsiveSettings)
-  
-  // Find the matching breakpoint
-  for (const breakpointKey of breakpoints) {
-    const breakpoint = levis2025r3wheelResponsiveConfig.responsiveSettings[breakpointKey]
-    
-    // Check if this breakpoint matches the width
-    const isWidthMatch = breakpoint.some(layout => 
-      width >= layout.breakpointCondition.minWidth && 
-      (layout.breakpointCondition.maxWidth === undefined || width <= layout.breakpointCondition.maxWidth)
-    )
-    
-    if (isWidthMatch) {
-      // Find the object layout in this breakpoint
-      const objectLayout = breakpoint.find(layout => layout.id === objectId)
-      if (objectLayout) {
-        return objectLayout.layoutProperties
-      }
-    }
-  }
-  
-  return null
-}
-
-/**
- * Get the breakpoint key for a given width
- */
-export const getBreakpointKey = (width: number): string => {
-  const breakpoints = levis2025r3wheelResponsiveConfig.responsiveSettings
-  
-  for (const [key, layouts] of Object.entries(breakpoints)) {
-    const isMatch = layouts.some(layout => 
-      width >= layout.breakpointCondition.minWidth && 
-      (layout.breakpointCondition.maxWidth === undefined || width <= layout.breakpointCondition.maxWidth)
-    )
-    
-    if (isMatch) {
-      return key
-    }
-  }
-  
-  return 'lg' // Default fallback
-}
-
-/**
- * Get the background image key for a specific object and window width
- */
-export const getBackgroundImageKey = (width: number, objectId: string): string | undefined => {
-  const layout = getObjectLayout(width, objectId)
-  return layout?.backgroundImage
-}
-
-/**
- * Get custom properties for a specific object and window width
- */
-export const getCustomProperties = (width: number, objectId: string): Record<string, any> => {
-  const layout = getObjectLayout(width, objectId)
-  if (!layout) return {}
-  
-  // Extract custom properties (everything except the standard ones)
-  const { maintainAspectRatio, scaleStrategy, alignment, backgroundImage, ...customProps } = layout
-  return customProps
-}
-
-/**
- * Check if current width matches a specific breakpoint
- */
-export const isBreakpoint = (width: number, breakpointKey: string): boolean => {
-  return getBreakpointKey(width) === breakpointKey
-}
-
-/**
- * Get specific responsive behavior properties for an object
- */
-export const shouldMaintainAspectRatio = (width: number, objectId: string): boolean => {
-  const layout = getObjectLayout(width, objectId)
-  return layout?.maintainAspectRatio ?? true
-}
-
-export const getScaleStrategy = (width: number, objectId: string): 'fit' | 'stretch' | 'fill' => {
-  const layout = getObjectLayout(width, objectId)
-  return layout?.scaleStrategy ?? 'fit'
-}
-
-export const getAlignment = (width: number, objectId: string): any => {
-  const layout = getObjectLayout(width, objectId)
-  return layout?.alignment ?? 'center'
-}
-
-/**
- * Get all available breakpoint keys
- */
-export const getBreakpointKeys = (): string[] => {
-  return Object.keys(levis2025r3wheelResponsiveConfig.responsiveSettings)
-}
-
-/**
- * Get breakpoint information for debugging
- */
-export const getBreakpointInfo = (width: number, objectId?: string) => {
-  const currentKey = getBreakpointKey(width)
-  const currentLayout = objectId ? getObjectLayout(width, objectId) : null
-  const customProperties = objectId ? getCustomProperties(width, objectId) : {}
-  
-  return {
-    currentBreakpoint: currentKey,
-    currentLayout,
-    customProperties,
-    objectId: objectId || 'none',
-    defaultBreakpoint: levis2025r3wheelResponsiveConfig.default,
-    allBreakpoints: levis2025r3wheelResponsiveConfig.responsiveSettings,
-    windowWidth: width
-  }
-}
-
-/**
- * Get all available object IDs that have responsive configs
- */
-export const getObjectIds = (): string[] => {
-  const allIds = new Set<string>()
-  
-  // Add default breakpoint IDs
-  levis2025r3wheelResponsiveConfig.default?.forEach(layout => {
-    allIds.add(layout.id)
-  })
-  
-  // Add responsive breakpoint IDs
-  Object.values(levis2025r3wheelResponsiveConfig.responsiveSettings).forEach(breakpoint => {
-    breakpoint.forEach(layout => {
-      allIds.add(layout.id)
-    })
-  })
-  
-  return Array.from(allIds)
-}
-
-/**
- * Check if an object has responsive configuration
- */
-export const hasObjectResponsiveConfig = (objectId: string): boolean => {
-  return getObjectIds().includes(objectId)
-}
-
-/**
- * Legacy compatibility functions (keeping for backward compatibility)
- */
-export const isDesktop = (width: number): boolean => {
-  return width >= 992 // lg breakpoint and above
-}
-
-export const isMobile = (width: number): boolean => {
-  return width < 768 // below md breakpoint
-}
