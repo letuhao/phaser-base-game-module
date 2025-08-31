@@ -81,7 +81,7 @@ export class ButtonFactory extends BaseGameObjectFactory {
       return button
       
     } catch (error) {
-      this.logger.error('ButtonFactory', `Error creating button '${config.id}':`, error, 'createGameObject')
+      this.logger.error('ButtonFactory', 'createGameObject', `Error creating button '${config.id}':`, error)
       return null
     }
   }

@@ -5,6 +5,7 @@ import type {
   IGameObjectNode 
 } from './ISceneLoaderConfig'
 import type { IResponsiveConfig } from './IResponsiveConfig'
+import { Logger } from '../../core/Logger'
 
 /**
  * Example Scene Loader Configuration
@@ -32,6 +33,9 @@ import type { IResponsiveConfig } from './IResponsiveConfig'
  *     - Health Bar (container)
  *       - Health Fill (image)
  */
+
+// Create logger instance for examples
+const logger = Logger.getInstance()
 
 /**
  * Example 1: Complete Game Scene with HTML-like Structure
@@ -75,20 +79,20 @@ export const exampleGameScene: ISceneLoaderConfig = {
   
   // Loading methods
   loadingMethods: {
-    loadScene: async () => { console.log('Loading game scene...') },
+    loadScene: async () => { logger.info('SceneLoaderExamples', 'loadScene', 'Loading game scene...') },
     loadObject: async (id) => { return createGameObject(id) },
-    unloadObject: async (id) => { console.log(`Unloading object: ${id}`) },
+    unloadObject: async (id) => { logger.info('SceneLoaderExamples', 'unloadObject', `Unloading object: ${id}`) },
     getLoadingProgress: () => 0.75,
     isSceneLoaded: () => false,
     getLoadingErrors: () => [],
-    reloadScene: async () => { console.log('Reloading scene...') }
+    reloadScene: async () => { logger.info('SceneLoaderExamples', 'reloadScene', 'Reloading scene...') }
   },
   
   // Object management
   objectManagement: {
-    addObject: (obj, parentId) => { console.log(`Adding object: ${obj.id}`) },
-    removeObject: (id) => { console.log(`Removing object: ${id}`) },
-    moveObject: (id, newParentId) => { console.log(`Moving object: ${id}`) },
+    addObject: (obj, parentId) => { logger.info('SceneLoaderExamples', 'addObject', `Adding object: ${obj.id}`) },
+    removeObject: (id) => { logger.info('SceneLoaderExamples', 'removeObject', `Removing object: ${id}`) },
+    moveObject: (id, newParentId) => { logger.info('SceneLoaderExamples', 'moveObject', `Moving object: ${id}`) },
     cloneObject: (id, newParentId) => { return createGameObject(id) },
     getObject: (id) => { return createGameObject(id) },
     getObjectsByType: (type) => { return [] },
@@ -194,7 +198,7 @@ function createBackgroundContainer(): IGameObjectConfig {
     
     // Lifecycle
     lifecycle: {
-      onCreate: () => console.log('Background container created'),
+      onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Background container created'),
       onUpdate: (time, delta) => { /* Update logic */ }
     },
     
@@ -266,7 +270,7 @@ export const headerContainer: IGameObjectConfig = {
   children: ['logo-image', 'navigation-container'],
   
   lifecycle: {
-    onCreate: () => console.log('Header container created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Header container created')
   },
   
   utilities: createUtilityMethods('header-container', 1)
@@ -318,7 +322,7 @@ export const logoImage: IGameObjectConfig = {
   children: [],
   
   lifecycle: {
-    onCreate: () => console.log('Logo created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Logo created')
   },
   
   utilities: createUtilityMethods('logo-image', 2)
@@ -363,7 +367,7 @@ export const navigationContainer: IGameObjectConfig = {
   children: ['menu-button', 'settings-button'],
   
   lifecycle: {
-    onCreate: () => console.log('Navigation created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Navigation created')
   },
   
   utilities: createUtilityMethods('navigation-container', 2)
@@ -433,7 +437,7 @@ export const menuButton: IGameObjectConfig = {
   
   events: {
     mouse: {
-      onClick: (event) => console.log('Menu button clicked')
+      onClick: (event) => logger.info('SceneLoaderExamples', 'onClick', 'Menu button clicked')
     }
   },
   
@@ -450,7 +454,7 @@ export const menuButton: IGameObjectConfig = {
   children: [],
   
   lifecycle: {
-    onCreate: () => console.log('Menu button created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Menu button created')
   },
   
   utilities: createUtilityMethods('menu-button', 3)
@@ -495,7 +499,7 @@ export const bodyContainer: IGameObjectConfig = {
   children: ['environment-container', 'effect-container'],
   
   lifecycle: {
-    onCreate: () => console.log('Body container created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Body container created')
   },
   
   utilities: createUtilityMethods('body-container', 1)
@@ -542,7 +546,7 @@ export const environmentContainer: IGameObjectConfig = {
   children: ['sky-image', 'ground-image', 'trees-container'],
   
   lifecycle: {
-    onCreate: () => console.log('Environment container created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Environment container created')
   },
   
   utilities: createUtilityMethods('environment-container', 2)
@@ -592,7 +596,7 @@ export const skyImage: IGameObjectConfig = {
   children: [],
   
   lifecycle: {
-    onCreate: () => console.log('Sky created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Sky created')
   },
   
   utilities: createUtilityMethods('sky-image', 3)
@@ -639,7 +643,7 @@ export const treesContainer: IGameObjectConfig = {
   children: ['tree1-image', 'tree2-image'],
   
   lifecycle: {
-    onCreate: () => console.log('Trees container created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Trees container created')
   },
   
   utilities: createUtilityMethods('trees-container', 3)
@@ -696,7 +700,7 @@ export const footerContainer: IGameObjectConfig = {
   children: ['score-text', 'health-bar-container'],
   
   lifecycle: {
-    onCreate: () => console.log('Footer container created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Footer container created')
   },
   
   utilities: createUtilityMethods('footer-container', 1)
@@ -756,7 +760,7 @@ export const scoreText: IGameObjectConfig = {
   children: [],
   
   lifecycle: {
-    onCreate: () => console.log('Score text created'),
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Score text created'),
     onUpdate: (time, delta) => { /* Update score logic */ }
   },
   
@@ -818,7 +822,7 @@ export const healthBarContainer: IGameObjectConfig = {
   children: ['health-fill-image'],
   
   lifecycle: {
-    onCreate: () => console.log('Health bar created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Health bar created')
   },
   
   utilities: createUtilityMethods('health-bar-container', 2)
@@ -868,7 +872,7 @@ export const healthFillImage: IGameObjectConfig = {
   children: [],
   
   lifecycle: {
-    onCreate: () => console.log('Health fill created')
+    onCreate: () => logger.info('SceneLoaderExamples', 'onCreate', 'Health fill created')
   },
   
   utilities: createUtilityMethods('health-fill-image', 3)

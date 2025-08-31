@@ -110,9 +110,16 @@ export class LoggingObserver implements IUnitObserver {
           this.logger.info(objectName, message, data, 'LoggingObserver')
       }
     } catch (error) {
-      // Fallback to console if Logger fails
-      console.error('[LoggingObserver] Failed to log via project logger:', error)
-      console.log(`[LoggingObserver] [${level.toUpperCase()}] ${event}`, data)
+      // Fallback to logger if project logger fails
+      try {
+        this.logger.error('LoggingObserver', 'log', 'Failed to log via project logger', {
+          error: error instanceof Error ? error.message : String(error)
+        })
+        this.logger.log('LoggingObserver', 'log', `[${level.toUpperCase()}] ${event}`, data)
+      } catch (fallbackError) {
+        // Final fallback to console if both loggers fail
+        console.error('[LoggingObserver] Both loggers failed:', fallbackError)
+      }
     }
   }
 

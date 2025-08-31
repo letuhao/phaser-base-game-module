@@ -56,12 +56,12 @@ export class ConfigManager {
       // Register theme config if provided
       if (themeConfig) {
         this.themeLoader.registerTheme(sceneName, themeConfig)
-        logger.info('ConfigManager', `Registered theme configuration for scene: ${sceneName}`)
+        logger.info('ConfigManager', 'unknown', 'unknown', 'Registered theme configuration for scene: ${sceneName}')
       }
       
-      logger.info('ConfigManager', `Registered all configurations for scene: ${sceneName}`)
+      logger.info('ConfigManager', 'unknown', 'unknown', 'Registered all configurations for scene: ${sceneName}')
     } catch (error) {
-      logger.error('ConfigManager', `Failed to register configurations for scene: ${sceneName}`, error)
+      logger.error('ConfigManager', 'unknown', 'Failed to register configurations for scene: ${sceneName}', error)
     }
   }
   
@@ -93,11 +93,11 @@ export class ConfigManager {
         theme: themeConfig
       }
       
-      logger.info('ConfigManager', `Loaded configurations for scene: ${sceneName}`, result)
+      logger.info('ConfigManager', 'loadSceneConfigs', 'Loaded configurations for scene: ${sceneName}', result)
       return result
       
     } catch (error) {
-      logger.error('ConfigManager', `Failed to load configurations for scene: ${sceneName}`, error)
+      logger.error('ConfigManager', 'loadSceneConfigs', 'Failed to load configurations for scene: ${sceneName}', error)
       return {
         logging: false,
         responsive: null,

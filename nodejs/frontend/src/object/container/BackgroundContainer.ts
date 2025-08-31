@@ -29,12 +29,12 @@ export class BackgroundContainer extends Container {
    */
   public static createFromConfig(config: any, scene: Phaser.Scene, parent?: Phaser.GameObjects.Container): BackgroundContainer {
     const logger = Logger.getInstance()
-    logger.debug('BackgroundContainer', 'createFromConfig called', {
+    logger.debug('BackgroundContainer', 'createFromConfig', 'createFromConfig called', {
       objectId: config.id,
       config: config,
       sceneKey: scene.scene.key,
       hasParent: !!parent
-    }, 'createFromConfig')
+    })
     
     try {
       const container = new BackgroundContainer(
@@ -45,25 +45,25 @@ export class BackgroundContainer extends Container {
         parent ? (parent as any) : null
       )
       
-      logger.debug('BackgroundContainer', 'BackgroundContainer instance created', {
+      logger.debug('BackgroundContainer', 'createFromConfig', 'BackgroundContainer instance created', {
         objectId: config.id,
         phaserObjectType: container.constructor.name,
         position: { x: container.x, y: container.y }
-      }, 'createFromConfig')
+      })
       
       // Apply configuration properties
       if (config.properties) {
-        logger.debug('BackgroundContainer', 'Applying properties from config', {
+        logger.debug('BackgroundContainer', 'createFromConfig', 'Applying properties from config', {
           objectId: config.id,
           properties: config.properties
-        }, 'createFromConfig')
+        })
       
         // Set interactive if specified
         if (config.properties.interactive !== undefined) {
-          logger.debug('BackgroundContainer', 'Setting interactive', {
+          logger.debug('BackgroundContainer', 'unknown', 'Setting interactive', {
             objectId: config.id,
             interactive: config.properties.interactive
-          }, 'createFromConfig')
+          })
           container.setInteractive(config.properties.interactive)
         }
       }
@@ -74,17 +74,17 @@ export class BackgroundContainer extends Container {
       // Set name
       container.name = config.name || config.id
       
-      logger.debug('BackgroundContainer', 'BackgroundContainer configured successfully', {
+      logger.debug('BackgroundContainer', 'unknown', 'BackgroundContainer configured successfully', {
         objectId: config.id,
         finalSize: { width: container.width, height: container.height },
         finalPosition: { x: container.x, y: container.y },
         finalName: container.name
-      }, 'createFromConfig')
+      })
       
       return container
       
     } catch (error) {
-      logger.error('BackgroundContainer', `Error in createFromConfig for ${config.id}:`, error)
+      logger.error('BackgroundContainer', 'unknown', 'Error in createFromConfig for ${config.id}:', error)
       throw error
     }
   }
@@ -137,13 +137,13 @@ export class BackgroundContainer extends Container {
   ) {
     super(scene, id, x, y, parent)
     
-    this.logger.debug('BackgroundContainer', 'BackgroundContainer constructor called', {
+    this.logger.debug('BackgroundContainer', 'super', 'BackgroundContainer constructor called', {
       id,
       x,
       y,
       hasParent: !!parent,
       sceneKey: scene.scene.key
-    }, 'constructor')
+    })
     
     // Set container type to background (not root anymore)
     this.setContainerType('background')
@@ -178,11 +178,11 @@ export class BackgroundContainer extends Container {
   setOriginalDimensions(width: number, height: number): void {
     this.originalWidth = width
     this.originalHeight = height
-    this.logger.debug('BackgroundContainer', 'Original dimensions set', {
+    this.logger.debug('BackgroundContainer', 'setOriginalDimensions', 'Original dimensions set', {
       objectId: this.id,
       originalWidth: this.originalWidth,
       originalHeight: this.originalHeight
-    }, 'setOriginalDimensions')
+    })
   }
   
   // ===== BACKGROUND IMAGE MANAGEMENT =====
@@ -201,11 +201,11 @@ export class BackgroundContainer extends Container {
       backgroundColor?: string
     } = {}
   ): void {
-    this.logger.debug('BackgroundContainer', 'setBackgroundImage called', {
+    this.logger.debug('BackgroundContainer', 'setOriginalDimensions', 'setBackgroundImage called', {
       objectId: this.id,
       textureKey: imageKey,
       hasTexture: this.scene.textures.exists(imageKey)
-    }, 'setBackgroundImage')
+    })
     
     this.backgroundImageKey = imageKey
     this.maintainAspectRatio = options.maintainAspectRatio ?? true
@@ -223,11 +223,11 @@ export class BackgroundContainer extends Container {
   private hasResponsiveBackgroundImages(): boolean {
     // Check if we have responsive background images configured
     const hasResponsive = this.responsiveBackgroundImages.size > 0
-    this.logger.debug('BackgroundContainer', 'Checking responsive background images', {
+    this.logger.debug('BackgroundContainer', 'hasResponsiveBackgroundImages', 'Checking responsive background images', {
       objectId: this.id,
       responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries()),
       hasResponsive
-    }, 'hasResponsiveBackgroundImages')
+    })
     return hasResponsive
   }
   
@@ -251,12 +251,12 @@ export class BackgroundContainer extends Container {
     this.responsiveBackgroundImages.set('desktop', desktopImageKey)
     this.responsiveBackgroundImages.set('mobile', mobileImageKey)
     
-    this.logger.debug('BackgroundContainer', 'setResponsiveBackgroundImage called', {
+    this.logger.debug('BackgroundContainer', 'hasResponsiveBackgroundImages', 'setResponsiveBackgroundImage called', {
       objectId: this.id,
       desktopImageKey,
       mobileImageKey,
       currentWidth: this.scene.game.scale.width
-    }, 'setResponsiveBackgroundImage')
+    })
     
     // Get the appropriate background image from responsive configuration
     const currentWidth = this.scene.game.scale.width
@@ -270,12 +270,12 @@ export class BackgroundContainer extends Container {
       selectedImageKey = isDesktop ? desktopImageKey : mobileImageKey
     }
     
-    this.logger.debug('BackgroundContainer', 'Selected background image', {
+    this.logger.debug('BackgroundContainer', 'hasResponsiveBackgroundImages', 'Selected background image', {
       objectId: this.id,
       selectedImageKey,
       currentWidth,
       hasResponsiveConfig: !!selectedImageKey
-    }, 'setResponsiveBackgroundImage')
+    })
     
     // Set the selected background image
     this.setBackgroundImage(selectedImageKey, options)
@@ -290,18 +290,18 @@ export class BackgroundContainer extends Container {
     try {
       // Check if texture exists
       if (!this.scene.textures.exists(imageKey)) {
-        this.logger.warn('BackgroundContainer', `Background texture "${imageKey}" not found`, {
+        this.logger.warn('BackgroundContainer', 'loadBackgroundImage', `Background texture "${imageKey}" not found`, {
           objectId: this.id,
           availableTextures: Object.keys(this.scene.textures.list)
-        }, 'loadBackgroundImage')
+        })
         return
       }
       
       // Remove existing background image
       if (this.backgroundImage) {
-        this.logger.debug('BackgroundContainer', 'Removing existing background image', {
+        this.logger.debug('BackgroundContainer', 'loadBackgroundImage', 'Removing existing background image', {
           objectId: this.id
-        }, 'loadBackgroundImage')
+        })
         this.backgroundImage.destroy()
         this.backgroundImage = null
       }
@@ -330,13 +330,13 @@ export class BackgroundContainer extends Container {
       // Apply responsive sizing based on parent container
       this.applyResponsiveSizing()
       
-      this.logger.debug('BackgroundContainer', `Background image loaded: ${imageKey}`, {
+      this.logger.debug('BackgroundContainer', 'loadBackgroundImage', 'Background image loaded: ${imageKey}', {
         objectId: this.id,
         imageSize: { width: this.backgroundImage!.width, height: this.backgroundImage!.height }
-      }, 'loadBackgroundImage')
+      })
       
     } catch (error) {
-      this.logger.error('BackgroundContainer', 'Failed to load background image:', error)
+      this.logger.error('BackgroundContainer', 'loadBackgroundImage', 'Failed to load background image:', error)
       this.isBackgroundLoaded = false
     }
   }
@@ -346,9 +346,9 @@ export class BackgroundContainer extends Container {
    */
   removeBackgroundImage(): void {
     if (this.backgroundImage) {
-      this.logger.debug('BackgroundContainer', 'Removing background image', {
+      this.logger.debug('BackgroundContainer', 'removeBackgroundImage', 'Removing background image', {
         objectId: this.id
-      }, 'removeBackgroundImage')
+      })
       this.backgroundImage.destroy()
       this.backgroundImage = null
     }
@@ -396,12 +396,12 @@ export class BackgroundContainer extends Container {
     // Add to container
     this.add(graphics)
     
-    this.logger.debug('BackgroundContainer', 'Background rectangle created/updated', {
+    this.logger.debug('BackgroundContainer', 'createBackgroundRectangle', 'Background rectangle created/updated', {
       objectId: this.id,
       backgroundColor: this.backgroundColor,
       rectangleSize: { width: rectWidth, height: rectHeight },
       containerSize: { width: this.width, height: this.height }
-    }, 'createBackgroundRectangle')
+    })
   }
   
   // ===== SIMPLIFIED RESPONSIVE LOGIC =====
@@ -460,11 +460,11 @@ export class BackgroundContainer extends Container {
       }
       
     } catch (error) {
-      this.logger.warn('BackgroundContainer', 'Failed to get background image from responsive config', {
+      this.logger.warn('BackgroundContainer', 'getBackgroundImageFromResponsiveConfig', 'Failed to get background image from responsive config', {
         objectId: this.id,
         width,
         error: error instanceof Error ? error.message : String(error)
-      }, 'getBackgroundImageFromResponsiveConfig')
+      })
     }
     
     return undefined
@@ -488,12 +488,12 @@ export class BackgroundContainer extends Container {
     // Propagate resize to children
     this.propagateResizeToChildren(parentWidth, parentHeight)
     
-    this.logger.debug('BackgroundContainer', 'Responsive sizing applied from parent', {
+    this.logger.debug('BackgroundContainer', 'applyResponsiveSizing', 'Responsive sizing applied from parent', {
       objectId: this.id,
       parentDimensions: { width: parentWidth, height: parentHeight },
       finalSize: { width: this.width, height: this.height },
       hasBackgroundImage: this.isBackgroundLoaded
-    }, 'applyResponsiveSizing')
+    })
   }
   
   // ===== SIMPLIFIED SCALE STRATEGY LOGIC =====
@@ -534,27 +534,27 @@ export class BackgroundContainer extends Container {
           // Center the image within the container
           this.backgroundImage.setPosition(this.width / 2, this.height / 2)
           
-          this.logger.debug('BackgroundContainer', 'Background image fitted with aspect ratio', {
+          this.logger.debug('BackgroundContainer', 'scaleBackgroundImageToFit', 'Background image fitted with aspect ratio', {
             objectId: this.id,
             containerSize: { width: this.width, height: this.height },
             imageDisplaySize: { width: displayWidth, height: displayHeight },
             imagePosition: { x: this.width / 2, y: this.height / 2 },
             scaleStrategy: 'fit',
             maintainAspectRatio: true
-          }, 'scaleBackgroundImageToFit')
+          })
         } else {
           // Fit to container without maintaining aspect ratio
           this.backgroundImage.setDisplaySize(this.width, this.height)
           this.backgroundImage.setPosition(this.width / 2, this.height / 2)
           
-          this.logger.debug('BackgroundContainer', 'Background image fitted without aspect ratio', {
+          this.logger.debug('BackgroundContainer', 'scaleBackgroundImageToFit', 'Background image fitted without aspect ratio', {
             objectId: this.id,
             containerSize: { width: this.width, height: this.height },
             imageDisplaySize: { width: this.width, height: this.height },
             imagePosition: { x: this.width / 2, y: this.height / 2 },
             scaleStrategy: 'fit',
             maintainAspectRatio: false
-          }, 'scaleBackgroundImageToFit')
+          })
         }
         break
         
@@ -564,14 +564,14 @@ export class BackgroundContainer extends Container {
         this.backgroundImage.setDisplaySize(this.width, this.height)
         this.backgroundImage.setPosition(this.width / 2, this.height / 2)
         
-        this.logger.debug('BackgroundContainer', 'Background image stretched to fill container', {
+        this.logger.debug('BackgroundContainer', 'scaleBackgroundImageToFit', 'Background image stretched to fill container', {
           objectId: this.id,
           containerSize: { width: this.width, height: this.height },
           imageDisplaySize: { width: this.width, height: this.height },
           imagePosition: { x: this.width / 2, y: this.height / 2 },
-          scaleStrategy: 'stretch',
-          note: 'Image stretched to fill container completely'
-        }, 'scaleBackgroundImageToFit')
+                      scaleStrategy: 'stretch',
+            note: 'Image stretched to fill container completely'
+          })
         break
     }
     
@@ -720,11 +720,11 @@ export class BackgroundContainer extends Container {
     
     if (properties.alignment) {
       this.alignment = properties.alignment
-      this.logger.debug('BackgroundContainer', 'Alignment updated', {
+      this.logger.debug('BackgroundContainer', 'getBackgroundInfo', 'Alignment updated', {
         objectId: this.id,
         newAlignment: properties.alignment,
         oldAlignment: this.alignment
-      }, 'updateBackgroundProperties')
+      })
     }
     
     if (properties.maintainAspectRatio !== undefined) {
@@ -742,11 +742,11 @@ export class BackgroundContainer extends Container {
    * @param alignment - New alignment configuration
    */
   setAlignment(alignment: { x: 'left' | 'center' | 'right'; y: 'top' | 'center' | 'bottom' }): void {
-    this.logger.debug('BackgroundContainer', 'Setting alignment', {
+    this.logger.debug('BackgroundContainer', 'setAlignment', 'Setting alignment', {
       objectId: this.id,
       oldAlignment: this.alignment,
       newAlignment: alignment
-    }, 'setAlignment')
+    })
     
     this.alignment = alignment
     
@@ -768,10 +768,10 @@ export class BackgroundContainer extends Container {
    */
   private switchBackgroundImageForDeviceType(width: number, _height: number): void {
     if (this.responsiveBackgroundImages.size === 0) {
-      this.logger.debug('BackgroundContainer', 'No responsive background images configured', {
+      this.logger.debug('BackgroundContainer', 'switchBackgroundImageForDeviceType', 'No responsive background images configured', {
         objectId: this.id,
         responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries())
-      }, 'switchBackgroundImageForDeviceType')
+      })
       return
     }
     
@@ -779,31 +779,31 @@ export class BackgroundContainer extends Container {
     const newImageKey = this.getBackgroundImageFromResponsiveConfig(width)
     
     if (!newImageKey) {
-      this.logger.warn('BackgroundContainer', 'No background image found in responsive config', {
+      this.logger.warn('BackgroundContainer', 'switchBackgroundImageForDeviceType', 'No background image found in responsive config', {
         objectId: this.id,
         width
-      }, 'switchBackgroundImageForDeviceType')
+      })
       return
     }
     
     // Check if the texture exists
     if (!this.scene.textures.exists(newImageKey)) {
-      this.logger.warn('BackgroundContainer', 'Background texture not found', {
+      this.logger.warn('BackgroundContainer', 'switchBackgroundImageForDeviceType', 'Background texture not found', {
         objectId: this.id,
         textureKey: newImageKey,
         availableTextures: Object.keys(this.scene.textures.list)
-      }, 'switchBackgroundImageForDeviceType')
+      })
       return
     }
     
     // Only switch if the image key is different
     if (newImageKey !== this.backgroundImageKey) {
-      this.logger.debug('BackgroundContainer', 'Switching background image', {
+      this.logger.debug('BackgroundContainer', 'switchBackgroundImageForDeviceType', 'Switching background image', {
         objectId: this.id,
         oldImageKey: this.backgroundImageKey,
         newImageKey,
         width
-      }, 'switchBackgroundImageForDeviceType')
+      })
       
       // Update the background image key and reload
       this.backgroundImageKey = newImageKey
@@ -818,12 +818,12 @@ export class BackgroundContainer extends Container {
       // Force a re-render to ensure proper z-order
       this.scene.events.emit('backgroundImageSwitched', this.id)
     } else {
-      this.logger.debug('BackgroundContainer', 'Background image already correct for device type', {
+      this.logger.debug('BackgroundContainer', 'switchBackgroundImageForDeviceType', 'Background image already correct for device type', {
         objectId: this.id,
         currentImageKey: this.backgroundImageKey,
         newImageKey,
         width
-      }, 'switchBackgroundImageForDeviceType')
+      })
     }
   }
   
@@ -831,7 +831,7 @@ export class BackgroundContainer extends Container {
    * Debug background container state
    */
   debugBackgroundState(): void {
-    this.logger.debug('BackgroundContainer', 'Background Container Debug:', {
+    this.logger.debug('BackgroundContainer', 'debugBackgroundState', 'Background Container Debug:', {
       id: this.id,
       backgroundInfo: this.getBackgroundInfo(),
       containerBounds: { x: this.x, y: this.y, width: this.width, height: this.height },
@@ -847,7 +847,7 @@ export class BackgroundContainer extends Container {
         height: this.scene.game.scale.height
       },
       currentAlignment: this.alignment
-    }, 'debugBackgroundState')
+    })
   }
   
   /**
@@ -867,10 +867,10 @@ export class BackgroundContainer extends Container {
       { x: 'right', y: 'bottom' }
     ]
     
-    this.logger.debug('BackgroundContainer', 'Testing all alignment configurations', {
+    this.logger.debug('BackgroundContainer', 'testAlignments', 'Testing all alignment configurations', {
       objectId: this.id,
       alignments
-    }, 'testAlignments')
+    })
     
     // Test center alignment first (most common use case)
     this.setAlignment({ x: 'center', y: 'center' })
@@ -919,10 +919,10 @@ export class BackgroundContainer extends Container {
   private ensureBackgroundImageZOrder(): void {
     if (this.backgroundImage) {
       this.backgroundImage.setDepth(-1)
-      this.logger.debug('BackgroundContainer', 'Background image z-order ensured', {
+      this.logger.debug('BackgroundContainer', 'ensureBackgroundImageZOrder', 'Background image z-order ensured', {
         objectId: this.id,
         depth: -1
-      }, 'ensureBackgroundImageZOrder')
+      })
     }
   }
   
@@ -931,10 +931,10 @@ export class BackgroundContainer extends Container {
    * This ensures proper layering after background image changes
    */
   private refreshChildZOrders(): void {
-    this.logger.debug('BackgroundContainer', 'Refreshing child z-orders', {
+    this.logger.debug('BackgroundContainer', 'refreshChildZOrders', 'Refreshing child z-orders', {
       objectId: this.id,
       childCount: this.children.length
-    }, 'refreshChildZOrders')
+    })
     
     // Try multiple paths to find scene configuration
     let sceneConfig: any = null
@@ -956,7 +956,7 @@ export class BackgroundContainer extends Container {
     }
     
     if (!sceneConfig?.gameObjects) {
-      this.logger.debug('BackgroundContainer', 'No scene config available for z-order refresh, using fallback', {
+      this.logger.debug('BackgroundContainer', 'sceneConfig', 'No scene config available for z-order refresh, using fallback', {
         objectId: this.id,
         triedPaths: [
           'sceneConfigs.scene',
@@ -967,7 +967,7 @@ export class BackgroundContainer extends Container {
         availablePaths: Object.keys((this.scene as any) || {}),
         hasSceneConfigs: !!(this.scene as any).sceneConfigs,
         hasConfigManager: !!(this.scene as any).configManager
-      }, 'refreshChildZOrders')
+      })
       
       // Use fallback z-order assignment
       this.assignFallbackZOrders()
@@ -977,12 +977,12 @@ export class BackgroundContainer extends Container {
     // Find the background container config to get child z-orders
     const backgroundConfig = sceneConfig.gameObjects.find((obj: any) => obj.id === this.id)
     if (!backgroundConfig?.children) {
-      this.logger.debug('BackgroundContainer', 'No background config found for z-order refresh, using fallback', {
+      this.logger.debug('BackgroundContainer', 'sceneConfig', 'No background config found for z-order refresh, using fallback', {
         objectId: this.id,
         configPath,
         availableGameObjects: sceneConfig.gameObjects?.map((obj: any) => obj.id) || [],
         backgroundConfig: backgroundConfig || 'not found'
-      }, 'refreshChildZOrders')
+      })
       
       // Use fallback z-order assignment
       this.assignFallbackZOrders()
@@ -1000,24 +1000,24 @@ export class BackgroundContainer extends Container {
         if (childConfig?.zOrder !== undefined) {
           // Use z-order from scene configuration
           child.setDepth(childConfig.zOrder)
-          this.logger.debug('BackgroundContainer', 'Child z-order refreshed from config', {
+          this.logger.debug('BackgroundContainer', 'sceneConfig', 'Child z-order refreshed from config', {
             objectId: this.id,
             childName: child.name || child.id || 'unnamed',
             childIndex: index,
             configZOrder: childConfig.zOrder,
             configPath
-          }, 'refreshChildZOrders')
+          })
         } else {
           // Fallback to default z-order if not specified in config
           const fallbackZOrder = index + 1
           child.setDepth(fallbackZOrder)
-          this.logger.debug('BackgroundContainer', 'Child z-order set to fallback', {
+          this.logger.debug('BackgroundContainer', 'sceneConfig', 'Child z-order set to fallback', {
             objectId: this.id,
             childName: child.name || child.id || 'unnamed',
             childIndex: index,
             fallbackZOrder: fallbackZOrder,
             configPath
-          }, 'refreshChildZOrders')
+                      })
         }
       }
     })
@@ -1027,10 +1027,10 @@ export class BackgroundContainer extends Container {
    * Assign fallback z-orders when no configuration is available
    */
   private assignFallbackZOrders(): void {
-    this.logger.debug('BackgroundContainer', 'Assigning fallback z-orders', {
+    this.logger.debug('BackgroundContainer', 'assignFallbackZOrders', 'Assigning fallback z-orders', {
       objectId: this.id,
       childCount: this.children.length
-    }, 'assignFallbackZOrders')
+    })
     
     // Assign sequential z-orders to children
     this.children.forEach((child: any, index: number) => {
@@ -1038,12 +1038,12 @@ export class BackgroundContainer extends Container {
         const fallbackZOrder = index + 1
         child.setDepth(fallbackZOrder)
         
-        this.logger.debug('BackgroundContainer', 'Fallback z-order assigned', {
+        this.logger.debug('BackgroundContainer', 'assignFallbackZOrders', 'Fallback z-order assigned', {
           objectId: this.id,
           childName: child.name || child.id || 'unnamed',
           childIndex: index,
           fallbackZOrder: fallbackZOrder
-        }, 'assignFallbackZOrders')
+        })
       }
     })
   }
@@ -1069,42 +1069,42 @@ export class BackgroundContainer extends Container {
    * Now simplified to work with Container's setStyle system
    */
   protected override resizeSelf(width: number, height: number): void {
-    this.logger.debug('BackgroundContainer', 'resizeSelf called', {
+    this.logger.debug('BackgroundContainer', 'setInteractive', 'resizeSelf called', {
       objectId: this.id,
       newDimensions: { width, height },
       currentDimensions: { width: this.width, height: this.height },
       hasBackgroundImage: !!this.backgroundImage,
       hasParent: !!this.parent
-    }, 'resizeSelf');
+    });
     
     // Check if background image should be switched based on device type
     if (this.backgroundImageKey && this.hasResponsiveBackgroundImages()) {
-      this.logger.debug('BackgroundContainer', 'Checking if background image should be switched', {
+      this.logger.debug('BackgroundContainer', 'setInteractive', 'Checking if background image should be switched', {
         objectId: this.id,
         currentWidth: width,
         hasBackgroundImageKey: !!this.backgroundImageKey,
         hasResponsiveBackgroundImages: this.hasResponsiveBackgroundImages(),
         responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries())
-      }, 'resizeSelf');
+      });
       this.switchBackgroundImageForDeviceType(width, height);
     } else {
-      this.logger.debug('BackgroundContainer', 'Skipping background image switch check', {
+      this.logger.debug('BackgroundContainer', 'setInteractive', 'Skipping background image switch check', {
         objectId: this.id,
         hasBackgroundImageKey: !!this.backgroundImageKey,
         hasResponsiveBackgroundImages: this.hasResponsiveBackgroundImages(),
         responsiveBackgroundImages: Array.from(this.responsiveBackgroundImages.entries())
-      }, 'resizeSelf');
+      });
     }
     
     if (this.isBackgroundLoaded && this.backgroundDimensions) {
       // Get current responsive behavior from Container's injected configs
       const responsiveBehavior = this.getCurrentResponsiveBehaviorFromContainer();
-      this.logger.debug('BackgroundContainer', 'Background image loaded, applying responsive behavior', {
+      this.logger.debug('BackgroundContainer', 'setInteractive', 'Background image loaded, applying responsive behavior', {
         objectId: this.id,
         responsiveBehavior,
         scaleStrategy: responsiveBehavior.scaleStrategy,
         maintainAspectRatio: responsiveBehavior.maintainAspectRatio
-      }, 'resizeSelf');
+      });
       
       let finalWidth: number;
       let finalHeight: number;
@@ -1159,20 +1159,20 @@ export class BackgroundContainer extends Container {
       // Scale background image to fill this container
       this.scaleBackgroundImageToFit();
       
-      this.logger.debug('BackgroundContainer', 'Background container resized with responsive behavior', {
+      this.logger.debug('BackgroundContainer', 'setInteractive', 'Background container resized with responsive behavior', {
         objectId: this.id,
         responsiveBehavior,
         finalSize: { width: finalWidth, height: finalHeight },
         finalPosition,
         backgroundDimensions: this.backgroundDimensions
-      }, 'resizeSelf');
+              });
     } else {
       // No background image, use Container's responsive sizing
       // The Container class will handle this through its setStyle method
-      this.logger.debug('BackgroundContainer', 'No background image, using Container responsive sizing', {
+      this.logger.debug('BackgroundContainer', 'unknown', 'No background image, using Container responsive sizing', {
         objectId: this.id,
         providedDimensions: { width, height }
-      }, 'resizeSelf');
+              });
     }
   }
   
@@ -1181,10 +1181,10 @@ export class BackgroundContainer extends Container {
    * This is part of the template method pattern from the parent Container class
    */
   protected override resizeAfter(width: number, height: number): void {
-    this.logger.debug('BackgroundContainer', 'resizeAfter called', {
+    this.logger.debug('BackgroundContainer', 'unknown', 'resizeAfter called', {
       objectId: this.id,
       newDimensions: { width, height }
-    }, 'resizeAfter');
+    });
     
     // Ensure background image z-order is correct after resize
     this.ensureBackgroundImageZOrder();
@@ -1192,8 +1192,8 @@ export class BackgroundContainer extends Container {
     // Refresh z-orders of all children
     this.refreshChildZOrders();
     
-    this.logger.debug('BackgroundContainer', 'Post-resize operations completed', {
+    this.logger.debug('BackgroundContainer', 'unknown', 'Post-resize operations completed', {
       objectId: this.id
-    }, 'resizeAfter');
+    })
   }
 }

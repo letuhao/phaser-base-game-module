@@ -10,16 +10,16 @@ export class ShapeFactory extends BaseGameObjectFactory {
   
   constructor() {
     super(['rectangle', 'circle', 'ellipse', 'triangle', 'polygon']);
-    this.logger.debug('ShapeFactory', 'ShapeFactory initialized', {
+    this.logger.debug('ShapeFactory', 'super', 'ShapeFactory initialized', {
       supportedTypes: this.getSupportedTypes()
-    }, 'constructor');
+    });
   }
   
   /**
    * Create a shape game object from configuration
    */
   createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.GameObject | null {
-    this.logger.debug('ShapeFactory', 'Creating shape game object', {
+    this.logger.debug('ShapeFactory', 'createGameObject', 'Creating shape game object', {
       objectId: config.id,
       objectType: config.type,
       config: {
@@ -30,7 +30,7 @@ export class ShapeFactory extends BaseGameObjectFactory {
         fillColor: config.fillColor,
         name: config.name
       }
-    }, 'createGameObject');
+    });
     
     try {
       let shape: Phaser.GameObjects.GameObject | null = null;
@@ -52,10 +52,10 @@ export class ShapeFactory extends BaseGameObjectFactory {
           shape = this.createPolygon(scene, config);
           break;
         default:
-          this.logger.warn('ShapeFactory', `Unknown shape type: ${config.type}`, {
+          this.logger.warn('ShapeFactory', 'createGameObject', 'Unknown shape type: ${config.type}', {
             objectId: config.id,
             supportedTypes: this.getSupportedTypes()
-          }, 'createGameObject');
+          });
           return null;
       }
       
@@ -66,22 +66,22 @@ export class ShapeFactory extends BaseGameObjectFactory {
         // Set name for debugging
         shape.name = config.name || config.id;
         
-        this.logger.info('ShapeFactory', 'Shape created successfully', {
+        this.logger.info('ShapeFactory', 'createGameObject', 'Shape created successfully', {
           objectId: config.id,
           shapeType: config.type,
           phaserObjectType: shape.constructor.name,
           shapeName: shape.name
-        }, 'createGameObject');
+        });
       }
       
       return shape;
       
     } catch (error) {
-      this.logger.error('ShapeFactory', `Error creating shape: ${config.id}`, {
+      this.logger.error('ShapeFactory', 'createGameObject', 'Error creating shape: ${config.id}', {
         error: error instanceof Error ? error.message : String(error),
         objectId: config.id,
         objectType: config.type
-      }, 'createGameObject');
+      });
       return null;
     }
   }
@@ -90,11 +90,11 @@ export class ShapeFactory extends BaseGameObjectFactory {
    * Create a rectangle shape
    */
   private createRectangle(scene: Phaser.Scene, config: any): Phaser.GameObjects.Rectangle {
-    this.logger.debug('ShapeFactory', 'Creating rectangle shape', {
+    this.logger.debug('ShapeFactory', 'createRectangle', 'Creating rectangle shape', {
       objectId: config.id,
       dimensions: { width: config.width, height: config.height },
       fillColor: config.fillColor
-    }, 'createRectangle');
+    });
     
     const rectangle = scene.add.rectangle(
       config.x || 0,
@@ -119,11 +119,11 @@ export class ShapeFactory extends BaseGameObjectFactory {
    * Create a circle shape
    */
   private createCircle(scene: Phaser.Scene, config: any): Phaser.GameObjects.Shape {
-    this.logger.debug('ShapeFactory', 'Creating circle shape', {
+    this.logger.debug('ShapeFactory', 'createCircle', 'Creating circle shape', {
       objectId: config.id,
       radius: config.radius || config.width / 2,
       fillColor: config.fillColor
-    }, 'createCircle');
+    });
     
     const radius = config.radius || (config.width || 100) / 2;
     const circle = scene.add.circle(
@@ -143,11 +143,11 @@ export class ShapeFactory extends BaseGameObjectFactory {
    * Create an ellipse shape
    */
   private createEllipse(scene: Phaser.Scene, config: any): Phaser.GameObjects.Shape {
-    this.logger.debug('ShapeFactory', 'Creating ellipse shape', {
+    this.logger.debug('ShapeFactory', 'createEllipse', 'Creating ellipse shape', {
       objectId: config.id,
       dimensions: { width: config.width, height: config.height },
       fillColor: config.fillColor
-    }, 'createEllipse');
+    });
     
     const ellipse = scene.add.ellipse(
       config.x || 0,
@@ -167,11 +167,11 @@ export class ShapeFactory extends BaseGameObjectFactory {
    * Create a triangle shape
    */
   private createTriangle(scene: Phaser.Scene, config: any): Phaser.GameObjects.Shape {
-    this.logger.debug('ShapeFactory', 'Creating triangle shape', {
+    this.logger.debug('ShapeFactory', 'createTriangle', 'Creating triangle shape', {
       objectId: config.id,
       dimensions: { width: config.width, height: config.height },
       fillColor: config.fillColor
-    }, 'createTriangle');
+    });
     
     const width = config.width || 100;
     const height = config.height || 100;
@@ -196,11 +196,11 @@ export class ShapeFactory extends BaseGameObjectFactory {
    * Create a polygon shape
    */
   private createPolygon(scene: Phaser.Scene, config: any): Phaser.GameObjects.Shape {
-    this.logger.debug('ShapeFactory', 'Creating polygon shape', {
+    this.logger.debug('ShapeFactory', 'createPolygon', 'Creating polygon shape', {
       objectId: config.id,
       points: config.points,
       fillColor: config.fillColor
-    }, 'createPolygon');
+    });
     
     // Default to a hexagon if no points specified
     const points = config.points || this.createHexagonPoints(config.width || 100, config.height || 100);
@@ -263,10 +263,10 @@ export class ShapeFactory extends BaseGameObjectFactory {
     }
     
     // Default to white if parsing fails
-    this.logger.warn('ShapeFactory', 'Failed to parse color, using default', {
+    this.logger.warn('ShapeFactory', 'parseColor', 'Failed to parse color, using default', {
       color,
       defaultColor: 0xffffff
-    }, 'parseColor');
+    });
     
     return 0xffffff;
   }

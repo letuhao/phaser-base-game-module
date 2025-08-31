@@ -6,7 +6,7 @@ export class Game {
   private game: Phaser.Game
 
   constructor() {
-    logger.debug('Game', 'constructor', 'Initializing Phaser game configuration')
+    logger.debug('Game', 'unknown', 'constructor', 'Initializing Phaser game configuration')
     
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
@@ -38,14 +38,14 @@ export class Game {
     
     this.game = new Phaser.Game(config)
     
-    logger.debug('Game', 'constructor', 'Phaser game instance created successfully')
+    logger.debug('Game', 'unknown', 'constructor', 'Phaser game instance created successfully')
   }
 
   destroy(): void {
     if (this.game) {
-      logger.info('Game', 'destroy', 'Destroying Phaser game instance')
+      logger.info('Game', 'destroy', 'destroy', 'Destroying Phaser game instance')
       this.game.destroy(true)
-              logger.debug('Game', 'destroy', 'Phaser game instance destroyed successfully')
+              logger.debug('Game', 'destroy', 'destroy', 'Phaser game instance destroyed successfully')
     }
   }
 }

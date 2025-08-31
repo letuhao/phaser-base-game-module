@@ -48,7 +48,7 @@ export class TextFactory extends BaseGameObjectFactory {
       return text
       
     } catch (error) {
-      this.logger.error('TextFactory', `Error creating text '${config.id}':`, error, 'createGameObject')
+      this.logger.error('TextFactory', 'createGameObject', `Error creating text '${config.id}':`, error)
       return null
     }
   }

@@ -139,7 +139,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   
   /** Set the style properties for this container with enhanced cascade logic */
   setStyle(layoutProperties: CommonIStyleProperties): void {
-    this.logger.debug('Container', 'Setting style properties', {
+    this.logger.debug('Container', 'setStyle', 'Setting style properties', {
       id: this.id,
       newStyle: layoutProperties
     });
@@ -194,7 +194,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     theme: any
     currentBreakpoint: string
   }): void {
-    this.logger.debug('Container', 'Initializing with injected configurations', {
+    this.logger.debug('Container', 'getStyleId', 'Initializing with injected configurations', {
       id: this.id,
       hasResponsive: !!configs.responsive,
       hasTheme: !!configs.theme,
@@ -207,7 +207,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     
     // Apply initial responsive configuration if available
     if (configs.responsive) {
-      this.logger.debug('Container', 'Applying initial responsive configuration', {
+      this.logger.debug('Container', 'getStyleId', 'Applying initial responsive configuration', {
         id: this.id,
         responsiveConfig: configs.responsive,
         hasDefault: !!configs.responsive.default,
@@ -223,7 +223,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         )
         
         if (defaultLayout?.layoutProperties) {
-          this.logger.debug('Container', 'Found default layout for container', {
+          this.logger.debug('Container', 'getStyleId', 'Found default layout for container', {
             id: this.id,
             defaultLayout,
             layoutProperties: defaultLayout.layoutProperties
@@ -232,7 +232,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
           // Apply the responsive layout properties
           this.setStyle(defaultLayout.layoutProperties)
         } else {
-          this.logger.warn('Container', 'No default layout found for container', {
+          this.logger.warn('Container', 'getStyleId', 'No default layout found for container', {
             id: this.id,
             availableLayouts: configs.responsive.default.map((l: any) => l.id)
           })
@@ -248,7 +248,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       )
       
       if (defaultLayout?.layoutProperties?.classes) {
-        this.logger.debug('Container', 'Applying initial theme configuration', {
+        this.logger.debug('Container', 'getStyleId', 'Applying initial theme configuration', {
           id: this.id,
           themeName: configs.theme.themeName,
           classes: defaultLayout.layoutProperties.classes,
@@ -278,7 +278,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   private applyThemeClasses(classes: string[], theme: any): void {
     if (!classes || !theme?.themeClasses) return
     
-    this.logger.debug('Container', 'Applying theme classes', {
+    this.logger.debug('Container', 'applyThemeClasses', 'Applying theme classes', {
       id: this.id,
       classes,
       availableThemeClasses: Object.keys(theme.themeClasses)
@@ -300,7 +300,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       }
       
       if (themeClass) {
-        this.logger.debug('Container', 'Applying theme class', {
+        this.logger.debug('Container', 'unknown', 'Applying theme class', {
           id: this.id,
           className,
           themeClass,
@@ -314,7 +314,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         // Apply the theme class properties directly to avoid infinite recursion
         this.applyStylePropertiesDirectly(themeClass)
       } else {
-        this.logger.warn('Container', 'Theme class not found', {
+        this.logger.warn('Container', 'unknown', 'Theme class not found', {
           id: this.id,
           className,
           availableClasses: Object.keys(theme.themeClasses),
@@ -331,7 +331,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   private applyPositionProperties(style: CommonIStyleProperties): void {
     // Apply position type first (affects other positioning)
     if (style.position !== undefined) {
-      this.logger.debug('Container', 'Applying position type', {
+      this.logger.debug('Container', 'applyPositionProperties', 'Applying position type', {
         id: this.id,
         position: style.position
       })
@@ -343,7 +343,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     // Handle X position with all supported types
     if (style.positionX !== undefined) {
       this.x = this.calculatePositionValue(style.positionX, 'x');
-      this.logger.debug('Container', 'X position calculated', {
+      this.logger.debug('Container', 'applyPositionProperties', 'X position calculated', {
         id: this.id,
         x: this.x,
         originalValue: style.positionX
@@ -353,7 +353,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     // Handle Y position with all supported types
     if (style.positionY !== undefined) {
       this.y = this.calculatePositionValue(style.positionY, 'y');
-      this.logger.debug('Container', 'Y position calculated', {
+      this.logger.debug('Container', 'applyPositionProperties', 'Y position calculated', {
         id: this.id,
         y: this.y,
         originalValue: style.positionY
@@ -367,7 +367,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     // Apply zIndex (alternative to positionZ)
     if (style.zIndex !== undefined) {
       this.setDepth(style.zIndex);
-      this.logger.debug('Container', 'Applied zIndex', {
+      this.logger.debug('Container', 'applyPositionProperties', 'Applied zIndex', {
         id: this.id,
         zIndex: style.zIndex
       })
@@ -418,7 +418,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
           }
           return axis === 'y' ? 0 : this.x;
         default:
-          this.logger.warn('Container', 'Unknown position keyword', {
+          this.logger.warn('Container', 'applyPositionProperties', 'Unknown position keyword', {
             id: this.id,
             axis,
             value
@@ -434,14 +434,14 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         try {
           return (value as any).getValue(this.parent);
         } catch (error) {
-          this.logger.warn('Container', 'Failed to calculate parent-relative position', {
+          this.logger.warn('Container', 'return', 'Failed to calculate parent-relative position', {
             id: this.id,
             axis,
             error: error instanceof Error ? error.message : String(error)
           });
         }
       } else {
-        this.logger.warn('Container', 'Parent-relative positioning requested but no parent available', {
+        this.logger.warn('Container', 'return', 'Parent-relative positioning requested but no parent available', {
           id: this.id,
           axis,
           value
@@ -456,7 +456,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       try {
         return (value as IRandomValueNumber).getRandomValue();
       } catch (error) {
-        this.logger.warn('Container', 'Failed to get random position value', {
+        this.logger.warn('Container', 'return', 'Failed to get random position value', {
           id: this.id,
           axis,
           error: error instanceof Error ? error.message : String(error)
@@ -467,7 +467,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     }
     
     // Unknown type - log warning and use current position
-    this.logger.warn('Container', 'Unknown position value type', {
+    this.logger.warn('Container', 'return', 'Unknown position value type', {
       id: this.id,
       axis,
       value,
@@ -482,7 +482,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     // Handle width with all supported types
     if (style.width !== undefined) {
       this.width = this.calculateSizeValue(style.width, 'width');
-      this.logger.debug('Container', 'Width calculated', {
+      this.logger.debug('Container', 'applySizeProperties', 'Width calculated', {
         id: this.id,
         width: this.width,
         originalValue: style.width
@@ -492,7 +492,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     // Handle height with all supported types
     if (style.height !== undefined) {
       this.height = this.calculateSizeValue(style.height, 'height');
-      this.logger.debug('Container', 'Height calculated', {
+      this.logger.debug('Container', 'applySizeProperties', 'Height calculated', {
         id: this.id,
         height: this.height,
         originalValue: style.height
@@ -532,7 +532,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
           // For now, use a reasonable default (could be enhanced later)
           return dimension === 'width' ? 200 : 150;
         default:
-          this.logger.warn('Container', 'Unknown size keyword', {
+          this.logger.warn('Container', 'applySizeProperties', 'Unknown size keyword', {
             id: this.id,
             dimension,
             value
@@ -548,14 +548,14 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         try {
           return (value as any).getValue(this.parent);
         } catch (error) {
-          this.logger.warn('Container', 'Failed to calculate parent-relative size', {
+          this.logger.warn('Container', 'return', 'Failed to calculate parent-relative size', {
             id: this.id,
             dimension,
             error: error instanceof Error ? error.message : String(error)
           });
         }
       } else {
-        this.logger.warn('Container', 'Parent-relative sizing requested but no parent available', {
+        this.logger.warn('Container', 'return', 'Parent-relative sizing requested but no parent available', {
           id: this.id,
           dimension,
           value
@@ -570,7 +570,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       try {
         return (value as IRandomValueNumber).getRandomValue();
       } catch (error) {
-        this.logger.warn('Container', 'Failed to get random size value', {
+        this.logger.warn('Container', 'return', 'Failed to get random size value', {
           id: this.id,
           dimension,
           error: error instanceof Error ? error.message : String(error)
@@ -581,7 +581,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     }
     
     // Unknown type - log warning and use default
-    this.logger.warn('Container', 'Unknown size value type', {
+    this.logger.warn('Container', 'return', 'Unknown size value type', {
       id: this.id,
       dimension,
       value,
@@ -595,7 +595,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   private applyMarginProperties(style: CommonIStyleProperties): void {
     // Apply uniform margin
     if (style.margin !== undefined) {
-      this.logger.debug('Container', 'Applying uniform margin', {
+      this.logger.debug('Container', 'applyMarginProperties', 'Applying uniform margin', {
         id: this.id,
         margin: style.margin
       })
@@ -609,7 +609,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     const marginProps = ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'] as const
     marginProps.forEach(prop => {
       if (style[prop] !== undefined) {
-        this.logger.debug('Container', 'Applying individual margin', {
+        this.logger.debug('Container', 'applyMarginProperties', 'Applying individual margin', {
           id: this.id,
           property: prop,
           value: style[prop]
@@ -623,7 +623,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   private applyPaddingProperties(style: CommonIStyleProperties): void {
     // Apply uniform padding
     if (style.padding !== undefined) {
-      this.logger.debug('Container', 'Applying uniform padding', {
+      this.logger.debug('Container', 'applyPaddingProperties', 'Applying uniform padding', {
         id: this.id,
         padding: style.padding
       })
@@ -648,7 +648,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         }
       }
       
-      this.logger.debug('Container', 'Padding updated', {
+      this.logger.debug('Container', 'applyPaddingProperties', 'Padding updated', {
         id: this.id,
         newPadding: this.spacing.padding
       })
@@ -677,7 +677,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
             break
         }
         
-        this.logger.debug('Container', 'Applied individual padding', {
+        this.logger.debug('Container', 'applyPaddingProperties', 'Applied individual padding', {
           id: this.id,
           property: prop,
           value
@@ -725,7 +725,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   private applyBackgroundProperties(style: CommonIStyleProperties): void {
     // Apply background color
     if (style.backgroundColor !== undefined) {
-      this.logger.debug('Container', 'Applying background color', {
+      this.logger.debug('Container', 'applyBackgroundProperties', 'Applying background color', {
         id: this.id,
         backgroundColor: style.backgroundColor
       })
@@ -754,7 +754,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         backgroundRect.setName('background-rectangle')
         this.addAt(backgroundRect, 0)
         
-        this.logger.debug('Container', 'Background rectangle created', {
+        this.logger.debug('Container', 'applyBackgroundProperties', 'Background rectangle created', {
           id: this.id,
           backgroundColor: style.backgroundColor,
           size: { width: backgroundRect.width, height: backgroundRect.height }
@@ -797,7 +797,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         style.shadowOffsetX !== undefined || style.shadowOffsetY !== undefined || 
         style.shadowAlpha !== undefined) {
       
-      this.logger.debug('Container', 'Applying shadow properties', {
+      this.logger.debug('Container', 'applyShadowProperties', 'Applying shadow properties', {
         id: this.id,
         shadowColor: style.shadowColor,
         shadowBlur: style.shadowBlur,
@@ -826,7 +826,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       shadowRect.setName('container-shadow')
       this.addAt(shadowRect, 0) // Add at index 0 (behind background)
       
-      this.logger.debug('Container', 'Shadow created', {
+      this.logger.debug('Container', 'applyShadowProperties', 'Shadow created', {
         id: this.id,
         shadowColor,
         shadowBlur,
@@ -850,7 +850,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       const borderWidth = style.borderWidth || 1
       const borderBottomWidth = style.borderBottomWidth || borderWidth
       
-      this.logger.debug('Container', 'Applying border properties', {
+      this.logger.debug('Container', 'applyBorderProperties', 'Applying border properties', {
         id: this.id,
         borderColor,
         borderWidth,
@@ -878,7 +878,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       this.addAt(borderRect, 1) // Add after background
       this.addAt(innerRect, 2) // Add after border
       
-      this.logger.debug('Container', 'Border created', {
+      this.logger.debug('Container', 'applyBorderProperties', 'Border created', {
         id: this.id,
         borderColor,
         borderWidth,
@@ -895,7 +895,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
                    (style.scale as IRandomValueNumber)?.getRandomValue() || 1
       this.setScale(scale, scale)
       
-      this.logger.debug('Container', 'Applied overall scale', {
+      this.logger.debug('Container', 'applyTransformProperties', 'Applied overall scale', {
         id: this.id,
         scale
       })
@@ -903,7 +903,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     
     // Apply scale mode/strategy (alias for scaleStrategy)
     if (style.scaleMode !== undefined) {
-      this.logger.debug('Container', 'Applied scale mode', {
+      this.logger.debug('Container', 'applyTransformProperties', 'Applied scale mode', {
         id: this.id,
         scaleMode: style.scaleMode
       })
@@ -916,7 +916,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
                     (style.scaleX as IRandomValueNumber)?.getRandomValue() || 1
       this.scaleX = scaleX
       
-      this.logger.debug('Container', 'Applied scale X', {
+      this.logger.debug('Container', 'applyTransformProperties', 'Applied scale X', {
         id: this.id,
         scaleX
       })
@@ -927,7 +927,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
                     (style.scaleY as IRandomValueNumber)?.getRandomValue() || 1
       this.scaleY = scaleY
       
-      this.logger.debug('Container', 'Applied scale Y', {
+      this.logger.debug('Container', 'applyTransformProperties', 'Applied scale Y', {
         id: this.id,
         scaleY
       })
@@ -940,7 +940,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     const borderRadius = style.borderRadius || style.borderRadiusValue
     
     if (borderRadius !== undefined) {
-      this.logger.debug('Container', 'Applying border radius', {
+      this.logger.debug('Container', 'applyBorderRadius', 'Applying border radius', {
         id: this.id,
         borderRadius
       })
@@ -948,7 +948,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       // Note: Phaser rectangles don't support border radius natively
       // This would require creating a custom shape or using graphics
       // For now, we'll log it as a placeholder for future implementation
-      this.logger.debug('Container', 'Border radius placeholder - would create rounded rectangle', {
+      this.logger.debug('Container', 'applyBorderRadius', 'Border radius placeholder - would create rounded rectangle', {
         id: this.id,
         borderRadius
       })
@@ -958,7 +958,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   /** Apply box shadow effect */
   private applyBoxShadow(style: any): void {
     if (style.boxShadow !== undefined) {
-      this.logger.debug('Container', 'Applying box shadow', {
+      this.logger.debug('Container', 'applyBoxShadow', 'Applying box shadow', {
         id: this.id,
         boxShadow: style.boxShadow
       })
@@ -986,7 +986,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         shadowRect.setName('box-shadow')
         this.addAt(shadowRect, 0) // Add at index 0 (behind everything)
         
-        this.logger.debug('Container', 'Box shadow created', {
+        this.logger.debug('Container', 'applyBoxShadow', 'Box shadow created', {
           id: this.id,
           boxShadow: boxShadow
         })
@@ -1036,7 +1036,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         return { offsetX, offsetY, blur, color, alpha }
       }
     } catch (error) {
-      this.logger.warn('Container', 'Failed to parse box shadow', {
+      this.logger.warn('Container', 'parseBoxShadow', 'Failed to parse box shadow', {
         id: this.id,
         boxShadow,
         error: error instanceof Error ? error.message : String(error)
@@ -1072,7 +1072,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
    */
   private applyStyleCascade(layoutProperties: CommonIStyleProperties): CommonIStyleProperties {
     if (!this.injectedConfigs) {
-      this.logger.debug('Container', 'No injected configs, using layout properties directly', { id: this.id })
+      this.logger.debug('Container', 'applyStyleCascade', 'No injected configs, using layout properties directly', { id: this.id })
       return layoutProperties;
     }
     
@@ -1086,7 +1086,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       );
       
       if (defaultLayout?.layoutProperties) {
-        this.logger.debug('Container', 'Applying default responsive settings', {
+        this.logger.debug('Container', 'applyStyleCascade', 'Applying default responsive settings', {
           id: this.id,
           defaultProperties: defaultLayout.layoutProperties
         })
@@ -1105,7 +1105,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
          );
         
         if (breakpointLayout?.layoutProperties) {
-          this.logger.debug('Container', 'Applying breakpoint-specific settings', {
+          this.logger.debug('Container', 'applyStyleCascade', 'Applying breakpoint-specific settings', {
             id: this.id,
             breakpoint: this.injectedConfigs.currentBreakpoint,
             breakpointProperties: breakpointLayout.layoutProperties
@@ -1117,7 +1117,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
     
     // Step 3: Apply theme config classes (Lowest priority)
     if (finalProperties.classes && this.injectedConfigs.theme?.themeClasses) {
-      this.logger.debug('Container', 'Applying theme classes', {
+      this.logger.debug('Container', 'applyStyleCascade', 'Applying theme classes', {
         id: this.id,
         classes: finalProperties.classes,
         themeName: this.injectedConfigs.theme.themeName
@@ -1132,7 +1132,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         finalProperties.classes.forEach(className => {
           const themeClass = themeClasses[className];
           if (themeClass) {
-            this.logger.debug('Container', 'Merging theme class properties', {
+            this.logger.debug('Container', 'unknown', 'Merging theme class properties', {
               id: this.id,
               className,
               themeClass
@@ -1143,7 +1143,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       }
     }
     
-    this.logger.debug('Container', 'Style cascade completed', {
+    this.logger.debug('Container', 'unknown', 'Style cascade completed', {
       id: this.id,
       originalProperties: layoutProperties,
       finalProperties
@@ -1157,7 +1157,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   /** Add a child game object to this container */
   addChild(child: IGameObject): void {
     if (this.children.length >= this.constraints.maxChildren) {
-      this.logger.warn('Container', 'Cannot add child - max children reached', {
+      this.logger.warn('Container', 'addChild', 'Cannot add child - max children reached', {
         id: this.id,
         currentCount: this.children.length,
         maxCount: this.constraints.maxChildren
@@ -1174,7 +1174,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       this.add(child)
     }
     
-    this.logger.debug('Container', 'Child added to container', {
+    this.logger.debug('Container', 'addChild', 'Child added to container', {
       id: this.id,
       childId: (child as any).id || 'unknown',
       childCount: this.children.length
@@ -1194,7 +1194,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         this.remove(child)
       }
       
-      this.logger.debug('Container', 'Child removed from container', {
+      this.logger.debug('Container', 'removeChild', 'Child removed from container', {
         id: this.id,
         childId: (child as any).id || 'unknown',
         childCount: this.children.length
@@ -1216,14 +1216,14 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   clearChildren(): void {
     this.children.length = 0
     this.removeAll()
-    this.logger.debug('Container', 'All children cleared', { id: this.id })
+    this.logger.debug('Container', 'clearChildren', 'All children cleared', { id: this.id })
   }
   
   // ===== RESPONSIVE BEHAVIOR =====
   
   /** Handle responsive resize from scene - now delegates to setStyle */
   handleResponsiveResize(width: number, height: number): void {
-    this.logger.debug('Container', 'Handling responsive resize', {
+    this.logger.debug('Container', 'handleResponsiveResize', 'Handling responsive resize', {
       id: this.id,
       newDimensions: { width, height },
       currentDimensions: this.size
@@ -1242,7 +1242,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   
   /** Handle resize events and propagate to children */
   resize(width: number, height: number): void {
-    this.logger.debug('Container', 'Resize called', {
+    this.logger.debug('Container', 'resize', 'Resize called', {
       id: this.id,
       newDimensions: { width, height },
       currentDimensions: this.size
@@ -1265,7 +1265,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
    * This method can be overridden by subclasses to implement custom resize logic
    */
   protected resizeSelf(width: number, height: number): void {
-    this.logger.debug('Container', 'Resizing self', {
+    this.logger.debug('Container', 'resizeSelf', 'Resizing self', {
       id: this.id,
       newDimensions: { width, height },
       currentDimensions: this.size
@@ -1291,7 +1291,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
    * Phase 2: Propagate resize event to all children
    */
   protected propagateResizeToChildren(width: number, height: number): void {
-    this.logger.debug('Container', 'Propagating resize to children', {
+    this.logger.debug('Container', 'propagateResizeToChildren', 'Propagating resize to children', {
       id: this.id,
       newDimensions: { width, height },
       childCount: this.children.length
@@ -1302,13 +1302,13 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       if (child && typeof child.resize === 'function') {
         try {
           child.resize(width, height);
-          this.logger.debug('Container', 'Child resize called', {
+          this.logger.debug('Container', 'propagateResizeToChildren', 'Child resize called', {
             id: this.id,
             childName: child.name || child.id || `child-${index}`,
             childType: child.constructor.name
           });
         } catch (error) {
-          this.logger.warn('Container', 'Failed to resize child', {
+          this.logger.warn('Container', 'propagateResizeToChildren', 'Failed to resize child', {
             id: this.id,
             childName: child.name || child.id || `child-${index}`,
             error: error instanceof Error ? error.message : String(error)
@@ -1323,7 +1323,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
    * This method can be overridden by subclasses to implement post-resize logic
    */
   protected resizeAfter(width: number, height: number): void {
-    this.logger.debug('Container', 'Post-resize operations', {
+    this.logger.debug('Container', 'resizeAfter', 'Post-resize operations', {
       id: this.id,
       newDimensions: { width, height }
     });
@@ -1355,19 +1355,19 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   
   /** Invalidate layout (trigger recalculation) */
   invalidateLayout(): void {
-    this.logger.debug('Container', 'Layout invalidated', { id: this.id })
+    this.logger.debug('Container', 'invalidateLayout', 'Layout invalidated', { id: this.id })
     // Implementation for layout invalidation
   }
   
   /** Update layout */
   updateLayout(): void {
-    this.logger.debug('Container', 'Updating layout', { id: this.id })
+    this.logger.debug('Container', 'updateLayout', 'Updating layout', { id: this.id })
     // Implementation for layout update
   }
   
   /** Destroy the container */
   destroy(fromScene?: boolean): void {
-    this.logger.debug('Container', 'Destroying container', { id: this.id })
+    this.logger.debug('Container', 'destroy', 'Destroying container', { id: this.id })
     
     // Clear children
     this.clearChildren()
@@ -1385,7 +1385,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
   static createFromConfig(config: any, scene: Phaser.Scene, parent?: Phaser.GameObjects.Container): Container {
     const logger = Logger.getInstance()
     
-    logger.debug('Container', 'Creating Container from config', {
+    logger.debug('Container', 'createFromConfig', 'Creating Container from config', {
       objectId: config.id,
       objectName: config.name,
       hasParent: !!parent,
@@ -1406,13 +1406,13 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       
       // NEW: Inject responsive and theme configurations from scene
       if ((scene as any).getGameObjectConfigs) {
-        logger.debug('Container', 'Scene supports getGameObjectConfigs, injecting configs', {
+        logger.debug('Container', 'createFromConfig', 'Scene supports getGameObjectConfigs, injecting configs', {
           objectId: config.id,
           sceneType: scene.constructor.name
         })
         
         const configs = (scene as any).getGameObjectConfigs(config.id)
-        logger.debug('Container', 'Received configs from scene', {
+        logger.debug('Container', 'createFromConfig', 'Received configs from scene', {
           objectId: config.id,
           hasResponsive: !!configs?.responsive,
           hasTheme: !!configs?.theme,
@@ -1421,7 +1421,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
         
         container.initializeWithConfigs(configs)
       } else {
-        logger.warn('Container', 'Scene does not support getGameObjectConfigs', {
+        logger.warn('Container', 'createFromConfig', 'Scene does not support getGameObjectConfigs', {
           objectId: config.id,
           sceneType: scene.constructor.name
         })
@@ -1470,19 +1470,19 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       // Add to parent if specified
       if (parent) {
         parent.add(container)
-        logger.debug('Container', 'Container added to parent', {
+        logger.debug('Container', 'createFromConfig', 'Container added to parent', {
           objectId: config.id,
           parentId: parent.name || 'unnamed'
         })
       } else {
         // Add to scene if no parent
         scene.add.existing(container)
-        logger.debug('Container', 'Container added to scene', {
+        logger.debug('Container', 'createFromConfig', 'Container added to scene', {
           objectId: config.id
         })
       }
       
-      logger.info('Container', 'Container created successfully from config', {
+      logger.info('Container', 'createFromConfig', 'Container created successfully from config', {
         objectId: config.id,
         objectName: config.name,
         phaserObjectType: container.constructor.name
@@ -1491,7 +1491,7 @@ export class Container extends Phaser.GameObjects.Container implements IContaine
       return container
       
     } catch (error) {
-      logger.error('Container', 'Failed to create Container from config', {
+      logger.error('Container', 'createFromConfig', 'Failed to create Container from config', {
         objectId: config.id,
         error: error instanceof Error ? error.message : String(error)
       })

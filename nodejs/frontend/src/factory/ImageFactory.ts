@@ -19,7 +19,7 @@ export class ImageFactory extends BaseGameObjectFactory {
     try {
       // Check if the texture key exists
       if (!config.textureKey || !scene.textures.exists(config.textureKey)) {
-        this.logger.warn('ImageFactory', `Texture key '${config.textureKey}' not found for image: ${config.id}`, null, 'createGameObject')
+        this.logger.warn('ImageFactory', 'createGameObject', `Texture key '${config.textureKey}' not found for image: ${config.id}`, null)
         return null
       }
       
@@ -50,7 +50,7 @@ export class ImageFactory extends BaseGameObjectFactory {
       return image
       
     } catch (error) {
-      this.logger.error('ImageFactory', `Error creating image '${config.id}':`, error, 'createGameObject')
+      this.logger.error('ImageFactory', 'createGameObject', `Error creating image '${config.id}':`, error)
       return null
     }
   }

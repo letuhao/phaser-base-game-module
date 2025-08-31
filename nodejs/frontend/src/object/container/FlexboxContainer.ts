@@ -324,7 +324,7 @@ export class FlexboxContainer extends Container {
   /** Calculate and apply flexbox layout */
   private calculateLayout(): void {
     // Implement flexbox layout calculation
-    this.logger.debug('FlexboxContainer', 'Calculating flexbox layout', {
+    this.logger.debug('FlexboxContainer', 'calculateLayout', 'Calculating flexbox layout', {
       id: this.id,
       childCount: this.children.length
     })
@@ -361,7 +361,7 @@ export class FlexboxContainer extends Container {
   
   /** Debug flexbox layout */
   debugFlexboxLayout(): void {
-    this.logger.debug('FlexboxContainer', 'Flexbox Container Debug:', {
+    this.logger.debug('FlexboxContainer', 'debugFlexboxLayout', 'Flexbox Container Debug:', {
       id: this.id,
       flexbox: this.flexbox,
       children: this.children.map(child => ({
@@ -396,7 +396,7 @@ export class FlexboxContainer extends Container {
   
   /** Initialize the game object */
   initialize(): void {
-    this.logger.debug('FlexboxContainer', 'Initializing flexbox container', { id: this.id })
+    this.logger.debug('FlexboxContainer', 'initialize', 'Initializing flexbox container', { id: this.id })
     // Default implementation - subclasses can override
   }
   
@@ -408,13 +408,13 @@ export class FlexboxContainer extends Container {
   /** Activate/enable the game object */
   activate(): void {
     this.setActive(true)
-    this.logger.debug('FlexboxContainer', 'Flexbox container activated', { id: this.id })
+    this.logger.debug('FlexboxContainer', 'activate', 'Flexbox container activated', { id: this.id })
   }
   
   /** Deactivate/disable the game object */
   deactivate(): void {
     this.setActive(false)
-    this.logger.debug('FlexboxContainer', 'Flexbox container deactivated', { id: this.id })
+    this.logger.debug('FlexboxContainer', 'deactivate', 'Flexbox container deactivated', { id: this.id })
   }
   
   /** Show the game object */

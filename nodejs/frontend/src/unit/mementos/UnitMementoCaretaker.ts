@@ -1,5 +1,6 @@
 import type { IUnitMementoCaretaker, IUnitMemento } from './IUnitMemento'
 import { UnitMemento } from './IUnitMemento'
+import { Logger } from '../../core/Logger'
 
 /**
  * Unit Memento Caretaker Implementation
@@ -12,6 +13,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
   private maxTotalMementos: number = 1000
   private undoStack: Map<string, IUnitMemento[]> = new Map()
   private redoStack: Map<string, IUnitMemento[]> = new Map()
+  private readonly logger: Logger = Logger.getInstance()
 
   /**
    * Save a memento for a unit
@@ -32,7 +34,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     if (unitMementos.length > this.maxMementosPerUnit) {
       const removed = unitMementos.shift()
       if (removed) {
-        console.debug(`[UnitMementoCaretaker] Removed old memento for unit ${unitId}: ${removed.getTimestamp()}`)
+        this.logger.debug('UnitMementoCaretaker', 'saveMemento', `Removed old memento for unit ${unitId}: ${removed.getTimestamp()}`)
       }
     }
     
@@ -42,7 +44,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     // Maintain total mementos limit
     this.enforceTotalMementosLimit()
     
-    console.debug(`[UnitMementoCaretaker] Saved memento for unit ${unitId}: ${memento.getTimestamp()}`)
+    this.logger.debug('UnitMementoCaretaker', 'saveMemento', `Saved memento for unit ${unitId}: ${memento.getTimestamp()}`)
   }
 
   /**
@@ -79,7 +81,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
    */
   restoreToMemento(unitId: string, memento: IUnitMemento): boolean {
     if (!memento.validate()) {
-      console.error(`[UnitMementoCaretaker] Cannot restore invalid memento for unit ${unitId}`)
+      this.logger.error('UnitMementoCaretaker', 'restoreToMemento', `Cannot restore invalid memento for unit ${unitId}`)
       return false
     }
     
@@ -92,7 +94,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     // Add target memento to undo stack
     this.addToUndoStack(unitId, memento)
     
-    console.debug(`[UnitMementoCaretaker] Restored unit ${unitId} to memento: ${memento.getTimestamp()}`)
+    this.logger.debug('UnitMementoCaretaker', 'restoreToMemento', `Restored unit ${unitId} to memento: ${memento.getTimestamp()}`)
     return true
   }
 
@@ -111,7 +113,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     
     if (index !== -1) {
       unitMementos.splice(index, 1)
-      console.debug(`[UnitMementoCaretaker] Deleted memento for unit ${unitId}: ${memento.getTimestamp()}`)
+      this.logger.debug('UnitMementoCaretaker', 'deleteMemento', `Deleted memento for unit ${unitId}: ${memento.getTimestamp()}`)
       return true
     }
     
@@ -125,7 +127,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     this.mementos.delete(unitId)
     this.undoStack.delete(unitId)
     this.redoStack.delete(unitId)
-    console.debug(`[UnitMementoCaretaker] Cleared all mementos for unit ${unitId}`)
+    this.logger.debug('UnitMementoCaretaker', 'clearMementosForUnit', `Cleared all mementos for unit ${unitId}`)
   }
 
   /**
@@ -183,7 +185,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     }
     this.redoStack.get(unitId)!.push(memento)
     
-    console.debug(`[UnitMementoCaretaker] Undo operation for unit ${unitId}: ${memento.getTimestamp()}`)
+    this.logger.debug('UnitMementoCaretaker', 'undo', `Undo operation for unit ${unitId}: ${memento.getTimestamp()}`)
     return memento
   }
 
@@ -202,7 +204,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     }
     this.undoStack.get(unitId)!.push(memento)
     
-    console.debug(`[UnitMementoCaretaker] Redo operation for unit ${unitId}: ${memento.getTimestamp()}`)
+    this.logger.debug('UnitMementoCaretaker', 'redo', `Redo operation for unit ${unitId}: ${memento.getTimestamp()}`)
     return memento
   }
 
@@ -297,11 +299,13 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
         this.saveMemento(memento)
       }
       
-      console.debug(`[UnitMementoCaretaker] Imported ${mementos.length} mementos for unit ${unitId}`)
+      this.logger.debug('UnitMementoCaretaker', 'importMementos', `Imported ${mementos.length} mementos for unit ${unitId}`)
       return true
       
     } catch (error) {
-      console.error(`[UnitMementoCaretaker] Import failed: ${error}`)
+      this.logger.error('UnitMementoCaretaker', 'importMementos', 'Import failed', {
+        error: error instanceof Error ? error.message : String(error)
+      })
       return false
     }
   }
@@ -331,7 +335,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
       while (unitMementos.length > this.maxMementosPerUnit) {
         const removed = unitMementos.shift()
         if (removed) {
-          console.debug(`[UnitMementoCaretaker] Enforced limit: removed memento for unit ${unitId}`)
+          this.logger.debug('UnitMementoCaretaker', 'enforceMementosPerUnitLimit', `Enforced limit: removed memento for unit ${unitId}`)
         }
       }
     }
@@ -364,6 +368,6 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
       this.deleteMemento(memento)
     }
     
-    console.debug(`[UnitMementoCaretaker] Enforced total limit: removed ${toRemove.length} oldest mementos`)
+    this.logger.debug('UnitMementoCaretaker', 'enforceTotalMementosLimit', `Enforced total limit: removed ${toRemove.length} oldest mementos`)
   }
 }

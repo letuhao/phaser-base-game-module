@@ -84,7 +84,7 @@ export class ResponsiveConfigLoader {
    */
   public registerConfig(sceneName: string, config: ResponsiveConfig): void {
     this.loadedConfigs.set(sceneName, config)
-    logger.info('ResponsiveConfigLoader', `Registered responsive config for scene: ${sceneName}`)
+    logger.info('ResponsiveConfigLoader', 'registerConfig', 'registerConfig', 'Registered responsive config for scene: ${sceneName}')
   }
   
   /**
@@ -94,11 +94,11 @@ export class ResponsiveConfigLoader {
     const config = this.loadedConfigs.get(sceneName)
     
     if (!config) {
-      logger.warn('ResponsiveConfigLoader', `No responsive config found for scene: ${sceneName}`)
+      logger.warn('ResponsiveConfigLoader', 'loadConfig', 'loadConfig', 'No responsive config found for scene: ${sceneName}')
       return null
     }
     
-    logger.info('ResponsiveConfigLoader', `Loaded responsive config for scene: ${sceneName}`)
+    logger.info('ResponsiveConfigLoader', 'loadConfig', 'loadConfig', 'Loaded responsive config for scene: ${sceneName}')
     return config
   }
   

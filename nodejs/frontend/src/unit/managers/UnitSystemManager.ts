@@ -9,6 +9,7 @@ import type { IUnitMemento } from '../mementos/IUnitMemento'
 import type { IUnitComposite } from '../composites/IUnitComposite'
 import type { IUnitAdapter } from '../adapters/IUnitAdapter'
 import type { IUnitDecorator } from '../decorators/IUnitDecorator'
+import { Logger } from '../../core/Logger'
 
 /**
  * Unit System Manager
@@ -108,6 +109,7 @@ export class UnitSystemManager implements IUnitSystemManager {
   private commandHistory: IUnitCommand[] = []
   private commandIndex: number = -1
   private isInitialized: boolean = false
+  private readonly logger: Logger = Logger.getInstance()
   
   private performanceMetrics = {
     totalCalculations: 0,
@@ -243,7 +245,9 @@ export class UnitSystemManager implements IUnitSystemManager {
           // Add more event types as needed
         }
       } catch (error) {
-        console.error('Error notifying observer:', error)
+        this.logger.error('UnitSystemManager', 'notifyObservers', 'Error notifying observer', {
+          error: error instanceof Error ? error.message : String(error)
+        })
       }
     })
   }

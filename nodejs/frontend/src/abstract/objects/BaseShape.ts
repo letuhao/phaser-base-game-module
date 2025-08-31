@@ -124,10 +124,10 @@ export abstract class BaseShape implements IShape {
   }
   
   setRotation(rotation: number): void {
-    this.logger.debug('BaseShape', 'Setting rotation', {
+    this.logger.debug('BaseShape', 'setRotation', 'Setting rotation', {
       id: this.id,
       rotation
-    }, 'setRotation');
+    });
     
     if (this.phaserObject && 'setRotation' in this.phaserObject) {
       (this.phaserObject as any).setRotation(rotation);
@@ -135,10 +135,10 @@ export abstract class BaseShape implements IShape {
   }
   
   setAlpha(alpha: number): void {
-    this.logger.debug('BaseShape', 'Setting alpha', {
+    this.logger.debug('BaseShape', 'setAlpha', 'Setting alpha', {
       id: this.id,
       alpha
-    }, 'setAlpha');
+    });
     
     if (this.phaserObject && 'setAlpha' in this.phaserObject) {
       (this.phaserObject as any).setAlpha(alpha);
@@ -195,12 +195,12 @@ export abstract class BaseShape implements IShape {
     this.isVisible = true;
     this.isInteractive = false;
     
-    this.logger.debug('BaseShape', 'Base shape created', {
+    this.logger.debug('BaseShape', 'constructor', 'Base shape created', {
       id,
       dimensions: this._dimensions,
       fillColor: this._fillColor,
       position: { x, y }
-    }, 'constructor');
+    });
   }
   
   // ===== ABSTRACT METHODS =====
@@ -250,22 +250,22 @@ export abstract class BaseShape implements IShape {
   }
   
   setFillColor(color: number): void {
-    this.logger.debug('BaseShape', 'Setting fill color', {
+    this.logger.debug('BaseShape', 'setFillColor', 'Setting fill color', {
       id: this.id,
       oldColor: this._fillColor,
       newColor: color
-    }, 'setFillColor');
+    });
     
     this._fillColor = color;
     this.updateShapeVisuals();
   }
   
   setStroke(color: number, width: number): void {
-    this.logger.debug('BaseShape', 'Setting stroke', {
+    this.logger.debug('BaseShape', 'setStroke', 'Setting stroke', {
       id: this.id,
       color,
       width
-    }, 'setStroke');
+    });
     
     this._strokeColor = color;
     this._strokeWidth = width;
@@ -273,9 +273,9 @@ export abstract class BaseShape implements IShape {
   }
   
   removeStroke(): void {
-    this.logger.debug('BaseShape', 'Removing stroke', {
+    this.logger.debug('BaseShape', 'removeStroke', 'Removing stroke', {
       id: this.id
-    }, 'removeStroke');
+    });
     
     this._strokeColor = null;
     this._strokeWidth = 0;
@@ -283,11 +283,11 @@ export abstract class BaseShape implements IShape {
   }
   
   resize(width: number, height: number): void {
-    this.logger.debug('BaseShape', 'Resizing shape', {
+    this.logger.debug('BaseShape', 'resize', 'Resizing shape', {
       id: this.id,
       oldDimensions: this._dimensions,
       newDimensions: { width, height }
-    }, 'resize');
+    });
     
     this._dimensions = { width, height };
     
@@ -311,9 +311,9 @@ export abstract class BaseShape implements IShape {
   // ===== IGameObject IMPLEMENTATION =====
   
   destroy(): void {
-    this.logger.debug('BaseShape', 'Destroying shape', {
+    this.logger.debug('BaseShape', 'destroy', 'Destroying shape', {
       id: this.id
-    }, 'destroy');
+    });
     
     if (this.phaserObject) {
       this.phaserObject.destroy();
@@ -321,10 +321,10 @@ export abstract class BaseShape implements IShape {
   }
   
   setActive(active: boolean): void {
-    this.logger.debug('BaseShape', 'Setting active state', {
+    this.logger.debug('BaseShape', 'setActive', 'Setting active state', {
       id: this.id,
       active
-    }, 'setActive');
+    });
     
     if (this.phaserObject && 'setActive' in this.phaserObject) {
       this.phaserObject.setActive(active);
@@ -332,10 +332,10 @@ export abstract class BaseShape implements IShape {
   }
   
   setVisible(visible: boolean): void {
-    this.logger.debug('BaseShape', 'Setting visible state', {
+    this.logger.debug('BaseShape', 'setVisible', 'Setting visible state', {
       id: this.id,
       visible
-    }, 'setVisible');
+    });
     
     if (this.phaserObject && 'setVisible' in this.phaserObject) {
       this.phaserObject.setVisible(visible);
@@ -343,10 +343,10 @@ export abstract class BaseShape implements IShape {
   }
   
   setInteractive(interactive: boolean): void {
-    this.logger.debug('BaseShape', 'Setting interactive state', {
+    this.logger.debug('BaseShape', 'setInteractive', 'Setting interactive state', {
       id: this.id,
       interactive
-    }, 'setInteractive');
+    });
     
     if (this.phaserObject) {
       if (interactive) {
@@ -358,10 +358,10 @@ export abstract class BaseShape implements IShape {
   }
   
   setPosition(x: number, y: number): void {
-    this.logger.debug('BaseShape', 'Setting position', {
+    this.logger.debug('BaseShape', 'setPosition', 'Setting position', {
       id: this.id,
       position: { x, y }
-    }, 'setPosition');
+    });
     
     if (this.phaserObject && 'setPosition' in this.phaserObject) {
       this.phaserObject.setPosition(x, y);
@@ -399,11 +399,11 @@ export abstract class BaseShape implements IShape {
     }
     
     // Default to white if parsing fails
-    this.logger.warn('BaseShape', 'Failed to parse color, using default', {
+    this.logger.warn('BaseShape', 'parseColor', 'Failed to parse color, using default', {
       id: this.id,
       color,
       defaultColor: 0xffffff
-    }, 'parseColor');
+    });
     
     return 0xffffff;
   }

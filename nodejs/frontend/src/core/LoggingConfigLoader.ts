@@ -116,7 +116,7 @@ export class LoggingConfigLoader {
    */
   public registerConfig(sceneName: string, config: LoggerConfig): void {
     this.loadedConfigs.set(sceneName, config)
-    logger.info('LoggingConfigLoader', `Registered logging config for scene: ${sceneName}`)
+    logger.info('LoggingConfigLoader', 'registerConfig', 'registerConfig', 'Registered logging config for scene: ${sceneName}')
   }
   
   /**
@@ -126,7 +126,7 @@ export class LoggingConfigLoader {
     const config = this.loadedConfigs.get(sceneName)
     
     if (!config) {
-      logger.warn('LoggingConfigLoader', `No logging config found for scene: ${sceneName}, using default`)
+      logger.warn('LoggingConfigLoader', 'loadConfig', 'loadConfig', 'No logging config found for scene: ${sceneName}, using default')
       return false
     }
     
@@ -135,7 +135,7 @@ export class LoggingConfigLoader {
       logger.updateConfig(config)
       
       // Log the configuration change
-      logger.info('LoggingConfigLoader', `Applied logging config for scene: ${sceneName}`, {
+      logger.info('LoggingConfigLoader', 'loadConfig', 'Applied logging config for scene: ${sceneName}', {
         globalLevel: config.globalLevel,
         consoleEnabled: config.console.enabled,
         serverEnabled: config.server.enabled,
@@ -144,7 +144,7 @@ export class LoggingConfigLoader {
       
       return true
     } catch (error) {
-      logger.error('LoggingConfigLoader', `Failed to apply logging config for scene: ${sceneName}`, error)
+      logger.error('LoggingConfigLoader', 'loadConfig', 'Failed to apply logging config for scene: ${sceneName}', error)
       return false
     }
   }
@@ -194,9 +194,9 @@ export class LoggingConfigLoader {
         }
       })
       
-      logger.info('LoggingConfigLoader', 'Reset logger to default configuration')
+      logger.info('LoggingConfigLoader', 'resetToDefault', 'resetToDefault', 'Reset logger to default configuration')
     } catch (error) {
-      logger.error('LoggingConfigLoader', 'Failed to reset logger to default configuration', error)
+      logger.error('LoggingConfigLoader', 'resetToDefault', 'Failed to reset logger to default configuration', error)
     }
   }
 }

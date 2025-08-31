@@ -17,7 +17,7 @@ export class GameObjectFactoryManager {
   private factories: Map<string, IGameObjectFactory> = new Map();
   
   private constructor() {
-    logger.debug('GameObjectFactoryManager', 'constructor', 'Initializing GameObjectFactoryManager');
+    logger.debug('GameObjectFactoryManager', 'unknown', 'constructor', 'Initializing GameObjectFactoryManager');
     this.registerDefaultFactories();
   }
   
@@ -208,11 +208,11 @@ export class GameObjectFactoryManager {
 
       switch (className) {
         case 'BackgroundContainer':
-          logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Loading BackgroundContainer class');
+          logger.debug('GameObjectFactoryManager', 'unknown', 'createGameObjectWithStaticFactory', 'Loading BackgroundContainer class');
           try {
             const BackgroundContainerModule = await import('../object/container/BackgroundContainer');
             ConcreteClass = BackgroundContainerModule.BackgroundContainer;
-            logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'BackgroundContainer class loaded successfully');
+            logger.debug('GameObjectFactoryManager', 'unknown', 'createGameObjectWithStaticFactory', 'BackgroundContainer class loaded successfully');
           } catch (importError) {
             logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Failed to import BackgroundContainer module', {
               objectId: config.id,
@@ -222,27 +222,14 @@ export class GameObjectFactoryManager {
           }
           break;
 
-        case 'ConcreteContainer':
-          logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Loading ConcreteContainer class');
-          try {
-            const ConcreteContainerModule = await import('../object/container/ConcreteContainer');
-            ConcreteClass = ConcreteContainerModule.ConcreteContainer;
-            logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'ConcreteContainer class loaded successfully');
-          } catch (importError) {
-            logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Failed to import ConcreteContainer module', {
-              objectId: config.id,
-              error: importError instanceof Error ? importError.message : String(importError)
-            });
-            return null;
-          }
-          break;
+
 
         case 'Rectangle':
-          logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Loading Rectangle class');
+          logger.debug('GameObjectFactoryManager', 'unknown', 'createGameObjectWithStaticFactory', 'Loading Rectangle class');
           try {
             const RectangleModule = await import('../object/shapes/Rectangle');
             ConcreteClass = RectangleModule.Rectangle;
-            logger.debug('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Rectangle class loaded successfully');
+            logger.debug('GameObjectFactoryManager', 'unknown', 'createGameObjectWithStaticFactory', 'Rectangle class loaded successfully');
           } catch (importError) {
             logger.error('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', 'Failed to import Rectangle module', {
               objectId: config.id,
@@ -255,7 +242,7 @@ export class GameObjectFactoryManager {
         default:
           logger.warn('GameObjectFactoryManager', 'createGameObjectWithStaticFactory', `Unknown factory class: ${className}`, {
             objectId: config.id,
-            availableClasses: ['BackgroundContainer', 'ConcreteContainer', 'Rectangle']
+            availableClasses: ['BackgroundContainer', 'Rectangle']
           });
           return null;
       }

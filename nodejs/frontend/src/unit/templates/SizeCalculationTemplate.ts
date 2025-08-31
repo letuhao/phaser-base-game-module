@@ -79,7 +79,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
     // Run all validators
     for (const validator of this.validators) {
       if (!validator.validate(input, this.context)) {
-        Logger.getInstance().warn('SizeCalculationTemplate', `Validation failed: ${validator.getErrorMessage()}`, undefined, 'preCalculationValidation');
+        Logger.getInstance().warn('SizeCalculationTemplate', 'preCalculationValidation', `Validation failed: ${validator.getErrorMessage()}`);
         return false;
       }
     }
@@ -126,11 +126,11 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Hook method that can be overridden
    */
   protected logCalculationCompletion(input: any, result: number): void {
-    Logger.getInstance().debug('SizeCalculationTemplate', 'Calculation completed', {
+    Logger.getInstance().debug('SizeCalculationTemplate', 'logCalculationCompletion', 'Calculation completed', {
       input,
       result,
       context: this.context
-    }, 'logCalculationCompletion');
+    });
   }
 
   /**
@@ -138,12 +138,12 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Hook method that can be overridden
    */
   protected handleCalculationError(error: any, input: any): void {
-    Logger.getInstance().error('SizeCalculationTemplate', 'Calculation error', {
+    Logger.getInstance().error('SizeCalculationTemplate', 'handleCalculationError', 'Calculation error', {
       error: error.message,
       input,
       context: this.context,
       stack: error.stack
-    }, 'handleCalculationError');
+    });
   }
 
   /**
@@ -179,7 +179,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    */
   public resetStats(): void {
     // Reset all statistics
-    Logger.getInstance().debug('SizeCalculationTemplate', 'Statistics reset', undefined, 'resetStats');
+    Logger.getInstance().debug('SizeCalculationTemplate', 'resetStats', 'Statistics reset');
   }
 
   /**

@@ -3,6 +3,7 @@ import { UnitMementoCaretaker } from './UnitMementoCaretaker'
 import { UnitCalculationMemento } from './UnitCalculationMemento'
 import type { UnitContext } from '../interfaces/IUnit'
 import type { IUnitCalculationTemplate } from '../templates/IUnitCalculationTemplate'
+import { Logger } from '../../core/Logger'
 
 /**
  * Unit Memento Manager
@@ -17,6 +18,7 @@ export class UnitMementoManager {
     timeThreshold: 50, // ms
     resultThreshold: 0.01 // 1% change
   }
+  private readonly logger: Logger = Logger.getInstance()
 
   constructor() {
     this.caretaker = new UnitMementoCaretaker()
@@ -27,7 +29,7 @@ export class UnitMementoManager {
    */
   setAutoSaveEnabled(enabled: boolean): void {
     this.autoSaveEnabled = enabled
-    console.debug(`[UnitMementoManager] Auto-save ${enabled ? 'enabled' : 'disabled'}`)
+    this.logger.debug('UnitMementoManager', 'setAutoSaveEnabled', `Auto-save ${enabled ? 'enabled' : 'disabled'}`)
   }
 
   /**
@@ -35,7 +37,7 @@ export class UnitMementoManager {
    */
   setAutoSaveThreshold(threshold: number): void {
     this.autoSaveThreshold = Math.max(0, threshold)
-    console.debug(`[UnitMementoManager] Auto-save threshold set to ${threshold}ms`)
+    this.logger.debug('UnitMementoManager', 'setAutoSaveThreshold', `Auto-save threshold set to ${threshold}ms`)
   }
 
   /**
@@ -47,7 +49,7 @@ export class UnitMementoManager {
   }): void {
     this.significantChangeThresholds.timeThreshold = Math.max(0, thresholds.timeThreshold)
     this.significantChangeThresholds.resultThreshold = Math.max(0, thresholds.resultThreshold)
-    console.debug(`[UnitMementoManager] Significant change thresholds updated:`, thresholds)
+    this.logger.debug('UnitMementoManager', 'setSignificantChangeThresholds', 'Significant change thresholds updated', thresholds)
   }
 
   /**
@@ -144,7 +146,7 @@ export class UnitMementoManager {
     }
 
     this.caretaker.saveMemento(memento)
-    console.debug(`[UnitMementoManager] Saved calculation memento for unit ${unitId}`)
+    this.logger.debug('UnitMementoManager', 'saveCalculationMemento', `Saved calculation memento for unit ${unitId}`)
   }
 
   /**
@@ -156,7 +158,7 @@ export class UnitMementoManager {
     targetMemento: IUnitMemento
   ): boolean {
     if (!(targetMemento instanceof UnitCalculationMemento)) {
-      console.error('[UnitMementoManager] Cannot restore: memento is not a calculation memento')
+      this.logger.error('UnitMementoManager', 'restoreCalculationMemento', 'Cannot restore: memento is not a calculation memento')
       return false
     }
 

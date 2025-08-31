@@ -1,5 +1,6 @@
 import type { IUnitObserver } from './IUnitObserver'
 import type { UnitContext } from '../interfaces/IUnit'
+import { Logger } from '../../core/Logger'
 
 /**
  * Performance Observer
@@ -24,6 +25,7 @@ export class PerformanceObserver implements IUnitObserver {
   }
 
   private readonly maxHistorySize = 1000
+  private readonly logger: Logger = Logger.getInstance()
 
   /**
    * Called when a unit value changes
@@ -40,7 +42,7 @@ export class PerformanceObserver implements IUnitObserver {
     
     // Log significant changes for performance analysis
     if (changeMagnitude > 100) {
-      console.debug(`[PerformanceObserver] Large value change detected: ${unitId}`, {
+      this.logger.debug('PerformanceObserver', 'onUnitValueChanged', `Large value change detected: ${unitId}`, {
         oldValue,
         newValue,
         changeMagnitude,
@@ -74,7 +76,7 @@ export class PerformanceObserver implements IUnitObserver {
   onUnitDestroyed(unitId: string): void {
     // Clean up performance data if needed
     // For now, just log the destruction
-    console.debug(`[PerformanceObserver] Unit destroyed: ${unitId}`)
+    this.logger.debug('PerformanceObserver', 'onUnitDestroyed', `Unit destroyed: ${unitId}`)
   }
 
   /**
@@ -101,11 +103,11 @@ export class PerformanceObserver implements IUnitObserver {
     // Clean up start time
     this.calculationStartTimes.delete(unitId)
     
-    // Log performance if it's significant
-    if (duration > 16) { // Longer than one frame at 60fps
-      console.warn(`[PerformanceObserver] Slow calculation detected: ${unitId}`, {
-        duration: `${duration.toFixed(2)}ms`,
-        result,
+    // Log slow calculations for performance analysis
+    if (duration > 100) {
+      this.logger.warn('PerformanceObserver', 'onUnitCalculationCompleted', `Slow calculation detected: ${unitId}`, {
+        duration,
+        threshold: 100,
         timestamp: new Date().toISOString()
       })
     }
@@ -118,8 +120,8 @@ export class PerformanceObserver implements IUnitObserver {
     // Update error metrics
     this.performanceMetrics.errors++
     
-    // Log the error
-    console.error(`[PerformanceObserver] Calculation failed: ${unitId}`, {
+    // Log calculation errors for debugging
+    this.logger.error('PerformanceObserver', 'onUnitCalculationFailed', `Calculation failed: ${unitId}`, {
       error: error.message,
       stack: error.stack,
       timestamp: new Date().toISOString()

@@ -174,7 +174,7 @@ export class ErrorTracker {
     this.objectErrorCounts.clear()
     this.errorRateWindow = []
     
-    this.logger.info('ErrorTracker', 'clearHistory', 'Error history cleared')
+    this.logger.info('ErrorTracker', 'clearHistory', 'clearHistory', 'Error history cleared')
   }
   
   /**
@@ -188,7 +188,7 @@ export class ErrorTracker {
       this.errorHistory = this.errorHistory.slice(-size)
     }
     
-    this.logger.debug('ErrorTracker', 'setMaxHistorySize', `Max history size set to ${size}`)
+    this.logger.debug('ErrorTracker', 'setMaxHistorySize', 'setMaxHistorySize', `Max history size set to ${size}`)
   }
   
   /**

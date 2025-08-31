@@ -77,7 +77,7 @@ export class SceneLoaderConfigLoader {
    */
   public registerConfig(sceneName: string, config: SceneConfig): void {
     this.loadedConfigs.set(sceneName, config)
-    logger.info('SceneLoaderConfigLoader', `Registered scene config for: ${sceneName}`)
+    logger.info('SceneLoaderConfigLoader', 'registerConfig', 'registerConfig', 'Registered scene config for: ${sceneName}')
   }
   
   /**
@@ -87,11 +87,11 @@ export class SceneLoaderConfigLoader {
     const config = this.loadedConfigs.get(sceneName)
     
     if (!config) {
-      logger.warn('SceneLoaderConfigLoader', `No scene config found for: ${sceneName}`)
+      logger.warn('SceneLoaderConfigLoader', 'loadConfig', 'loadConfig', 'No scene config found for: ${sceneName}')
       return null
     }
     
-    logger.info('SceneLoaderConfigLoader', `Loaded scene config for: ${sceneName}`)
+    logger.info('SceneLoaderConfigLoader', 'loadConfig', 'loadConfig', 'Loaded scene config for: ${sceneName}')
     return config
   }
   

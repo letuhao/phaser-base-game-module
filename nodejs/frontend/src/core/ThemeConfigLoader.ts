@@ -473,7 +473,7 @@ export class ThemeConfigLoader {
     // Set default active theme
     this.activeTheme = 'light'
     
-    logger.info('ThemeConfigLoader', 'ThemeConfigLoader initialized with default themes')
+    logger.info('ThemeConfigLoader', 'getOppositeTheme', 'getOppositeTheme', 'ThemeConfigLoader initialized with default themes')
   }
   
   /**
@@ -491,7 +491,7 @@ export class ThemeConfigLoader {
    */
   public registerTheme(themeName: string, config: SimpleThemeConfig): void {
     this.loadedConfigs.set(themeName, config)
-    logger.info('ThemeConfigLoader', `Registered theme: ${themeName}`)
+    logger.info('ThemeConfigLoader', 'registerTheme', 'registerTheme', 'Registered theme: ${themeName}')
   }
   
   /**
@@ -501,11 +501,11 @@ export class ThemeConfigLoader {
     const config = this.loadedConfigs.get(themeName)
     
     if (!config) {
-      logger.warn('ThemeConfigLoader', `Theme not found: ${themeName}`)
+      logger.warn('ThemeConfigLoader', 'loadTheme', 'loadTheme', 'Theme not found: ${themeName}')
       return null
     }
     
-    logger.info('ThemeConfigLoader', `Loaded theme: ${themeName}`)
+    logger.info('ThemeConfigLoader', 'loadTheme', 'loadTheme', 'Loaded theme: ${themeName}')
     return config
   }
   
@@ -514,12 +514,12 @@ export class ThemeConfigLoader {
    */
   public setActiveTheme(themeName: string): boolean {
     if (!this.loadedConfigs.has(themeName)) {
-      logger.warn('ThemeConfigLoader', `Cannot set active theme - theme not found: ${themeName}`)
+      logger.warn('ThemeConfigLoader', 'setActiveTheme', 'setActiveTheme', 'Cannot set active theme - theme not found: ${themeName}')
       return false
     }
     
     this.activeTheme = themeName
-    logger.info('ThemeConfigLoader', `Active theme set to: ${themeName}`)
+    logger.info('ThemeConfigLoader', 'setActiveTheme', 'setActiveTheme', 'Active theme set to: ${themeName}')
     return true
   }
   

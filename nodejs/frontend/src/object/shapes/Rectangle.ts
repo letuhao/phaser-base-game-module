@@ -51,7 +51,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
     // Set initial properties
     this.setOrigin(0, 0); // Set origin to top-left for easier positioning
     
-    this.logger.debug('Rectangle', 'Rectangle created', {
+    this.logger.debug('Rectangle', 'super', 'Rectangle created', {
       id,
       dimensions: { width, height },
       fillColor,
@@ -61,14 +61,14 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       active: this.active,
       alpha: this.alpha,
       scale: { x: this.scaleX, y: this.scaleY }
-    }, 'constructor');
+    });
   }
   
   // ===== IStyle IMPLEMENTATION =====
   
   /** Set the style properties for this rectangle */
   setStyle(layoutProperties: CommonIStyleProperties): void {
-    this.logger.debug('Rectangle', 'Setting style properties', {
+    this.logger.debug('Rectangle', 'setStyle', 'Setting style properties', {
       id: this.id,
       newStyle: layoutProperties
     });
@@ -267,11 +267,11 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
   }
   
   resize(width: number, height: number): void {
-    this.logger.debug('Rectangle', 'Resizing rectangle', {
+    this.logger.debug('Rectangle', 'resize', 'Resizing rectangle', {
       id: this.id,
       oldDimensions: this.dimensions,
       newDimensions: { width, height }
-    }, 'resize');
+    });
     
     // Set the new size
     this.setSize(width, height);
@@ -293,9 +293,9 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
   // ===== ABSTRACT METHOD IMPLEMENTATIONS =====
   
   initialize(): void {
-    this.logger.debug('Rectangle', 'Initializing rectangle', {
+    this.logger.debug('Rectangle', 'initialize', 'Initializing rectangle', {
       id: this.id
-    }, 'initialize');
+    });
     
     // Set initial state
     this.setActive(true);
@@ -308,25 +308,25 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
   }
   
   activate(): void {
-    this.logger.debug('Rectangle', 'Activating rectangle', {
+    this.logger.debug('Rectangle', 'activate', 'Activating rectangle', {
       id: this.id
-    }, 'activate');
+    });
     
     this.setActive(true);
   }
   
   deactivate(): void {
-    this.logger.debug('Rectangle', 'Deactivating rectangle', {
+    this.logger.debug('Rectangle', 'deactivate', 'Deactivating rectangle', {
       id: this.id
-    }, 'deactivate');
+    });
     
     this.setActive(false);
   }
   
   clone(): IGameObject {
-    this.logger.debug('Rectangle', 'Cloning rectangle', {
+    this.logger.debug('Rectangle', 'clone', 'Cloning rectangle', {
       id: this.id
-    }, 'clone');
+    });
     
     return new Rectangle(
       this.scene,
@@ -364,11 +364,11 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
    * This method is called by the scene's resize system
    */
   handleResponsiveResize(width: number, height: number): void {
-    this.logger.debug('Rectangle', 'Handling responsive resize from scene', {
+    this.logger.debug('Rectangle', 'handleResponsiveResize', 'Handling responsive resize from scene', {
       id: this.id,
       newDimensions: { width, height },
       currentDimensions: this.dimensions
-    }, 'handleResponsiveResize');
+    });
     
     // Apply the new size
     this.resize(width, height);
@@ -377,8 +377,8 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
   /**
    * Log the current state of the Rectangle for debugging
    */
-  logCurrentState(methodName: string = 'logCurrentState'): void {
-    this.logger.debug('Rectangle', 'Current Rectangle state', {
+  logCurrentState(): void {
+    this.logger.debug('Rectangle', 'logCurrentState', 'Current Rectangle state', {
       id: this.id,
       dimensions: this.dimensions,
       position: this.position,
@@ -391,7 +391,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       strokeWidth: this.strokeWidth,
       parentId: this.parent?.id || 'none',
       sceneKey: this.scene.scene.key
-    }, methodName);
+    });
   }
   
   // ===== STATIC FACTORY METHOD =====
@@ -401,7 +401,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
    */
   public static createFromConfig(config: any, scene: Phaser.Scene, parent?: IContainer): Rectangle {
     const logger = Logger.getInstance();
-    logger.debug('Rectangle', 'createFromConfig called', {
+    logger.debug('Rectangle', 'createFromConfig', 'createFromConfig called', {
       objectId: config.id,
       config: config,
       sceneKey: scene.scene.key,
@@ -411,7 +411,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         type: parent.constructor.name,
         bounds: parent.getContainerBounds()
       } : null
-    }, 'createFromConfig');
+    });
     
     try {
       // Resolve dimensions (handle 'fill' values)
@@ -424,11 +424,11 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         if (height === 'fill') height = parentBounds.height;
       }
       
-      logger.debug('Rectangle', 'Dimensions resolved', {
+      logger.debug('Rectangle', 'createFromConfig', 'Dimensions resolved', {
         objectId: config.id,
         finalDimensions: { width, height },
         hasParent: !!parent
-      }, 'createFromConfig');
+      });
       
       const rectangle = new Rectangle(
         scene,
@@ -455,7 +455,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       }
       
       // Log final state after all properties are applied
-      logger.debug('Rectangle', 'Final Rectangle state after property application', {
+      logger.debug('Rectangle', 'createFromConfig', 'Final Rectangle state after property application', {
         objectId: config.id,
         finalDimensions: rectangle.dimensions,
         finalPosition: rectangle.position,
@@ -466,12 +466,12 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         finalScale: { x: rectangle.scaleX, y: rectangle.scaleY },
         fillColor: rectangle.fillColor,
         strokeWidth: rectangle.strokeWidth
-      }, 'createFromConfig');
+      });
       
       // Log the complete state using the instance method
-      rectangle.logCurrentState('createFromConfig');
+      rectangle.logCurrentState();
       
-      logger.debug('Rectangle', 'Rectangle created successfully from config', {
+      logger.debug('Rectangle', 'createFromConfig', 'Rectangle created successfully from config', {
         objectId: config.id,
         finalDimensions: rectangle.dimensions,
         hasStroke: rectangle.strokeWidth > 0,
@@ -481,12 +481,12 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         active: rectangle.active,
         alpha: rectangle.alpha,
         scale: { x: rectangle.scaleX, y: rectangle.scaleY }
-      }, 'createFromConfig');
+      });
       
       return rectangle;
       
     } catch (error) {
-      logger.error('Rectangle', `Error in createFromConfig for ${config.id}:`, error);
+      logger.error('Rectangle', 'logCurrentState', 'Error in createFromConfig for ${config.id}:', error);
       throw error;
     }
   }

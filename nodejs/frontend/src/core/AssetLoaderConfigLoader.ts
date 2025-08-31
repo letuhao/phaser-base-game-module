@@ -153,7 +153,7 @@ export class AssetLoaderConfigLoader {
    */
   public registerConfig(sceneName: string, config: AssetLoaderConfig): void {
     this.loadedConfigs.set(sceneName, config)
-    logger.info('AssetLoaderConfigLoader', `Registered asset loader config for scene: ${sceneName}`)
+    logger.info('AssetLoaderConfigLoader', 'registerConfig', 'registerConfig', 'Registered asset loader config for scene: ${sceneName}')
   }
   
   /**
@@ -163,11 +163,11 @@ export class AssetLoaderConfigLoader {
     const config = this.loadedConfigs.get(sceneName)
     
     if (!config) {
-      logger.warn('AssetLoaderConfigLoader', `No asset loader config found for scene: ${sceneName}`)
+      logger.warn('AssetLoaderConfigLoader', 'loadConfig', 'loadConfig', 'No asset loader config found for scene: ${sceneName}')
       return null
     }
     
-    logger.info('AssetLoaderConfigLoader', `Loaded asset loader config for scene: ${sceneName}`)
+    logger.info('AssetLoaderConfigLoader', 'loadConfig', 'loadConfig', 'Loaded asset loader config for scene: ${sceneName}')
     return config
   }
   

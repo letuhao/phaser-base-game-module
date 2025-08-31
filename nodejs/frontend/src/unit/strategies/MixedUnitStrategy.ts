@@ -3,6 +3,7 @@ import type { UnitContext } from '../interfaces/IUnit'
 import { UnitType } from '../enums/UnitType'
 import { Dimension } from '../enums/Dimension'
 import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory'
+import { Logger } from '../../core/Logger'
 
 /**
  * Mixed Unit Strategy
@@ -12,6 +13,7 @@ import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory'
 export class MixedUnitStrategy implements IUnitStrategy {
   readonly unitType = 'mixed'
   private readonly factory = UnitCalculatorFactory.getInstance()
+  private readonly logger: Logger = Logger.getInstance()
 
   /**
    * Calculate mixed unit value using the appropriate strategy
@@ -199,7 +201,10 @@ export class MixedUnitStrategy implements IUnitStrategy {
       const processedExpression = this.processMathExpression(expression, context)
       return eval(processedExpression) // Note: eval is used for simplicity, consider using a safer parser
     } catch (error) {
-      console.warn('Failed to evaluate math expression:', expression, error)
+      this.logger.warn('MixedUnitStrategy', 'calculateMathExpression', 'Failed to evaluate math expression', {
+        expression,
+        error: error instanceof Error ? error.message : String(error)
+      })
       return 0
     }
   }

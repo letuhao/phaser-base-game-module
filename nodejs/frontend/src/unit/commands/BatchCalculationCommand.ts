@@ -3,6 +3,7 @@ import type { UnitContext } from '../interfaces/IUnit'
 import { BaseUnitCommand } from './IUnitCommand'
 import { CalculateSizeCommand } from './CalculateSizeCommand'
 import { CalculatePositionCommand } from './CalculatePositionCommand'
+import { Logger } from '../../core/Logger'
 
 /**
  * Batch Calculation Command
@@ -13,6 +14,7 @@ export class BatchCalculationCommand extends BaseUnitCommand {
   private readonly context: UnitContext
   private executionResults: number[] = []
   private previousResults: number[] = []
+  private readonly logger: Logger = Logger.getInstance()
 
   constructor(commands: IUnitCommand[], context: UnitContext) {
     super(`batch-calculation-${Date.now()}`)
@@ -37,11 +39,13 @@ export class BatchCalculationCommand extends BaseUnitCommand {
           const result = command.execute(context)
           this.executionResults.push(result)
         } catch (error) {
-          console.error(`Error executing command: ${command.getDescription()}`, error)
+          this.logger.error('BatchCalculationCommand', 'execute', `Error executing command: ${command.getDescription()}`, {
+            error: error instanceof Error ? error.message : String(error)
+          })
           this.executionResults.push(0) // Default fallback
         }
       } else {
-        console.warn(`Command cannot be executed: ${command.getDescription()}`)
+        this.logger.warn('BatchCalculationCommand', 'execute', `Command cannot be executed: ${command.getDescription()}`)
         this.executionResults.push(0) // Default fallback
       }
     }

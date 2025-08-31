@@ -38,10 +38,10 @@ export abstract class BaseScene extends Phaser.Scene {
     this.responsiveConfigLoader = ResponsiveConfigLoader.getInstance()
     this.themeConfigLoader = ThemeConfigLoader.getInstance()
 
-    this.logger.debug('BaseScene', 'BaseScene constructor called', {
+    this.logger.debug('BaseScene', 'super', 'BaseScene constructor called', {
       sceneKey,
       timestamp: Date.now()
-    }, 'constructor')
+    })
   }
 
   /**
@@ -61,15 +61,15 @@ export abstract class BaseScene extends Phaser.Scene {
    * This method is called manually after configurations are loaded
    */
   preload(): void {
-    this.logger.debug('BaseScene', 'Scene preload() method started', {
+    this.logger.debug('BaseScene', 'preload', 'Scene preload() method started', {
       sceneKey: this.scene.key,
       timestamp: Date.now()
-    }, 'preload')
+    })
 
     try {
       // Load background images from asset configuration
       if (this.sceneConfigs.asset && this.sceneConfigs.asset.backgrounds) {
-        this.logger.debug('BaseScene', 'Loading background images', {
+        this.logger.debug('BaseScene', 'preload', 'Loading background images', {
           backgroundKeys: Object.keys(this.sceneConfigs.asset.backgrounds)
         })
 
@@ -77,7 +77,7 @@ export abstract class BaseScene extends Phaser.Scene {
         if (this.sceneConfigs.asset.backgrounds.desktop) {
           const desktopBg = this.sceneConfigs.asset.backgrounds.desktop
           const desktopPath = this.sceneConfigs.asset.basePath + desktopBg.path
-          this.logger.debug('BaseScene', 'Loading desktop background', {
+          this.logger.debug('BaseScene', 'preload', 'Loading desktop background', {
             key: desktopBg.key,
             path: desktopPath
           })
@@ -88,7 +88,7 @@ export abstract class BaseScene extends Phaser.Scene {
         if (this.sceneConfigs.asset.backgrounds.mobile) {
           const mobileBg = this.sceneConfigs.asset.backgrounds.mobile
           const mobilePath = this.sceneConfigs.asset.basePath + mobileBg.path
-          this.logger.debug('BaseScene', 'Loading mobile background', {
+          this.logger.debug('BaseScene', 'preload', 'Loading mobile background', {
             key: mobileBg.key,
             path: mobilePath
           })
@@ -99,20 +99,20 @@ export abstract class BaseScene extends Phaser.Scene {
         if (this.sceneConfigs.asset.backgrounds.mobileOrigin) {
           const mobileOriginBg = this.sceneConfigs.asset.backgrounds.mobileOrigin
           const mobileOriginPath = this.sceneConfigs.asset.basePath + mobileOriginBg.path
-          this.logger.debug('BaseScene', 'Loading mobile origin background', {
+          this.logger.debug('BaseScene', 'preload', 'Loading mobile origin background', {
             key: mobileOriginBg.key,
             path: mobileOriginPath
           })
           this.load.image(mobileOriginBg.key, mobileOriginPath)
         }
 
-        this.logger.info('BaseScene', 'Background images loaded successfully')
+        this.logger.info('BaseScene', 'preload', 'Background images loaded successfully')
       } else {
-        this.logger.warn('BaseScene', 'No asset configuration found for background images')
+        this.logger.warn('BaseScene', 'preload', 'preload', 'No asset configuration found for background images')
       }
 
     } catch (error) {
-      this.logger.error('BaseScene', 'Error in scene preload', error)
+      this.logger.error('BaseScene', 'preload', 'Error in scene preload', error)
       throw error
     }
   }
@@ -121,7 +121,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Wait for assets to finish loading
    */
   private async waitForAssetsToLoad(): Promise<void> {
-    this.logger.debug('BaseScene', 'Waiting for assets to load')
+    this.logger.debug('BaseScene', 'waitForAssetsToLoad', 'waitForAssetsToLoad', 'Waiting for assets to load')
 
     try {
       // Start the loader if it hasn't been started
@@ -137,19 +137,19 @@ export abstract class BaseScene extends Phaser.Scene {
 
         this.load.once('complete', () => {
           clearTimeout(timeout)
-          this.logger.info('BaseScene', 'All assets loaded successfully')
+          this.logger.info('BaseScene', 'clearTimeout', 'clearTimeout', 'All assets loaded successfully')
           resolve()
         })
 
         this.load.once('loaderror', (file: any) => {
           clearTimeout(timeout)
-          this.logger.warn('BaseScene', 'Asset load error', { file })
+          this.logger.warn('BaseScene', 'clearTimeout', 'Asset load error', { file })
           resolve() // Continue anyway
         })
       })
 
     } catch (error) {
-      this.logger.warn('BaseScene', 'Asset loading error or timeout, continuing anyway', error)
+      this.logger.warn('BaseScene', 'resolve', 'Asset loading error or timeout, continuing anyway', error)
     }
   }
 
@@ -157,12 +157,12 @@ export abstract class BaseScene extends Phaser.Scene {
    * Scene initialization - purely configuration-driven
    */
   async create(): Promise<void> {
-    this.logger.debug('BaseScene', 'Scene create() method started', {
+    this.logger.debug('BaseScene', 'create', 'Scene create() method started', {
       sceneKey: this.scene.key,
       gameWidth: this.game.config.width,
       gameHeight: this.game.config.height,
       timestamp: Date.now()
-    }, 'create')
+    })
 
     try {
       // Register scene-specific configurations
@@ -178,12 +178,12 @@ export abstract class BaseScene extends Phaser.Scene {
       await this.waitForAssetsToLoad()
 
       // Log scene creation
-      this.logger.info('BaseScene', 'Scene created', {
+      this.logger.info('BaseScene', 'create', 'Scene created', {
         sceneKey: this.scene.key,
         gameWidth: this.game.config.width,
         gameHeight: this.game.config.height,
         timestamp: Date.now()
-      }, 'create')
+      })
 
       // Initialize scene based on configuration
       await this.initializeSceneFromConfig()
@@ -192,17 +192,17 @@ export abstract class BaseScene extends Phaser.Scene {
       this.setupResponsiveBehavior()
 
       // Log scene setup completion
-      this.logger.info('BaseScene', 'Scene setup completed', {
+      this.logger.info('BaseScene', 'create', 'Scene setup completed', {
         gameSize: { width: Number(this.game.config.width), height: Number(this.game.config.height) },
         scaleMode: this.game.scale.scaleMode,
         gameObjectCount: this.gameObjects.size
-      }, 'create')
+      })
 
       // Flush logs to ensure they're sent to server
       await this.logger.flushLogs()
 
     } catch (error) {
-      this.logger.error('BaseScene', 'Critical error in scene creation', error, 'create')
+      this.logger.error('BaseScene', 'create', 'Critical error in scene creation', error)
       await this.logger.flushLogs()
       throw error
     }
@@ -212,7 +212,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Load all scene configurations
    */
   private loadSceneConfigs(): void {
-    this.logger.debug('BaseScene', 'Starting to load scene configurations', undefined, 'loadSceneConfigs')
+    this.logger.debug('BaseScene', 'loadSceneConfigs', 'Starting to load scene configurations')
 
     try {
       const sceneName = this.getSceneName()
@@ -220,20 +220,20 @@ export abstract class BaseScene extends Phaser.Scene {
       // Load all configurations
       this.sceneConfigs = this.configManager.loadSceneConfigs(sceneName)
 
-      this.logger.debug('BaseScene', 'Scene configurations loaded', {
+      this.logger.debug('BaseScene', 'loadSceneConfigs', 'Scene configurations loaded', {
         sceneName,
         sceneConfigs: this.sceneConfigs,
         configKeys: Object.keys(this.sceneConfigs)
-      }, 'loadSceneConfigs')
+      })
 
       if (this.sceneConfigs.logging) {
-        this.logger.info('BaseScene', 'All scene configurations loaded successfully', undefined, 'loadSceneConfigs')
+        this.logger.info('BaseScene', 'loadSceneConfigs', 'All scene configurations loaded successfully')
       } else {
-        this.logger.warn('BaseScene', 'Failed to load some scene configurations', undefined, 'loadSceneConfigs')
+                  this.logger.warn('BaseScene', 'loadSceneConfigs', 'Failed to load some scene configurations')
       }
 
     } catch (error) {
-      this.logger.error('BaseScene', 'Error loading scene configurations', error, 'loadSceneConfigs')
+      this.logger.error('BaseScene', 'loadSceneConfigs', 'Error loading scene configurations', error)
       throw error
     }
   }
@@ -242,28 +242,28 @@ export abstract class BaseScene extends Phaser.Scene {
    * Initialize scene purely from configuration
    */
   private async initializeSceneFromConfig(): Promise<void> {
-    this.logger.debug('BaseScene', 'Starting scene initialization from config', undefined, 'initializeSceneFromConfig')
+    this.logger.debug('BaseScene', 'initializeSceneFromConfig', 'Starting scene initialization from config')
 
     try {
       if (!this.sceneConfigs.scene) {
-        this.logger.warn('BaseScene', 'No scene configuration available', {
+        this.logger.warn('BaseScene', 'initializeSceneFromConfig', 'No scene configuration available', {
           availableConfigs: Object.keys(this.sceneConfigs)
         })
         return
       }
 
       const sceneConfig = this.sceneConfigs.scene
-      this.logger.debug('BaseScene', 'Scene config found', {
+      this.logger.debug('BaseScene', 'initializeSceneFromConfig', 'Scene config found', {
         sceneName: sceneConfig.sceneName,
         gameObjectCount: sceneConfig.gameObjects?.length || 0,
         backgroundColor: sceneConfig.backgroundColor
-      }, 'initializeSceneFromConfig')
+      })
 
       // NEW: Register responsive config with ResponsiveConfigLoader
       if (this.sceneConfigs.responsive) {
         const sceneName = this.getSceneName()
         this.responsiveConfigLoader.registerConfig(sceneName, this.sceneConfigs.responsive)
-        this.logger.info('BaseScene', 'Responsive config registered', {
+        this.logger.info('BaseScene', 'initializeSceneFromConfig', 'Responsive config registered', {
           sceneName,
           configKeys: Object.keys(this.sceneConfigs.responsive),
           hasDefault: !!this.sceneConfigs.responsive.default,
@@ -273,50 +273,50 @@ export abstract class BaseScene extends Phaser.Scene {
         // Cache responsive configs for performance
         this.cacheResponsiveConfigs()
       } else {
-        this.logger.error('BaseScene', 'No responsive configuration found - scene cannot function properly')
+        this.logger.error('BaseScene', 'initializeSceneFromConfig', 'initializeSceneFromConfig', 'No responsive configuration found - scene cannot function properly')
         throw new Error('Responsive configuration is required for scene functionality')
       }
 
       // NEW: Set active theme if specified (now loaded via ConfigManager)
       if (this.sceneConfigs.theme) {
         this.themeConfigLoader.setActiveTheme(this.sceneConfigs.theme.themeName)
-        this.logger.info('BaseScene', 'Theme activated', {
+        this.logger.info('BaseScene', 'initializeSceneFromConfig', 'Theme activated', {
           themeName: this.sceneConfigs.theme.themeName,
           hasThemeClasses: !!this.sceneConfigs.theme.themeClasses
         })
       } else {
-        this.logger.warn('BaseScene', 'No theme configuration found - using default styling')
+        this.logger.warn('BaseScene', 'initializeSceneFromConfig', 'initializeSceneFromConfig', 'No theme configuration found - using default styling')
       }
 
       // Set scene background color from config
       if (sceneConfig.backgroundColor) {
-        this.logger.debug('BaseScene', 'Setting scene background color', {
+        this.logger.debug('BaseScene', 'initializeSceneFromConfig', 'Setting scene background color', {
           backgroundColor: sceneConfig.backgroundColor
-        }, 'initializeSceneFromConfig')
+        })
         this.cameras.main.setBackgroundColor(sceneConfig.backgroundColor)
       }
 
       // Create game objects from configuration
       if (sceneConfig.gameObjects && sceneConfig.gameObjects.length > 0) {
-        this.logger.debug('BaseScene', 'Creating game objects from config', {
+        this.logger.debug('BaseScene', 'initializeSceneFromConfig', 'Creating game objects from config', {
           gameObjectCount: sceneConfig.gameObjects.length,
           gameObjectIds: sceneConfig.gameObjects.map((obj: any) => obj.id)
-        }, 'initializeSceneFromConfig')
+        })
         await this.createGameObjectsFromConfig(sceneConfig.gameObjects)
       } else {
-        this.logger.warn('BaseScene', 'No game objects found in scene config', undefined, 'initializeSceneFromConfig')
+        this.logger.warn('BaseScene', 'initializeSceneFromConfig', 'No game objects found in scene config')
       }
 
       // Trigger initial resize for all game objects after creation is complete
       // This ensures proper positioning and sizing from the start
-      this.logger.debug('BaseScene', 'Triggering initial resize for all game objects', {
+      this.logger.debug('BaseScene', 'initializeSceneFromConfig', 'Triggering initial resize for all game objects', {
         gameObjectCount: this.gameObjects.size,
         gameObjectIds: Array.from(this.gameObjects.keys())
-      }, 'initializeSceneFromConfig')
+      })
 
       await this.triggerInitialResize()
 
-      this.logger.info('BaseScene', 'Scene initialized from configuration', {
+      this.logger.info('BaseScene', 'initializeSceneFromConfig', 'Scene initialized from configuration', {
         sceneName: sceneConfig.sceneName,
         gameObjectCount: sceneConfig.gameObjects?.length || 0,
         backgroundColor: sceneConfig.backgroundColor,
@@ -324,7 +324,7 @@ export abstract class BaseScene extends Phaser.Scene {
       })
 
     } catch (error) {
-      this.logger.error('BaseScene', 'Error initializing scene from config', error)
+      this.logger.error('BaseScene', 'initializeSceneFromConfig', 'Error initializing scene from config', error)
       throw error
     }
   }
@@ -334,7 +334,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * FIXED: Creates containers first, then children to ensure proper sizing
    */
   private async createGameObjectsFromConfig(gameObjects: any[], parent?: Phaser.GameObjects.Container): Promise<void> {
-    this.logger.debug('BaseScene', 'Creating game objects recursively', {
+    this.logger.debug('BaseScene', 'createGameObjectsFromConfig', 'Creating game objects recursively', {
       gameObjectCount: gameObjects.length,
       parentId: parent?.name || 'root',
       gameObjectIds: gameObjects.map((obj: any) => obj.id)
@@ -348,7 +348,7 @@ export abstract class BaseScene extends Phaser.Scene {
     
     for (const objConfig of gameObjects) {
       try {
-        this.logger.debug('BaseScene', 'Starting creation of game object', {
+        this.logger.debug('BaseScene', 'createGameObjectsFromConfig', 'Starting creation of game object', {
           objectId: objConfig.id,
           objectType: objConfig.type,
           objectName: objConfig.name,
@@ -362,7 +362,7 @@ export abstract class BaseScene extends Phaser.Scene {
 
         if (gameObject) {
           successCount++
-          this.logger.debug('BaseScene', 'Game object created successfully', {
+          this.logger.debug('BaseScene', 'createGameObjectsFromConfig', 'Game object created successfully', {
             objectId: objConfig.id,
             objectType: objConfig.type,
             phaserObjectType: gameObject.constructor.name,
@@ -371,7 +371,7 @@ export abstract class BaseScene extends Phaser.Scene {
 
           // Store reference to game object
           this.gameObjects.set(objConfig.id, gameObject)
-          this.logger.debug('BaseScene', 'Game object stored in scene map', {
+          this.logger.debug('BaseScene', 'createGameObjectsFromConfig', 'Game object stored in scene map', {
             objectId: objConfig.id,
             totalGameObjects: this.gameObjects.size
           })
@@ -388,14 +388,14 @@ export abstract class BaseScene extends Phaser.Scene {
 
               containers.push({ config: objConfig, gameObject, phaserContainer });
               
-              this.logger.debug('BaseScene', 'Container stored for later child creation', {
+              this.logger.debug('BaseScene', 'createGameObjectsFromConfig', 'Container stored for later child creation', {
                 objectId: objConfig.id,
                 containerType: gameObject.constructor.name,
                 phaserContainerType: phaserContainer.constructor.name,
                 childCount: objConfig.children.length
               })
             } else {
-              this.logger.warn('BaseScene', `Cannot add children to non-container object: ${objConfig.id}`, {
+              this.logger.warn('BaseScene', 'createGameObjectsFromConfig', 'Cannot add children to non-container object: ${objConfig.id}', {
                 objectType: objConfig.type,
                 phaserObjectType: gameObject.constructor.name
               })
@@ -403,7 +403,7 @@ export abstract class BaseScene extends Phaser.Scene {
           }
         } else {
           failureCount++
-          this.logger.error('BaseScene', 'Failed to create game object - createGameObjectFromConfig returned null', {
+          this.logger.error('BaseScene', 'createGameObjectsFromConfig', 'Failed to create game object - createGameObjectFromConfig returned null', {
             objectId: objConfig.id,
             objectType: objConfig.type,
             objectName: objConfig.name,
@@ -414,7 +414,7 @@ export abstract class BaseScene extends Phaser.Scene {
 
       } catch (error) {
         failureCount++
-        this.logger.error('BaseScene', `Exception during game object creation: ${objConfig.id}`, {
+        this.logger.error('BaseScene', 'createGameObjectsFromConfig', 'Exception during game object creation: ${objConfig.id}', {
           error: error instanceof Error ? error.message : String(error),
           stack: error instanceof Error ? error.stack : undefined,
           objectId: objConfig.id,
@@ -426,7 +426,7 @@ export abstract class BaseScene extends Phaser.Scene {
     // PHASE 2: Create all children after containers are ready
     for (const { config: objConfig, phaserContainer } of containers) {
       try {
-        this.logger.debug('BaseScene', 'Creating children for container', {
+        this.logger.debug('BaseScene', 'createGameObjectsFromConfig', 'Creating children for container', {
           objectId: objConfig.id,
           childCount: objConfig.children.length,
           childIds: objConfig.children.map((child: any) => child.id)
@@ -435,7 +435,7 @@ export abstract class BaseScene extends Phaser.Scene {
         await this.createGameObjectsFromConfig(objConfig.children, phaserContainer)
         
       } catch (error) {
-        this.logger.error('BaseScene', `Exception during child creation for container: ${objConfig.id}`, {
+        this.logger.error('BaseScene', 'createGameObjectsFromConfig', 'Exception during child creation for container: ${objConfig.id}', {
           error: error instanceof Error ? error.message : String(error),
           stack: error instanceof Error ? error.stack : undefined,
           objectId: objConfig.id,
@@ -444,7 +444,7 @@ export abstract class BaseScene extends Phaser.Scene {
       }
     }
 
-    this.logger.info('BaseScene', 'Game objects creation batch completed', {
+    this.logger.info('BaseScene', 'createGameObjectsFromConfig', 'Game objects creation batch completed', {
       totalRequested: gameObjects.length,
       successCount,
       failureCount,
@@ -458,80 +458,80 @@ export abstract class BaseScene extends Phaser.Scene {
    * This ensures proper positioning and sizing from the start
    */
   private async triggerInitialResize(): Promise<void> {
-    this.logger.debug('BaseScene', 'Starting initial resize for all game objects', {
+    this.logger.debug('BaseScene', 'triggerInitialResize', 'Starting initial resize for all game objects', {
       gameObjectCount: this.gameObjects.size,
       gameObjectIds: Array.from(this.gameObjects.keys())
-    }, 'triggerInitialResize')
+    })
 
     try {
       // Get current game dimensions
       const gameWidth = this.game.config.width as number
       const gameHeight = this.game.config.height as number
 
-      this.logger.debug('BaseScene', 'Game dimensions for initial resize', {
+      this.logger.debug('BaseScene', 'triggerInitialResize', 'Game dimensions for initial resize', {
         gameWidth,
         gameHeight,
         gameObjectCount: this.gameObjects.size
-      }, 'triggerInitialResize')
+      })
 
       // Trigger resize for all game objects
       for (const [objectId, gameObject] of this.gameObjects) {
         try {
           // Check if the game object has a resize method (our wrapper objects)
           if ((gameObject as any).resize && typeof (gameObject as any).resize === 'function') {
-            this.logger.debug('BaseScene', 'Triggering resize for wrapper object', {
+            this.logger.debug('BaseScene', 'triggerInitialResize', 'Triggering resize for wrapper object', {
               objectId,
               objectType: gameObject.constructor.name,
               hasResizeMethod: true,
               hasResponsiveResizeMethod: false
-            }, 'triggerInitialResize');
+            });
 
             // Call resize with current game dimensions
             (gameObject as any).resize(gameWidth, gameHeight)
           } else if ((gameObject as any).handleResponsiveResize && typeof (gameObject as any).handleResponsiveResize === 'function') {
             // Check if the game object has a responsive resize method (shapes like Rectangle)
-            this.logger.debug('BaseScene', 'Triggering responsive resize for shape object', {
+            this.logger.debug('BaseScene', 'triggerInitialResize', 'Triggering responsive resize for shape object', {
               objectId,
               objectType: gameObject.constructor.name,
               hasResponsiveResizeMethod: true
-            }, 'triggerInitialResize');
+            });
 
             // Call handleResponsiveResize with current game dimensions
             (gameObject as any).handleResponsiveResize(gameWidth, gameHeight)
           } else if (gameObject instanceof Phaser.GameObjects.Container) {
-            this.logger.debug('BaseScene', 'Skipping resize for Phaser container (no wrapper)', {
+            this.logger.debug('BaseScene', 'triggerInitialResize', 'Skipping resize for Phaser container (no wrapper)', {
               objectId,
               objectType: gameObject.constructor.name,
               hasResizeMethod: false
-            }, 'triggerInitialResize')
+            })
           } else {
-            this.logger.debug('BaseScene', 'Skipping resize for non-container object', {
+            this.logger.debug('BaseScene', 'triggerInitialResize', 'Skipping resize for non-container object', {
               objectId,
               objectType: gameObject.constructor.name,
               hasResizeMethod: false,
               hasResponsiveResizeMethod: false
-            }, 'triggerInitialResize')
+            })
           }
         } catch (error) {
-          this.logger.error('BaseScene', `Error during initial resize for object: ${objectId}`, {
+          this.logger.error('BaseScene', 'triggerInitialResize', 'Error during initial resize for object: ${objectId}', {
             error: error instanceof Error ? error.message : String(error),
             objectId,
             objectType: gameObject.constructor.name
-          }, 'triggerInitialResize')
+          })
         }
       }
 
-      this.logger.info('BaseScene', 'Initial resize completed for all game objects', {
+      this.logger.info('BaseScene', 'triggerInitialResize', 'Initial resize completed for all game objects', {
         gameObjectCount: this.gameObjects.size,
         gameWidth,
         gameHeight
-      }, 'triggerInitialResize')
+      })
 
     } catch (error) {
-      this.logger.error('BaseScene', 'Error during initial resize process', {
+      this.logger.error('BaseScene', 'triggerInitialResize', 'Error during initial resize process', {
         error: error instanceof Error ? error.message : String(error),
         gameObjectCount: this.gameObjects.size
-      }, 'triggerInitialResize')
+      })
     }
   }
 
@@ -539,7 +539,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Create a single game object from configuration using the Factory Pattern
    */
   private async createGameObjectFromConfig(objConfig: any, parent?: Phaser.GameObjects.Container): Promise<Phaser.GameObjects.GameObject | null> {
-    this.logger.debug('BaseScene', 'Creating game object from config', {
+    this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Creating game object from config', {
       objectId: objConfig.id,
       objectType: objConfig.type,
       hasFactory: !!objConfig.factory,
@@ -552,7 +552,7 @@ export abstract class BaseScene extends Phaser.Scene {
 
       // Use Factory Pattern to create game objects
       if (objConfig.factory && objConfig.factory.className) {
-        this.logger.debug('BaseScene', 'Using static factory method', {
+        this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Using static factory method', {
           objectId: objConfig.id,
           className: objConfig.factory.className,
           createMethod: objConfig.factory.createMethod
@@ -561,14 +561,14 @@ export abstract class BaseScene extends Phaser.Scene {
         // Use static factory method from concrete classes
         gameObject = await this.createGameObjectUsingStaticFactory(objConfig, parent)
 
-        this.logger.debug('BaseScene', 'Static factory method completed', {
+        this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Static factory method completed', {
           objectId: objConfig.id,
           hasResult: !!gameObject,
           resultType: gameObject?.constructor.name,
           result: gameObject
         })
       } else {
-        this.logger.debug('BaseScene', 'Using factory manager fallback', {
+        this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Using factory manager fallback', {
           objectId: objConfig.id,
           objectType: objConfig.type
         })
@@ -576,7 +576,7 @@ export abstract class BaseScene extends Phaser.Scene {
         // Fallback to factory manager
         gameObject = this.factoryManager.createGameObject(objConfig, this)
 
-        this.logger.debug('BaseScene', 'Factory manager fallback completed', {
+        this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Factory manager fallback completed', {
           objectId: objConfig.id,
           hasResult: !!gameObject,
           resultType: gameObject?.constructor.name,
@@ -585,7 +585,7 @@ export abstract class BaseScene extends Phaser.Scene {
       }
 
       if (gameObject) {
-        this.logger.debug('BaseScene', 'Game object created successfully, setting properties', {
+        this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Game object created successfully, setting properties', {
           objectId: objConfig.id,
           phaserObjectType: gameObject.constructor.name,
           gameObjectName: gameObject.name
@@ -598,7 +598,7 @@ export abstract class BaseScene extends Phaser.Scene {
           if (parent && parent instanceof Phaser.GameObjects.Container) {
             // ALL objects (including wrapper objects) should be added to parent containers
             // This maintains the proper hierarchy: background-container > footer-container > footer-rectangle
-            this.logger.debug('BaseScene', 'Adding game object to parent container', {
+            this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Adding game object to parent container', {
               objectId: objConfig.id,
               parentId: parent.name,
               objectType: gameObject.constructor.name,
@@ -612,20 +612,20 @@ export abstract class BaseScene extends Phaser.Scene {
               parent.add(gameObject)
             }
           } else {
-            this.logger.debug('BaseScene', 'Adding game object to scene', {
+            this.logger.debug('BaseScene', 'createGameObjectFromConfig', 'Adding game object to scene', {
               objectId: objConfig.id
             })
             this.add.existing(gameObject)
           }
 
-        this.logger.info('BaseScene', 'Game object fully created and added to scene', {
+        this.logger.info('BaseScene', 'createGameObjectFromConfig', 'Game object fully created and added to scene', {
           objectId: objConfig.id,
           phaserObjectType: gameObject.constructor.name,
           gameObjectName: gameObject.name,
           addedToScene: true
         })
       } else {
-        this.logger.error('BaseScene', 'Factory failed to create game object - returning null', {
+        this.logger.error('BaseScene', 'createGameObjectFromConfig', 'Factory failed to create game object - returning null', {
           objectId: objConfig.id,
           objectType: objConfig.type,
           hasFactory: !!objConfig.factory,
@@ -637,7 +637,7 @@ export abstract class BaseScene extends Phaser.Scene {
       return gameObject
 
     } catch (error) {
-      this.logger.error('BaseScene', `Critical error creating game object from config: ${objConfig.id}`, {
+      this.logger.error('BaseScene', 'createGameObjectFromConfig', 'Critical error creating game object from config: ${objConfig.id}', {
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
         objectId: objConfig.id,
@@ -652,7 +652,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Create game object using static factory methods from concrete classes
    */
   private async createGameObjectUsingStaticFactory(objConfig: any, parent?: Phaser.GameObjects.Container): Promise<Phaser.GameObjects.GameObject | null> {
-    this.logger.debug('BaseScene', 'Using static factory method', {
+    this.logger.debug('BaseScene', 'createGameObjectUsingStaticFactory', 'Using static factory method', {
       objectId: objConfig.id,
       className: objConfig.factory.className,
       createMethod: objConfig.factory.createMethod
@@ -661,7 +661,7 @@ export abstract class BaseScene extends Phaser.Scene {
     try {
       const { className, createMethod = 'createFromConfig' } = objConfig.factory
 
-      this.logger.debug('BaseScene', 'Factory configuration parsed', {
+      this.logger.debug('BaseScene', 'createGameObjectUsingStaticFactory', 'Factory configuration parsed', {
         objectId: objConfig.id,
         className,
         createMethod
@@ -671,7 +671,7 @@ export abstract class BaseScene extends Phaser.Scene {
       // This delegates the responsibility to the proper factory system
       const gameObject = await this.factoryManager.createGameObjectWithStaticFactory(objConfig, this, parent)
 
-      this.logger.debug('BaseScene', 'Static factory method completed', {
+      this.logger.debug('BaseScene', 'createGameObjectUsingStaticFactory', 'Static factory method completed', {
         objectId: objConfig.id,
         hasResult: !!gameObject,
         resultType: gameObject?.constructor.name,
@@ -686,7 +686,7 @@ export abstract class BaseScene extends Phaser.Scene {
       return gameObject
 
     } catch (error) {
-      this.logger.error('BaseScene', `Critical error using static factory for ${objConfig.id}:`, {
+      this.logger.error('BaseScene', 'active', 'Critical error using static factory for ${objConfig.id}:', {
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
         objectId: objConfig.id,
@@ -701,7 +701,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Set common game object properties
    */
   private setGameObjectProperties(gameObject: Phaser.GameObjects.GameObject, objConfig: any): void {
-    this.logger.debug('BaseScene', 'Setting game object properties', {
+    this.logger.debug('BaseScene', 'setGameObjectProperties', 'Setting game object properties', {
       objectId: objConfig.id,
       hasSetPosition: 'setPosition' in gameObject,
       hasSetSize: 'setSize' in gameObject,
@@ -726,7 +726,7 @@ export abstract class BaseScene extends Phaser.Scene {
          if (parentContainer) {
            // For "fill" y, position at the bottom of the parent container
            y = parentContainer.height;
-           this.logger.debug('BaseScene', 'Resolved fill y position from parent', {
+           this.logger.debug('BaseScene', 'setGameObjectProperties', 'Resolved fill y position from parent', {
              objectId: objConfig.id,
              parentHeight: parentContainer.height,
              resolvedY: y
@@ -734,14 +734,14 @@ export abstract class BaseScene extends Phaser.Scene {
          } else {
            // Fallback to scene height
            y = this.game.config.height as number;
-           this.logger.debug('BaseScene', 'Using scene height for fill y position', {
+           this.logger.debug('BaseScene', 'setGameObjectProperties', 'Using scene height for fill y position', {
              objectId: objConfig.id,
              sceneHeight: y
            });
          }
        }
       
-      this.logger.debug('BaseScene', 'Setting position', {
+      this.logger.debug('BaseScene', 'setGameObjectProperties', 'Setting position', {
         objectId: objConfig.id,
         x: x,
         y: y
@@ -752,7 +752,7 @@ export abstract class BaseScene extends Phaser.Scene {
     // Set size if supported
     if (objConfig.width && objConfig.width !== 'fill') {
       if ('setSize' in gameObject) {
-        this.logger.debug('BaseScene', 'Setting size', {
+        this.logger.debug('BaseScene', 'setGameObjectProperties', 'Setting size', {
           objectId: objConfig.id,
           width: objConfig.width,
           height: objConfig.height || objConfig.width
@@ -763,14 +763,14 @@ export abstract class BaseScene extends Phaser.Scene {
 
     // Set name for debugging
     gameObject.name = objConfig.name || objConfig.id
-    this.logger.debug('BaseScene', 'Set game object name', {
+    this.logger.debug('BaseScene', 'setGameObjectProperties', 'Set game object name', {
       objectId: objConfig.id,
       name: gameObject.name
     });
 
     // Set z-order if specified
     if (objConfig.zOrder !== undefined && 'setDepth' in gameObject) {
-      this.logger.debug('BaseScene', 'Setting z-order', {
+      this.logger.debug('BaseScene', 'setGameObjectProperties', 'Setting z-order', {
         objectId: objConfig.id,
         zOrder: objConfig.zOrder
       });
@@ -782,7 +782,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Setup responsive behavior
    */
   private setupResponsiveBehavior(): void {
-    this.logger.debug('BaseScene', 'Setting up responsive behavior')
+    this.logger.debug('BaseScene', 'setupResponsiveBehavior', 'setupResponsiveBehavior', 'Setting up responsive behavior')
 
     // Create resize handler
     const resizeHandler = () => {
@@ -797,12 +797,12 @@ export abstract class BaseScene extends Phaser.Scene {
 
     // Log responsive config if available
     if (this.sceneConfigs.responsive) {
-      this.logger.info('BaseScene', 'Responsive behavior setup completed with config', {
+      this.logger.info('BaseScene', 'setupResponsiveBehavior', 'Responsive behavior setup completed with config', {
         scaleMode: this.game.scale.scaleMode,
         responsiveConfig: this.sceneConfigs.responsive
       })
     } else {
-      this.logger.info('BaseScene', 'Responsive behavior setup completed (no config)', {
+      this.logger.info('BaseScene', 'setupResponsiveBehavior', 'Responsive behavior setup completed (no config)', {
         scaleMode: this.game.scale.scaleMode
       })
     }
@@ -817,7 +817,7 @@ export abstract class BaseScene extends Phaser.Scene {
       const newWidth = window.innerWidth
       const newHeight = window.innerHeight
 
-      this.logger.debug('BaseScene', 'Screen resize detected', {
+      this.logger.debug('BaseScene', 'handleResize', 'Screen resize detected', {
         newDimensions: { width: newWidth, height: newHeight },
         gameObjectCount: this.gameObjects.size
       })
@@ -826,7 +826,7 @@ export abstract class BaseScene extends Phaser.Scene {
       const rootContainer = this.findRootContainer()
       
       if (rootContainer) {
-        this.logger.debug('BaseScene', 'Found root container, triggering resize', {
+        this.logger.debug('BaseScene', 'handleResize', 'Found root container, triggering resize', {
           rootContainerId: rootContainer.name || 'unnamed',
           rootContainerType: rootContainer.constructor.name
         })
@@ -835,23 +835,23 @@ export abstract class BaseScene extends Phaser.Scene {
         if (typeof (rootContainer as any).resize === 'function') {
           (rootContainer as any).resize(newWidth, newHeight)
         } else {
-          this.logger.warn('BaseScene', 'Root container does not have resize method', {
+          this.logger.warn('BaseScene', 'handleResize', 'Root container does not have resize method', {
             rootContainerId: rootContainer.name || 'unnamed',
             rootContainerType: rootContainer.constructor.name
           })
         }
       } else {
-        this.logger.warn('BaseScene', 'No root container found for resize propagation')
+        this.logger.warn('BaseScene', 'handleResize', 'handleResize', 'No root container found for resize propagation')
       }
 
       // Log resize event
-      this.logger.info('BaseScene', 'Screen resized', {
+      this.logger.info('BaseScene', 'handleResize', 'Screen resized', {
         newDimensions: { width: newWidth, height: newHeight },
         timestamp: Date.now()
       })
 
     } catch (error) {
-      this.logger.error('BaseScene', 'Error handling resize', error)
+      this.logger.error('BaseScene', 'handleResize', 'Error handling resize', error)
     }
   }
 
@@ -862,7 +862,7 @@ export abstract class BaseScene extends Phaser.Scene {
     // Configuration-driven updates can be added here later
     // For now, just log performance metrics occasionally
     if (time % 1000 < delta) { // Log every second
-      this.logger.trace('BaseScene', 'Scene update', {
+      this.logger.trace('BaseScene', 'update', 'Scene update', {
         time,
         delta,
         fps: Math.round(1000 / delta),
@@ -875,7 +875,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Scene shutdown
    */
   async shutdown(): Promise<void> {
-    this.logger.debug('BaseScene', 'Scene shutdown started', {
+    this.logger.debug('BaseScene', 'shutdown', 'Scene shutdown started', {
       gameObjectCount: this.gameObjects.size
     })
 
@@ -883,7 +883,7 @@ export abstract class BaseScene extends Phaser.Scene {
     this.gameObjects.clear()
 
     // Log scene shutdown
-    this.logger.info('BaseScene', 'Scene shutdown', {
+    this.logger.info('BaseScene', 'shutdown', 'Scene shutdown', {
       timestamp: Date.now()
     })
 
@@ -922,7 +922,7 @@ export abstract class BaseScene extends Phaser.Scene {
       const firstGameObject = this.gameObjects.get(firstGameObjectId)
       
       if (firstGameObject && firstGameObject instanceof Phaser.GameObjects.Container) {
-        this.logger.debug('BaseScene', 'Found root container from scene config', {
+        this.logger.debug('BaseScene', 'findRootContainer', 'Found root container from scene config', {
           rootContainerId: firstGameObject.name || firstGameObjectId,
           rootContainerType: firstGameObject.constructor.name
         })
@@ -935,7 +935,7 @@ export abstract class BaseScene extends Phaser.Scene {
       if (gameObject instanceof Phaser.GameObjects.Container) {
         // Check if this container has no parent
         if (!(gameObject as any).parent) {
-          this.logger.debug('BaseScene', 'Found root container by parent check', {
+          this.logger.debug('BaseScene', 'findRootContainer', 'Found root container by parent check', {
             rootContainerId: gameObject.name || 'unnamed',
             rootContainerType: gameObject.constructor.name
           })
@@ -944,7 +944,7 @@ export abstract class BaseScene extends Phaser.Scene {
       }
     }
     
-    this.logger.warn('BaseScene', 'No root container found')
+    this.logger.warn('BaseScene', 'findRootContainer', 'findRootContainer', 'No root container found')
     return null
   }
 
@@ -976,11 +976,11 @@ export abstract class BaseScene extends Phaser.Scene {
    * This prevents lag during resize by pre-loading all configs
    */
   private cacheResponsiveConfigs(): void {
-    this.logger.debug('BaseScene', 'Caching responsive configurations for performance')
+    this.logger.debug('BaseScene', 'cacheResponsiveConfigs', 'cacheResponsiveConfigs', 'Caching responsive configurations for performance')
     
     try {
       if (!this.sceneConfigs.responsive) {
-        this.logger.warn('BaseScene', 'No responsive config to cache')
+        this.logger.warn('BaseScene', 'cacheResponsiveConfigs', 'cacheResponsiveConfigs', 'No responsive config to cache')
         return
       }
       
@@ -1000,14 +1000,14 @@ export abstract class BaseScene extends Phaser.Scene {
         })
       })
       
-      this.logger.info('BaseScene', 'Responsive configurations cached successfully', {
+      this.logger.info('BaseScene', 'cacheResponsiveConfigs', 'Responsive configurations cached successfully', {
         totalCached: this.cachedResponsiveConfigs.size,
         breakpoints: Object.keys(responsiveConfig.responsiveSettings),
         defaultCount: responsiveConfig.default?.length || 0
       })
       
     } catch (error) {
-      this.logger.error('BaseScene', 'Error caching responsive configurations', error)
+      this.logger.error('BaseScene', 'cacheResponsiveConfigs', 'Error caching responsive configurations', error)
     }
   }
   

@@ -5,6 +5,7 @@ import { RangeValidator } from '../validators/RangeValidator'
 import { TypeValidator } from '../validators/TypeValidator'
 import { UnitType } from '../enums/UnitType'
 import { Dimension } from '../enums/Dimension'
+import { Logger } from '../../core/Logger'
 
 /**
  * Scale Calculation Template
@@ -15,6 +16,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
   protected readonly strategy: ScaleUnitStrategy
   protected readonly validators: Array<RangeValidator | TypeValidator>
   protected readonly context: UnitContext
+  protected readonly logger: Logger = Logger.getInstance()
 
   constructor(context: UnitContext) {
     this.context = context
@@ -78,7 +80,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
     // Run all validators
     for (const validator of this.validators) {
       if (!validator.validate(input, this.context)) {
-        console.warn(`[ScaleCalculationTemplate] Validation failed: ${validator.getErrorMessage()}`)
+        this.logger.warn('ScaleCalculationTemplate', 'preCalculationValidation', `Validation failed: ${validator.getErrorMessage()}`)
         return false
       }
     }
@@ -125,7 +127,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    * Hook method that can be overridden
    */
   protected logCalculationCompletion(input: any, result: number): void {
-    console.debug(`[ScaleCalculationTemplate] Calculation completed:`, {
+    this.logger.debug('ScaleCalculationTemplate', 'logCalculationCompletion', 'Calculation completed', {
       input,
       result,
       context: this.context
@@ -137,7 +139,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    * Hook method that can be overridden
    */
   protected handleCalculationError(error: any, input: any): void {
-    console.error(`[ScaleCalculationTemplate] Calculation error:`, {
+    this.logger.error('ScaleCalculationTemplate', 'handleCalculationError', 'Calculation error', {
       error: error.message,
       input,
       context: this.context,
@@ -178,7 +180,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   public resetStats(): void {
     // Reset all statistics
-    console.debug('[ScaleCalculationTemplate] Statistics reset')
+    this.logger.debug('ScaleCalculationTemplate', 'resetStats', 'Statistics reset')
   }
 
   /**
