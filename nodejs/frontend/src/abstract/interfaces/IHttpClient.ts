@@ -6,85 +6,93 @@ export interface IHttpClient {
   /**
    * Make an HTTP request
    */
-  request<T = any>(options: HttpRequestOptions): Promise<HttpResponse<T>>
-  
+  request<T = any>(options: HttpRequestOptions): Promise<HttpResponse<T>>;
+
   /**
    * Make a GET request
    */
-  get<T = any>(url: string, options?: Partial<HttpRequestOptions>): Promise<HttpResponse<T>>
-  
+  get<T = any>(url: string, options?: Partial<HttpRequestOptions>): Promise<HttpResponse<T>>;
+
   /**
    * Make a POST request
    */
-  post<T = any>(url: string, data?: any, options?: Partial<HttpRequestOptions>): Promise<HttpResponse<T>>
-  
+  post<T = any>(
+    url: string,
+    data?: any,
+    options?: Partial<HttpRequestOptions>
+  ): Promise<HttpResponse<T>>;
+
   /**
    * Make a PUT request
    */
-  put<T = any>(url: string, data?: any, options?: Partial<HttpRequestOptions>): Promise<HttpResponse<T>>
-  
+  put<T = any>(
+    url: string,
+    data?: any,
+    options?: Partial<HttpRequestOptions>
+  ): Promise<HttpResponse<T>>;
+
   /**
    * Make a DELETE request
    */
-  delete<T = any>(url: string, options?: Partial<HttpRequestOptions>): Promise<HttpResponse<T>>
-  
+  delete<T = any>(url: string, options?: Partial<HttpRequestOptions>): Promise<HttpResponse<T>>;
+
   /**
    * Set default headers for all requests
    */
-  setDefaultHeaders(headers: Record<string, string>): void
-  
+  setDefaultHeaders(headers: Record<string, string>): void;
+
   /**
    * Set authentication token
    */
-  setAuthToken(token: string): void
-  
+  setAuthToken(token: string): void;
+
   /**
    * Clear authentication token
    */
-  clearAuthToken(): void
-  
+  clearAuthToken(): void;
+
   /**
    * Set request timeout
    */
-  setTimeout(timeout: number): void
-  
+  setTimeout(timeout: number): void;
+
   /**
    * Test connectivity to a URL
    */
-  testConnection(url: string): Promise<boolean>
+  testConnection(url: string): Promise<boolean>;
 }
 
 /**
  * HTTP request options
  */
 export interface HttpRequestOptions {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
-  url: string
-  headers?: Record<string, string>
-  body?: any
-  timeout?: number
-  signal?: AbortSignal
-  credentials?: 'omit' | 'same-origin' | 'include'
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  url: string;
+  headers?: Record<string, string>;
+  body?: any;
+  timeout?: number;
+  signal?: AbortSignal;
+  credentials?: 'omit' | 'same-origin' | 'include';
 }
 
 /**
  * HTTP response structure
  */
 export interface HttpResponse<T = any> {
-  data: T
-  status: number
-  statusText: string
-  headers: Record<string, string>
-  ok: boolean
-  url: string
+  data: T;
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+  ok: boolean;
+  url: string;
 }
 
 /**
  * HTTP error structure
  */
 export interface HttpError extends Error {
-  status?: number
-  statusText?: string
-  response?: HttpResponse
-  request?: HttpRequestOptions
+  status?: number;
+  statusText?: string;
+  response?: HttpResponse;
+  request?: HttpRequestOptions;
 }

@@ -17,21 +17,21 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
   private _id: string;
   private _parent: IContainer | null;
   private logger: Logger = Logger.getInstance();
-  
+
   /** Current style properties */
   private currentStyle: CommonIStyleProperties = {
     maintainAspectRatio: false,
     scaleStrategy: 'stretch',
-    alignment: 'center'
+    alignment: 'center',
   };
-  
+
   /** Responsive layout properties for this object (IGameObject requirement) */
   layoutProperties: CommonIStyleProperties = {
     maintainAspectRatio: false,
     scaleStrategy: 'stretch',
-    alignment: 'center'
+    alignment: 'center',
   };
-  
+
   constructor(
     scene: Phaser.Scene,
     id: string,
@@ -43,14 +43,14 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
     parent: IContainer | null = null
   ) {
     super(scene, x, y, width, height, fillColor);
-    
+
     this._id = id;
     this._parent = parent;
     this.name = id;
-    
+
     // Set initial properties
     this.setOrigin(0, 0); // Set origin to top-left for easier positioning
-    
+
     this.logger.debug('Rectangle', 'super', 'Rectangle created', {
       id,
       dimensions: { width, height },
@@ -60,47 +60,47 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       visible: this.visible,
       active: this.active,
       alpha: this.alpha,
-      scale: { x: this.scaleX, y: this.scaleY }
+      scale: { x: this.scaleX, y: this.scaleY },
     });
   }
-  
+
   // ===== IStyle IMPLEMENTATION =====
-  
+
   /** Set the style properties for this rectangle */
   setStyle(layoutProperties: CommonIStyleProperties): void {
     this.logger.debug('Rectangle', 'setStyle', 'Setting style properties', {
       id: this.id,
-      newStyle: layoutProperties
+      newStyle: layoutProperties,
     });
-    
+
     // Store the new style
     this.currentStyle = { ...layoutProperties };
-    
+
     // Apply position properties
     this.applyPositionProperties(layoutProperties);
-    
+
     // Apply size properties
     this.applySizeProperties(layoutProperties);
-    
+
     // Apply visual properties
     this.applyVisualProperties(layoutProperties);
-    
+
     // Apply fill and stroke properties
     this.applyFillAndStrokeProperties(layoutProperties);
   }
-  
+
   /** Get the current style properties */
   getStyle(): CommonIStyleProperties {
     return { ...this.currentStyle };
   }
-  
+
   /** Get the object ID for responsive config lookup */
   getStyleId(): string {
     return this.id;
   }
-  
+
   // ===== STYLE APPLICATION METHODS =====
-  
+
   /** Apply position properties from style */
   private applyPositionProperties(style: CommonIStyleProperties): void {
     if (style.positionX !== undefined) {
@@ -111,7 +111,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         this.x = 0; // Placeholder, will be calculated
       }
     }
-    
+
     if (style.positionY !== undefined) {
       if (typeof style.positionY === 'number') {
         this.y = style.positionY;
@@ -120,12 +120,12 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         this.y = 0; // Placeholder, will be calculated
       }
     }
-    
+
     if (style.positionZ !== undefined) {
       this.setDepth(style.positionZ);
     }
   }
-  
+
   /** Apply size properties from style */
   private applySizeProperties(style: CommonIStyleProperties): void {
     if (style.width !== undefined) {
@@ -134,7 +134,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       }
       // 'fill' and 'auto' will be handled during resize
     }
-    
+
     if (style.height !== undefined) {
       if (typeof style.height === 'number') {
         this.height = style.height;
@@ -142,7 +142,7 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       // 'fill' and 'auto' will be handled during resize
     }
   }
-  
+
   /** Apply visual properties from style */
   private applyVisualProperties(style: CommonIStyleProperties): void {
     if (style.alpha !== undefined) {
@@ -154,21 +154,25 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         this.setAlpha(randomValue);
       }
     }
-    
+
     if (style.rotation !== undefined) {
       if (typeof style.rotation === 'number') {
         this.setRotation(style.rotation);
-      } else if (typeof style.rotation === 'object' && 'min' in style.rotation && 'max' in style.rotation) {
+      } else if (
+        typeof style.rotation === 'object' &&
+        'min' in style.rotation &&
+        'max' in style.rotation
+      ) {
         // Handle RandomValueNumber
         const randomValue = (style.rotation as IRandomValueNumber).getRandomValue();
         this.setRotation(randomValue);
       }
     }
-    
+
     if (style.visible !== undefined) {
       this.setVisible(style.visible);
     }
-    
+
     if (style.interactive !== undefined) {
       if (style.interactive) {
         this.setInteractive();
@@ -177,157 +181,161 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       }
     }
   }
-  
+
   /** Apply fill and stroke properties from style */
   private applyFillAndStrokeProperties(style: CommonIStyleProperties): void {
     if (style.backgroundColor !== undefined) {
       this.setFillStyle(style.backgroundColor as number);
     }
-    
+
     if (style.borderColor !== undefined && style.borderWidth !== undefined) {
       if (typeof style.borderWidth === 'number') {
         this.setStrokeStyle(style.borderWidth, style.borderColor as number);
-      } else if (typeof style.borderWidth === 'object' && 'min' in style.borderWidth && 'max' in style.borderWidth) {
+      } else if (
+        typeof style.borderWidth === 'object' &&
+        'min' in style.borderWidth &&
+        'max' in style.borderWidth
+      ) {
         // Handle RandomValueNumber
         const randomWidth = (style.borderWidth as IRandomValueNumber).getRandomValue();
         this.setStrokeStyle(randomWidth, style.borderColor as number);
       }
     }
   }
-  
+
   // ===== IShape IMPLEMENTATION =====
-  
+
   get id(): string {
     return this._id;
   }
-  
+
   get parent(): IContainer | null {
     return this._parent;
   }
-  
+
   get phaserObject(): Phaser.GameObjects.Rectangle {
     return this;
   }
-  
+
   get isActive(): boolean {
     return this.active;
   }
-  
+
   get isVisible(): boolean {
     return this.visible;
   }
-  
+
   get isInteractive(): boolean {
     return this.input?.enabled || false;
   }
-  
+
   get isDestroyed(): boolean {
     return (this as any).destroyed || false;
   }
-  
+
   get position(): { x: number; y: number } {
     return { x: this.x, y: this.y };
   }
-  
+
   get size(): { width: number; height: number } {
     return { width: this.width, height: this.height };
   }
-  
+
   get interactive(): boolean {
     return this.input?.enabled || false;
   }
-  
+
   // Use Phaser's getBounds method directly
   getBounds(): any {
     return super.getBounds();
   }
-  
+
   // ===== IShape REQUIRED PROPERTIES =====
-  
+
   get dimensions(): { width: number; height: number } {
     return { width: this.width, height: this.height };
   }
-  
+
   get strokeWidth(): number {
     return 0; // Phaser doesn't expose stroke width directly
   }
-  
+
   // ===== IShape METHOD IMPLEMENTATIONS =====
-  
+
   setFillColor(color: number): void {
     this.setFillStyle(color);
   }
-  
+
   setStroke(color: number, width: number): void {
     this.setStrokeStyle(width, color);
   }
-  
+
   removeStroke(): void {
     this.setStrokeStyle(0, 0x000000);
   }
-  
+
   resize(width: number, height: number): void {
     this.logger.debug('Rectangle', 'resize', 'Resizing rectangle', {
       id: this.id,
       oldDimensions: this.dimensions,
-      newDimensions: { width, height }
+      newDimensions: { width, height },
     });
-    
+
     // Set the new size
     this.setSize(width, height);
   }
-  
+
   // ===== IGameObject METHOD IMPLEMENTATIONS =====
-  
+
   show(): void {
     this.setVisible(true);
   }
-  
+
   hide(): void {
     this.setVisible(false);
   }
-  
+
   // Note: We don't override setPosition, setRotation, setAlpha, setInteractive, destroy
   // because Phaser's Rectangle already has these methods with the correct signatures
-  
+
   // ===== ABSTRACT METHOD IMPLEMENTATIONS =====
-  
+
   initialize(): void {
     this.logger.debug('Rectangle', 'initialize', 'Initializing rectangle', {
-      id: this.id
+      id: this.id,
     });
-    
+
     // Set initial state
     this.setActive(true);
     this.setVisible(true);
   }
-  
+
   update(_time: number, _delta: number): void {
     // Rectangle doesn't need per-frame updates
     // Override in subclasses if needed
   }
-  
+
   activate(): void {
     this.logger.debug('Rectangle', 'activate', 'Activating rectangle', {
-      id: this.id
+      id: this.id,
     });
-    
+
     this.setActive(true);
   }
-  
+
   deactivate(): void {
     this.logger.debug('Rectangle', 'deactivate', 'Deactivating rectangle', {
-      id: this.id
+      id: this.id,
     });
-    
+
     this.setActive(false);
   }
-  
+
   clone(): IGameObject {
     this.logger.debug('Rectangle', 'clone', 'Cloning rectangle', {
-      id: this.id
+      id: this.id,
     });
-    
+
     return new Rectangle(
       this.scene,
       `${this.id}_clone`,
@@ -339,37 +347,42 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       this.parent
     );
   }
-  
+
   /** Get the size of this game object */
   getSize(): { width: number; height: number } {
     return this.size;
   }
-  
+
   /** Get the position of this game object */
   getPosition(): { x: number; y: number } {
     return this.position;
   }
-  
+
   // ===== RECTANGLE-SPECIFIC METHODS =====
-  
+
   /**
    * Get the current corner radius
    */
   getCornerRadius(): number {
     return this.radius;
   }
-  
+
   /**
    * Handle responsive resize from scene
    * This method is called by the scene's resize system
    */
   handleResponsiveResize(width: number, height: number): void {
-    this.logger.debug('Rectangle', 'handleResponsiveResize', 'Handling responsive resize from scene', {
-      id: this.id,
-      newDimensions: { width, height },
-      currentDimensions: this.dimensions
-    });
-    
+    this.logger.debug(
+      'Rectangle',
+      'handleResponsiveResize',
+      'Handling responsive resize from scene',
+      {
+        id: this.id,
+        newDimensions: { width, height },
+        currentDimensions: this.dimensions,
+      }
+    );
+
     // Apply the new size
     this.resize(width, height);
   }
@@ -390,12 +403,12 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       fillColor: this.fillColor,
       strokeWidth: this.strokeWidth,
       parentId: this.parent?.id || 'none',
-      sceneKey: this.scene.scene.key
+      sceneKey: this.scene.scene.key,
     });
   }
-  
+
   // ===== STATIC FACTORY METHOD =====
-  
+
   /**
    * Create a Rectangle instance from configuration
    */
@@ -406,30 +419,32 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
       config: config,
       sceneKey: scene.scene.key,
       hasParent: !!parent,
-      parentInfo: parent ? {
-        id: parent.id,
-        type: parent.constructor.name,
-        bounds: parent.getContainerBounds()
-      } : null
+      parentInfo: parent
+        ? {
+            id: parent.id,
+            type: parent.constructor.name,
+            bounds: parent.getContainerBounds(),
+          }
+        : null,
     });
-    
+
     try {
       // Resolve dimensions (handle 'fill' values)
       let width = config.width || 100;
       let height = config.height || 100;
-      
+
       if (parent && (width === 'fill' || height === 'fill')) {
         const parentBounds = parent.getContainerBounds();
         if (width === 'fill') width = parentBounds.width;
         if (height === 'fill') height = parentBounds.height;
       }
-      
+
       logger.debug('Rectangle', 'createFromConfig', 'Dimensions resolved', {
         objectId: config.id,
         finalDimensions: { width, height },
-        hasParent: !!parent
+        hasParent: !!parent,
       });
-      
+
       const rectangle = new Rectangle(
         scene,
         config.id,
@@ -440,37 +455,45 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         config.fillColor || 0xffffff,
         parent || null
       );
-      
+
       // Apply additional properties if specified
       if (config.properties) {
         // Set stroke if specified
-        if (config.properties.strokeColor !== undefined && config.properties.strokeWidth !== undefined) {
+        if (
+          config.properties.strokeColor !== undefined &&
+          config.properties.strokeWidth !== undefined
+        ) {
           rectangle.setStroke(config.properties.strokeColor, config.properties.strokeWidth);
         }
-        
+
         // Set interactive if specified
         if (config.properties.interactive !== undefined) {
           rectangle.setInteractive(config.properties.interactive);
         }
       }
-      
+
       // Log final state after all properties are applied
-      logger.debug('Rectangle', 'createFromConfig', 'Final Rectangle state after property application', {
-        objectId: config.id,
-        finalDimensions: rectangle.dimensions,
-        finalPosition: rectangle.position,
-        finalDepth: rectangle.depth,
-        finalVisible: rectangle.visible,
-        finalActive: rectangle.active,
-        finalAlpha: rectangle.alpha,
-        finalScale: { x: rectangle.scaleX, y: rectangle.scaleY },
-        fillColor: rectangle.fillColor,
-        strokeWidth: rectangle.strokeWidth
-      });
-      
+      logger.debug(
+        'Rectangle',
+        'createFromConfig',
+        'Final Rectangle state after property application',
+        {
+          objectId: config.id,
+          finalDimensions: rectangle.dimensions,
+          finalPosition: rectangle.position,
+          finalDepth: rectangle.depth,
+          finalVisible: rectangle.visible,
+          finalActive: rectangle.active,
+          finalAlpha: rectangle.alpha,
+          finalScale: { x: rectangle.scaleX, y: rectangle.scaleY },
+          fillColor: rectangle.fillColor,
+          strokeWidth: rectangle.strokeWidth,
+        }
+      );
+
       // Log the complete state using the instance method
       rectangle.logCurrentState();
-      
+
       logger.debug('Rectangle', 'createFromConfig', 'Rectangle created successfully from config', {
         objectId: config.id,
         finalDimensions: rectangle.dimensions,
@@ -480,13 +503,17 @@ export class Rectangle extends Phaser.GameObjects.Rectangle implements IShape, I
         visible: rectangle.visible,
         active: rectangle.active,
         alpha: rectangle.alpha,
-        scale: { x: rectangle.scaleX, y: rectangle.scaleY }
+        scale: { x: rectangle.scaleX, y: rectangle.scaleY },
       });
-      
+
       return rectangle;
-      
     } catch (error) {
-      logger.error('Rectangle', 'logCurrentState', 'Error in createFromConfig for ${config.id}:', error);
+      logger.error(
+        'Rectangle',
+        'logCurrentState',
+        'Error in createFromConfig for ${config.id}:',
+        error
+      );
       throw error;
     }
   }

@@ -1,6 +1,6 @@
-import type { IUnit } from '../interfaces/IUnit'
-import type { UnitContext } from '../interfaces/IUnit'
-import { UnitType } from '../enums/UnitType'
+import type { IUnit } from '../interfaces/IUnit';
+import type { UnitContext } from '../interfaces/IUnit';
+import { UnitType } from '../enums/UnitType';
 
 /**
  * Unit Composite Interface
@@ -8,55 +8,55 @@ import { UnitType } from '../enums/UnitType'
  */
 export interface IUnitComposite extends IUnit {
   /** Add a child unit */
-  addChild(unit: IUnit): void
-  
+  addChild(unit: IUnit): void;
+
   /** Remove a child unit */
-  removeChild(unit: IUnit): boolean
-  
+  removeChild(unit: IUnit): boolean;
+
   /** Get all child units */
-  getChildren(): IUnit[]
-  
+  getChildren(): IUnit[];
+
   /** Get a child unit by ID */
-  getChildById(id: string): IUnit | undefined
-  
+  getChildById(id: string): IUnit | undefined;
+
   /** Check if the composite has children */
-  hasChildren(): boolean
-  
+  hasChildren(): boolean;
+
   /** Get the number of children */
-  getChildCount(): number
-  
+  getChildCount(): number;
+
   /** Execute operation on all children */
-  executeOnChildren(operation: (unit: IUnit) => void): void
-  
+  executeOnChildren(operation: (unit: IUnit) => void): void;
+
   /** Get the composite depth level */
-  getDepth(): number
-  
+  getDepth(): number;
+
   /** Set the composite depth level */
-  setDepth(depth: number): void
-  
+  setDepth(depth: number): void;
+
   /** Check if the composite is a leaf (no children) */
-  isLeaf(): boolean
-  
+  isLeaf(): boolean;
+
   /** Get the parent composite */
-  getParent(): IUnitComposite | undefined
-  
+  getParent(): IUnitComposite | undefined;
+
   /** Set the parent composite */
-  setParent(parent: IUnitComposite | undefined): void
-  
+  setParent(parent: IUnitComposite | undefined): void;
+
   /** Get all descendants (children and their children) */
-  getAllDescendants(): IUnit[]
-  
+  getAllDescendants(): IUnit[];
+
   /** Get the root composite (top-level parent) */
-  getRoot(): IUnitComposite
-  
+  getRoot(): IUnitComposite;
+
   /** Get the path from root to this composite */
-  getPathFromRoot(): IUnitComposite[]
-  
+  getPathFromRoot(): IUnitComposite[];
+
   /** Find a unit by ID in the entire composite tree */
-  findById(id: string): IUnit | undefined
-  
+  findById(id: string): IUnit | undefined;
+
   /** Get the total number of units in the composite tree */
-  getTotalUnitCount(): number
+  getTotalUnitCount(): number;
 }
 
 /**
@@ -64,197 +64,197 @@ export interface IUnitComposite extends IUnit {
  * Provides common functionality for composite units
  */
 export abstract class BaseUnitComposite implements IUnitComposite {
-  private children: IUnit[] = []
-  private parent?: IUnitComposite
-  private depth: number = 0
-  private active: boolean = true
-  
+  private children: IUnit[] = [];
+  private parent?: IUnitComposite;
+  private depth: number = 0;
+  private active: boolean = true;
+
   constructor(
     public readonly id: string,
     public readonly name: string,
     public readonly unitType: UnitType,
     public readonly baseValue: number = 0
   ) {}
-  
+
   // IUnit interface implementation
-  abstract calculate(context: UnitContext): number
-  abstract isResponsive(): boolean
-  
+  abstract calculate(context: UnitContext): number;
+  abstract isResponsive(): boolean;
+
   get isActive(): boolean {
-    return this.active
+    return this.active;
   }
-  
+
   set isActive(value: boolean) {
-    this.active = value
+    this.active = value;
   }
-  
+
   validate(context: UnitContext): boolean {
-    return this.children.every(child => child.validate(context))
+    return this.children.every(child => child.validate(context));
   }
-  
+
   toString(): string {
-    return `${this.constructor.name}(${this.id}, ${this.name})`
+    return `${this.constructor.name}(${this.id}, ${this.name})`;
   }
-  
+
   clone(overrides?: Partial<IUnit>): IUnit {
-    const cloned = Object.create(Object.getPrototypeOf(this))
-    Object.assign(cloned, this, overrides)
-    return cloned
+    const cloned = Object.create(Object.getPrototypeOf(this));
+    Object.assign(cloned, this, overrides);
+    return cloned;
   }
-  
+
   // IUnitComposite interface implementation
   addChild(unit: IUnit): void {
     if (!this.children.includes(unit)) {
-      this.children.push(unit)
+      this.children.push(unit);
       if (this.isUnitComposite(unit)) {
-        unit.setParent(this)
-        unit.setDepth(this.depth + 1)
+        unit.setParent(this);
+        unit.setDepth(this.depth + 1);
       }
     }
   }
-  
+
   removeChild(unit: IUnit): boolean {
-    const index = this.children.indexOf(unit)
+    const index = this.children.indexOf(unit);
     if (index > -1) {
-      this.children.splice(index, 1)
+      this.children.splice(index, 1);
       if (this.isUnitComposite(unit)) {
-        unit.setParent(undefined)
-        unit.setDepth(0)
+        unit.setParent(undefined);
+        unit.setDepth(0);
       }
-      return true
+      return true;
     }
-    return false
+    return false;
   }
-  
+
   getChildren(): IUnit[] {
-    return [...this.children]
+    return [...this.children];
   }
-  
+
   getChildById(id: string): IUnit | undefined {
-    return this.children.find(child => child.id === id)
+    return this.children.find(child => child.id === id);
   }
-  
+
   hasChildren(): boolean {
-    return this.children.length > 0
+    return this.children.length > 0;
   }
-  
+
   getChildCount(): number {
-    return this.children.length
+    return this.children.length;
   }
-  
+
   executeOnChildren(operation: (unit: IUnit) => void): void {
-    this.children.forEach(operation)
+    this.children.forEach(operation);
   }
-  
+
   getDepth(): number {
-    return this.depth
+    return this.depth;
   }
-  
+
   setDepth(depth: number): void {
-    this.depth = depth
+    this.depth = depth;
   }
-  
+
   isLeaf(): boolean {
-    return this.children.length === 0
+    return this.children.length === 0;
   }
-  
+
   getParent(): IUnitComposite | undefined {
-    return this.parent
+    return this.parent;
   }
-  
+
   setParent(parent: IUnitComposite | undefined): void {
-    this.parent = parent
-    this.depth = parent ? parent.getDepth() + 1 : 0
+    this.parent = parent;
+    this.depth = parent ? parent.getDepth() + 1 : 0;
   }
-  
+
   /**
    * Type guard to check if a unit is a composite
    */
   private isUnitComposite(unit: IUnit): unit is IUnitComposite {
-    return 'addChild' in unit && 'removeChild' in unit
+    return 'addChild' in unit && 'removeChild' in unit;
   }
-  
+
   /**
    * Get all descendants (children and their children)
    */
   getAllDescendants(): IUnit[] {
-    const descendants: IUnit[] = []
-    
+    const descendants: IUnit[] = [];
+
     const collectDescendants = (unit: IUnit) => {
-      descendants.push(unit)
+      descendants.push(unit);
       if (this.isUnitComposite(unit)) {
-        unit.executeOnChildren(collectDescendants)
+        unit.executeOnChildren(collectDescendants);
       }
-    }
-    
-    this.executeOnChildren(collectDescendants)
-    return descendants
+    };
+
+    this.executeOnChildren(collectDescendants);
+    return descendants;
   }
-  
+
   /**
    * Get the root composite (top-level parent)
    */
   getRoot(): IUnitComposite {
-    let current: IUnitComposite = this
+    let current: IUnitComposite = this;
     while (current.getParent()) {
-      current = current.getParent()!
+      current = current.getParent()!;
     }
-    return current
+    return current;
   }
-  
+
   /**
    * Get the path from root to this composite
    */
   getPathFromRoot(): IUnitComposite[] {
-    const path: IUnitComposite[] = []
-    let current: IUnitComposite | undefined = this
-    
+    const path: IUnitComposite[] = [];
+    let current: IUnitComposite | undefined = this;
+
     while (current) {
-      path.unshift(current)
-      current = current.getParent()
+      path.unshift(current);
+      current = current.getParent();
     }
-    
-    return path
+
+    return path;
   }
-  
+
   /**
    * Find a unit by ID in the entire composite tree
    */
   findById(id: string): IUnit | undefined {
     if (this.id === id) {
-      return this
+      return this;
     }
-    
+
     for (const child of this.children) {
       if (child.id === id) {
-        return child
+        return child;
       }
-      
+
       if (this.isUnitComposite(child)) {
-        const found = child.findById(id)
+        const found = child.findById(id);
         if (found) {
-          return found
+          return found;
         }
       }
     }
-    
-    return undefined
+
+    return undefined;
   }
-  
+
   /**
    * Get the total number of units in the composite tree
    */
   getTotalUnitCount(): number {
-    let count = 1 // Count this unit
-    
+    let count = 1; // Count this unit
+
     for (const child of this.children) {
       if (this.isUnitComposite(child)) {
-        count += child.getTotalUnitCount()
+        count += child.getTotalUnitCount();
       } else {
-        count++
+        count++;
       }
     }
-    
-    return count
+
+    return count;
   }
 }

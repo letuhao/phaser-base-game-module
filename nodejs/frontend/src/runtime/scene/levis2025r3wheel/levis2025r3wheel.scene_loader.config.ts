@@ -1,9 +1,9 @@
 // Simplified scene loader configuration for levis2025r3wheel scene
 // This focuses on the essential scene structure without complex interface requirements
 
-import { levis2025r3wheelResponsiveConfig } from './levis2025r3wheel.responsive.config'
-import type { SceneConfig } from '../../../core/SceneLoaderConfigLoader'
-import { GameObjectType } from '../../../core/SceneLoaderConfigLoader'
+import { levis2025r3wheelResponsiveConfig } from './levis2025r3wheel.responsive.config';
+import type { SceneConfig } from '../../../core/SceneLoaderConfigLoader';
+import { GameObjectType } from '../../../core/SceneLoaderConfigLoader';
 
 export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   sceneId: 'levis2025r3wheel',
@@ -11,7 +11,7 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   version: '1.0.0',
   backgroundColor: '#000000',
   responsive: levis2025r3wheelResponsiveConfig,
-  
+
   // Root game objects (like HTML body) - COMMENTED OUT FOR DEBUGGING
   // gameObjects: [
   //   {
@@ -131,15 +131,15 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
   // DEBUGGING: Simple test with Container as root + BackgroundContainer as child
   gameObjects: [
     {
-            id: 'root-container',
+      id: 'root-container',
       type: GameObjectType.CONTAINER,
       name: 'Root Container',
       factory: {
         className: 'Container',
-        createMethod: 'createFromConfig'
+        createMethod: 'createFromConfig',
       },
       properties: {
-        interactive: false
+        interactive: false,
       },
       children: [
         // {
@@ -187,15 +187,13 @@ export const levis2025r3wheelSceneLoaderConfig: SceneConfig = {
         //   parentId: 'test-root-container'
         // }
       ],
-      parentId: undefined
-    }
+      parentId: undefined,
+    },
   ],
-  
+
   // Asset loading configuration
   assetLoading: {
     preload: true,
-    priority: ['background', 'ui', 'audio', 'effects']
-  }
-}
-
-
+    priority: ['background', 'ui', 'audio', 'effects'],
+  },
+};

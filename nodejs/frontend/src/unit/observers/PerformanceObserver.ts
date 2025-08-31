@@ -1,6 +1,6 @@
-import type { IUnitObserver } from './IUnitObserver'
-import type { UnitContext } from '../interfaces/IUnit'
-import { Logger } from '../../core/Logger'
+import type { IUnitObserver } from './IUnitObserver';
+import type { UnitContext } from '../interfaces/IUnit';
+import { Logger } from '../../core/Logger';
 
 /**
  * Performance Observer
@@ -15,39 +15,47 @@ export class PerformanceObserver implements IUnitObserver {
     maxCalculationTime: 0,
     calculationTimes: [] as number[],
     errors: 0,
-    unitTypeStats: new Map<string, {
-      count: number
-      totalTime: number
-      averageTime: number
-      minTime: number
-      maxTime: number
-    }>()
-  }
+    unitTypeStats: new Map<
+      string,
+      {
+        count: number;
+        totalTime: number;
+        averageTime: number;
+        minTime: number;
+        maxTime: number;
+      }
+    >(),
+  };
 
-  private readonly maxHistorySize = 1000
-  private readonly logger: Logger = Logger.getInstance()
+  private readonly maxHistorySize = 1000;
+  private readonly logger: Logger = Logger.getInstance();
 
   /**
    * Called when a unit value changes
    */
   onUnitValueChanged(unitId: string, oldValue: number, newValue: number): void {
     // Performance monitoring for value changes
-    const changeTime = performance.now()
-    
+    const changeTime = performance.now();
+
     // Update general metrics
-    this.performanceMetrics.totalCalculations++
-    
+    this.performanceMetrics.totalCalculations++;
+
     // Calculate change magnitude for performance analysis
-    const changeMagnitude = Math.abs(newValue - oldValue)
-    
+    const changeMagnitude = Math.abs(newValue - oldValue);
+
     // Log significant changes for performance analysis
     if (changeMagnitude > 100) {
-      this.logger.debug('PerformanceObserver', 'onUnitValueChanged', `Large value change detected: ${unitId}`, {
-        oldValue,
-        newValue,
-        changeMagnitude,
-        timestamp: new Date().toISOString()
-      })
+      this.logger.debug(
+        'PerformanceObserver',
+        'onUnitValueChanged',
+        `Large value change detected: ${unitId}`,
+        {
+          oldValue,
+          newValue,
+          changeMagnitude,
+          timestamp: new Date().toISOString(),
+        }
+      );
     }
   }
 
@@ -62,12 +70,12 @@ export class PerformanceObserver implements IUnitObserver {
         totalTime: 0,
         averageTime: 0,
         minTime: Infinity,
-        maxTime: 0
-      })
+        maxTime: 0,
+      });
     }
 
-    const stats = this.performanceMetrics.unitTypeStats.get(unitType)!
-    stats.count++
+    const stats = this.performanceMetrics.unitTypeStats.get(unitType)!;
+    stats.count++;
   }
 
   /**
@@ -76,7 +84,7 @@ export class PerformanceObserver implements IUnitObserver {
   onUnitDestroyed(unitId: string): void {
     // Clean up performance data if needed
     // For now, just log the destruction
-    this.logger.debug('PerformanceObserver', 'onUnitDestroyed', `Unit destroyed: ${unitId}`)
+    this.logger.debug('PerformanceObserver', 'onUnitDestroyed', `Unit destroyed: ${unitId}`);
   }
 
   /**
@@ -84,12 +92,12 @@ export class PerformanceObserver implements IUnitObserver {
    */
   onUnitCalculationStarted(unitId: string): void {
     // Mark calculation start time
-    const startTime = performance.now()
-    
+    const startTime = performance.now();
+
     // Store start time in unit context or use a Map
     // For now, we'll use a simple approach
     if (!this.calculationStartTimes.has(unitId)) {
-      this.calculationStartTimes.set(unitId, startTime)
+      this.calculationStartTimes.set(unitId, startTime);
     }
   }
 
@@ -98,18 +106,23 @@ export class PerformanceObserver implements IUnitObserver {
    */
   onUnitCalculationCompleted(unitId: string, result: number, duration: number): void {
     // Update performance metrics
-    this.updatePerformanceMetrics(duration)
-    
+    this.updatePerformanceMetrics(duration);
+
     // Clean up start time
-    this.calculationStartTimes.delete(unitId)
-    
+    this.calculationStartTimes.delete(unitId);
+
     // Log slow calculations for performance analysis
     if (duration > 100) {
-      this.logger.warn('PerformanceObserver', 'onUnitCalculationCompleted', `Slow calculation detected: ${unitId}`, {
-        duration,
-        threshold: 100,
-        timestamp: new Date().toISOString()
-      })
+      this.logger.warn(
+        'PerformanceObserver',
+        'onUnitCalculationCompleted',
+        `Slow calculation detected: ${unitId}`,
+        {
+          duration,
+          threshold: 100,
+          timestamp: new Date().toISOString(),
+        }
+      );
     }
   }
 
@@ -118,14 +131,19 @@ export class PerformanceObserver implements IUnitObserver {
    */
   onUnitCalculationFailed(unitId: string, error: Error): void {
     // Update error metrics
-    this.performanceMetrics.errors++
-    
+    this.performanceMetrics.errors++;
+
     // Log calculation errors for debugging
-    this.logger.error('PerformanceObserver', 'onUnitCalculationFailed', `Calculation failed: ${unitId}`, {
-      error: error.message,
-      stack: error.stack,
-      timestamp: new Date().toISOString()
-    })
+    this.logger.error(
+      'PerformanceObserver',
+      'onUnitCalculationFailed',
+      `Calculation failed: ${unitId}`,
+      {
+        error: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+      }
+    );
   }
 
   /**
@@ -134,29 +152,29 @@ export class PerformanceObserver implements IUnitObserver {
   getPerformanceMetrics() {
     return {
       ...this.performanceMetrics,
-      unitTypeStats: Object.fromEntries(this.performanceMetrics.unitTypeStats)
-    }
+      unitTypeStats: Object.fromEntries(this.performanceMetrics.unitTypeStats),
+    };
   }
 
   /**
    * Get performance metrics for a specific unit type
    */
   getUnitTypePerformance(unitType: string) {
-    return this.performanceMetrics.unitTypeStats.get(unitType)
+    return this.performanceMetrics.unitTypeStats.get(unitType);
   }
 
   /**
    * Reset performance metrics
    */
   resetMetrics(): void {
-    this.performanceMetrics.totalCalculations = 0
-    this.performanceMetrics.totalCalculationTime = 0
-    this.performanceMetrics.averageCalculationTime = 0
-    this.performanceMetrics.minCalculationTime = Infinity
-    this.performanceMetrics.maxCalculationTime = 0
-    this.performanceMetrics.calculationTimes = []
-    this.performanceMetrics.errors = 0
-    this.performanceMetrics.unitTypeStats.clear()
+    this.performanceMetrics.totalCalculations = 0;
+    this.performanceMetrics.totalCalculationTime = 0;
+    this.performanceMetrics.averageCalculationTime = 0;
+    this.performanceMetrics.minCalculationTime = Infinity;
+    this.performanceMetrics.maxCalculationTime = 0;
+    this.performanceMetrics.calculationTimes = [];
+    this.performanceMetrics.errors = 0;
+    this.performanceMetrics.unitTypeStats.clear();
   }
 
   /**
@@ -166,73 +184,74 @@ export class PerformanceObserver implements IUnitObserver {
     const data = {
       timestamp: new Date().toISOString(),
       metrics: this.getPerformanceMetrics(),
-      summary: this.getPerformanceSummary()
-    }
-    
-    return JSON.stringify(data, null, 2)
+      summary: this.getPerformanceSummary(),
+    };
+
+    return JSON.stringify(data, null, 2);
   }
 
   /**
    * Get performance summary
    */
   getPerformanceSummary(): {
-    status: 'excellent' | 'good' | 'fair' | 'poor'
-    recommendations: string[]
+    status: 'excellent' | 'good' | 'fair' | 'poor';
+    recommendations: string[];
   } {
-    const avgTime = this.performanceMetrics.averageCalculationTime
-    const errorRate = this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, 1)
-    
-    let status: 'excellent' | 'good' | 'fair' | 'poor' = 'excellent'
-    const recommendations: string[] = []
+    const avgTime = this.performanceMetrics.averageCalculationTime;
+    const errorRate =
+      this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, 1);
+
+    let status: 'excellent' | 'good' | 'fair' | 'poor' = 'excellent';
+    const recommendations: string[] = [];
 
     if (avgTime > 50) {
-      status = 'poor'
-      recommendations.push('Consider optimizing calculation algorithms')
-      recommendations.push('Review unit calculation complexity')
+      status = 'poor';
+      recommendations.push('Consider optimizing calculation algorithms');
+      recommendations.push('Review unit calculation complexity');
     } else if (avgTime > 16) {
-      status = 'fair'
-      recommendations.push('Monitor calculation performance')
-      recommendations.push('Consider caching frequently used values')
+      status = 'fair';
+      recommendations.push('Monitor calculation performance');
+      recommendations.push('Consider caching frequently used values');
     } else if (avgTime > 5) {
-      status = 'good'
-      recommendations.push('Performance is acceptable')
+      status = 'good';
+      recommendations.push('Performance is acceptable');
     }
 
     if (errorRate > 0.1) {
-      status = 'poor'
-      recommendations.push('High error rate detected - review error handling')
+      status = 'poor';
+      recommendations.push('High error rate detected - review error handling');
     } else if (errorRate > 0.01) {
-      recommendations.push('Monitor error rates')
+      recommendations.push('Monitor error rates');
     }
 
-    return { status, recommendations }
+    return { status, recommendations };
   }
 
   /**
    * Private helper methods
    */
-  private calculationStartTimes = new Map<string, number>()
+  private calculationStartTimes = new Map<string, number>();
 
   private updatePerformanceMetrics(duration: number): void {
     // Update general metrics
-    this.performanceMetrics.totalCalculationTime += duration
-    this.performanceMetrics.averageCalculationTime = 
-      this.performanceMetrics.totalCalculationTime / this.performanceMetrics.totalCalculations
-    
+    this.performanceMetrics.totalCalculationTime += duration;
+    this.performanceMetrics.averageCalculationTime =
+      this.performanceMetrics.totalCalculationTime / this.performanceMetrics.totalCalculations;
+
     // Update min/max
     if (duration < this.performanceMetrics.minCalculationTime) {
-      this.performanceMetrics.minCalculationTime = duration
+      this.performanceMetrics.minCalculationTime = duration;
     }
     if (duration > this.performanceMetrics.maxCalculationTime) {
-      this.performanceMetrics.maxCalculationTime = duration
+      this.performanceMetrics.maxCalculationTime = duration;
     }
 
     // Store calculation time in history
-    this.performanceMetrics.calculationTimes.push(duration)
-    
+    this.performanceMetrics.calculationTimes.push(duration);
+
     // Keep history size manageable
     if (this.performanceMetrics.calculationTimes.length > this.maxHistorySize) {
-      this.performanceMetrics.calculationTimes.shift()
+      this.performanceMetrics.calculationTimes.shift();
     }
   }
 }

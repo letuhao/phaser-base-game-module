@@ -4,15 +4,15 @@
  */
 export interface IRandomValue<T> {
   /** Current value */
-  current: T
+  current: T;
   /** Minimum value */
-  min: T
+  min: T;
   /** Maximum value */
-  max: T
+  max: T;
   /** Get a random value between min and max */
-  getRandomValue(): T
+  getRandomValue(): T;
   /** Set the current value */
-  setCurrentValue(value: T): void
+  setCurrentValue(value: T): void;
 }
 
 /**
@@ -21,13 +21,13 @@ export interface IRandomValue<T> {
  */
 export interface IRandomValueNumber extends IRandomValue<number> {
   /** Current number value */
-  current: number
+  current: number;
   /** Minimum number value */
-  min: number
+  min: number;
   /** Maximum number value */
-  max: number
+  max: number;
   /** Get a random number between min and max */
-  getRandomValue(): number
+  getRandomValue(): number;
   /** Set the current number value */
-  setCurrentValue(value: number): void
+  setCurrentValue(value: number): void;
 }

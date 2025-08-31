@@ -1,4 +1,4 @@
-import type { IResponsiveConfig } from '../../abstract/configs/index'
+import type { IResponsiveConfig } from '../../abstract/configs/index';
 
 /**
  * Example configurations demonstrating the use of IResponsiveConfig
@@ -17,7 +17,7 @@ export const exampleButtonConfig: Partial<IResponsiveConfig> = {
   isActive: true,
   lastModified: new Date(),
   metadata: { componentType: 'button', priority: 'high' },
-  
+
   // IPositionConfig properties
   positionMode: 'relative',
   x: 0,
@@ -31,7 +31,7 @@ export const exampleButtonConfig: Partial<IResponsiveConfig> = {
     minWidth: 80,
     maxWidth: 200,
     minHeight: 32,
-    maxHeight: 60
+    maxHeight: 60,
   },
   margin: { top: 8, right: 8, bottom: 8, left: 8 },
   padding: { top: 12, right: 16, bottom: 12, left: 16 },
@@ -39,24 +39,24 @@ export const exampleButtonConfig: Partial<IResponsiveConfig> = {
     width: 2,
     style: 'solid',
     color: '#007bff',
-    radius: 6
+    radius: 6,
   },
   alignment: { horizontal: 'center', vertical: 'center' },
   transform: {
     scale: { x: 1, y: 1 },
     rotation: 0,
-    skew: { x: 0, y: 0 }
+    skew: { x: 0, y: 0 },
   },
   constraints: {
     respectParentBounds: true,
     snapToGrid: false,
     gridSize: 8,
     maintainAspectRatio: false,
-    minDistanceFromEdges: { top: 4, right: 4, bottom: 4, left: 4 }
-  }
-}
+    minDistanceFromEdges: { top: 4, right: 4, bottom: 4, left: 4 },
+  },
+};
 
 // Export the working example
 export const allConfigExamples = {
-  button: exampleButtonConfig
-}
+  button: exampleButtonConfig,
+};

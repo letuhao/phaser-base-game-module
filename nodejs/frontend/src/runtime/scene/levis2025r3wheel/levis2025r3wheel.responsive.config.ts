@@ -1,7 +1,7 @@
 // Flexible responsive configuration for levis2025r3wheel scene
 // Clean structure: breakpoints contain arrays of object-specific layouts
 
-import type { ResponsiveConfig } from '../../../core/ResponsiveConfigLoader'
+import type { ResponsiveConfig } from '../../../core/ResponsiveConfigLoader';
 
 export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
   // Default breakpoint that loads first (highest priority)
@@ -20,8 +20,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         zOrder: 0,
         backgroundColor: '#1a1a2e',
         interactive: false,
-        classes: ['container-autumn', 'root-container']
-      }
+        classes: ['container-autumn', 'root-container'],
+      },
     },
     {
       id: 'background-container',
@@ -37,8 +37,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         zOrder: -100,
         backgroundColor: '#ffffff',
         backgroundImage: 'levis2025r3wheel-desktop-bg',
-        classes: ['background-autumn']
-      }
+        classes: ['background-autumn'],
+      },
     },
     {
       id: 'footer-container',
@@ -54,8 +54,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         zOrder: 30,
         backgroundColor: '#ffffff',
         interactive: false,
-        classes: ['footer-autumn']
-      }
+        classes: ['footer-autumn'],
+      },
     },
     {
       id: 'footer-rectangle',
@@ -71,9 +71,9 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
         zOrder: 40,
         backgroundColor: '#ffffff',
         interactive: false,
-        classes: ['footer-autumn']
-      }
-    }
+        classes: ['footer-autumn'],
+      },
+    },
   ],
   responsiveSettings: {
     xs: [
@@ -91,8 +91,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           zOrder: 0,
           backgroundColor: '#2a2a3e',
           interactive: false,
-          classes: ['container-autumn', 'root-container', 'mobile-root']
-        }
+          classes: ['container-autumn', 'root-container', 'mobile-root'],
+        },
       },
       {
         id: 'background-container',
@@ -102,8 +102,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'center',
           backgroundImage: 'levis2025r3wheel-mobile-bg',
-          classes: ['background-autumn', 'mobile-background']
-        }
+          classes: ['background-autumn', 'mobile-background'],
+        },
       },
       {
         id: 'footer-container',
@@ -114,8 +114,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           alignment: 'bottom-left',
           height: 60,
           padding: 10,
-          classes: ['footer-autumn', 'mobile-footer']
-        }
+          classes: ['footer-autumn', 'mobile-footer'],
+        },
       },
       {
         id: 'footer-rectangle',
@@ -126,11 +126,11 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           alignment: 'bottom-left',
           height: 60,
           padding: 10,
-          classes: ['footer-autumn', 'mobile-footer']
-        }
-      }
+          classes: ['footer-autumn', 'mobile-footer'],
+        },
+      },
     ],
-    
+
     sm: [
       {
         id: 'root-container',
@@ -146,8 +146,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           zOrder: 0,
           backgroundColor: '#3a3a4e',
           interactive: false,
-          classes: ['container-autumn', 'root-container', 'small-root']
-        }
+          classes: ['container-autumn', 'root-container', 'small-root'],
+        },
       },
       {
         id: 'background-container',
@@ -157,8 +157,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'center',
           backgroundImage: 'levis2025r3wheel-mobile-bg',
-          classes: ['background-autumn', 'mobile-background']
-        }
+          classes: ['background-autumn', 'mobile-background'],
+        },
       },
       {
         id: 'footer-container',
@@ -169,8 +169,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           alignment: 'bottom-left',
           height: 65,
           padding: 12,
-          classes: ['footer-autumn', 'mobile-footer']
-        }
+          classes: ['footer-autumn', 'mobile-footer'],
+        },
       },
       {
         id: 'footer-rectangle',
@@ -181,11 +181,11 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           alignment: 'bottom-left',
           height: 65,
           padding: 12,
-          classes: ['footer-autumn', 'mobile-footer']
-        }
-      }
+          classes: ['footer-autumn', 'mobile-footer'],
+        },
+      },
     ],
-    
+
     md: [
       {
         id: 'root-container',
@@ -201,8 +201,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           zOrder: 0,
           backgroundColor: '#4a4a5e',
           interactive: false,
-          classes: ['container-autumn', 'root-container', 'tablet-root']
-        }
+          classes: ['container-autumn', 'root-container', 'tablet-root'],
+        },
       },
       {
         id: 'background-container',
@@ -212,8 +212,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'fit',
           alignment: 'center',
           backgroundImage: 'levis2025r3wheel-mobile-bg',
-          classes: ['background-autumn', 'tablet-background']
-        }
+          classes: ['background-autumn', 'tablet-background'],
+        },
       },
       {
         id: 'footer-container',
@@ -224,8 +224,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           alignment: 'bottom-left',
           height: 70,
           padding: 15,
-          classes: ['footer-autumn', 'tablet-footer']
-        }
+          classes: ['footer-autumn', 'tablet-footer'],
+        },
       },
       {
         id: 'footer-rectangle',
@@ -236,11 +236,11 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           alignment: 'bottom-left',
           height: 70,
           padding: 15,
-          classes: ['footer-autumn', 'tablet-footer']
-        }
-      }
+          classes: ['footer-autumn', 'tablet-footer'],
+        },
+      },
     ],
-    
+
     lg: [
       {
         id: 'root-container',
@@ -256,8 +256,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           zOrder: 0,
           backgroundColor: '#5a5a6e',
           interactive: false,
-          classes: ['container-autumn', 'root-container', 'large-root']
-        }
+          classes: ['container-autumn', 'root-container', 'large-root'],
+        },
       },
       {
         id: 'background-container',
@@ -266,8 +266,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           maintainAspectRatio: true,
           scaleStrategy: 'fit',
           alignment: 'center',
-          backgroundImage: 'levis2025r3wheel-desktop-bg'
-        }
+          backgroundImage: 'levis2025r3wheel-desktop-bg',
+        },
       },
       {
         id: 'footer-container',
@@ -277,8 +277,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 80,
-          padding: 20
-        }
+          padding: 20,
+        },
       },
       {
         id: 'footer-rectangle',
@@ -288,11 +288,11 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 80,
-          padding: 20
-        }
-      }
+          padding: 20,
+        },
+      },
     ],
-    
+
     xl: [
       {
         id: 'root-container',
@@ -308,8 +308,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           zOrder: 0,
           backgroundColor: '#6a6a7e',
           interactive: false,
-          classes: ['container-autumn', 'root-container', 'xl-root']
-        }
+          classes: ['container-autumn', 'root-container', 'xl-root'],
+        },
       },
       {
         id: 'background-container',
@@ -318,8 +318,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           maintainAspectRatio: true,
           scaleStrategy: 'fit',
           alignment: 'center',
-          backgroundImage: 'levis2025r3wheel-desktop-bg'
-        }
+          backgroundImage: 'levis2025r3wheel-desktop-bg',
+        },
       },
       {
         id: 'footer-container',
@@ -329,8 +329,8 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 80,
-          padding: 20
-        }
+          padding: 20,
+        },
       },
       {
         id: 'footer-rectangle',
@@ -340,11 +340,9 @@ export const levis2025r3wheelResponsiveConfig: ResponsiveConfig = {
           scaleStrategy: 'stretch',
           alignment: 'bottom-left',
           height: 80,
-          padding: 20
-        }
-      }
-    ]
-  }
-}
-
-
+          padding: 20,
+        },
+      },
+    ],
+  },
+};

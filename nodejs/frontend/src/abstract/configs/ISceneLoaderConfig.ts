@@ -1,11 +1,11 @@
-import type { IConfiguration } from '../interfaces/IConfiguration'
-import type { IResponsiveConfig } from './IResponsiveConfig'
+import type { IConfiguration } from '../interfaces/IConfiguration';
+import type { IResponsiveConfig } from './IResponsiveConfig';
 
 /**
  * Scene Loader Configuration Interface
  * Provides HTML-like hierarchical structure for game objects within a scene
  * Allows deep nesting of objects with parent-child relationships
- * 
+ *
  * Structure example:
  * - Background Container (div-like)
  *   - Header (div-like)
@@ -30,111 +30,111 @@ import type { IResponsiveConfig } from './IResponsiveConfig'
  */
 export interface ISceneLoaderConfig extends IConfiguration {
   /** Scene identifier this loader config belongs to */
-  readonly sceneId: string
-  
+  readonly sceneId: string;
+
   /** Root container configuration */
-  readonly rootContainer: IGameObjectConfig
-  
+  readonly rootContainer: IGameObjectConfig;
+
   /** Object registry - all objects by ID */
-  readonly objectRegistry: Map<string, IGameObjectConfig>
-  
+  readonly objectRegistry: Map<string, IGameObjectConfig>;
+
   /** Object hierarchy tree */
-  readonly objectHierarchy: IGameObjectNode
-  
+  readonly objectHierarchy: IGameObjectNode;
+
   /** Loading strategy */
   readonly loadingStrategy: {
     /** Loading order: 'breadth-first' | 'depth-first' | 'priority-based' | 'dependency-based' */
-    order: 'breadth-first' | 'depth-first' | 'priority-based' | 'dependency-based'
+    order: 'breadth-first' | 'depth-first' | 'priority-based' | 'dependency-based';
     /** Whether to load objects in parallel */
-    parallel: boolean
+    parallel: boolean;
     /** Maximum concurrent loading operations */
-    maxConcurrent: number
+    maxConcurrent: number;
     /** Loading timeout in milliseconds */
-    timeout: number
+    timeout: number;
     /** Whether to show loading progress */
-    showProgress: boolean
-  }
-  
+    showProgress: boolean;
+  };
+
   /** Object instantiation strategy */
   readonly instantiationStrategy: {
     /** When to instantiate objects: 'eager' | 'lazy' | 'on-demand' */
-    timing: 'eager' | 'lazy' | 'on-demand'
+    timing: 'eager' | 'lazy' | 'on-demand';
     /** Whether to pool objects for reuse */
-    useObjectPooling: boolean
+    useObjectPooling: boolean;
     /** Pool size for each object type */
-    poolSizes: { [objectType: string]: number }
+    poolSizes: { [objectType: string]: number };
     /** Whether to preload object templates */
-    preloadTemplates: boolean
-  }
-  
+    preloadTemplates: boolean;
+  };
+
   /** Scene loading methods */
   readonly loadingMethods: {
     /** Load the entire scene */
-    loadScene(): Promise<void>
-    
+    loadScene(): Promise<void>;
+
     /** Load specific object and its children */
-    loadObject(objectId: string): Promise<IGameObjectConfig>
-    
+    loadObject(objectId: string): Promise<IGameObjectConfig>;
+
     /** Unload specific object and its children */
-    unloadObject(objectId: string): Promise<void>
-    
+    unloadObject(objectId: string): Promise<void>;
+
     /** Get loading progress (0-1) */
-    getLoadingProgress(): number
-    
+    getLoadingProgress(): number;
+
     /** Check if scene is fully loaded */
-    isSceneLoaded(): boolean
-    
+    isSceneLoaded(): boolean;
+
     /** Get loading errors */
-    getLoadingErrors(): string[]
-    
+    getLoadingErrors(): string[];
+
     /** Reload scene */
-    reloadScene(): Promise<void>
-  }
-  
+    reloadScene(): Promise<void>;
+  };
+
   /** Object management methods */
   readonly objectManagement: {
     /** Add new object to the scene */
-    addObject(object: IGameObjectConfig, parentId?: string): void
-    
+    addObject(object: IGameObjectConfig, parentId?: string): void;
+
     /** Remove object from the scene */
-    removeObject(objectId: string): void
-    
+    removeObject(objectId: string): void;
+
     /** Move object to different parent */
-    moveObject(objectId: string, newParentId: string): void
-    
+    moveObject(objectId: string, newParentId: string): void;
+
     /** Clone object */
-    cloneObject(objectId: string, newParentId?: string): IGameObjectConfig
-    
+    cloneObject(objectId: string, newParentId?: string): IGameObjectConfig;
+
     /** Get object by ID */
-    getObject(objectId: string): IGameObjectConfig | undefined
-    
+    getObject(objectId: string): IGameObjectConfig | undefined;
+
     /** Get all objects of specific type */
-    getObjectsByType(type: string): IGameObjectConfig[]
-    
+    getObjectsByType(type: string): IGameObjectConfig[];
+
     /** Get objects by tag */
-    getObjectsByTag(tag: string): IGameObjectConfig[]
-    
+    getObjectsByTag(tag: string): IGameObjectConfig[];
+
     /** Find objects by property value */
-    findObjects(property: string, value: any): IGameObjectConfig[]
-  }
-  
+    findObjects(property: string, value: any): IGameObjectConfig[];
+  };
+
   /** Scene lifecycle events */
   readonly sceneEvents: {
     /** Fired when scene starts loading */
-    onSceneLoadStart: (() => void)[]
+    onSceneLoadStart: (() => void)[];
     /** Fired when scene finishes loading */
-    onSceneLoadComplete: (() => void)[]
+    onSceneLoadComplete: (() => void)[];
     /** Fired when scene loading fails */
-    onSceneLoadError: ((error: string) => void)[]
+    onSceneLoadError: ((error: string) => void)[];
     /** Fired when object is added */
-    onObjectAdded: ((object: IGameObjectConfig) => void)[]
+    onObjectAdded: ((object: IGameObjectConfig) => void)[];
     /** Fired when object is removed */
-    onObjectRemoved: ((objectId: string) => void)[]
+    onObjectRemoved: ((objectId: string) => void)[];
     /** Fired when object is moved */
-    onObjectMoved: ((objectId: string, newParentId: string) => void)[]
+    onObjectMoved: ((objectId: string, newParentId: string) => void)[];
     /** Fired when loading progress updates */
-    onLoadingProgress: ((progress: number) => void)[]
-  }
+    onLoadingProgress: ((progress: number) => void)[];
+  };
 }
 
 /**
@@ -143,103 +143,118 @@ export interface ISceneLoaderConfig extends IConfiguration {
  */
 export interface IGameObjectConfig extends IConfiguration {
   /** Unique identifier for this object */
-  readonly id: string
-  
+  readonly id: string;
+
   /** Object type (like HTML tag) */
-  readonly type: 'container' | 'image' | 'text' | 'button' | 'input' | 'sprite' | 'animation' | 'audio' | 'video' | 'particle' | 'light' | 'camera' | 'physics' | 'shape' | 'custom'
-  
+  readonly type:
+    | 'container'
+    | 'image'
+    | 'text'
+    | 'button'
+    | 'input'
+    | 'sprite'
+    | 'animation'
+    | 'audio'
+    | 'video'
+    | 'particle'
+    | 'light'
+    | 'camera'
+    | 'physics'
+    | 'shape'
+    | 'custom';
+
   /** Object name for display/debugging */
-  readonly name: string
-  
+  readonly name: string;
+
   /** Object tags for categorization and querying */
-  readonly tags: string[]
-  
+  readonly tags: string[];
+
   /** Object priority (higher = rendered on top) */
-  readonly priority: number
-  
+  readonly priority: number;
+
   /** Whether object is visible */
-  readonly visible: boolean
-  
+  readonly visible: boolean;
+
   /** Whether object is interactive */
-  readonly interactive: boolean
-  
+  readonly interactive: boolean;
+
   /** Whether object is active/enabled */
-  readonly active: boolean
-  
+  readonly active: boolean;
+
   /** Object template (for cloning/instancing) */
-  readonly template?: string
-  
+  readonly template?: string;
+
   /** Responsive configuration for this object */
-  readonly responsive: IResponsiveConfig
-  
+  readonly responsive: IResponsiveConfig;
+
   /** Object properties based on type */
-  readonly properties: IGameObjectProperties
-  
+  readonly properties: IGameObjectProperties;
+
   /** Object behaviors/scripts */
-  readonly behaviors: IGameObjectBehavior[]
-  
+  readonly behaviors: IGameObjectBehavior[];
+
   /** Object events and callbacks */
-  readonly events: IGameObjectEvents
-  
+  readonly events: IGameObjectEvents;
+
   /** Object constraints and validation */
-  readonly constraints: IGameObjectConstraints
-  
+  readonly constraints: IGameObjectConstraints;
+
   /** Object metadata for custom use */
-  readonly metadata: Record<string, any>
-  
+  readonly metadata: Record<string, any>;
+
   /** Parent object ID (null for root) */
-  readonly parentId: string | null
-  
+  readonly parentId: string | null;
+
   /** Child object IDs */
-  readonly children: string[]
-  
+  readonly children: string[];
+
   /** Object lifecycle methods */
   readonly lifecycle: {
     /** Called when object is created */
-    onCreate?: () => void
+    onCreate?: () => void;
     /** Called when object is initialized */
-    onInit?: () => void
+    onInit?: () => void;
     /** Called when object is activated */
-    onActivate?: () => void
+    onActivate?: () => void;
     /** Called when object is deactivated */
-    onDeactivate?: () => void
+    onDeactivate?: () => void;
     /** Called when object is destroyed */
-    onDestroy?: () => void
+    onDestroy?: () => void;
     /** Called every frame */
-    onUpdate?: (time: number, delta: number) => void
+    onUpdate?: (time: number, delta: number) => void;
     /** Called when object is rendered */
-    onRender?: () => void
-  }
-  
+    onRender?: () => void;
+  };
+
   /** Object utility methods */
   readonly utilities: {
     /** Get object path in hierarchy */
-    getObjectPath(): string[]
-    
+    getObjectPath(): string[];
+
     /** Get object depth in hierarchy */
-    getDepth(): number
-    
+    getDepth(): number;
+
     /** Check if object is descendant of another */
-    isDescendantOf(ancestorId: string): boolean
-    
+    isDescendantOf(ancestorId: string): boolean;
+
     /** Check if object is ancestor of another */
-    isAncestorOf(descendantId: string): boolean
-    
+    isAncestorOf(descendantId: string): boolean;
+
     /** Get all descendants */
-    getDescendants(): string[]
-    
+    getDescendants(): string[];
+
     /** Get all ancestors */
-    getAncestors(): string[]
-    
+    getAncestors(): string[];
+
     /** Get siblings */
-    getSiblings(): string[]
-    
+    getSiblings(): string[];
+
     /** Check if object has children */
-    hasChildren(): boolean
-    
+    hasChildren(): boolean;
+
     /** Check if object is leaf node */
-    isLeaf(): boolean
-  }
+    isLeaf(): boolean;
+  };
 }
 
 /**
@@ -250,205 +265,205 @@ export interface IGameObjectProperties {
   /** Container properties */
   container?: {
     /** Container layout type */
-    layoutType: 'flexbox' | 'grid' | 'stack' | 'absolute' | 'flow'
+    layoutType: 'flexbox' | 'grid' | 'stack' | 'absolute' | 'flow';
     /** Container background */
     background?: {
-      color?: string
-      image?: string
-      opacity?: number
-    }
+      color?: string;
+      image?: string;
+      opacity?: number;
+    };
     /** Container border */
     border?: {
-      width: number
-      style: 'solid' | 'dashed' | 'dotted' | 'none'
-      color: string
-      radius: number
-    }
+      width: number;
+      style: 'solid' | 'dashed' | 'dotted' | 'none';
+      color: string;
+      radius: number;
+    };
     /** Container shadow */
     shadow?: {
-      enabled: boolean
-      color: string
-      blur: number
-      offsetX: number
-      offsetY: number
-    }
-  }
-  
+      enabled: boolean;
+      color: string;
+      blur: number;
+      offsetX: number;
+      offsetY: number;
+    };
+  };
+
   /** Image properties */
   image?: {
     /** Image source */
-    src: string
+    src: string;
     /** Image alt text */
-    alt?: string
+    alt?: string;
     /** Image tint color */
-    tint?: string
+    tint?: string;
     /** Image alpha/opacity */
-    alpha?: number
+    alpha?: number;
     /** Image flip */
     flip?: {
-      horizontal: boolean
-      vertical: boolean
-    }
+      horizontal: boolean;
+      vertical: boolean;
+    };
     /** Image crop */
     crop?: {
-      x: number
-      y: number
-      width: number
-      height: number
-    }
-  }
-  
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
+  };
+
   /** Text properties */
   text?: {
     /** Text content */
-    content: string
+    content: string;
     /** Text font family */
-    fontFamily: string
+    fontFamily: string;
     /** Text font size */
-    fontSize: number
+    fontSize: number;
     /** Text font weight */
-    fontWeight: number
+    fontWeight: number;
     /** Text color */
-    color: string
+    color: string;
     /** Text alignment */
-    alignment: 'left' | 'center' | 'right' | 'justify'
+    alignment: 'left' | 'center' | 'right' | 'justify';
     /** Text line height */
-    lineHeight: number
+    lineHeight: number;
     /** Text word wrap */
-    wordWrap: boolean
+    wordWrap: boolean;
     /** Text max width */
-    maxWidth?: number
+    maxWidth?: number;
     /** Text stroke */
     stroke?: {
-      color: string
-      width: number
-    }
+      color: string;
+      width: number;
+    };
     /** Text shadow */
     shadow?: {
-      color: string
-      blur: number
-      offsetX: number
-      offsetY: number
-    }
-  }
-  
+      color: string;
+      blur: number;
+      offsetX: number;
+      offsetY: number;
+    };
+  };
+
   /** Button properties */
   button?: {
     /** Button text */
-    text: string
+    text: string;
     /** Button icon */
-    icon?: string
+    icon?: string;
     /** Button states */
     states: {
-      normal: IButtonState
-      hover: IButtonState
-      pressed: IButtonState
-      disabled: IButtonState
-    }
+      normal: IButtonState;
+      hover: IButtonState;
+      pressed: IButtonState;
+      disabled: IButtonState;
+    };
     /** Button behavior */
     behavior: {
       /** Whether button is toggleable */
-      toggleable: boolean
+      toggleable: boolean;
       /** Whether button is checked (for toggle) */
-      checked: boolean
+      checked: boolean;
       /** Button group (for radio buttons) */
-      group?: string
+      group?: string;
       /** Button action */
-      action: string
-    }
-  }
-  
+      action: string;
+    };
+  };
+
   /** Sprite properties */
   sprite?: {
     /** Sprite sheet source */
-    spritesheet: string
+    spritesheet: string;
     /** Sprite frame */
-    frame: number | string
+    frame: number | string;
     /** Sprite animations */
     animations?: {
       [name: string]: {
-        frames: (number | string)[]
-        frameRate: number
-        repeat: number
-        yoyo: boolean
-      }
-    }
+        frames: (number | string)[];
+        frameRate: number;
+        repeat: number;
+        yoyo: boolean;
+      };
+    };
     /** Current animation */
-    currentAnimation?: string
-  }
-  
+    currentAnimation?: string;
+  };
+
   /** Audio properties */
   audio?: {
     /** Audio source */
-    src: string
+    src: string;
     /** Audio volume */
-    volume: number
+    volume: number;
     /** Audio loop */
-    loop: boolean
+    loop: boolean;
     /** Audio autoplay */
-    autoplay: boolean
+    autoplay: boolean;
     /** Audio preload */
-    preload: boolean
-  }
-  
+    preload: boolean;
+  };
+
   /** Particle properties */
   particle?: {
     /** Particle system type */
-    systemType: 'emitter' | 'explosion' | 'trail' | 'custom'
+    systemType: 'emitter' | 'explosion' | 'trail' | 'custom';
     /** Particle texture */
-    texture: string
+    texture: string;
     /** Particle count */
-    count: number
+    count: number;
     /** Particle lifetime */
-    lifetime: number
+    lifetime: number;
     /** Particle speed */
-    speed: number
+    speed: number;
     /** Particle scale */
-    scale: number
+    scale: number;
     /** Particle color */
-    color: string
+    color: string;
     /** Particle alpha */
-    alpha: number
-  }
-  
+    alpha: number;
+  };
+
   /** Physics properties */
   physics?: {
     /** Physics body type */
-    bodyType: 'static' | 'dynamic' | 'kinematic'
+    bodyType: 'static' | 'dynamic' | 'kinematic';
     /** Physics shape */
-    shape: 'rectangle' | 'circle' | 'polygon' | 'custom'
+    shape: 'rectangle' | 'circle' | 'polygon' | 'custom';
     /** Physics mass */
-    mass: number
+    mass: number;
     /** Physics friction */
-    friction: number
+    friction: number;
     /** Physics restitution */
-    restitution: number
+    restitution: number;
     /** Physics collision group */
-    collisionGroup: number
+    collisionGroup: number;
     /** Physics collision mask */
-    collisionMask: number
-  }
-  
+    collisionMask: number;
+  };
+
   /** Shape properties */
   shape?: {
     /** Shape type */
-    shapeType: 'rectangle' | 'circle' | 'ellipse' | 'triangle' | 'polygon'
+    shapeType: 'rectangle' | 'circle' | 'ellipse' | 'triangle' | 'polygon';
     /** Fill color (hex number) */
-    fillColor: number
+    fillColor: number;
     /** Stroke color (hex number) */
-    strokeColor?: number
+    strokeColor?: number;
     /** Stroke width */
-    strokeWidth?: number
+    strokeWidth?: number;
     /** Corner radius (for rectangles) */
-    cornerRadius?: number
+    cornerRadius?: number;
     /** Whether shape is filled */
-    filled: boolean
+    filled: boolean;
     /** Whether shape has stroke */
-    stroked: boolean
-  }
-  
+    stroked: boolean;
+  };
+
   /** Custom properties */
-  custom?: Record<string, any>
+  custom?: Record<string, any>;
 }
 
 /**
@@ -456,15 +471,15 @@ export interface IGameObjectProperties {
  */
 export interface IButtonState {
   /** Background color */
-  backgroundColor: string
+  backgroundColor: string;
   /** Text color */
-  textColor: string
+  textColor: string;
   /** Border color */
-  borderColor: string
+  borderColor: string;
   /** Shadow color */
-  shadowColor?: string
+  shadowColor?: string;
   /** Scale */
-  scale: number
+  scale: number;
 }
 
 /**
@@ -472,19 +487,19 @@ export interface IButtonState {
  */
 export interface IGameObjectBehavior {
   /** Behavior name */
-  name: string
+  name: string;
   /** Behavior type */
-  type: 'script' | 'animation' | 'physics' | 'ai' | 'custom'
+  type: 'script' | 'animation' | 'physics' | 'ai' | 'custom';
   /** Behavior script/function */
-  script: string | Function
+  script: string | Function;
   /** Behavior parameters */
-  parameters: Record<string, any>
+  parameters: Record<string, any>;
   /** Whether behavior is enabled */
-  enabled: boolean
+  enabled: boolean;
   /** Behavior priority */
-  priority: number
+  priority: number;
   /** Behavior dependencies */
-  dependencies: string[]
+  dependencies: string[];
 }
 
 /**
@@ -493,43 +508,43 @@ export interface IGameObjectBehavior {
 export interface IGameObjectEvents {
   /** Mouse events */
   mouse?: {
-    onClick?: (event: any) => void
-    onDoubleClick?: (event: any) => void
-    onMouseDown?: (event: any) => void
-    onMouseUp?: (event: any) => void
-    onMouseOver?: (event: any) => void
-    onMouseOut?: (event: any) => void
-    onMouseMove?: (event: any) => void
-    onMouseWheel?: (event: any) => void
-  }
-  
+    onClick?: (event: any) => void;
+    onDoubleClick?: (event: any) => void;
+    onMouseDown?: (event: any) => void;
+    onMouseUp?: (event: any) => void;
+    onMouseOver?: (event: any) => void;
+    onMouseOut?: (event: any) => void;
+    onMouseMove?: (event: any) => void;
+    onMouseWheel?: (event: any) => void;
+  };
+
   /** Touch events */
   touch?: {
-    onTouchStart?: (event: any) => void
-    onTouchEnd?: (event: any) => void
-    onTouchMove?: (event: any) => void
-    onTouchCancel?: (event: any) => void
-  }
-  
+    onTouchStart?: (event: any) => void;
+    onTouchEnd?: (event: any) => void;
+    onTouchMove?: (event: any) => void;
+    onTouchCancel?: (event: any) => void;
+  };
+
   /** Keyboard events */
   keyboard?: {
-    onKeyDown?: (event: any) => void
-    onKeyUp?: (event: any) => void
-    onKeyPress?: (event: any) => void
-  }
-  
+    onKeyDown?: (event: any) => void;
+    onKeyUp?: (event: any) => void;
+    onKeyPress?: (event: any) => void;
+  };
+
   /** Game events */
   game?: {
-    onGameStart?: () => void
-    onGamePause?: () => void
-    onGameResume?: () => void
-    onGameEnd?: () => void
-    onLevelComplete?: () => void
-    onLevelFail?: () => void
-  }
-  
+    onGameStart?: () => void;
+    onGamePause?: () => void;
+    onGameResume?: () => void;
+    onGameEnd?: () => void;
+    onLevelComplete?: () => void;
+    onLevelFail?: () => void;
+  };
+
   /** Custom events */
-  custom: Record<string, (event: any) => void>
+  custom: Record<string, (event: any) => void>;
 }
 
 /**
@@ -539,64 +554,64 @@ export interface IGameObjectConstraints {
   /** Position constraints */
   position?: {
     /** Minimum X position */
-    minX?: number
+    minX?: number;
     /** Maximum X position */
-    maxX?: number
+    maxX?: number;
     /** Minimum Y position */
-    minY?: number
+    minY?: number;
     /** Maximum Y position */
-    maxY?: number
+    maxY?: number;
     /** Whether to respect parent bounds */
-    respectParentBounds: boolean
-  }
-  
+    respectParentBounds: boolean;
+  };
+
   /** Size constraints */
   size?: {
     /** Minimum width */
-    minWidth?: number
+    minWidth?: number;
     /** Maximum width */
-    maxWidth?: number
+    maxWidth?: number;
     /** Minimum height */
-    minHeight?: number
+    minHeight?: number;
     /** Maximum height */
-    maxHeight?: number
+    maxHeight?: number;
     /** Whether to maintain aspect ratio */
-    maintainAspectRatio: boolean
-  }
-  
+    maintainAspectRatio: boolean;
+  };
+
   /** Rotation constraints */
   rotation?: {
     /** Minimum rotation */
-    minRotation?: number
+    minRotation?: number;
     /** Maximum rotation */
-    maxRotation?: number
+    maxRotation?: number;
     /** Whether to snap to grid */
-    snapToGrid: boolean
+    snapToGrid: boolean;
     /** Grid size */
-    gridSize: number
-  }
-  
+    gridSize: number;
+  };
+
   /** Scale constraints */
   scale?: {
     /** Minimum scale */
-    minScale: number
+    minScale: number;
     /** Maximum scale */
-    maxScale: number
+    maxScale: number;
     /** Whether to maintain aspect ratio */
-    maintainAspectRatio: boolean
-  }
-  
+    maintainAspectRatio: boolean;
+  };
+
   /** Performance constraints */
   performance?: {
     /** Maximum update frequency */
-    maxUpdateFrequency: number
+    maxUpdateFrequency: number;
     /** Whether to cull when off-screen */
-    cullOffScreen: boolean
+    cullOffScreen: boolean;
     /** Culling distance */
-    cullDistance: number
+    cullDistance: number;
     /** Whether to use LOD (Level of Detail) */
-    useLOD: boolean
-  }
+    useLOD: boolean;
+  };
 }
 
 /**
@@ -605,17 +620,17 @@ export interface IGameObjectConstraints {
  */
 export interface IGameObjectNode {
   /** Object ID */
-  id: string
+  id: string;
   /** Object configuration */
-  config: IGameObjectConfig
+  config: IGameObjectConfig;
   /** Parent node */
-  parent: IGameObjectNode | null
+  parent: IGameObjectNode | null;
   /** Child nodes */
-  children: IGameObjectNode[]
+  children: IGameObjectNode[];
   /** Node depth in tree */
-  depth: number
+  depth: number;
   /** Node path from root */
-  path: string[]
+  path: string[];
 }
 
 /**
@@ -623,26 +638,26 @@ export interface IGameObjectNode {
  */
 export interface ISceneLoaderUtilities {
   /** Create object hierarchy from flat list */
-  createHierarchy(objects: IGameObjectConfig[]): IGameObjectNode
-  
+  createHierarchy(objects: IGameObjectConfig[]): IGameObjectNode;
+
   /** Flatten hierarchy to flat list */
-  flattenHierarchy(root: IGameObjectNode): IGameObjectConfig[]
-  
+  flattenHierarchy(root: IGameObjectNode): IGameObjectConfig[];
+
   /** Find object by path */
-  findObjectByPath(root: IGameObjectNode, path: string[]): IGameObjectNode | null
-  
+  findObjectByPath(root: IGameObjectNode, path: string[]): IGameObjectNode | null;
+
   /** Get object subtree */
-  getSubtree(node: IGameObjectNode): IGameObjectNode[]
-  
+  getSubtree(node: IGameObjectNode): IGameObjectNode[];
+
   /** Validate object hierarchy */
-  validateHierarchy(root: IGameObjectNode): string[]
-  
+  validateHierarchy(root: IGameObjectNode): string[];
+
   /** Optimize object hierarchy */
-  optimizeHierarchy(root: IGameObjectNode): IGameObjectNode
-  
+  optimizeHierarchy(root: IGameObjectNode): IGameObjectNode;
+
   /** Serialize hierarchy to JSON */
-  serializeHierarchy(root: IGameObjectNode): string
-  
+  serializeHierarchy(root: IGameObjectNode): string;
+
   /** Deserialize hierarchy from JSON */
-  deserializeHierarchy(json: string): IGameObjectNode
+  deserializeHierarchy(json: string): IGameObjectNode;
 }

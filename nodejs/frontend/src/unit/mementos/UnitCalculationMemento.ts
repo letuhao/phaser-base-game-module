@@ -1,6 +1,6 @@
-import type { IUnitMemento } from './IUnitMemento'
-import type { UnitContext } from '../interfaces/IUnit'
-import { UnitMemento } from './IUnitMemento'
+import type { IUnitMemento } from './IUnitMemento';
+import type { UnitContext } from '../interfaces/IUnit';
+import { UnitMemento } from './IUnitMemento';
 
 /**
  * Unit Calculation Memento
@@ -8,21 +8,21 @@ import { UnitMemento } from './IUnitMemento'
  * Includes input, context, result, and performance metrics
  */
 export class UnitCalculationMemento extends UnitMemento {
-  private readonly calculationInput: any
-  private readonly calculationContext: UnitContext
-  private readonly calculationResult: number
+  private readonly calculationInput: any;
+  private readonly calculationContext: UnitContext;
+  private readonly calculationResult: number;
   private readonly performanceMetrics: {
-    totalTime: number
-    stepTimes: Record<string, number>
-    memoryUsage: number
-  }
+    totalTime: number;
+    stepTimes: Record<string, number>;
+    memoryUsage: number;
+  };
   private readonly calculationMetadata: {
-    templateName: string
-    strategyName: string
-    validatorsUsed: string[]
-    success: boolean
-    errorMessage?: string
-  }
+    templateName: string;
+    strategyName: string;
+    validatorsUsed: string[];
+    success: boolean;
+    errorMessage?: string;
+  };
 
   constructor(
     calculationInput: any,
@@ -34,9 +34,9 @@ export class UnitCalculationMemento extends UnitMemento {
     strategyName: string,
     validatorsUsed: string[],
     performanceMetrics: {
-      totalTime: number
-      stepTimes: Record<string, number>
-      memoryUsage: number
+      totalTime: number;
+      stepTimes: Record<string, number>;
+      memoryUsage: number;
     },
     success: boolean = true,
     errorMessage?: string,
@@ -54,105 +54,105 @@ export class UnitCalculationMemento extends UnitMemento {
         strategyName,
         validatorsUsed,
         success,
-        errorMessage
-      }
-    }
+        errorMessage,
+      },
+    };
 
-    super(state, unitId, unitType, description, version)
+    super(state, unitId, unitType, description, version);
 
-    this.calculationInput = calculationInput
-    this.calculationContext = calculationContext
-    this.calculationResult = calculationResult
-    this.performanceMetrics = performanceMetrics
+    this.calculationInput = calculationInput;
+    this.calculationContext = calculationContext;
+    this.calculationResult = calculationResult;
+    this.performanceMetrics = performanceMetrics;
     this.calculationMetadata = {
       templateName,
       strategyName,
       validatorsUsed,
       success,
-      errorMessage
-    }
+      errorMessage,
+    };
   }
 
   /**
    * Get the calculation input
    */
   getCalculationInput(): any {
-    return this.calculationInput
+    return this.calculationInput;
   }
 
   /**
    * Get the calculation context
    */
   getCalculationContext(): UnitContext {
-    return this.calculationContext
+    return this.calculationContext;
   }
 
   /**
    * Get the calculation result
    */
   getCalculationResult(): number {
-    return this.calculationResult
+    return this.calculationResult;
   }
 
   /**
    * Get the performance metrics
    */
   getPerformanceMetrics() {
-    return { ...this.performanceMetrics }
+    return { ...this.performanceMetrics };
   }
 
   /**
    * Get the calculation metadata
    */
   getCalculationMetadata() {
-    return { ...this.calculationMetadata }
+    return { ...this.calculationMetadata };
   }
 
   /**
    * Check if the calculation was successful
    */
   wasSuccessful(): boolean {
-    return this.calculationMetadata.success
+    return this.calculationMetadata.success;
   }
 
   /**
    * Get the error message if calculation failed
    */
   getErrorMessage(): string | undefined {
-    return this.calculationMetadata.errorMessage
+    return this.calculationMetadata.errorMessage;
   }
 
   /**
    * Get the template name used for calculation
    */
   getTemplateName(): string {
-    return this.calculationMetadata.templateName
+    return this.calculationMetadata.templateName;
   }
 
   /**
    * Get the strategy name used for calculation
    */
   getStrategyName(): string {
-    return this.calculationMetadata.strategyName
+    return this.calculationMetadata.strategyName;
   }
 
   /**
    * Get the validators used during calculation
    */
   getValidatorsUsed(): string[] {
-    return [...this.calculationMetadata.validatorsUsed]
+    return [...this.calculationMetadata.validatorsUsed];
   }
 
   /**
    * Get calculation summary
    */
   getCalculationSummary(): {
-    input: any
-    result: number
-    success: boolean
-    totalTime: number
-    templateName: string
-    strategyName: string
+    input: any;
+    result: number;
+    success: boolean;
+    totalTime: number;
+    templateName: string;
+    strategyName: string;
   } {
     return {
       input: this.calculationInput,
@@ -160,60 +160,67 @@ export class UnitCalculationMemento extends UnitMemento {
       success: this.calculationMetadata.success,
       totalTime: this.performanceMetrics.totalTime,
       templateName: this.calculationMetadata.templateName,
-      strategyName: this.calculationMetadata.strategyName
-    }
+      strategyName: this.calculationMetadata.strategyName,
+    };
   }
 
   /**
    * Compare with another calculation memento
    */
   compareWith(other: UnitCalculationMemento): {
-    inputChanged: boolean
-    resultChanged: boolean
-    performanceChanged: boolean
-    timeDifference: number
-    resultDifference: number
+    inputChanged: boolean;
+    resultChanged: boolean;
+    performanceChanged: boolean;
+    timeDifference: number;
+    resultDifference: number;
   } {
-    const inputChanged = JSON.stringify(this.calculationInput) !== JSON.stringify(other.calculationInput)
-    const resultChanged = this.calculationResult !== other.calculationResult
-    const performanceChanged = this.performanceMetrics.totalTime !== other.performanceMetrics.totalTime
-    
-    const timeDifference = this.performanceMetrics.totalTime - other.performanceMetrics.totalTime
-    const resultDifference = this.calculationResult - other.calculationResult
+    const inputChanged =
+      JSON.stringify(this.calculationInput) !== JSON.stringify(other.calculationInput);
+    const resultChanged = this.calculationResult !== other.calculationResult;
+    const performanceChanged =
+      this.performanceMetrics.totalTime !== other.performanceMetrics.totalTime;
+
+    const timeDifference = this.performanceMetrics.totalTime - other.performanceMetrics.totalTime;
+    const resultDifference = this.calculationResult - other.calculationResult;
 
     return {
       inputChanged,
       resultChanged,
       performanceChanged,
       timeDifference,
-      resultDifference
-    }
+      resultDifference,
+    };
   }
 
   /**
    * Check if this memento represents a significant change from another
    */
-  isSignificantChange(other: UnitCalculationMemento, thresholds: {
-    timeThreshold: number
-    resultThreshold: number
-  }): boolean {
-    const comparison = this.compareWith(other)
-    
-    return Math.abs(comparison.timeDifference) > thresholds.timeThreshold ||
-           Math.abs(comparison.resultDifference) > thresholds.resultThreshold
+  isSignificantChange(
+    other: UnitCalculationMemento,
+    thresholds: {
+      timeThreshold: number;
+      resultThreshold: number;
+    }
+  ): boolean {
+    const comparison = this.compareWith(other);
+
+    return (
+      Math.abs(comparison.timeDifference) > thresholds.timeThreshold ||
+      Math.abs(comparison.resultDifference) > thresholds.resultThreshold
+    );
   }
 
   /**
    * Get calculation efficiency score (0-100)
    */
   getEfficiencyScore(): number {
-    if (this.performanceMetrics.totalTime === 0) return 100
-    
+    if (this.performanceMetrics.totalTime === 0) return 100;
+
     // Base score on time and memory usage
-    const timeScore = Math.max(0, 100 - (this.performanceMetrics.totalTime * 10))
-    const memoryScore = Math.max(0, 100 - (this.performanceMetrics.memoryUsage / 1000))
-    
-    return Math.round((timeScore + memoryScore) / 2)
+    const timeScore = Math.max(0, 100 - this.performanceMetrics.totalTime * 10);
+    const memoryScore = Math.max(0, 100 - this.performanceMetrics.memoryUsage / 1000);
+
+    return Math.round((timeScore + memoryScore) / 2);
   }
 
   /**
@@ -226,10 +233,10 @@ export class UnitCalculationMemento extends UnitMemento {
       calculation: this.getCalculationSummary(),
       performance: this.performanceMetrics,
       metadata: this.calculationMetadata,
-      efficiencyScore: this.getEfficiencyScore()
-    }
-    
-    return JSON.stringify(analysisData, null, 2)
+      efficiencyScore: this.getEfficiencyScore(),
+    };
+
+    return JSON.stringify(analysisData, null, 2);
   }
 
   /**
@@ -245,9 +252,9 @@ export class UnitCalculationMemento extends UnitMemento {
     validatorsUsed: string[],
     errorMessage: string,
     performanceMetrics: {
-      totalTime: number
-      stepTimes: Record<string, number>
-      memoryUsage: number
+      totalTime: number;
+      stepTimes: Record<string, number>;
+      memoryUsage: number;
     }
   ): UnitCalculationMemento {
     return new UnitCalculationMemento(
@@ -264,7 +271,7 @@ export class UnitCalculationMemento extends UnitMemento {
       errorMessage,
       `Failed calculation: ${errorMessage}`,
       '1.0.0'
-    )
+    );
   }
 
   /**
@@ -280,9 +287,9 @@ export class UnitCalculationMemento extends UnitMemento {
     strategyName: string,
     validatorsUsed: string[],
     performanceMetrics: {
-      totalTime: number
-      stepTimes: Record<string, number>
-      memoryUsage: number
+      totalTime: number;
+      stepTimes: Record<string, number>;
+      memoryUsage: number;
     }
   ): UnitCalculationMemento {
     return new UnitCalculationMemento(
@@ -299,6 +306,6 @@ export class UnitCalculationMemento extends UnitMemento {
       undefined, // no error message
       `Successful calculation using ${templateName} with ${strategyName}`,
       '1.0.0'
-    )
+    );
   }
 }

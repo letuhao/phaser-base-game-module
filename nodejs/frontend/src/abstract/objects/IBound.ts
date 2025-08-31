@@ -5,82 +5,82 @@
  */
 export interface IBound {
   /** Get the current bounds of the object */
-  getBounds(): IBounds
-  
+  getBounds(): IBounds;
+
   /** Set the bounds of the object */
-  setBounds(bounds: IBounds): void
-  
+  setBounds(bounds: IBounds): void;
+
   /** Get the X position */
-  getX(): number
-  
+  getX(): number;
+
   /** Get the Y position */
-  getY(): number
-  
+  getY(): number;
+
   /** Get the width */
-  getWidth(): number
-  
+  getWidth(): number;
+
   /** Get the height */
-  getHeight(): number
-  
+  getHeight(): number;
+
   /** Set the X position */
-  setX(x: number): void
-  
+  setX(x: number): void;
+
   /** Set the Y position */
-  setY(y: number): void
-  
+  setY(y: number): void;
+
   /** Set the width */
-  setWidth(width: number): void
-  
+  setWidth(width: number): void;
+
   /** Set the height */
-  setHeight(height: number): void
-  
+  setHeight(height: number): void;
+
   /** Get the left edge position (X) */
-  getLeft(): number
-  
+  getLeft(): number;
+
   /** Get the right edge position (X + Width) */
-  getRight(): number
-  
+  getRight(): number;
+
   /** Get the top edge position (Y) */
-  getTop(): number
-  
+  getTop(): number;
+
   /** Get the bottom edge position (Y + Height) */
-  getBottom(): number
-  
+  getBottom(): number;
+
   /** Get the center X position */
-  getCenterX(): number
-  
+  getCenterX(): number;
+
   /** Get the center Y position */
-  getCenterY(): number
-  
+  getCenterY(): number;
+
   /** Get the center point */
-  getCenter(): { x: number; y: number }
-  
+  getCenter(): { x: number; y: number };
+
   /** Check if a point is within the bounds */
-  containsPoint(x: number, y: number): boolean
-  
+  containsPoint(x: number, y: number): boolean;
+
   /** Check if another bounds object intersects with this one */
-  intersects(bounds: IBounds): boolean
-  
+  intersects(bounds: IBounds): boolean;
+
   /** Get the intersection bounds with another bounds object */
-  getIntersection(bounds: IBounds): IBounds | null
-  
+  getIntersection(bounds: IBounds): IBounds | null;
+
   /** Expand the bounds by the specified amount */
-  expand(amount: number): void
-  
+  expand(amount: number): void;
+
   /** Contract the bounds by the specified amount */
-  contract(amount: number): void
-  
+  contract(amount: number): void;
+
   /** Move the bounds by the specified offset */
-  moveBy(offsetX: number, offsetY: number): void
-  
+  moveBy(offsetX: number, offsetY: number): void;
+
   /** Resize the bounds by the specified amount */
-  resizeBy(widthDelta: number, heightDelta: number): void
-  
+  resizeBy(widthDelta: number, heightDelta: number): void;
+
   /** Fit the bounds within another bounds object */
-  fitWithin(bounds: IBounds): void
-  
+  fitWithin(bounds: IBounds): void;
+
   /** Align the bounds relative to another bounds object */
-  alignTo(bounds: IBounds, alignment: IBoundAlignment): void
+  alignTo(bounds: IBounds, alignment: IBoundAlignment): void;
 }
 
 /**
@@ -89,16 +89,16 @@ export interface IBound {
  */
 export interface IBounds {
   /** X position */
-  x: number
-  
+  x: number;
+
   /** Y position */
-  y: number
-  
+  y: number;
+
   /** Width */
-  width: number
-  
+  width: number;
+
   /** Height */
-  height: number
+  height: number;
 }
 
 /**
@@ -108,21 +108,21 @@ export interface IBounds {
  */
 export interface IBoundAlignment {
   /** Horizontal alignment */
-  horizontal: 'left' | 'center' | 'right' | 'stretch'
-  
+  horizontal: 'left' | 'center' | 'right' | 'stretch';
+
   /** Vertical alignment */
-  vertical: 'top' | 'center' | 'bottom' | 'stretch'
-  
+  vertical: 'top' | 'center' | 'bottom' | 'stretch';
+
   /** Margin from the reference bounds */
   margin?: {
-    left?: number
-    right?: number
-    top?: number
-    bottom?: number
-  }
-  
+    left?: number;
+    right?: number;
+    top?: number;
+    bottom?: number;
+  };
+
   /** Whether to maintain aspect ratio when stretching */
-  maintainAspectRatio?: boolean
+  maintainAspectRatio?: boolean;
 }
 
 /**
@@ -131,39 +131,39 @@ export interface IBoundAlignment {
  */
 export interface IBoundConstraints {
   /** Minimum width */
-  minWidth?: number
-  
+  minWidth?: number;
+
   /** Maximum width */
-  maxWidth?: number
-  
+  maxWidth?: number;
+
   /** Minimum height */
-  minHeight?: number
-  
+  minHeight?: number;
+
   /** Maximum height */
-  maxHeight?: number
-  
+  maxHeight?: number;
+
   /** Minimum X position */
-  minX?: number
-  
+  minX?: number;
+
   /** Maximum X position */
-  maxX?: number
-  
+  maxX?: number;
+
   /** Minimum Y position */
-  minY?: number
-  
+  minY?: number;
+
   /** Maximum Y position */
-  maxY?: number
-  
+  maxY?: number;
+
   /** Whether to respect parent bounds */
-  respectParentBounds?: boolean
-  
+  respectParentBounds?: boolean;
+
   /** Whether to maintain aspect ratio */
-  maintainAspectRatio?: boolean
-  
+  maintainAspectRatio?: boolean;
+
   /** Snap to grid settings */
   snapToGrid?: {
-    enabled: boolean
-    gridSize: number
-    snapThreshold: number
-  }
+    enabled: boolean;
+    gridSize: number;
+    snapThreshold: number;
+  };
 }

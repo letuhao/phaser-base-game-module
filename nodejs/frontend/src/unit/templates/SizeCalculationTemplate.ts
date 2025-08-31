@@ -13,14 +13,14 @@ import { Logger } from '../../core/Logger';
  * Provides hooks for customization while maintaining consistent calculation flow
  */
 export abstract class SizeCalculationTemplate implements IUnitCalculationTemplate {
-  protected readonly strategy: SizeUnitStrategy
-  protected readonly validators: Array<RangeValidator | TypeValidator>
-  protected readonly context: UnitContext
+  protected readonly strategy: SizeUnitStrategy;
+  protected readonly validators: Array<RangeValidator | TypeValidator>;
+  protected readonly context: UnitContext;
 
   constructor(context: UnitContext) {
-    this.context = context
-    this.strategy = new SizeUnitStrategy()
-    this.validators = this.createValidators()
+    this.context = context;
+    this.strategy = new SizeUnitStrategy();
+    this.validators = this.createValidators();
   }
 
   /**
@@ -31,32 +31,31 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
     try {
       // Step 1: Pre-calculation validation
       if (!this.preCalculationValidation(input)) {
-        throw new Error('Pre-calculation validation failed')
+        throw new Error('Pre-calculation validation failed');
       }
 
       // Step 2: Pre-calculation processing
-      const processedInput = this.preCalculationProcessing(input)
+      const processedInput = this.preCalculationProcessing(input);
 
       // Step 3: Strategy selection and calculation
-      const result = this.performCalculation(processedInput)
+      const result = this.performCalculation(processedInput);
 
       // Step 4: Post-calculation validation
       if (!this.postCalculationValidation(result)) {
-        throw new Error('Post-calculation validation failed')
+        throw new Error('Post-calculation validation failed');
       }
 
       // Step 5: Post-calculation processing
-      const finalResult = this.postCalculationProcessing(result)
+      const finalResult = this.postCalculationProcessing(result);
 
       // Step 6: Log calculation completion
-      this.logCalculationCompletion(input, finalResult)
+      this.logCalculationCompletion(input, finalResult);
 
-      return finalResult
-
+      return finalResult;
     } catch (error) {
       // Step 7: Error handling
-      this.handleCalculationError(error, input)
-      throw error
+      this.handleCalculationError(error, input);
+      throw error;
     }
   }
 
@@ -67,8 +66,13 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
   protected createValidators(): Array<RangeValidator | TypeValidator> {
     return [
       new RangeValidator('SizeRangeValidator', 0, 10000, true),
-      new TypeValidator('SizeTypeValidator', [UnitType.SIZE], [Dimension.WIDTH, Dimension.HEIGHT, Dimension.BOTH], false)
-    ]
+      new TypeValidator(
+        'SizeTypeValidator',
+        [UnitType.SIZE],
+        [Dimension.WIDTH, Dimension.HEIGHT, Dimension.BOTH],
+        false
+      ),
+    ];
   }
 
   /**
@@ -79,7 +83,11 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
     // Run all validators
     for (const validator of this.validators) {
       if (!validator.validate(input, this.context)) {
-        Logger.getInstance().warn('SizeCalculationTemplate', 'preCalculationValidation', `Validation failed: ${validator.getErrorMessage()}`);
+        Logger.getInstance().warn(
+          'SizeCalculationTemplate',
+          'preCalculationValidation',
+          `Validation failed: ${validator.getErrorMessage()}`
+        );
         return false;
       }
     }
@@ -92,7 +100,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    */
   protected preCalculationProcessing(input: any): any {
     // Default implementation: return input as-is
-    return input
+    return input;
   }
 
   /**
@@ -100,7 +108,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Hook method that can be overridden
    */
   protected performCalculation(input: any): number {
-    return this.strategy.calculate(input, this.context)
+    return this.strategy.calculate(input, this.context);
   }
 
   /**
@@ -109,7 +117,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    */
   protected postCalculationValidation(result: number): boolean {
     // Default validation: check if result is a valid number
-    return typeof result === 'number' && !isNaN(result) && isFinite(result)
+    return typeof result === 'number' && !isNaN(result) && isFinite(result);
   }
 
   /**
@@ -118,7 +126,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    */
   protected postCalculationProcessing(result: number): number {
     // Default implementation: apply rounding and bounds
-    return this.applyRoundingAndBounds(result)
+    return this.applyRoundingAndBounds(result);
   }
 
   /**
@@ -126,11 +134,16 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Hook method that can be overridden
    */
   protected logCalculationCompletion(input: any, result: number): void {
-    Logger.getInstance().debug('SizeCalculationTemplate', 'logCalculationCompletion', 'Calculation completed', {
-      input,
-      result,
-      context: this.context
-    });
+    Logger.getInstance().debug(
+      'SizeCalculationTemplate',
+      'logCalculationCompletion',
+      'Calculation completed',
+      {
+        input,
+        result,
+        context: this.context,
+      }
+    );
   }
 
   /**
@@ -138,12 +151,17 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Hook method that can be overridden
    */
   protected handleCalculationError(error: any, input: any): void {
-    Logger.getInstance().error('SizeCalculationTemplate', 'handleCalculationError', 'Calculation error', {
-      error: error.message,
-      input,
-      context: this.context,
-      stack: error.stack
-    });
+    Logger.getInstance().error(
+      'SizeCalculationTemplate',
+      'handleCalculationError',
+      'Calculation error',
+      {
+        error: error.message,
+        input,
+        context: this.context,
+        stack: error.stack,
+      }
+    );
   }
 
   /**
@@ -152,17 +170,17 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    */
   protected applyRoundingAndBounds(result: number): number {
     // Default implementation: round to 2 decimal places
-    return Math.round(result * 100) / 100
+    return Math.round(result * 100) / 100;
   }
 
   /**
    * Get calculation statistics
    */
   public getCalculationStats(): {
-    totalCalculations: number
-    validationFailures: number
-    calculationErrors: number
-    averageResult: number
+    totalCalculations: number;
+    validationFailures: number;
+    calculationErrors: number;
+    averageResult: number;
   } {
     // This would track statistics over time
     // For now, return placeholder data
@@ -170,8 +188,8 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
       totalCalculations: 0,
       validationFailures: 0,
       calculationErrors: 0,
-      averageResult: 0
-    }
+      averageResult: 0,
+    };
   }
 
   /**
@@ -189,24 +207,24 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
     return this.validators.map(validator => ({
       name: validator.getName(),
       type: validator.constructor.name,
-      enabled: true
-    }))
+      enabled: true,
+    }));
   }
 
   /**
    * Add custom validator
    */
   public addValidator(validator: RangeValidator | TypeValidator): void {
-    this.validators.push(validator)
+    this.validators.push(validator);
   }
 
   /**
    * Remove validator by name
    */
   public removeValidator(name: string): void {
-    const index = this.validators.findIndex(v => v.getName() === name)
+    const index = this.validators.findIndex(v => v.getName() === name);
     if (index !== -1) {
-      this.validators.splice(index, 1)
+      this.validators.splice(index, 1);
     }
   }
 
@@ -214,14 +232,14 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    * Get context information
    */
   public getContext(): UnitContext {
-    return this.context
+    return this.context;
   }
 
   /**
    * Update context
    */
   public updateContext(newContext: Partial<UnitContext>): void {
-    Object.assign(this.context, newContext)
+    Object.assign(this.context, newContext);
   }
 
   /**
@@ -232,17 +250,17 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
       templateName: this.constructor.name,
       version: '1.0.0',
       supportedInputs: this.getSupportedInputs(),
-      calculationSteps: this.getCalculationSteps()
-    }
+      calculationSteps: this.getCalculationSteps(),
+    };
   }
 
   /**
    * Check if the template can handle the input
    */
   public canHandle(input: any): boolean {
-    return this.getSupportedInputs().some(type => 
-      typeof input === type || input?.constructor?.name === type
-    )
+    return this.getSupportedInputs().some(
+      type => typeof input === type || input?.constructor?.name === type
+    );
   }
 
   /**
@@ -252,13 +270,13 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
     return {
       totalTime: 0,
       stepTimes: {},
-      memoryUsage: 0
-    }
+      memoryUsage: 0,
+    };
   }
 
   /**
    * Abstract methods for metadata
    */
-  protected abstract getSupportedInputs(): string[]
-  protected abstract getCalculationSteps(): string[]
+  protected abstract getSupportedInputs(): string[];
+  protected abstract getCalculationSteps(): string[];
 }

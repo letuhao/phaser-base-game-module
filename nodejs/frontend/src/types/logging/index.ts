@@ -1,5 +1,5 @@
 // Logging Types
-export * from './LoggerTypes'
+export * from './LoggerTypes';
 
 // Re-export all logging types as a namespace for convenience
-export * as LoggingTypes from './'
+export * as LoggingTypes from './';

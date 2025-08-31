@@ -1,6 +1,6 @@
-import type { IUnit } from '../interfaces/IUnit'
-import type { UnitContext } from '../interfaces/IUnit'
-import { UnitType } from '../enums/UnitType'
+import type { IUnit } from '../interfaces/IUnit';
+import type { UnitContext } from '../interfaces/IUnit';
+import { UnitType } from '../enums/UnitType';
 
 /**
  * Unit Adapter Interface
@@ -8,22 +8,22 @@ import { UnitType } from '../enums/UnitType'
  */
 export interface IUnitAdapter<T = any> extends IUnit {
   /** Get the adapted legacy unit */
-  getAdaptedUnit(): T
-  
+  getAdaptedUnit(): T;
+
   /** Check if the adapter can handle the legacy unit type */
-  canAdapt(legacyUnit: any): boolean
-  
+  canAdapt(legacyUnit: any): boolean;
+
   /** Get the legacy unit type name */
-  getLegacyTypeName(): string
-  
+  getLegacyTypeName(): string;
+
   /** Get the conversion factor used for adaptation */
-  getConversionFactor(): number
-  
+  getConversionFactor(): number;
+
   /** Check if the adapter is bidirectional */
-  isBidirectional(): boolean
-  
+  isBidirectional(): boolean;
+
   /** Convert back to legacy format if possible */
-  toLegacyFormat(): any
+  toLegacyFormat(): any;
 }
 
 /**
@@ -31,70 +31,70 @@ export interface IUnitAdapter<T = any> extends IUnit {
  * Provides common functionality for unit adapters
  */
 export abstract class BaseUnitAdapter<T = any> implements IUnitAdapter<T> {
-  protected readonly conversionFactor: number = 1
-  protected readonly bidirectional: boolean = false
-  
+  protected readonly conversionFactor: number = 1;
+  protected readonly bidirectional: boolean = false;
+
   constructor(
     public readonly id: string,
     public readonly name: string,
     public readonly unitType: UnitType,
     protected readonly adaptedUnit: T
   ) {}
-  
+
   // IUnit interface implementation
-  abstract calculate(context: UnitContext): number
-  abstract isResponsive(): boolean
-  
+  abstract calculate(context: UnitContext): number;
+  abstract isResponsive(): boolean;
+
   get isActive(): boolean {
-    return true // Adapters are always active
+    return true; // Adapters are always active
   }
-  
+
   validate(_context: UnitContext): boolean {
-    return this.adaptedUnit !== null && this.adaptedUnit !== undefined
+    return this.adaptedUnit !== null && this.adaptedUnit !== undefined;
   }
-  
+
   toString(): string {
-    return `${this.constructor.name}(${this.id}, ${this.name})`
+    return `${this.constructor.name}(${this.id}, ${this.name})`;
   }
-  
+
   clone(overrides?: Partial<IUnit>): IUnit {
-    const cloned = Object.create(Object.getPrototypeOf(this))
-    Object.assign(cloned, this, overrides)
-    return cloned
+    const cloned = Object.create(Object.getPrototypeOf(this));
+    Object.assign(cloned, this, overrides);
+    return cloned;
   }
-  
+
   // IUnitAdapter interface implementation
   getAdaptedUnit(): T {
-    return this.adaptedUnit
+    return this.adaptedUnit;
   }
-  
+
   canAdapt(legacyUnit: any): boolean {
-    return this.getLegacyTypeName() === legacyUnit?.constructor?.name
+    return this.getLegacyTypeName() === legacyUnit?.constructor?.name;
   }
-  
+
   getLegacyTypeName(): string {
-    return this.adaptedUnit?.constructor?.name || 'Unknown'
+    return this.adaptedUnit?.constructor?.name || 'Unknown';
   }
-  
+
   getConversionFactor(): number {
-    return this.conversionFactor
+    return this.conversionFactor;
   }
-  
+
   isBidirectional(): boolean {
-    return this.bidirectional
+    return this.bidirectional;
   }
-  
+
   toLegacyFormat(): any {
     if (!this.bidirectional) {
-      throw new Error('This adapter does not support bidirectional conversion')
+      throw new Error('This adapter does not support bidirectional conversion');
     }
-    return this.convertToLegacyFormat()
+    return this.convertToLegacyFormat();
   }
-  
+
   /**
    * Abstract method for converting back to legacy format
    */
-  protected abstract convertToLegacyFormat(): any
+  protected abstract convertToLegacyFormat(): any;
 }
 
 /**
@@ -103,19 +103,19 @@ export abstract class BaseUnitAdapter<T = any> implements IUnitAdapter<T> {
  */
 export interface IUnitAdapterFactory {
   /** Create an adapter for a legacy unit */
-  createAdapter(legacyUnit: any): IUnitAdapter | undefined
-  
+  createAdapter(legacyUnit: any): IUnitAdapter | undefined;
+
   /** Register a new adapter type */
-  registerAdapter(adapterType: string, adapterClass: new (...args: any[]) => IUnitAdapter): void
-  
+  registerAdapter(adapterType: string, adapterClass: new (...args: any[]) => IUnitAdapter): void;
+
   /** Get all registered adapter types */
-  getRegisteredAdapterTypes(): string[]
-  
+  getRegisteredAdapterTypes(): string[];
+
   /** Check if an adapter exists for a legacy unit type */
-  hasAdapter(legacyUnit: any): boolean
-  
+  hasAdapter(legacyUnit: any): boolean;
+
   /** Get the best adapter for a legacy unit */
-  getBestAdapter(legacyUnit: any): IUnitAdapter | undefined
+  getBestAdapter(legacyUnit: any): IUnitAdapter | undefined;
 }
 
 /**
@@ -124,20 +124,20 @@ export interface IUnitAdapterFactory {
  */
 export interface IUnitAdapterRegistry {
   /** Register an adapter */
-  register(adapter: IUnitAdapter): void
-  
+  register(adapter: IUnitAdapter): void;
+
   /** Unregister an adapter */
-  unregister(adapterId: string): boolean
-  
+  unregister(adapterId: string): boolean;
+
   /** Get an adapter by ID */
-  getById(adapterId: string): IUnitAdapter | undefined
-  
+  getById(adapterId: string): IUnitAdapter | undefined;
+
   /** Get all adapters */
-  getAll(): IUnitAdapter[]
-  
+  getAll(): IUnitAdapter[];
+
   /** Get adapters by type */
-  getByType(unitType: string): IUnitAdapter[]
-  
+  getByType(unitType: string): IUnitAdapter[];
+
   /** Clear all adapters */
-  clear(): void
+  clear(): void;
 }

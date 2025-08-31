@@ -1,22 +1,22 @@
-import type { IUnitCommand } from './IUnitCommand'
-import type { UnitContext } from '../interfaces/IUnit'
-import { BaseUnitCommand } from './IUnitCommand'
-import { PositionUnitStrategy } from '../strategies/PositionUnitStrategy'
+import type { IUnitCommand } from './IUnitCommand';
+import type { UnitContext } from '../interfaces/IUnit';
+import { BaseUnitCommand } from './IUnitCommand';
+import { PositionUnitStrategy } from '../strategies/PositionUnitStrategy';
 
 /**
  * Calculate Position Command
  * Implements the Command pattern for position calculations
  */
 export class CalculatePositionCommand extends BaseUnitCommand {
-  private readonly input: any
-  private readonly context: UnitContext
-  private readonly strategy: PositionUnitStrategy
+  private readonly input: any;
+  private readonly context: UnitContext;
+  private readonly strategy: PositionUnitStrategy;
 
   constructor(input: any, context: UnitContext) {
-    super(`calculate-position-${Date.now()}`)
-    this.input = input
-    this.context = context
-    this.strategy = new PositionUnitStrategy()
+    super(`calculate-position-${Date.now()}`);
+    this.input = input;
+    this.context = context;
+    this.strategy = new PositionUnitStrategy();
   }
 
   /**
@@ -24,53 +24,53 @@ export class CalculatePositionCommand extends BaseUnitCommand {
    */
   execute(context: UnitContext): number {
     // Perform the calculation
-    const result = this.strategy.calculate(this.input, context)
-    
+    const result = this.strategy.calculate(this.input, context);
+
     // Set the result using the protected method
-    this.setResult(result)
-    
-    return result
+    this.setResult(result);
+
+    return result;
   }
 
   /**
    * Undo the command by calling the base class undo
    */
   undo(): void {
-    super.undo()
+    super.undo();
   }
 
   /**
    * Check if the command can be executed
    */
   canExecute(): boolean {
-    return this.strategy.canHandle(this.input)
+    return this.strategy.canHandle(this.input);
   }
 
   /**
    * Get command description
    */
   getDescription(): string {
-    return `Calculate position for input: ${JSON.stringify(this.input)}`
+    return `Calculate position for input: ${JSON.stringify(this.input)}`;
   }
 
   /**
    * Get input data
    */
   getInput(): any {
-    return this.input
+    return this.input;
   }
 
   /**
    * Get calculation context
    */
   getContext(): UnitContext {
-    return this.context
+    return this.context;
   }
 
   /**
    * Get the strategy used for calculation
    */
   getStrategy(): PositionUnitStrategy {
-    return this.strategy
+    return this.strategy;
   }
 }

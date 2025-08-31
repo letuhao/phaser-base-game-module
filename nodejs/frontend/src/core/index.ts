@@ -1,19 +1,19 @@
 // Core Logger System
-export { Logger, logger } from './Logger'
-export { ErrorTracker } from './ErrorTracker'
-export { LogServerClient } from './LogServerClient'
-export { HttpClient } from './HttpClient'
+export { Logger, logger } from './Logger';
+export { ErrorTracker } from './ErrorTracker';
+export { LogServerClient } from './LogServerClient';
+export { HttpClient } from './HttpClient';
 
 // Interfaces
-export * from '../abstract/interfaces/IConfiguration'
-export * from '../abstract/interfaces/IHttpClient'
-export * from '../abstract/interfaces/IWebhookClient'
+export * from '../abstract/interfaces/IConfiguration';
+export * from '../abstract/interfaces/IHttpClient';
+export * from '../abstract/interfaces/IWebhookClient';
 
 // Types and Interfaces
-export * from '../types'
+export * from '../types';
 
 // Configuration
-export * from '../config/LoggerConfig'
+export * from '../config/LoggerConfig';
 
 // Convenience Functions
 export {
@@ -24,8 +24,8 @@ export {
   logTrace,
   log,
   logPerformance,
-  logGameEvent
-} from './Logger'
+  logGameEvent,
+} from './Logger';
 
 // Re-export all core functionality as a namespace for convenience
-export * as Core from './'
+export * as Core from './';

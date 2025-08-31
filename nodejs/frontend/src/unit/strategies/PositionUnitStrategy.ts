@@ -1,17 +1,17 @@
-import type { IUnitStrategy } from './IUnitStrategy'
-import type { UnitContext } from '../interfaces/IUnit'
-import { PositionValue } from '../enums/PositionValue'
-import { PositionUnit } from '../enums/PositionUnit'
-import { Dimension } from '../enums/Dimension'
-import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory'
+import type { IUnitStrategy } from './IUnitStrategy';
+import type { UnitContext } from '../interfaces/IUnit';
+import { PositionValue } from '../enums/PositionValue';
+import { PositionUnit } from '../enums/PositionUnit';
+import { Dimension } from '../enums/Dimension';
+import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
 
 /**
  * Position Unit Strategy
  * Handles position-related calculations using the PositionUnitCalculator
  */
 export class PositionUnitStrategy implements IUnitStrategy {
-  readonly unitType = 'position'
-  private readonly factory = UnitCalculatorFactory.getInstance()
+  readonly unitType = 'position';
+  private readonly factory = UnitCalculatorFactory.getInstance();
 
   // String position mappings using enums
   private readonly STRING_POSITION_MAP = {
@@ -19,8 +19,8 @@ export class PositionUnitStrategy implements IUnitStrategy {
     [PositionValue.LEFT]: PositionValue.LEFT,
     [PositionValue.RIGHT]: PositionValue.RIGHT,
     [PositionValue.TOP]: PositionValue.TOP,
-    [PositionValue.BOTTOM]: PositionValue.BOTTOM
-  } as const
+    [PositionValue.BOTTOM]: PositionValue.BOTTOM,
+  } as const;
 
   /**
    * Calculate position value using the appropriate strategy
@@ -28,36 +28,36 @@ export class PositionUnitStrategy implements IUnitStrategy {
   calculate(input: any, context: UnitContext): number {
     // Handle direct numbers
     if (typeof input === 'number') {
-      return input
+      return input;
     }
 
     // Handle string keywords
     if (typeof input === 'string') {
-      return this.calculateStringPosition(input, context)
+      return this.calculateStringPosition(input, context);
     }
 
     // Handle PositionValue enum
     if (this.isPositionValue(input)) {
-      return this.calculatePositionValue(input, context)
+      return this.calculatePositionValue(input, context);
     }
 
     // Handle PositionUnit enum
     if (this.isPositionUnit(input)) {
-      return this.calculatePositionUnit(input, context)
+      return this.calculatePositionUnit(input, context);
     }
 
     // Handle random values
     if (this.isRandomValue(input)) {
-      return input.getRandomValue()
+      return input.getRandomValue();
     }
 
     // Handle legacy ParentPositionX/ParentPositionY
     if (this.isParentPosition(input)) {
-      return this.calculateParentPosition(input, context)
+      return this.calculateParentPosition(input, context);
     }
 
     // Default fallback
-    return 0
+    return 0;
   }
 
   /**
@@ -71,14 +71,14 @@ export class PositionUnitStrategy implements IUnitStrategy {
       this.isPositionUnit(input) ||
       this.isRandomValue(input) ||
       this.isParentPosition(input)
-    )
+    );
   }
 
   /**
    * Get strategy priority (lower = higher priority)
    */
   getPriority(): number {
-    return 2 // High priority for position calculations
+    return 2; // High priority for position calculations
   }
 
   /**
@@ -86,13 +86,13 @@ export class PositionUnitStrategy implements IUnitStrategy {
    */
   private calculateStringPosition(input: string, context: UnitContext): number {
     // Map string to PositionValue enum
-    const positionValue = this.mapStringToPositionValue(input)
+    const positionValue = this.mapStringToPositionValue(input);
     if (positionValue) {
-      return this.calculatePositionValue(positionValue, context)
+      return this.calculatePositionValue(positionValue, context);
     }
 
     // Fallback for unknown strings
-    return 0
+    return 0;
   }
 
   /**
@@ -101,17 +101,17 @@ export class PositionUnitStrategy implements IUnitStrategy {
   private mapStringToPositionValue(input: string): PositionValue | null {
     switch (input.toLowerCase()) {
       case 'center':
-        return PositionValue.CENTER
+        return PositionValue.CENTER;
       case 'left':
-        return PositionValue.LEFT
+        return PositionValue.LEFT;
       case 'right':
-        return PositionValue.RIGHT
+        return PositionValue.RIGHT;
       case 'top':
-        return PositionValue.TOP
+        return PositionValue.TOP;
       case 'bottom':
-        return PositionValue.BOTTOM
+        return PositionValue.BOTTOM;
       default:
-        return null
+        return null;
     }
   }
 
@@ -122,17 +122,17 @@ export class PositionUnitStrategy implements IUnitStrategy {
     // Use enum-based logic for calculations
     switch (input) {
       case PositionValue.CENTER:
-        return this.calculateCenterPosition(context)
+        return this.calculateCenterPosition(context);
       case PositionValue.LEFT:
-        return this.calculateLeftPosition(context)
+        return this.calculateLeftPosition(context);
       case PositionValue.RIGHT:
-        return this.calculateRightPosition(context)
+        return this.calculateRightPosition(context);
       case PositionValue.TOP:
-        return this.calculateTopPosition(context)
+        return this.calculateTopPosition(context);
       case PositionValue.BOTTOM:
-        return this.calculateBottomPosition(context)
+        return this.calculateBottomPosition(context);
       default:
-        return this.calculateWithCalculator(input, context)
+        return this.calculateWithCalculator(input, context);
     }
   }
 
@@ -146,8 +146,8 @@ export class PositionUnitStrategy implements IUnitStrategy {
       input,
       Dimension.X,
       0
-    )
-    return calculator.calculatePosition(context)
+    );
+    return calculator.calculatePosition(context);
   }
 
   /**
@@ -155,38 +155,38 @@ export class PositionUnitStrategy implements IUnitStrategy {
    */
   private calculateParentPosition(input: any, context: UnitContext): number {
     if (context.parent && typeof input.getValue === 'function') {
-      return input.getValue(context.parent)
+      return input.getValue(context.parent);
     }
-    return 0
+    return 0;
   }
 
   /**
    * Enum-based position calculations
    */
   private calculateCenterPosition(context: UnitContext): number {
-    const dimension = this.getDimensionFromContext(context)
+    const dimension = this.getDimensionFromContext(context);
     if (dimension === Dimension.X) {
-      return (context.scene?.width ?? context.viewport?.width ?? 800) / 2
+      return (context.scene?.width ?? context.viewport?.width ?? 800) / 2;
     } else if (dimension === Dimension.Y) {
-      return (context.scene?.height ?? context.viewport?.height ?? 600) / 2
+      return (context.scene?.height ?? context.viewport?.height ?? 600) / 2;
     }
-    return 0
+    return 0;
   }
 
   private calculateLeftPosition(context: UnitContext): number {
-    return 0
+    return 0;
   }
 
   private calculateRightPosition(context: UnitContext): number {
-    return context.scene?.width ?? context.viewport?.width ?? 800
+    return context.scene?.width ?? context.viewport?.width ?? 800;
   }
 
   private calculateTopPosition(context: UnitContext): number {
-    return 0
+    return 0;
   }
 
   private calculateBottomPosition(context: UnitContext): number {
-    return context.scene?.height ?? context.viewport?.height ?? 600
+    return context.scene?.height ?? context.viewport?.height ?? 600;
   }
 
   /**
@@ -199,33 +199,33 @@ export class PositionUnitStrategy implements IUnitStrategy {
       PositionUnit.PIXEL,
       this.getDimensionFromContext(context),
       input
-    )
-    return calculator.calculatePosition(context)
+    );
+    return calculator.calculatePosition(context);
   }
 
   /**
    * Get dimension from context or default to X
    */
   private getDimensionFromContext(context: UnitContext): Dimension.X | Dimension.Y | Dimension.XY {
-    return context.dimension || Dimension.X
+    return context.dimension || Dimension.X;
   }
 
   /**
    * Type guards
    */
   private isPositionValue(input: any): input is PositionValue {
-    return Object.values(PositionValue).includes(input)
+    return Object.values(PositionValue).includes(input);
   }
 
   private isPositionUnit(input: any): input is PositionUnit {
-    return Object.values(PositionUnit).includes(input)
+    return Object.values(PositionUnit).includes(input);
   }
 
   private isRandomValue(input: any): input is { getRandomValue(): number } {
-    return input && typeof input.getRandomValue === 'function'
+    return input && typeof input.getRandomValue === 'function';
   }
 
   private isParentPosition(input: any): input is { getValue(parent: any): number } {
-    return input && typeof input.getValue === 'function'
+    return input && typeof input.getValue === 'function';
   }
 }

@@ -1,1 +1,1 @@
-export { Rectangle } from './Rectangle'
+export { Rectangle } from './Rectangle';

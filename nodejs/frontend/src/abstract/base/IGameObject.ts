@@ -1,68 +1,68 @@
-import * as Phaser from 'phaser'
-import type { IContainer } from '../objects/IContainer'
-import type { CommonIStyleProperties } from '../configs/IStyleProperties'
+import * as Phaser from 'phaser';
+import type { IContainer } from '../objects/IContainer';
+import type { CommonIStyleProperties } from '../configs/IStyleProperties';
 
 /**
  * Base interface for all game objects in the Phaser game
  * Provides common properties and methods that all game objects should implement
- * 
+ *
  * Layout and styling is now handled through layoutProperties and IStyle interface
  */
 export interface IGameObject {
   /** Unique identifier for this game object */
-  readonly id: string
-  
+  readonly id: string;
+
   /** Parent container (null if root node) */
-  readonly parent: IContainer | null
-  
+  readonly parent: IContainer | null;
+
   /** Whether this game object is currently active/visible */
-  readonly isActive: boolean
-  
+  readonly isActive: boolean;
+
   /** Whether this game object is destroyed */
-  readonly isDestroyed: boolean
-  
+  readonly isDestroyed: boolean;
+
   /** The scene this game object belongs to */
-  readonly scene: Phaser.Scene
-  
+  readonly scene: Phaser.Scene;
+
   /** Whether the game object is visible */
-  readonly visible: boolean
-  
+  readonly visible: boolean;
+
   /** Whether the game object is interactive */
-  readonly interactive: boolean
-  
+  readonly interactive: boolean;
+
   /** Responsive layout properties for this object */
-  layoutProperties: CommonIStyleProperties
-  
+  layoutProperties: CommonIStyleProperties;
+
   /** Initialize the game object */
-  initialize(): void
-  
+  initialize(): void;
+
   /** Update the game object (called every frame) */
-  update(time: number, delta: number): void
-  
+  update(time: number, delta: number): void;
+
   /** Activate/enable the game object */
-  activate(): void
-  
+  activate(): void;
+
   /** Deactivate/disable the game object */
-  deactivate(): void
-  
+  deactivate(): void;
+
   /** Show the game object */
-  show(): void
-  
+  show(): void;
+
   /** Hide the game object */
-  hide(): void
-  
+  hide(): void;
+
   /** Set whether the game object is interactive */
-  setInteractive(interactive: boolean): void
-  
+  setInteractive(interactive: boolean): void;
+
   /** Destroy the game object and clean up resources */
-  destroy(): void
-  
+  destroy(): void;
+
   /** Clone the game object */
-  clone(): IGameObject
-  
+  clone(): IGameObject;
+
   /** Get the size of this game object */
-  getSize(): { width: number; height: number }
-  
+  getSize(): { width: number; height: number };
+
   /** Get the position of this game object */
-  getPosition(): { x: number; y: number }
+  getPosition(): { x: number; y: number };
 }

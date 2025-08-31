@@ -4,22 +4,22 @@
  */
 export interface IUnitObserver {
   /** Called when a unit value changes */
-  onUnitValueChanged(unitId: string, oldValue: number, newValue: number): void
-  
+  onUnitValueChanged(unitId: string, oldValue: number, newValue: number): void;
+
   /** Called when a unit is created */
-  onUnitCreated(unitId: string, unitType: string): void
-  
+  onUnitCreated(unitId: string, unitType: string): void;
+
   /** Called when a unit is destroyed */
-  onUnitDestroyed(unitId: string): void
-  
+  onUnitDestroyed(unitId: string): void;
+
   /** Called when a unit calculation starts */
-  onUnitCalculationStarted(unitId: string): void
-  
+  onUnitCalculationStarted(unitId: string): void;
+
   /** Called when a unit calculation completes */
-  onUnitCalculationCompleted(unitId: string, result: number, duration: number): void
-  
+  onUnitCalculationCompleted(unitId: string, result: number, duration: number): void;
+
   /** Called when a unit calculation fails */
-  onUnitCalculationFailed(unitId: string, error: Error): void
+  onUnitCalculationFailed(unitId: string, error: Error): void;
 }
 
 /**
@@ -28,37 +28,37 @@ export interface IUnitObserver {
  */
 export interface IUnitSubject {
   /** Add an observer */
-  addObserver(observer: IUnitObserver): void
-  
+  addObserver(observer: IUnitObserver): void;
+
   /** Remove an observer */
-  removeObserver(observer: IUnitObserver): void
-  
+  removeObserver(observer: IUnitObserver): void;
+
   /** Check if an observer is registered */
-  hasObserver(observer: IUnitObserver): boolean
-  
+  hasObserver(observer: IUnitObserver): boolean;
+
   /** Get all registered observers */
-  getObservers(): IUnitObserver[]
-  
+  getObservers(): IUnitObserver[];
+
   /** Clear all observers */
-  clearObservers(): void
-  
+  clearObservers(): void;
+
   /** Notify all observers of a unit value change */
-  notifyValueChanged(unitId: string, oldValue: number, newValue: number): void
-  
+  notifyValueChanged(unitId: string, oldValue: number, newValue: number): void;
+
   /** Notify all observers of a unit creation */
-  notifyUnitCreated(unitId: string, unitType: string): void
-  
+  notifyUnitCreated(unitId: string, unitType: string): void;
+
   /** Notify all observers of a unit destruction */
-  notifyUnitDestroyed(unitId: string): void
-  
+  notifyUnitDestroyed(unitId: string): void;
+
   /** Notify all observers of calculation start */
-  notifyCalculationStarted(unitId: string): void
-  
+  notifyCalculationStarted(unitId: string): void;
+
   /** Notify all observers of calculation completion */
-  notifyCalculationCompleted(unitId: string, result: number, duration: number): void
-  
+  notifyCalculationCompleted(unitId: string, result: number, duration: number): void;
+
   /** Notify all observers of calculation failure */
-  notifyCalculationFailed(unitId: string, error: Error): void
+  notifyCalculationFailed(unitId: string, error: Error): void;
 }
 
 /**
@@ -71,7 +71,7 @@ export enum UnitEventType {
   UNIT_DESTROYED = 'unit_destroyed',
   CALCULATION_STARTED = 'calculation_started',
   CALCULATION_COMPLETED = 'calculation_completed',
-  CALCULATION_FAILED = 'calculation_failed'
+  CALCULATION_FAILED = 'calculation_failed',
 }
 
 /**
@@ -79,8 +79,8 @@ export enum UnitEventType {
  * Contains information about unit events
  */
 export interface IUnitEvent {
-  type: UnitEventType
-  unitId: string
-  timestamp: Date
-  data: any
+  type: UnitEventType;
+  unitId: string;
+  timestamp: Date;
+  data: any;
 }

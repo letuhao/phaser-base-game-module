@@ -5,70 +5,70 @@
 
 export interface BackendConfig {
   /** Backend server base URL */
-  baseUrl: string
-  
+  baseUrl: string;
+
   /** API version */
-  apiVersion: string
-  
+  apiVersion: string;
+
   /** Connection timeout in milliseconds */
-  timeout: number
-  
+  timeout: number;
+
   /** Retry attempts for failed requests */
-  retryAttempts: number
-  
+  retryAttempts: number;
+
   /** Retry delay between attempts in milliseconds */
-  retryDelay: number
-  
+  retryDelay: number;
+
   /** Logging endpoint configuration */
   logging: {
     /** Single log endpoint */
-    single: string
-    
+    single: string;
+
     /** Batch logs endpoint */
-    batch: string
-    
+    batch: string;
+
     /** Log statistics endpoint */
-    stats: string
-    
+    stats: string;
+
     /** Game event endpoint */
-    gameEvent: string
-  }
-  
+    gameEvent: string;
+  };
+
   /** Game endpoints */
   games: {
     /** Game state endpoint */
-    state: string
-    
+    state: string;
+
     /** Game action endpoint */
-    action: string
-    
+    action: string;
+
     /** Game result endpoint */
-    result: string
-  }
-  
+    result: string;
+  };
+
   /** Health check endpoint */
-  health: string
-  
+  health: string;
+
   /** Authentication settings */
   auth: {
     /** API key header name */
-    apiKeyHeader: string
-    
+    apiKeyHeader: string;
+
     /** Session token header name */
-    sessionHeader: string
-    
+    sessionHeader: string;
+
     /** Whether authentication is required */
-    required: boolean
-  }
-  
+    required: boolean;
+  };
+
   /** Rate limiting settings */
   rateLimit: {
     /** Maximum requests per minute */
-    maxRequestsPerMinute: number
-    
+    maxRequestsPerMinute: number;
+
     /** Rate limit window in milliseconds */
-    windowMs: number
-  }
+    windowMs: number;
+  };
 }
 
 /**
@@ -84,24 +84,24 @@ export const DEV_BACKEND_CONFIG: BackendConfig = {
     single: '/api/logs/log',
     batch: '/api/logs/batch',
     stats: '/api/logs/stats',
-    gameEvent: '/api/logs/game-event'
+    gameEvent: '/api/logs/game-event',
   },
   games: {
     state: '/api/games/state',
     action: '/api/games/action',
-    result: '/api/games/result'
+    result: '/api/games/result',
   },
   health: '/api/health',
   auth: {
     apiKeyHeader: 'X-API-Key',
     sessionHeader: 'X-Session-Token',
-    required: false
+    required: false,
   },
   rateLimit: {
     maxRequestsPerMinute: 1000,
-    windowMs: 60000
-  }
-}
+    windowMs: 60000,
+  },
+};
 
 /**
  * Production environment backend configuration
@@ -116,24 +116,24 @@ export const PROD_BACKEND_CONFIG: BackendConfig = {
     single: '/api/logs/log',
     batch: '/api/logs/batch',
     stats: '/api/logs/stats',
-    gameEvent: '/api/logs/game-event'
+    gameEvent: '/api/logs/game-event',
   },
   games: {
     state: '/api/games/state',
     action: '/api/games/action',
-    result: '/api/games/result'
+    result: '/api/games/result',
   },
   health: '/api/health',
   auth: {
     apiKeyHeader: 'X-API-Key',
     sessionHeader: 'X-Session-Token',
-    required: true
+    required: true,
   },
   rateLimit: {
     maxRequestsPerMinute: 500,
-    windowMs: 60000
-  }
-}
+    windowMs: 60000,
+  },
+};
 
 /**
  * Get backend configuration based on current environment
@@ -141,41 +141,42 @@ export const PROD_BACKEND_CONFIG: BackendConfig = {
 export function getBackendConfig(): BackendConfig {
   // For now, always use development config in Node.js environment
   // In browser environment, this would use import.meta.env.DEV
-  const isDevelopment = typeof process !== 'undefined' ? process.env.NODE_ENV === 'development' : true
-  return isDevelopment ? DEV_BACKEND_CONFIG : PROD_BACKEND_CONFIG
+  const isDevelopment =
+    typeof process !== 'undefined' ? process.env.NODE_ENV === 'development' : true;
+  return isDevelopment ? DEV_BACKEND_CONFIG : PROD_BACKEND_CONFIG;
 }
 
 /**
  * Get full URL for a specific endpoint
  */
 export function getBackendUrl(endpoint: string): string {
-  const config = getBackendConfig()
-  return `${config.baseUrl}${endpoint}`
+  const config = getBackendConfig();
+  return `${config.baseUrl}${endpoint}`;
 }
 
 /**
  * Get logging endpoint URL
  */
 export function getLoggingUrl(type: 'single' | 'batch' | 'stats' | 'gameEvent'): string {
-  const config = getBackendConfig()
-  return `${config.baseUrl}${config.logging[type]}`
+  const config = getBackendConfig();
+  return `${config.baseUrl}${config.logging[type]}`;
 }
 
 /**
  * Get game endpoint URL
  */
 export function getGameUrl(type: 'state' | 'action' | 'result'): string {
-  const config = getBackendConfig()
-  return `${config.baseUrl}${config.games[type]}`
+  const config = getBackendConfig();
+  return `${config.baseUrl}${config.games[type]}`;
 }
 
 /**
  * Get health check URL
  */
 export function getHealthUrl(): string {
-  const config = getBackendConfig()
-  return `${config.baseUrl}${config.health}`
+  const config = getBackendConfig();
+  return `${config.baseUrl}${config.health}`;
 }
 
 // Export default configuration
-export default getBackendConfig()
+export default getBackendConfig();

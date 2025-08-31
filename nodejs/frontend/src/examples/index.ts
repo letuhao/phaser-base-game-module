@@ -4,16 +4,16 @@
  */
 
 // Style Properties Examples
-export * from './style-properties/IStyleProperties.examples'
+export * from './style-properties/IStyleProperties.examples';
 
 // Configuration Examples
-export * from './configs/example-configs'
+export * from './configs/example-configs';
 
 // Responsive Configuration Examples
-export * from './responsive/ResponsiveConfigLoader.examples'
+export * from './responsive/ResponsiveConfigLoader.examples';
 
 // Theme Classes Examples
-export * from './theme/theme-classes-example'
+export * from './theme/theme-classes-example';
 
 // Utility Examples
-export * from './utils/example-utils'
+export * from './utils/example-utils';

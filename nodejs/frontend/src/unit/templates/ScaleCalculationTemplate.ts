@@ -1,11 +1,11 @@
-import type { IUnitCalculationTemplate } from './IUnitCalculationTemplate'
-import type { UnitContext } from '../interfaces/IUnit'
-import { ScaleUnitStrategy } from '../strategies/ScaleUnitStrategy'
-import { RangeValidator } from '../validators/RangeValidator'
-import { TypeValidator } from '../validators/TypeValidator'
-import { UnitType } from '../enums/UnitType'
-import { Dimension } from '../enums/Dimension'
-import { Logger } from '../../core/Logger'
+import type { IUnitCalculationTemplate } from './IUnitCalculationTemplate';
+import type { UnitContext } from '../interfaces/IUnit';
+import { ScaleUnitStrategy } from '../strategies/ScaleUnitStrategy';
+import { RangeValidator } from '../validators/RangeValidator';
+import { TypeValidator } from '../validators/TypeValidator';
+import { UnitType } from '../enums/UnitType';
+import { Dimension } from '../enums/Dimension';
+import { Logger } from '../../core/Logger';
 
 /**
  * Scale Calculation Template
@@ -13,15 +13,15 @@ import { Logger } from '../../core/Logger'
  * Provides hooks for customization while maintaining consistent calculation flow
  */
 export abstract class ScaleCalculationTemplate implements IUnitCalculationTemplate {
-  protected readonly strategy: ScaleUnitStrategy
-  protected readonly validators: Array<RangeValidator | TypeValidator>
-  protected readonly context: UnitContext
-  protected readonly logger: Logger = Logger.getInstance()
+  protected readonly strategy: ScaleUnitStrategy;
+  protected readonly validators: Array<RangeValidator | TypeValidator>;
+  protected readonly context: UnitContext;
+  protected readonly logger: Logger = Logger.getInstance();
 
   constructor(context: UnitContext) {
-    this.context = context
-    this.strategy = new ScaleUnitStrategy()
-    this.validators = this.createValidators()
+    this.context = context;
+    this.strategy = new ScaleUnitStrategy();
+    this.validators = this.createValidators();
   }
 
   /**
@@ -32,32 +32,31 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
     try {
       // Step 1: Pre-calculation validation
       if (!this.preCalculationValidation(input)) {
-        throw new Error('Pre-calculation validation failed')
+        throw new Error('Pre-calculation validation failed');
       }
 
       // Step 2: Pre-calculation processing
-      const processedInput = this.preCalculationProcessing(input)
+      const processedInput = this.preCalculationProcessing(input);
 
       // Step 3: Strategy selection and calculation
-      const result = this.performCalculation(processedInput)
+      const result = this.performCalculation(processedInput);
 
       // Step 4: Post-calculation validation
       if (!this.postCalculationValidation(result)) {
-        throw new Error('Post-calculation validation failed')
+        throw new Error('Post-calculation validation failed');
       }
 
       // Step 5: Post-calculation processing
-      const finalResult = this.postCalculationProcessing(result)
+      const finalResult = this.postCalculationProcessing(result);
 
       // Step 6: Log calculation completion
-      this.logCalculationCompletion(input, finalResult)
+      this.logCalculationCompletion(input, finalResult);
 
-      return finalResult
-
+      return finalResult;
     } catch (error) {
       // Step 7: Error handling
-      this.handleCalculationError(error, input)
-      throw error
+      this.handleCalculationError(error, input);
+      throw error;
     }
   }
 
@@ -68,8 +67,13 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
   protected createValidators(): Array<RangeValidator | TypeValidator> {
     return [
       new RangeValidator('ScaleRangeValidator', 0.01, 10, true),
-      new TypeValidator('ScaleTypeValidator', [UnitType.SCALE], [Dimension.X, Dimension.Y, Dimension.BOTH], false)
-    ]
+      new TypeValidator(
+        'ScaleTypeValidator',
+        [UnitType.SCALE],
+        [Dimension.X, Dimension.Y, Dimension.BOTH],
+        false
+      ),
+    ];
   }
 
   /**
@@ -80,11 +84,15 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
     // Run all validators
     for (const validator of this.validators) {
       if (!validator.validate(input, this.context)) {
-        this.logger.warn('ScaleCalculationTemplate', 'preCalculationValidation', `Validation failed: ${validator.getErrorMessage()}`)
-        return false
+        this.logger.warn(
+          'ScaleCalculationTemplate',
+          'preCalculationValidation',
+          `Validation failed: ${validator.getErrorMessage()}`
+        );
+        return false;
       }
     }
-    return true
+    return true;
   }
 
   /**
@@ -93,7 +101,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   protected preCalculationProcessing(input: any): any {
     // Default implementation: return input as-is
-    return input
+    return input;
   }
 
   /**
@@ -101,7 +109,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    * Hook method that can be overridden
    */
   protected performCalculation(input: any): number {
-    return this.strategy.calculate(input, this.context)
+    return this.strategy.calculate(input, this.context);
   }
 
   /**
@@ -110,7 +118,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   protected postCalculationValidation(result: number): boolean {
     // Default validation: check if result is a valid number
-    return typeof result === 'number' && !isNaN(result) && isFinite(result)
+    return typeof result === 'number' && !isNaN(result) && isFinite(result);
   }
 
   /**
@@ -119,7 +127,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   protected postCalculationProcessing(result: number): number {
     // Default implementation: apply rounding and bounds
-    return this.applyRoundingAndBounds(result)
+    return this.applyRoundingAndBounds(result);
   }
 
   /**
@@ -127,11 +135,16 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    * Hook method that can be overridden
    */
   protected logCalculationCompletion(input: any, result: number): void {
-    this.logger.debug('ScaleCalculationTemplate', 'logCalculationCompletion', 'Calculation completed', {
-      input,
-      result,
-      context: this.context
-    })
+    this.logger.debug(
+      'ScaleCalculationTemplate',
+      'logCalculationCompletion',
+      'Calculation completed',
+      {
+        input,
+        result,
+        context: this.context,
+      }
+    );
   }
 
   /**
@@ -143,8 +156,8 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
       error: error.message,
       input,
       context: this.context,
-      stack: error.stack
-    })
+      stack: error.stack,
+    });
   }
 
   /**
@@ -153,17 +166,17 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   protected applyRoundingAndBounds(result: number): number {
     // Default implementation: round to 3 decimal places for scale precision
-    return Math.round(result * 1000) / 1000
+    return Math.round(result * 1000) / 1000;
   }
 
   /**
    * Get calculation statistics
    */
   public getCalculationStats(): {
-    totalCalculations: number
-    validationFailures: number
-    calculationErrors: number
-    averageResult: number
+    totalCalculations: number;
+    validationFailures: number;
+    calculationErrors: number;
+    averageResult: number;
   } {
     // This would track statistics over time
     // For now, return placeholder data
@@ -171,8 +184,8 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
       totalCalculations: 0,
       validationFailures: 0,
       calculationErrors: 0,
-      averageResult: 0
-    }
+      averageResult: 0,
+    };
   }
 
   /**
@@ -180,7 +193,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   public resetStats(): void {
     // Reset all statistics
-    this.logger.debug('ScaleCalculationTemplate', 'resetStats', 'Statistics reset')
+    this.logger.debug('ScaleCalculationTemplate', 'resetStats', 'Statistics reset');
   }
 
   /**
@@ -190,24 +203,24 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
     return this.validators.map(validator => ({
       name: validator.getName(),
       type: validator.constructor.name,
-      enabled: true
-    }))
+      enabled: true,
+    }));
   }
 
   /**
    * Add custom validator
    */
   public addValidator(validator: RangeValidator | TypeValidator): void {
-    this.validators.push(validator)
+    this.validators.push(validator);
   }
 
   /**
    * Remove validator by name
    */
   public removeValidator(name: string): void {
-    const index = this.validators.findIndex(v => v.getName() === name)
+    const index = this.validators.findIndex(v => v.getName() === name);
     if (index !== -1) {
-      this.validators.splice(index, 1)
+      this.validators.splice(index, 1);
     }
   }
 
@@ -215,14 +228,14 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    * Get context information
    */
   public getContext(): UnitContext {
-    return this.context
+    return this.context;
   }
 
   /**
    * Update context
    */
   public updateContext(newContext: Partial<UnitContext>): void {
-    Object.assign(this.context, newContext)
+    Object.assign(this.context, newContext);
   }
 
   /**
@@ -233,17 +246,17 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
       templateName: this.constructor.name,
       version: '1.0.0',
       supportedInputs: this.getSupportedInputs(),
-      calculationSteps: this.getCalculationSteps()
-    }
+      calculationSteps: this.getCalculationSteps(),
+    };
   }
 
   /**
    * Check if the template can handle the input
    */
   public canHandle(input: any): boolean {
-    return this.getSupportedInputs().some(type => 
-      typeof input === type || input?.constructor?.name === type
-    )
+    return this.getSupportedInputs().some(
+      type => typeof input === type || input?.constructor?.name === type
+    );
   }
 
   /**
@@ -253,13 +266,13 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
     return {
       totalTime: 0,
       stepTimes: {},
-      memoryUsage: 0
-    }
+      memoryUsage: 0,
+    };
   }
 
   /**
    * Abstract methods for metadata
    */
-  protected abstract getSupportedInputs(): string[]
-  protected abstract getCalculationSteps(): string[]
+  protected abstract getSupportedInputs(): string[];
+  protected abstract getCalculationSteps(): string[];
 }

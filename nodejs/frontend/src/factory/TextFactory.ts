@@ -1,17 +1,17 @@
-import * as Phaser from 'phaser'
-import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory'
-import { Logger } from '../core/Logger'
+import * as Phaser from 'phaser';
+import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
+import { Logger } from '../core/Logger';
 
 /**
  * Factory for creating text game objects
  */
 export class TextFactory extends BaseGameObjectFactory {
-  private logger: Logger = Logger.getInstance()
-  
+  private logger: Logger = Logger.getInstance();
+
   constructor() {
-    super(['text'])
+    super(['text']);
   }
-  
+
   /**
    * Create a text game object from configuration
    */
@@ -27,29 +27,33 @@ export class TextFactory extends BaseGameObjectFactory {
         shadow: config.shadow,
         align: config.align || 'left',
         wordWrap: config.wordWrap || false,
-        maxLines: config.maxLines
-      }
-      
-      const text = scene.add.text(config.x || 0, config.y || 0, config.content || '', textConfig)
-      
+        maxLines: config.maxLines,
+      };
+
+      const text = scene.add.text(config.x || 0, config.y || 0, config.content || '', textConfig);
+
       // Set common properties
-      this.setCommonProperties(text, config)
-      
+      this.setCommonProperties(text, config);
+
       // Set text-specific properties
       if (config.origin) {
-        text.setOrigin(config.origin.x || 0, config.origin.y || 0)
+        text.setOrigin(config.origin.x || 0, config.origin.y || 0);
       }
-      
+
       // Set interactive if specified
       if (config.interactive) {
-        text.setInteractive()
+        text.setInteractive();
       }
-      
-      return text
-      
+
+      return text;
     } catch (error) {
-      this.logger.error('TextFactory', 'createGameObject', `Error creating text '${config.id}':`, error)
-      return null
+      this.logger.error(
+        'TextFactory',
+        'createGameObject',
+        `Error creating text '${config.id}':`,
+        error
+      );
+      return null;
     }
   }
 }

@@ -1,17 +1,17 @@
-import type { IUnitValidator } from './IUnitValidator'
-import type { UnitContext } from '../interfaces/IUnit'
-import { BaseUnitValidator } from './IUnitValidator'
-import { UnitType } from '../enums/UnitType'
-import { Dimension } from '../enums/Dimension'
+import type { IUnitValidator } from './IUnitValidator';
+import type { UnitContext } from '../interfaces/IUnit';
+import { BaseUnitValidator } from './IUnitValidator';
+import { UnitType } from '../enums/UnitType';
+import { Dimension } from '../enums/Dimension';
 
 /**
  * Type Validator
  * Validates that unit types and dimensions are compatible
  */
 export class TypeValidator extends BaseUnitValidator {
-  private allowedTypes: UnitType[]
-  private allowedDimensions: Dimension[]
-  private strictMode: boolean
+  private allowedTypes: UnitType[];
+  private allowedDimensions: Dimension[];
+  private strictMode: boolean;
 
   constructor(
     name: string = 'TypeValidator',
@@ -19,24 +19,24 @@ export class TypeValidator extends BaseUnitValidator {
     allowedDimensions: Dimension[] = Object.values(Dimension),
     strictMode: boolean = false
   ) {
-    super()
-    this.allowedTypes = allowedTypes
-    this.allowedDimensions = allowedDimensions
-    this.strictMode = strictMode
+    super();
+    this.allowedTypes = allowedTypes;
+    this.allowedDimensions = allowedDimensions;
+    this.strictMode = strictMode;
   }
 
   /**
    * Get validator name
    */
   getName(): string {
-    return 'TypeValidator'
+    return 'TypeValidator';
   }
 
   /**
    * Check if this validator can handle the input
    */
   canHandle(input: any): boolean {
-    return input !== null && input !== undefined
+    return input !== null && input !== undefined;
   }
 
   /**
@@ -45,22 +45,22 @@ export class TypeValidator extends BaseUnitValidator {
   protected performValidation(input: any, context: UnitContext): boolean {
     // Validate unit type
     if (!this.validateUnitType(input, context)) {
-      return false
+      return false;
     }
 
     // Validate dimension compatibility
     if (!this.validateDimension(input, context)) {
-      return false
+      return false;
     }
 
     // Validate value type
     if (!this.validateValueType(input, context)) {
-      return false
+      return false;
     }
 
     // All validations passed
-    this.errorMessage = undefined
-    return true
+    this.errorMessage = undefined;
+    return true;
   }
 
   /**
@@ -69,21 +69,21 @@ export class TypeValidator extends BaseUnitValidator {
   private validateUnitType(input: any, context: UnitContext): boolean {
     // Check if input has a unitType property
     if (input && typeof input.unitType === 'string') {
-      const inputType = input.unitType as UnitType
-      
+      const inputType = input.unitType as UnitType;
+
       if (!this.allowedTypes.includes(inputType)) {
-        this.errorMessage = `Unit type '${inputType}' is not allowed. Allowed types: ${this.allowedTypes.join(', ')}`
-        return false
+        this.errorMessage = `Unit type '${inputType}' is not allowed. Allowed types: ${this.allowedTypes.join(', ')}`;
+        return false;
       }
     }
 
     // Check context unit type if available
     if (context.unitType && !this.allowedTypes.includes(context.unitType)) {
-      this.errorMessage = `Context unit type '${context.unitType}' is not allowed. Allowed types: ${this.allowedTypes.join(', ')}`
-      return false
+      this.errorMessage = `Context unit type '${context.unitType}' is not allowed. Allowed types: ${this.allowedTypes.join(', ')}`;
+      return false;
     }
 
-    return true
+    return true;
   }
 
   /**
@@ -92,21 +92,21 @@ export class TypeValidator extends BaseUnitValidator {
   private validateDimension(input: any, context: UnitContext): boolean {
     // Check if input has a dimension property
     if (input && input.dimension) {
-      const inputDimension = input.dimension as Dimension
-      
+      const inputDimension = input.dimension as Dimension;
+
       if (!this.allowedDimensions.includes(inputDimension)) {
-        this.errorMessage = `Dimension '${inputDimension}' is not allowed. Allowed dimensions: ${this.allowedDimensions.join(', ')}`
-        return false
+        this.errorMessage = `Dimension '${inputDimension}' is not allowed. Allowed dimensions: ${this.allowedDimensions.join(', ')}`;
+        return false;
       }
     }
 
     // Check context dimension if available
     if (context.dimension && !this.allowedDimensions.includes(context.dimension)) {
-      this.errorMessage = `Context dimension '${context.dimension}' is not allowed. Allowed dimensions: ${this.allowedDimensions.join(', ')}`
-      return false
+      this.errorMessage = `Context dimension '${context.dimension}' is not allowed. Allowed dimensions: ${this.allowedDimensions.join(', ')}`;
+      return false;
     }
 
-    return true
+    return true;
   }
 
   /**
@@ -117,18 +117,18 @@ export class TypeValidator extends BaseUnitValidator {
     if (this.strictMode) {
       // Strict mode: only allow specific value types
       if (!this.isValidStrictValue(input)) {
-        this.errorMessage = `Input value type '${typeof input}' is not allowed in strict mode`
-        return false
+        this.errorMessage = `Input value type '${typeof input}' is not allowed in strict mode`;
+        return false;
       }
     } else {
       // Relaxed mode: allow common value types
       if (!this.isValidRelaxedValue(input)) {
-        this.errorMessage = `Input value type '${typeof input}' is not supported`
-        return false
+        this.errorMessage = `Input value type '${typeof input}' is not supported`;
+        return false;
       }
     }
 
-    return true
+    return true;
   }
 
   /**
@@ -138,12 +138,12 @@ export class TypeValidator extends BaseUnitValidator {
     return (
       typeof input === 'number' ||
       typeof input === 'string' ||
-      (typeof input === 'object' && input !== null && (
-        typeof input.value === 'number' ||
-        typeof input.getValue === 'function' ||
-        typeof input.unitType === 'string'
-      ))
-    )
+      (typeof input === 'object' &&
+        input !== null &&
+        (typeof input.value === 'number' ||
+          typeof input.getValue === 'function' ||
+          typeof input.unitType === 'string'))
+    );
   }
 
   /**
@@ -157,7 +157,7 @@ export class TypeValidator extends BaseUnitValidator {
       typeof input === 'string' ||
       typeof input === 'boolean' ||
       typeof input === 'object'
-    )
+    );
   }
 
   /**
@@ -167,21 +167,21 @@ export class TypeValidator extends BaseUnitValidator {
     return {
       allowedTypes: this.allowedTypes,
       allowedDimensions: this.allowedDimensions,
-      strictMode: this.strictMode
-    }
+      strictMode: this.strictMode,
+    };
   }
 
   /**
    * Update validator configuration
    */
   updateConfiguration(config: {
-    allowedTypes?: UnitType[]
-    allowedDimensions?: Dimension[]
-    strictMode?: boolean
+    allowedTypes?: UnitType[];
+    allowedDimensions?: Dimension[];
+    strictMode?: boolean;
   }) {
-    if (config.allowedTypes !== undefined) this.allowedTypes = config.allowedTypes
-    if (config.allowedDimensions !== undefined) this.allowedDimensions = config.allowedDimensions
-    if (config.strictMode !== undefined) this.strictMode = config.strictMode
+    if (config.allowedTypes !== undefined) this.allowedTypes = config.allowedTypes;
+    if (config.allowedDimensions !== undefined) this.allowedDimensions = config.allowedDimensions;
+    if (config.strictMode !== undefined) this.strictMode = config.strictMode;
   }
 
   /**
@@ -189,7 +189,7 @@ export class TypeValidator extends BaseUnitValidator {
    */
   addAllowedType(type: UnitType): void {
     if (!this.allowedTypes.includes(type)) {
-      this.allowedTypes.push(type)
+      this.allowedTypes.push(type);
     }
   }
 
@@ -197,9 +197,9 @@ export class TypeValidator extends BaseUnitValidator {
    * Remove allowed unit type
    */
   removeAllowedType(type: UnitType): void {
-    const index = this.allowedTypes.indexOf(type)
+    const index = this.allowedTypes.indexOf(type);
     if (index > -1) {
-      this.allowedTypes.splice(index, 1)
+      this.allowedTypes.splice(index, 1);
     }
   }
 
@@ -208,7 +208,7 @@ export class TypeValidator extends BaseUnitValidator {
    */
   addAllowedDimension(dimension: Dimension): void {
     if (!this.allowedDimensions.includes(dimension)) {
-      this.allowedDimensions.push(dimension)
+      this.allowedDimensions.push(dimension);
     }
   }
 
@@ -216,9 +216,9 @@ export class TypeValidator extends BaseUnitValidator {
    * Remove allowed dimension
    */
   removeAllowedDimension(dimension: Dimension): void {
-    const index = this.allowedDimensions.indexOf(dimension)
+    const index = this.allowedDimensions.indexOf(dimension);
     if (index > -1) {
-      this.allowedDimensions.splice(index, 1)
+      this.allowedDimensions.splice(index, 1);
     }
   }
 }

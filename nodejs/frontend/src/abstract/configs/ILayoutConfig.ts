@@ -1,4 +1,4 @@
-import type { IPositionConfig } from './IPositionConfig'
+import type { IPositionConfig } from './IPositionConfig';
 
 /**
  * Layout configuration interface for game object layout management
@@ -7,180 +7,187 @@ import type { IPositionConfig } from './IPositionConfig'
  */
 export interface ILayoutConfig extends IPositionConfig {
   /** Layout type */
-  readonly layoutType: 'none' | 'flexbox' | 'grid' | 'stack' | 'dock' | 'flow' | 'absolute'
-  
+  readonly layoutType: 'none' | 'flexbox' | 'grid' | 'stack' | 'dock' | 'flow' | 'absolute';
+
   /** Layout direction for flexbox and stack layouts */
-  readonly layoutDirection: 'horizontal' | 'vertical' | 'horizontal-reverse' | 'vertical-reverse'
-  
+  readonly layoutDirection: 'horizontal' | 'vertical' | 'horizontal-reverse' | 'vertical-reverse';
+
   /** Layout alignment and distribution */
   readonly layoutAlignment: {
     /** Main axis alignment (for flexbox: flex-start, center, flex-end, space-between, space-around, space-evenly) */
-    mainAxis: 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly' | 'stretch'
+    mainAxis:
+      | 'start'
+      | 'center'
+      | 'end'
+      | 'space-between'
+      | 'space-around'
+      | 'space-evenly'
+      | 'stretch';
     /** Cross axis alignment (for flexbox: flex-start, center, flex-end, stretch, baseline) */
-    crossAxis: 'start' | 'center' | 'end' | 'stretch' | 'baseline'
+    crossAxis: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
     /** Content alignment within the container */
-    content: 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly'
-  }
-  
+    content: 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';
+  };
+
   /** Flexbox specific properties */
   readonly flexbox: {
     /** Flex grow factor */
-    flexGrow: number
+    flexGrow: number;
     /** Flex shrink factor */
-    flexShrink: number
+    flexShrink: number;
     /** Flex basis (initial size) */
-    flexBasis: number | 'auto' | 'content'
+    flexBasis: number | 'auto' | 'content';
     /** Flex order for reordering */
-    order: number
+    order: number;
     /** Whether to wrap flex items */
-    flexWrap: 'nowrap' | 'wrap' | 'wrap-reverse'
+    flexWrap: 'nowrap' | 'wrap' | 'wrap-reverse';
     /** Align individual flex items */
-    alignSelf: 'auto' | 'start' | 'center' | 'end' | 'stretch' | 'baseline'
-  }
-  
+    alignSelf: 'auto' | 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+  };
+
   /** Grid specific properties */
   readonly grid: {
     /** Grid column start position */
-    gridColumnStart: number | string
+    gridColumnStart: number | string;
     /** Grid column end position */
-    gridColumnEnd: number | string
+    gridColumnEnd: number | string;
     /** Grid row start position */
-    gridRowStart: number | string
+    gridRowStart: number | string;
     /** Grid row end position */
-    gridRowEnd: number | string
+    gridRowEnd: number | string;
     /** Grid area name */
-    gridArea: string
+    gridArea: string;
     /** Justify self alignment within grid cell */
-    justifySelf: 'start' | 'center' | 'end' | 'stretch'
+    justifySelf: 'start' | 'center' | 'end' | 'stretch';
     /** Align self alignment within grid cell */
-    alignSelf: 'start' | 'center' | 'end' | 'stretch' | 'baseline'
-  }
-  
+    alignSelf: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+  };
+
   /** Stack layout properties */
   readonly stack: {
     /** Stack orientation */
-    orientation: 'horizontal' | 'vertical'
+    orientation: 'horizontal' | 'vertical';
     /** Spacing between stack items */
-    spacing: number
+    spacing: number;
     /** Whether to reverse the stack order */
-    reverse: boolean
+    reverse: boolean;
     /** Stack alignment */
-    alignment: 'start' | 'center' | 'end' | 'stretch'
-  }
-  
+    alignment: 'start' | 'center' | 'end' | 'stretch';
+  };
+
   /** Dock layout properties (like WPF DockPanel) */
   readonly dock: {
     /** Dock position */
-    dockPosition: 'top' | 'bottom' | 'left' | 'right' | 'fill'
+    dockPosition: 'top' | 'bottom' | 'left' | 'right' | 'fill';
     /** Dock margin */
-    dockMargin: number
+    dockMargin: number;
     /** Whether to fill remaining space */
-    fillRemaining: boolean
-  }
-  
+    fillRemaining: boolean;
+  };
+
   /** Flow layout properties */
   readonly flow: {
     /** Flow direction */
-    flowDirection: 'left-to-right' | 'right-to-left' | 'top-to-bottom' | 'bottom-to-top'
+    flowDirection: 'left-to-right' | 'right-to-left' | 'top-to-bottom' | 'bottom-to-top';
     /** Line wrapping behavior */
-    wrap: 'wrap' | 'nowrap'
+    wrap: 'wrap' | 'nowrap';
     /** Line alignment */
-    lineAlignment: 'start' | 'center' | 'end' | 'justify'
+    lineAlignment: 'start' | 'center' | 'end' | 'justify';
     /** Spacing between items */
-    itemSpacing: number
+    itemSpacing: number;
     /** Spacing between lines */
-    lineSpacing: number
-  }
-  
+    lineSpacing: number;
+  };
+
   /** Container properties */
   readonly container: {
     /** Whether this element acts as a container */
-    isContainer: boolean
+    isContainer: boolean;
     /** Container type */
-    containerType: 'flex' | 'grid' | 'stack' | 'dock' | 'flow' | 'absolute'
+    containerType: 'flex' | 'grid' | 'stack' | 'dock' | 'flow' | 'absolute';
     /** Container constraints */
     constraints: {
       /** Maximum number of children */
-      maxChildren: number
+      maxChildren: number;
       /** Whether to auto-size based on content */
-      autoSize: boolean
+      autoSize: boolean;
       /** Whether to clip overflow */
-      clipOverflow: boolean
+      clipOverflow: boolean;
       /** Overflow behavior */
-      overflow: 'visible' | 'hidden' | 'scroll' | 'auto'
-    }
-  }
-  
+      overflow: 'visible' | 'hidden' | 'scroll' | 'auto';
+    };
+  };
+
   /** Spacing and gaps */
   readonly spacing: {
     /** Gap between child elements */
-    gap: number
+    gap: number;
     /** Row gap for grid layouts */
-    rowGap: number
+    rowGap: number;
     /** Column gap for grid layouts */
-    columnGap: number
+    columnGap: number;
     /** Margin around the entire layout */
-    margin: number
+    margin: number;
     /** Padding inside the layout container */
-    padding: number
-  }
-  
+    padding: number;
+  };
+
   /** Responsive layout rules */
   readonly responsiveLayout: {
     /** Breakpoint-specific layout changes */
     breakpoints: {
       [breakpoint: string]: {
-        layoutType?: 'none' | 'flexbox' | 'grid' | 'stack' | 'dock' | 'flow' | 'absolute'
-        layoutDirection?: 'horizontal' | 'vertical' | 'horizontal-reverse' | 'vertical-reverse'
-        flexbox?: Partial<ILayoutConfig['flexbox']>
-        grid?: Partial<ILayoutConfig['grid']>
-        stack?: Partial<ILayoutConfig['stack']>
-        dock?: Partial<ILayoutConfig['dock']>
-        flow?: Partial<ILayoutConfig['flow']>
-        spacing?: Partial<ILayoutConfig['spacing']>
-      }
-    }
-  }
-  
+        layoutType?: 'none' | 'flexbox' | 'grid' | 'stack' | 'dock' | 'flow' | 'absolute';
+        layoutDirection?: 'horizontal' | 'vertical' | 'horizontal-reverse' | 'vertical-reverse';
+        flexbox?: Partial<ILayoutConfig['flexbox']>;
+        grid?: Partial<ILayoutConfig['grid']>;
+        stack?: Partial<ILayoutConfig['stack']>;
+        dock?: Partial<ILayoutConfig['dock']>;
+        flow?: Partial<ILayoutConfig['flow']>;
+        spacing?: Partial<ILayoutConfig['spacing']>;
+      };
+    };
+  };
+
   /** Layout calculation methods */
   readonly layoutMethods: {
     /** Calculate layout for all children */
-    calculateLayout(): void
+    calculateLayout(): void;
     /** Measure the size needed for this layout */
-    measureLayout(): { width: number; height: number }
+    measureLayout(): { width: number; height: number };
     /** Arrange children within the available space */
-    arrangeLayout(availableWidth: number, availableHeight: number): void
+    arrangeLayout(availableWidth: number, availableHeight: number): void;
     /** Get the layout bounds including all children */
-    getLayoutBounds(): { x: number; y: number; width: number; height: number }
+    getLayoutBounds(): { x: number; y: number; width: number; height: number };
     /** Check if layout needs recalculation */
-    needsLayoutRecalculation(): boolean
+    needsLayoutRecalculation(): boolean;
     /** Invalidate layout cache */
-    invalidateLayout(): void
-  }
-  
+    invalidateLayout(): void;
+  };
+
   /** Child management */
   readonly childManagement: {
     /** Add child to layout */
-    addChild(child: ILayoutConfig): void
+    addChild(child: ILayoutConfig): void;
     /** Remove child from layout */
-    removeChild(child: ILayoutConfig): void
+    removeChild(child: ILayoutConfig): void;
     /** Get all children */
-    getChildren(): ILayoutConfig[]
+    getChildren(): ILayoutConfig[];
     /** Get child at specific index */
-    getChildAt(index: number): ILayoutConfig | undefined
+    getChildAt(index: number): ILayoutConfig | undefined;
     /** Get child count */
-    getChildCount(): number
+    getChildCount(): number;
     /** Clear all children */
-    clearChildren(): void
-  }
-  
+    clearChildren(): void;
+  };
+
   /** Layout events */
   readonly layoutEvents: {
     /** Fired when layout changes */
-    onLayoutChanged: (() => void)[]
+    onLayoutChanged: (() => void)[];
     /** Fired when children are added/removed */
-    onChildrenChanged: (() => void)[]
+    onChildrenChanged: (() => void)[];
     /** Fired when layout is invalidated */
-    onLayoutInvalidated: (() => void)[]
-  }
+    onLayoutInvalidated: (() => void)[];
+  };
 }

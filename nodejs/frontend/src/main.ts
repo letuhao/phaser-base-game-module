@@ -1,8 +1,8 @@
-import { Game } from './game/Game'
-import { logger } from './core'
+import { Game } from './game/Game';
+import { logger } from './core';
 
 // Initialize the game when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  logger.info('Main', 'unknown', 'main', 'Initializing Phaser Game')
-  new Game()
-})
+  logger.info('Main', 'unknown', 'main', 'Initializing Phaser Game');
+  new Game();
+});
