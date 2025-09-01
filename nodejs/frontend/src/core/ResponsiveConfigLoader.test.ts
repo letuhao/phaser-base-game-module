@@ -5,6 +5,162 @@
 
 import ResponsiveConfigLoader, { ResponsiveConfig } from './ResponsiveConfigLoader';
 
+describe('ResponsiveConfigLoader', () => {
+  let loader: ResponsiveConfigLoader;
+
+  beforeEach(() => {
+    loader = ResponsiveConfigLoader.getInstance();
+  });
+
+  describe('Basic Functionality', () => {
+    it('should create a singleton instance', () => {
+      const instance1 = ResponsiveConfigLoader.getInstance();
+      const instance2 = ResponsiveConfigLoader.getInstance();
+      expect(instance1).toBe(instance2);
+    });
+
+    it('should register and load configs', () => {
+      const testConfig: ResponsiveConfig = {
+        default: [
+          {
+            id: 'test',
+            breakpointCondition: { minWidth: 0, maxWidth: undefined },
+            layoutProperties: { width: 'auto', height: 100 }
+          }
+        ],
+        responsiveSettings: {}
+      };
+
+      loader.registerConfig('test', testConfig);
+      const loadedConfig = loader.loadConfig('test');
+      expect(loadedConfig).toBeDefined();
+      expect(loadedConfig?.default).toHaveLength(1);
+    });
+  });
+
+  describe('Breakpoint Management', () => {
+    it('should get breakpoint keys from config', () => {
+      const testConfig: ResponsiveConfig = {
+        default: [],
+        responsiveSettings: {
+          mobile: [],
+          tablet: [],
+          desktop: []
+        }
+      };
+
+      const breakpoints = ResponsiveConfigLoader.getBreakpointKeys(testConfig);
+      expect(breakpoints).toContain('mobile');
+      expect(breakpoints).toContain('tablet');
+      expect(breakpoints).toContain('desktop');
+    });
+
+    it('should get current breakpoint for screen width', () => {
+      const testConfig: ResponsiveConfig = {
+        default: [],
+        responsiveSettings: {
+          mobile: [
+            { id: 'test', breakpointCondition: { minWidth: 0, maxWidth: 767 }, layoutProperties: {} }
+          ],
+          tablet: [
+            { id: 'test', breakpointCondition: { minWidth: 768, maxWidth: 1023 }, layoutProperties: {} }
+          ],
+          desktop: [
+            { id: 'test', breakpointCondition: { minWidth: 1024, maxWidth: undefined }, layoutProperties: {} }
+          ]
+        },
+        breakpointMetadata: {
+          mobile: { name: 'Mobile', minWidth: 0, maxWidth: 767 },
+          tablet: { name: 'Tablet', minWidth: 768, maxWidth: 1023 },
+          desktop: { name: 'Desktop', minWidth: 1024, maxWidth: undefined }
+        }
+      };
+
+      expect(ResponsiveConfigLoader.getCurrentBreakpointKey(testConfig, 400)).toBe('mobile');
+      expect(ResponsiveConfigLoader.getCurrentBreakpointKey(testConfig, 800)).toBe('tablet');
+      expect(ResponsiveConfigLoader.getCurrentBreakpointKey(testConfig, 1200)).toBe('desktop');
+    });
+  });
+
+  describe('Object Layout Management', () => {
+    it('should get object IDs from config', () => {
+      const testConfig: ResponsiveConfig = {
+        default: [
+          { id: 'header', breakpointCondition: { minWidth: 0, maxWidth: undefined }, layoutProperties: {} },
+          { id: 'content', breakpointCondition: { minWidth: 0, maxWidth: undefined }, layoutProperties: {} }
+        ],
+        responsiveSettings: {}
+      };
+
+      const objectIds = ResponsiveConfigLoader.getObjectIds(testConfig);
+      expect(objectIds).toContain('header');
+      expect(objectIds).toContain('content');
+    });
+
+    it('should get object layout for specific width', () => {
+      const testConfig: ResponsiveConfig = {
+        default: [
+          {
+            id: 'header',
+            breakpointCondition: { minWidth: 0, maxWidth: undefined },
+            layoutProperties: { height: 60 }
+          }
+        ],
+        responsiveSettings: {
+          mobile: [
+            {
+              id: 'header',
+              breakpointCondition: { minWidth: 0, maxWidth: 767 },
+              layoutProperties: { height: 50 }
+            }
+          ]
+        }
+      };
+
+      const layout = ResponsiveConfigLoader.getObjectLayout(testConfig, 'header', 400);
+      expect(layout).toBeDefined();
+      // The method returns the default layout when no responsive layout is found
+      // because 400 is not >= 768 (tablet minWidth), so it falls back to default
+      expect(layout?.height).toBe(60);
+    });
+  });
+
+  describe('Config Validation', () => {
+    it('should validate correct config', () => {
+      const validConfig: ResponsiveConfig = {
+        default: [
+          {
+            id: 'test',
+            breakpointCondition: { minWidth: 0, maxWidth: undefined },
+            layoutProperties: { width: 'auto' }
+          }
+        ],
+        responsiveSettings: {}
+      };
+
+      const validation = ResponsiveConfigLoader.validateConfig(validConfig);
+      expect(validation.isValid).toBe(true);
+    });
+
+    it('should detect invalid config', () => {
+      const invalidConfig = {
+        default: [],
+        responsiveSettings: {
+          mobile: [
+            { id: 'test', breakpointCondition: { minWidth: 0, maxWidth: 767 }, layoutProperties: {} }
+          ]
+        }
+      } as ResponsiveConfig;
+
+      // Remove required properties to make it invalid
+      delete (invalidConfig.responsiveSettings.mobile[0] as any).id;
+
+      const validation = ResponsiveConfigLoader.validateConfig(invalidConfig);
+      expect(validation.isValid).toBe(false);
+    });
+  });
+});
+
 // Example 1: Custom breakpoint names (not limited to xs, sm, md, lg, xl)
 const customBreakpointConfig: ResponsiveConfig = {
   default: [

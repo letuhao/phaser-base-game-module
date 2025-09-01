@@ -66,7 +66,7 @@ export class FillSizeValueCalculationStrategy implements ISizeValueCalculationSt
   readonly sizeUnit = SizeUnit.PARENT_WIDTH;
   readonly dimension = Dimension.WIDTH;
 
-  canHandle(sizeValue: SizeValue, sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+  canHandle(sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
     return sizeValue === SizeValue.FILL;
   }
 

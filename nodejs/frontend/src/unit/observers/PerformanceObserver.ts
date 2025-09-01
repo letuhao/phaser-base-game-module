@@ -1,6 +1,6 @@
 import type { IUnitObserver } from './IUnitObserver';
 import { Logger } from '../../core/Logger';
-import { DEFAULT_FALLBACK_VALUES } from '../constants';
+import { DEFAULT_FALLBACK_VALUES, PERFORMANCE_CONSTANTS } from '../constants';
 
 /**
  * Performance Observer
@@ -27,7 +27,7 @@ export class PerformanceObserver implements IUnitObserver {
     >(),
   };
 
-  private readonly maxHistorySize = 1000;
+  private readonly maxHistorySize = PERFORMANCE_CONSTANTS.MONITORING.MAX_HISTORY_SIZE;
   private readonly logger: Logger = Logger.getInstance();
 
   /**

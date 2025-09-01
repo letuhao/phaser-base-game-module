@@ -57,6 +57,147 @@ export const DEFAULT_FALLBACK_VALUES = {
 } as const;
 
 /**
+ * Performance Constants
+ * Used for performance monitoring, caching, and optimization
+ */
+export const PERFORMANCE_CONSTANTS = {
+  // Cache settings
+  CACHE: {
+    DEFAULT_TIMEOUT_MS: 5000,
+    DEFAULT_MAX_SIZE: 100,
+    CLEANUP_INTERVAL_MS: 30000,
+    HASH_SEED: 5381 as number
+  },
+  
+  // Performance thresholds
+  THRESHOLDS: {
+    MAX_CALCULATION_TIME_MS: 100,
+    MAX_MEMORY_USAGE_MB: 50,
+    ERROR_RATE_THRESHOLD: 0.05, // 5%
+    SLOW_OPERATION_THRESHOLD_MS: 10
+  },
+  
+  // History and monitoring
+  MONITORING: {
+    MAX_HISTORY_SIZE: 1000,
+    MAX_EXECUTION_TIMES: 100,
+    PERFORMANCE_CHECK_INTERVAL_MS: 5000,
+    METRICS_RESET_INTERVAL_MS: 60000
+  },
+  
+  // Smoothing and averaging
+  SMOOTHING: {
+    ALPHA_FACTOR: 0.1,
+    MOVING_AVERAGE_WINDOW: 10,
+    EXPONENTIAL_DECAY_FACTOR: 0.95
+  }
+} as const;
+
+/**
+ * Validation Constants
+ * Used for input validation and error checking
+ */
+export const VALIDATION_CONSTANTS = {
+  // Range validation
+  RANGES: {
+    REASONABLE_SIZE_MIN: 0,
+    REASONABLE_SIZE_MAX: 10000,
+    REASONABLE_POSITION_MIN: -10000,
+    REASONABLE_POSITION_MAX: 20000,
+    REASONABLE_SCALE_MIN: 0,
+    REASONABLE_SCALE_MAX: 10
+  },
+  
+  // Validation rules
+  RULES: {
+    MAX_VALIDATION_RULES: 10,
+    VALIDATION_TIMEOUT_MS: 1000,
+    STRICT_VALIDATION_THRESHOLD: 0.01
+  },
+  
+  // Error handling
+  ERROR_HANDLING: {
+    MAX_ERROR_MESSAGES: 50,
+    ERROR_CLEANUP_INTERVAL_MS: 30000,
+    ERROR_RETENTION_PERIOD_MS: 300000 // 5 minutes
+  }
+} as const;
+
+/**
+ * Feature Flag Constants
+ * Used for feature flag system and deployment
+ */
+export const FEATURE_FLAG_CONSTANTS = {
+  // Rollout settings
+  ROLLOUT: {
+    DEFAULT_PERCENTAGE: 10,
+    MAX_PERCENTAGE: 100,
+    HASH_MODULO: 100,
+    HASH_OFFSET: 1
+  },
+  
+  // Hash calculation
+  HASH: {
+    INITIAL_VALUE: 0,
+    SHIFT_AMOUNT: 5,
+    BITWISE_MASK: 0xFFFFFFFF
+  },
+  
+  // Version management
+  VERSION: {
+    DEFAULT_VERSION: '1.0.0',
+    VERSION_SEPARATOR: '.',
+    MAX_VERSION_PARTS: 3
+  }
+} as const;
+
+/**
+ * Command and History Constants
+ * Used for command management and undo/redo functionality
+ */
+export const COMMAND_CONSTANTS = {
+  // Command history
+  HISTORY: {
+    DEFAULT_INDEX: -1,
+    MAX_HISTORY_SIZE: 100,
+    CLEANUP_THRESHOLD: 50
+  },
+  
+  // Batch operations
+  BATCH: {
+    DEFAULT_BATCH_SIZE: 10,
+    MAX_BATCH_SIZE: 100,
+    BATCH_TIMEOUT_MS: 5000
+  },
+  
+  // Execution metrics
+  METRICS: {
+    MAX_EXECUTION_TIMES: 100,
+    METRICS_RESET_INTERVAL_MS: 60000
+  }
+} as const;
+
+/**
+ * Observer and Monitoring Constants
+ * Used for observer patterns and monitoring systems
+ */
+export const OBSERVER_CONSTANTS = {
+  // Observer management
+  MANAGEMENT: {
+    MAX_OBSERVERS_PER_UNIT: 10,
+    OBSERVER_CLEANUP_INTERVAL_MS: 30000,
+    MAX_NOTIFICATION_QUEUE: 100
+  },
+  
+  // Performance monitoring
+  PERFORMANCE: {
+    METRICS_RESET_INTERVAL_MS: 60000,
+    SLOW_OPERATION_THRESHOLD_MS: 10,
+    MEMORY_USAGE_THRESHOLD_MB: 50
+  }
+} as const;
+
+/**
  * Mock Context Defaults
  * Used in test setup and fallback scenarios
  */
@@ -182,6 +323,25 @@ export const TypeGuards = {
   isValidScale: (value: number): boolean => {
     return value >= DEFAULT_FALLBACK_VALUES.SCALE.MIN && 
            value <= DEFAULT_FALLBACK_VALUES.SCALE.MAX;
+  },
+  
+  /**
+   * Check if a value is within reasonable bounds for validation
+   */
+  isWithinReasonableBounds: (value: number, type: 'size' | 'position' | 'scale'): boolean => {
+    switch (type) {
+      case 'size':
+        return value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MIN && 
+               value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MAX;
+      case 'position':
+        return value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_POSITION_MIN && 
+               value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_POSITION_MAX;
+      case 'scale':
+        return value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MIN && 
+               value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MAX;
+      default:
+        return false;
+    }
   }
 } as const;
 
@@ -216,7 +376,28 @@ export const Utils = {
   /**
    * Get mock context defaults for testing
    */
-  getMockContextDefaults: () => MOCK_CONTEXT_DEFAULTS
+  getMockContextDefaults: () => MOCK_CONTEXT_DEFAULTS,
+  
+  /**
+   * Generate a hash for string input
+   */
+  generateHash: (str: string): number => {
+    let hash = PERFORMANCE_CONSTANTS.CACHE.HASH_SEED;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & 0xFFFFFFFF; // Convert to 32-bit integer
+    }
+    return hash;
+  },
+  
+  /**
+   * Check if performance is within acceptable thresholds
+   */
+  isPerformanceAcceptable: (executionTime: number, errorRate: number): boolean => {
+    return executionTime <= PERFORMANCE_CONSTANTS.THRESHOLDS.MAX_CALCULATION_TIME_MS && 
+           errorRate <= PERFORMANCE_CONSTANTS.THRESHOLDS.ERROR_RATE_THRESHOLD;
+  }
 } as const;
 
 /**
@@ -224,6 +405,11 @@ export const Utils = {
  */
 export const UnitSystemConstants = {
   DEFAULTS: DEFAULT_FALLBACK_VALUES,
+  PERFORMANCE: PERFORMANCE_CONSTANTS,
+  VALIDATION: VALIDATION_CONSTANTS,
+  FEATURE_FLAGS: FEATURE_FLAG_CONSTANTS,
+  COMMANDS: COMMAND_CONSTANTS,
+  OBSERVERS: OBSERVER_CONSTANTS,
   MOCK: MOCK_CONTEXT_DEFAULTS,
   PRIORITIES: STRATEGY_PRIORITIES,
   CALCULATIONS: CALCULATION_CONSTANTS,

@@ -1,3 +1,5 @@
+import { FEATURE_FLAG_CONSTANTS, Utils } from '../constants';
+
 export interface FeatureFlag {
   id: string;
   name: string;
@@ -106,9 +108,9 @@ export class FeatureFlagSystem {
     }
 
     // Check rollout percentage
-    if (flag.rolloutPercentage < 100) {
+    if (flag.rolloutPercentage < FEATURE_FLAG_CONSTANTS.ROLLOUT.MAX_PERCENTAGE) {
       const hash = this.hashString(fullContext.userId || fullContext.sessionId || fullContext.ipAddress || 'default');
-      const percentage = (hash % 100) + 1;
+      const percentage = (hash % FEATURE_FLAG_CONSTANTS.ROLLOUT.HASH_MODULO) + FEATURE_FLAG_CONSTANTS.ROLLOUT.HASH_OFFSET;
       
       if (percentage > flag.rolloutPercentage) {
         return {
@@ -177,13 +179,7 @@ export class FeatureFlagSystem {
    * Simple hash function for consistent user assignment
    */
   private hashString(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-    return Math.abs(hash);
+    return Math.abs(Utils.generateHash(str));
   }
 
   /**
@@ -191,7 +187,7 @@ export class FeatureFlagSystem {
    */
   static createUnitSystemRolloutFlag(
     id: string,
-    rolloutPercentage: number = 10,
+    rolloutPercentage: number = FEATURE_FLAG_CONSTANTS.ROLLOUT.DEFAULT_PERCENTAGE,
     targetEnvironments: string[] = ['development', 'staging']
   ): FeatureFlag {
     return {
@@ -204,7 +200,7 @@ export class FeatureFlagSystem {
       targetEnvironments,
       startDate: new Date(),
       metadata: {
-        version: '2.0.0',
+        version: FEATURE_FLAG_CONSTANTS.VERSION.DEFAULT_VERSION,
         improvements: [
           'Strategy Pattern implementation',
           'Performance caching',
@@ -221,7 +217,7 @@ export class FeatureFlagSystem {
   static createABTestFlag(
     id: string,
     testName: string,
-    rolloutPercentage: number = 50
+    rolloutPercentage: number = FEATURE_FLAG_CONSTANTS.ROLLOUT.MAX_PERCENTAGE / 2
   ): FeatureFlag {
     return {
       id,

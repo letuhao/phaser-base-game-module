@@ -412,6 +412,10 @@ export class ProductionMonitoringSystem {
    * Check performance thresholds
    */
   private checkPerformanceThresholds(metric: PerformanceMetric): void {
+    if (!this.config.alertingEnabled) {
+      return;
+    }
+
     if (metric.metricName === 'calculation.execution_time' && 
         metric.value > this.config.performanceThresholds.maxExecutionTime) {
       this.createAlert({
@@ -426,10 +430,11 @@ export class ProductionMonitoringSystem {
       });
     }
 
-    if (metric.metricName === 'errors.count' && metric.value > 0) {
+    // Only create alerts for errors.count if it's not from recordError (no context tag)
+    if (metric.metricName === 'errors.count' && metric.value > 0 && !metric.tags.context) {
       this.createAlert({
         severity: 'error',
-        title: 'Error detected',
+        title: 'Error count threshold exceeded',
         message: `Error count: ${metric.value}`,
         component: 'error',
         metadata: { metric }

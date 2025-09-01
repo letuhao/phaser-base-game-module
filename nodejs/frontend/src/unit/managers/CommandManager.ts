@@ -1,7 +1,7 @@
 import type { IUnitCommand } from '../commands/IUnitCommand';
 import type { UnitContext } from '../interfaces/IUnit';
 import { Logger } from '../../core/Logger';
-import { DEFAULT_FALLBACK_VALUES } from '../constants';
+import { DEFAULT_FALLBACK_VALUES, COMMAND_CONSTANTS } from '../constants';
 
 /**
  * Command Manager
@@ -37,7 +37,7 @@ export interface ICommandManager {
  */
 export class CommandManager implements ICommandManager {
   private commandHistory: IUnitCommand[] = [];
-  private commandIndex: number = -1;
+  private commandIndex: number = COMMAND_CONSTANTS.HISTORY.DEFAULT_INDEX;
   private readonly logger: Logger = Logger.getInstance();
   
   private executionMetrics = {
@@ -71,8 +71,8 @@ export class CommandManager implements ICommandManager {
       this.executionMetrics.executionTimes.push(duration);
       this.executionMetrics.lastExecutionTime = duration;
 
-      // Keep only last 100 execution times
-      if (this.executionMetrics.executionTimes.length > 100) {
+      // Keep only last execution times based on constants
+      if (this.executionMetrics.executionTimes.length > COMMAND_CONSTANTS.METRICS.MAX_EXECUTION_TIMES) {
         this.executionMetrics.executionTimes.shift();
       }
 
@@ -214,7 +214,7 @@ export class CommandManager implements ICommandManager {
   public clearCommandHistory(): void {
     const count = this.commandHistory.length;
     this.commandHistory = [];
-    this.commandIndex = -1;
+    this.commandIndex = COMMAND_CONSTANTS.HISTORY.DEFAULT_INDEX;
     
     this.logger.info('CommandManager', 'clearCommandHistory', 'Command history cleared', { count });
   }
@@ -223,7 +223,7 @@ export class CommandManager implements ICommandManager {
    * Check if undo is possible
    */
   public canUndo(): boolean {
-    return this.commandIndex >= 0;
+    return this.commandIndex >= COMMAND_CONSTANTS.HISTORY.DEFAULT_INDEX + 1;
   }
 
   /**

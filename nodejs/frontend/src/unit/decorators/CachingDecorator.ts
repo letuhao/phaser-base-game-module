@@ -2,6 +2,7 @@ import { BaseUnitDecorator } from './IUnitDecorator';
 import type { IUnit } from '../interfaces/IUnit';
 import type { UnitContext } from '../interfaces/IUnit';
 import { UnitType } from '../enums/UnitType';
+import { PERFORMANCE_CONSTANTS, Utils } from '../constants';
 
 /**
  * Caching Decorator
@@ -9,15 +10,15 @@ import { UnitType } from '../enums/UnitType';
  */
 export class CachingDecorator extends BaseUnitDecorator {
   private cache = new Map<string, { result: number; timestamp: number; contextHash: string }>();
-  private cacheTimeout: number = 5000; // 5 seconds
-  private maxCacheSize: number = 100;
+  private cacheTimeout: number = PERFORMANCE_CONSTANTS.CACHE.DEFAULT_TIMEOUT_MS;
+  private maxCacheSize: number = PERFORMANCE_CONSTANTS.CACHE.DEFAULT_MAX_SIZE;
 
   constructor(
     id: string,
     name: string,
     wrappedUnit: IUnit,
-    cacheTimeout: number = 5000,
-    maxCacheSize: number = 100
+    cacheTimeout: number = PERFORMANCE_CONSTANTS.CACHE.DEFAULT_TIMEOUT_MS,
+    maxCacheSize: number = PERFORMANCE_CONSTANTS.CACHE.DEFAULT_MAX_SIZE
   ) {
     super(id, name, UnitType.SIZE, wrappedUnit);
     this.cacheTimeout = cacheTimeout;
@@ -69,7 +70,7 @@ export class CachingDecorator extends BaseUnitDecorator {
   }
 
   getPriority(): number {
-    return 10; // High priority for caching
+    return PERFORMANCE_CONSTANTS.CACHE.DEFAULT_MAX_SIZE / 10; // High priority for caching
   }
 
   canDecorate(unit: IUnit): boolean {
@@ -177,13 +178,7 @@ export class CachingDecorator extends BaseUnitDecorator {
    * Simple string hash function
    */
   private hashString(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-    return hash;
+    return Utils.generateHash(str);
   }
 
   /**
