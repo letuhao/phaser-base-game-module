@@ -20,6 +20,50 @@ export enum GameObjectType {
   GRAPHICS = 'graphics',
   SHAPE = 'shape',
   
+  // Core Types (Phase 1)
+  TILE_SPRITE = 'tileSprite',
+  BITMAP_TEXT = 'bitmapText',
+  DYNAMIC_BITMAP_TEXT = 'dynamicBitmapText',
+  RENDER_TEXTURE = 'renderTexture',
+  
+  // Physics Types (Phase 2)
+  PHYSICS = 'physics',
+  ARCADE_PHYSICS = 'arcadePhysics',
+  MATTER_PHYSICS = 'matterPhysics',
+  STATIC_BODY = 'staticBody',
+  DYNAMIC_BODY = 'dynamicBody',
+  
+  // Animation Types (Phase 3)
+  ANIMATED = 'animated',
+  SPRITE_ANIMATION = 'spriteAnimation',
+  TWEEN_OBJECT = 'tweenObject',
+  TIMELINE_OBJECT = 'timelineObject',
+  
+  // Advanced UI Types (Phase 4)
+  SLIDER = 'slider',
+  CHECKBOX = 'checkbox',
+  RADIO_BUTTON = 'radioButton',
+  DROPDOWN = 'dropdown',
+  TOOLTIP = 'tooltip',
+  PROGRESS_BAR = 'progressBar',
+  TAB_CONTAINER = 'tabContainer',
+  SCROLL_VIEW = 'scrollView',
+  
+  // Lighting Types (Phase 5)
+  LIGHT = 'light',
+  POINT_LIGHT = 'pointLight',
+  DIRECTIONAL_LIGHT = 'directionalLight',
+  SPOT_LIGHT = 'spotLight',
+  MESH = 'mesh',
+  BLITTER = 'blitter',
+  
+  // Performance Types (Phase 6)
+  POOLED_OBJECT = 'pooledObject',
+  CACHED_OBJECT = 'cachedObject',
+  OPTIMIZED_OBJECT = 'optimizedObject',
+  NETWORK_OBJECT = 'networkObject',
+  SYNC_OBJECT = 'syncObject',
+  
   // Interactive Types
   BUTTON = 'button',
   ZONE = 'zone',
@@ -28,7 +72,6 @@ export enum GameObjectType {
   // Advanced Types
   PARTICLE_EMITTER = 'particle_emitter',
   VIDEO = 'video',
-  RENDER_TEXTURE = 'render_texture',
   MESH = 'mesh',
   
   // Custom Types
