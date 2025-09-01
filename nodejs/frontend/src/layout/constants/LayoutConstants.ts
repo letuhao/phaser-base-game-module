@@ -8,7 +8,7 @@
  */
 
 // Import Unit System for compatibility
-import { SizeUnit } from '../../unit';
+import { SizeUnit, SizeValue } from '../../unit';
 
 // ============================================================================
 // BREAKPOINT CONSTANTS
@@ -122,10 +122,10 @@ export const LAYOUT_CONSTANTS = {
 export const SIZE_CONSTANTS = {
   // Size values (compatible with Unit System SizeValue)
   VALUES: {
-    AUTO: SizeUnit.AUTO,
-    FILL: SizeUnit.FILL,
-    FIT: SizeUnit.FIT,
-    STRETCH: SizeUnit.STRETCH,
+    AUTO: SizeValue.AUTO,
+    FILL: SizeValue.FILL,
+    FIT: SizeValue.FIT,
+    STRETCH: SizeValue.STRETCH,
   },
 
   // Size units (compatible with Unit System SizeUnit)

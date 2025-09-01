@@ -47,66 +47,118 @@ export class PositionUnitCalculator implements IPositionUnit {
    * Calculate position based on context
    */
   calculatePosition(context: UnitContext): number {
-    if (typeof this.baseValue === 'number') {
-      return this.baseValue + this.offset;
+    // First determine the reference point based on PositionUnit (measurement type)
+    let referencePoint: number;
+    switch (this.positionUnit) {
+      case PositionUnit.PIXEL:
+        referencePoint = typeof this.baseValue === 'number' ? this.baseValue : 0;
+        break;
+      case PositionUnit.PERCENTAGE:
+        referencePoint = typeof this.baseValue === 'number' ? this.baseValue : 0;
+        break;
+      case PositionUnit.PARENT_LEFT:
+        referencePoint = context.parent?.x ?? 0;
+        break;
+      case PositionUnit.PARENT_RIGHT:
+        referencePoint = (context.parent?.x ?? 0) + (context.parent?.width ?? 0);
+        break;
+      case PositionUnit.PARENT_TOP:
+        referencePoint = context.parent?.y ?? 0;
+        break;
+      case PositionUnit.PARENT_BOTTOM:
+        referencePoint = (context.parent?.y ?? 0) + (context.parent?.height ?? 0);
+        break;
+      case PositionUnit.PARENT_CENTER_X:
+        if (context.parent) {
+          referencePoint = context.parent.x + context.parent.width / 2;
+        } else {
+          // Fallback to scene center when no parent
+          referencePoint = (context.scene?.width ?? 0) / 2;
+        }
+        break;
+      case PositionUnit.PARENT_CENTER_Y:
+        referencePoint = (context.parent?.y ?? 0) + (context.parent?.height ?? 0) / 2;
+        break;
+      case PositionUnit.SCENE_LEFT:
+        referencePoint = 0;
+        break;
+      case PositionUnit.SCENE_RIGHT:
+        referencePoint = context.scene?.width ?? 0;
+        break;
+      case PositionUnit.SCENE_TOP:
+        referencePoint = 0;
+        break;
+      case PositionUnit.SCENE_BOTTOM:
+        referencePoint = context.scene?.height ?? 0;
+        break;
+      case PositionUnit.SCENE_CENTER_X:
+        referencePoint = (context.scene?.width ?? 0) / 2;
+        break;
+      case PositionUnit.SCENE_CENTER_Y:
+        referencePoint = (context.scene?.height ?? 0) / 2;
+        break;
+      case PositionUnit.VIEWPORT_LEFT:
+        referencePoint = 0;
+        break;
+      case PositionUnit.VIEWPORT_RIGHT:
+        referencePoint = context.viewport?.width ?? 0;
+        break;
+      case PositionUnit.VIEWPORT_TOP:
+        referencePoint = 0;
+        break;
+      case PositionUnit.VIEWPORT_BOTTOM:
+        referencePoint = context.viewport?.height ?? 0;
+        break;
+      default:
+        referencePoint = 0;
     }
 
-    switch (this.baseValue) {
-      case PositionValue.CENTER:
-        return this.calculateCenterPosition(context);
-      case PositionValue.LEFT:
-        return this.calculateLeftPosition(context);
-      case PositionValue.RIGHT:
-        return this.calculateRightPosition(context);
-      case PositionValue.TOP:
-        return this.calculateTopPosition(context);
-      case PositionValue.BOTTOM:
-        return this.calculateBottomPosition(context);
-      case PositionValue.PARENT_LEFT:
-        return this.calculateParentLeftPosition(context);
-      case PositionValue.PARENT_RIGHT:
-        return this.calculateParentRightPosition(context);
-      case PositionValue.PARENT_TOP:
-        return this.calculateParentTopPosition(context);
-      case PositionValue.PARENT_BOTTOM:
-        return this.calculateParentBottomPosition(context);
-      case PositionValue.PARENT_CENTER_X:
-        return this.calculateParentCenterXPosition(context);
-      case PositionValue.PARENT_CENTER_Y:
-        return this.calculateParentCenterYPosition(context);
-      case PositionValue.SCENE_LEFT:
-        return this.calculateSceneLeftPosition(context);
-      case PositionValue.SCENE_RIGHT:
-        return this.calculateSceneRightPosition(context);
-      case PositionValue.SCENE_TOP:
-        return this.calculateSceneTopPosition(context);
-      case PositionValue.SCENE_BOTTOM:
-        return this.calculateSceneBottomPosition(context);
-      case PositionValue.SCENE_CENTER_X:
-        return this.calculateSceneCenterXPosition(context);
-      case PositionValue.SCENE_CENTER_Y:
-        return this.calculateSceneCenterYPosition(context);
-      case PositionValue.VIEWPORT_LEFT:
-        return this.calculateViewportLeftPosition(context);
-      case PositionValue.VIEWPORT_RIGHT:
-        return this.calculateViewportRightPosition(context);
-      case PositionValue.VIEWPORT_TOP:
-        return this.calculateViewportTopPosition(context);
-      case PositionValue.VIEWPORT_BOTTOM:
-        return this.calculateViewportBottomPosition(context);
-      case PositionValue.RANDOM:
-        return this.calculateRandomPosition(context);
-      case PositionValue.CONTENT_LEFT:
-        return this.calculateContentLeftPosition(context);
-      case PositionValue.CONTENT_RIGHT:
-        return this.calculateContentRightPosition(context);
-      case PositionValue.CONTENT_TOP:
-        return this.calculateContentTopPosition(context);
-      case PositionValue.CONTENT_BOTTOM:
-        return this.calculateContentBottomPosition(context);
-      default:
-        return this.offset; // Default fallback
+    // Then apply the behavior based on PositionValue
+    return this.applyPositionValue(referencePoint, context);
+  }
+
+  /**
+   * Apply position value behavior to reference point
+   */
+  private applyPositionValue(referencePoint: number, context: UnitContext): number {
+    // If baseValue is a PositionValue enum, use it for behavior
+    if (this.baseValue && Object.values(PositionValue).includes(this.baseValue as PositionValue)) {
+      switch (this.baseValue as PositionValue) {
+        case PositionValue.CENTER:
+          return referencePoint + this.offset;
+        case PositionValue.LEFT:
+          return referencePoint + this.offset;
+        case PositionValue.RIGHT:
+          return referencePoint + this.offset;
+        case PositionValue.TOP:
+          return referencePoint + this.offset;
+        case PositionValue.BOTTOM:
+          return referencePoint + this.offset;
+        case PositionValue.STATIC:
+          return this.offset;
+        case PositionValue.RELATIVE:
+          return this.offset;
+        case PositionValue.ABSOLUTE:
+          return this.offset;
+        case PositionValue.FIXED:
+          return this.offset;
+        case PositionValue.RANDOM:
+          return this.calculateRandomPosition(context);
+        case PositionValue.CONTENT_LEFT:
+          return this.calculateContentLeftPosition(context);
+        case PositionValue.CONTENT_RIGHT:
+          return this.calculateContentRightPosition(context);
+        case PositionValue.CONTENT_TOP:
+          return this.calculateContentTopPosition(context);
+        case PositionValue.CONTENT_BOTTOM:
+          return this.calculateContentBottomPosition(context);
+        default:
+          return referencePoint + this.offset;
+      }
     }
+    
+    // If baseValue is a number, just return the reference point + offset (direct value)
+    return referencePoint + this.offset;
   }
 
   /**
@@ -185,34 +237,36 @@ export class PositionUnitCalculator implements IPositionUnit {
    * Validate unit in given context
    */
   validate(context: UnitContext): boolean {
+    // Check if the positionUnit requires specific context
     if (
-      this.baseValue === PositionValue.PARENT_LEFT ||
-      this.baseValue === PositionValue.PARENT_RIGHT ||
-      this.baseValue === PositionValue.PARENT_TOP ||
-      this.baseValue === PositionValue.PARENT_BOTTOM ||
-      this.baseValue === PositionValue.PARENT_CENTER_X ||
-      this.baseValue === PositionValue.PARENT_CENTER_Y
+      this.positionUnit === PositionUnit.PARENT_LEFT ||
+      this.positionUnit === PositionUnit.PARENT_RIGHT ||
+      this.positionUnit === PositionUnit.PARENT_TOP ||
+      this.positionUnit === PositionUnit.PARENT_BOTTOM ||
+      this.positionUnit === PositionUnit.PARENT_CENTER_X ||
+      this.positionUnit === PositionUnit.PARENT_CENTER_Y
     ) {
       return !!context.parent;
     }
     if (
-      this.baseValue === PositionValue.SCENE_LEFT ||
-      this.baseValue === PositionValue.SCENE_RIGHT ||
-      this.baseValue === PositionValue.SCENE_TOP ||
-      this.baseValue === PositionValue.SCENE_BOTTOM ||
-      this.baseValue === PositionValue.SCENE_CENTER_X ||
-      this.baseValue === PositionValue.SCENE_CENTER_Y
+      this.positionUnit === PositionUnit.SCENE_LEFT ||
+      this.positionUnit === PositionUnit.SCENE_RIGHT ||
+      this.positionUnit === PositionUnit.SCENE_TOP ||
+      this.positionUnit === PositionUnit.SCENE_BOTTOM ||
+      this.positionUnit === PositionUnit.SCENE_CENTER_X ||
+      this.positionUnit === PositionUnit.SCENE_CENTER_Y
     ) {
       return !!context.scene;
     }
     if (
-      this.baseValue === PositionValue.VIEWPORT_LEFT ||
-      this.baseValue === PositionValue.VIEWPORT_RIGHT ||
-      this.baseValue === PositionValue.VIEWPORT_TOP ||
-      this.baseValue === PositionValue.VIEWPORT_BOTTOM
+      this.positionUnit === PositionUnit.VIEWPORT_LEFT ||
+      this.positionUnit === PositionUnit.VIEWPORT_RIGHT ||
+      this.positionUnit === PositionUnit.VIEWPORT_TOP ||
+      this.positionUnit === PositionUnit.VIEWPORT_BOTTOM
     ) {
       return !!context.viewport;
     }
+    // Check if the baseValue requires specific context
     if (
       this.baseValue === PositionValue.CONTENT_LEFT ||
       this.baseValue === PositionValue.CONTENT_RIGHT ||
@@ -246,112 +300,6 @@ export class PositionUnitCalculator implements IPositionUnit {
     if (this.alignment) cloned.setAlignment(this.alignment);
     cloned.setOffset(this.offset);
     return cloned;
-  }
-
-  // Private calculation methods
-  private calculateCenterPosition(context: UnitContext): number {
-    if (this.axis === Dimension.X) {
-      return (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
-    }
-    return (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
-  }
-
-  private calculateLeftPosition(_context: UnitContext): number {
-    return this.offset;
-  }
-
-  private calculateRightPosition(context: UnitContext): number {
-    if (this.axis === Dimension.X) {
-      return (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
-    }
-    return this.offset;
-  }
-
-  private calculateTopPosition(_context: UnitContext): number {
-    return this.offset;
-  }
-
-  private calculateBottomPosition(context: UnitContext): number {
-    if (this.axis === Dimension.Y) {
-      return (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
-    }
-    return this.offset;
-  }
-
-  private calculateParentLeftPosition(context: UnitContext): number {
-    return (context.parent?.x ?? 0) + this.offset;
-  }
-
-  private calculateParentRightPosition(context: UnitContext): number {
-    return (context.parent?.x ?? 0) + (context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) + this.offset;
-  }
-
-  private calculateParentTopPosition(context: UnitContext): number {
-    return (context.parent?.y ?? 0) + this.offset;
-  }
-
-  private calculateParentBottomPosition(context: UnitContext): number {
-    return (context.parent?.y ?? 0) + (context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) + this.offset;
-  }
-
-  private calculateParentCenterXPosition(context: UnitContext): number {
-    return (context.parent?.x ?? 0) + (context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / 2 + this.offset;
-  }
-
-  private calculateParentCenterYPosition(context: UnitContext): number {
-    return (context.parent?.y ?? 0) + (context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / 2 + this.offset;
-  }
-
-  private calculateSceneLeftPosition(_context: UnitContext): number {
-    return this.offset;
-  }
-
-  private calculateSceneRightPosition(context: UnitContext): number {
-    if (this.axis === Dimension.X) {
-      return (context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
-    }
-    return this.offset;
-  }
-
-  private calculateSceneTopPosition(_context: UnitContext): number {
-    return this.offset;
-  }
-
-  private calculateSceneBottomPosition(context: UnitContext): number {
-    if (this.axis === Dimension.Y) {
-      return (context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
-    }
-    return this.offset;
-  }
-
-  private calculateSceneCenterXPosition(context: UnitContext): number {
-    return (context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
-  }
-
-  private calculateSceneCenterYPosition(context: UnitContext): number {
-    return (context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
-  }
-
-  private calculateViewportLeftPosition(_context: UnitContext): number {
-    return this.offset;
-  }
-
-  private calculateViewportRightPosition(context: UnitContext): number {
-    if (this.axis === Dimension.X) {
-      return (context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT) + this.offset;
-    }
-    return this.offset;
-  }
-
-  private calculateViewportTopPosition(_context: UnitContext): number {
-    return this.offset;
-  }
-
-  private calculateViewportBottomPosition(context: UnitContext): number {
-    if (this.axis === Dimension.Y) {
-      return (context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT) + this.offset;
-    }
-    return this.offset;
   }
 
   private calculateRandomPosition(context: UnitContext): number {

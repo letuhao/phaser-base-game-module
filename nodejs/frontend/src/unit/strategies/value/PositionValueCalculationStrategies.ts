@@ -62,7 +62,7 @@ export class PixelPositionValueCalculationStrategy implements IPositionValueCalc
 export class CenterPositionValueCalculationStrategy implements IPositionValueCalculationStrategy {
   readonly strategyId = 'center-position-calculation';
   readonly positionValue = PositionValue.CENTER;
-  readonly positionUnit = PositionUnit.CENTER;
+  readonly positionUnit = PositionUnit.PIXEL; // CENTER behavior with pixel measurement
   readonly axisUnit = AxisUnit.X;
 
   canHandle(positionValue: PositionValue, _positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
@@ -123,7 +123,7 @@ export class CenterPositionValueCalculationStrategy implements IPositionValueCal
 export class ContentLeftPositionValueCalculationStrategy implements IPositionValueCalculationStrategy {
   readonly strategyId = 'content-left-position-calculation';
   readonly positionValue = PositionValue.CONTENT_LEFT;
-  readonly positionUnit = PositionUnit.CONTENT_LEFT;
+  readonly positionUnit = PositionUnit.PIXEL; // CONTENT_LEFT behavior with pixel measurement
   readonly axisUnit = AxisUnit.X;
 
   canHandle(positionValue: PositionValue, _positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
@@ -175,12 +175,12 @@ export class ContentLeftPositionValueCalculationStrategy implements IPositionVal
  */
 export class ParentCenterXPositionValueCalculationStrategy implements IPositionValueCalculationStrategy {
   readonly strategyId = 'parent-center-x-position-calculation';
-  readonly positionValue = PositionValue.PARENT_CENTER_X;
-  readonly positionUnit = PositionUnit.PARENT_CENTER_X;
+  readonly positionValue = PositionValue.CENTER; // CENTER behavior
+  readonly positionUnit = PositionUnit.PARENT_CENTER_X; // measured relative to parent center X
   readonly axisUnit = AxisUnit.X;
 
   canHandle(positionValue: PositionValue, positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
-    return positionValue === PositionValue.PARENT_CENTER_X && positionUnit === PositionUnit.PARENT_CENTER_X;
+    return positionValue === PositionValue.CENTER && positionUnit === PositionUnit.PARENT_CENTER_X;
   }
 
   calculate(
@@ -226,12 +226,12 @@ export class ParentCenterXPositionValueCalculationStrategy implements IPositionV
  */
 export class SceneCenterXPositionValueCalculationStrategy implements IPositionValueCalculationStrategy {
   readonly strategyId = 'scene-center-x-position-calculation';
-  readonly positionValue = PositionValue.SCENE_CENTER_X;
-  readonly positionUnit = PositionUnit.SCENE_CENTER_X;
+  readonly positionValue = PositionValue.CENTER; // CENTER behavior
+  readonly positionUnit = PositionUnit.SCENE_CENTER_X; // measured relative to scene center X
   readonly axisUnit = AxisUnit.X;
 
   canHandle(positionValue: PositionValue, positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
-    return positionValue === PositionValue.SCENE_CENTER_X && positionUnit === PositionUnit.SCENE_CENTER_X;
+    return positionValue === PositionValue.CENTER && positionUnit === PositionUnit.SCENE_CENTER_X;
   }
 
   calculate(

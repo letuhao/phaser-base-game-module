@@ -195,7 +195,7 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should handle fill values', () => {
-      expect(strategy.canHandle(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(true);
+      expect(strategy.canHandle(SizeValue.FILL, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(true);
       expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(false);
     });
 
@@ -242,22 +242,22 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should handle auto values', () => {
-      expect(strategy.canHandle(SizeValue.AUTO, SizeUnit.AUTO, Dimension.WIDTH)).toBe(true);
-      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.AUTO, Dimension.WIDTH)).toBe(false);
+      expect(strategy.canHandle(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(true);
+      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(false);
     });
 
     it('should calculate auto values based on content dimensions', () => {
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.AUTO, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
       expect(result).toBe(200); // content.width
     });
 
     it('should calculate height dimension correctly', () => {
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.AUTO, Dimension.HEIGHT, mockContext);
+      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.HEIGHT, mockContext);
       expect(result).toBe(150); // content.height
     });
 
     it('should calculate both dimensions correctly', () => {
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.AUTO, Dimension.BOTH, mockContext);
+      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.BOTH, mockContext);
       expect(result).toBe(200); // Math.max(content.width, content.height)
     });
 
@@ -283,12 +283,12 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should handle parent width values', () => {
-      expect(strategy.canHandle(SizeValue.PARENT_WIDTH, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(true);
+      expect(strategy.canHandle(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(true);
       expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(false);
     });
 
     it('should calculate parent width values correctly', () => {
-      const result = strategy.calculate(SizeValue.PARENT_WIDTH, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext);
       expect(result).toBe(800); // parent.width
     });
 
@@ -314,12 +314,12 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should handle viewport width values', () => {
-      expect(strategy.canHandle(SizeValue.VIEWPORT_WIDTH, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH)).toBe(true);
+      expect(strategy.canHandle(SizeValue.FILL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH)).toBe(true);
       expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH)).toBe(false);
     });
 
     it('should calculate viewport width values correctly', () => {
-      const result = strategy.calculate(SizeValue.VIEWPORT_WIDTH, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(SizeValue.FILL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH, mockContext);
       expect(result).toBe(1366); // viewport.width
     });
 

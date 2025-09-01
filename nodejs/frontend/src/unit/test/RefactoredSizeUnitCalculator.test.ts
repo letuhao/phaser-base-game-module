@@ -132,14 +132,14 @@ describe('RefactoredSizeUnitCalculator', () => {
       );
 
       const result = calculator.calculate(mockContext);
-      expect(result).toBe(1920); // scene.width (matching original behavior)
+      expect(result).toBe(800); // parent.width (correct behavior)
     });
 
     it('should use AutoSizeValueCalculationStrategy for AUTO values', () => {
       calculator = new RefactoredSizeUnitCalculator(
         'test-id',
         'Test Calculator',
-        SizeUnit.AUTO,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.AUTO,
         false,
@@ -156,7 +156,7 @@ describe('RefactoredSizeUnitCalculator', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -171,7 +171,7 @@ describe('RefactoredSizeUnitCalculator', () => {
         'Test Calculator',
         SizeUnit.VIEWPORT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.VIEWPORT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -203,7 +203,7 @@ describe('RefactoredSizeUnitCalculator', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -409,7 +409,7 @@ describe('RefactoredSizeUnitCalculator', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -424,7 +424,7 @@ describe('RefactoredSizeUnitCalculator', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -442,7 +442,7 @@ describe('RefactoredSizeUnitCalculator', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -467,7 +467,7 @@ describe('RefactoredSizeUnitCalculator', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );

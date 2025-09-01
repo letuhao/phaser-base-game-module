@@ -112,7 +112,7 @@ describe('LegacyPositionUnitAdapter', () => {
     });
 
     it('should not be responsive for static units', () => {
-      const staticLegacyUnit = createLegacyPositionUnit({ positionUnit: PositionUnit.STATIC });
+      const staticLegacyUnit = createLegacyPositionUnit({ positionUnit: PositionUnit.PIXEL });
       const staticAdapter = new LegacyPositionUnitAdapter('static-adapter', 'Static Adapter', staticLegacyUnit);
       
       expect(staticAdapter.isResponsive()).toBe(false);

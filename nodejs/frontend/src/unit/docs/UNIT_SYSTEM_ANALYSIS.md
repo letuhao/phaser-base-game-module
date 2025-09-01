@@ -5,32 +5,69 @@ The Unit System is a sophisticated, enterprise-grade architecture for handling r
 
 ## Core Architecture
 
-### 1. **Unit Types & Enums**
-The system supports three main unit types:
+### 1. **Unit Types & Enums (REFACTORED)**
+The system now uses a clear separation between **semantic behaviors** and **measurement types**:
 
-#### **Size Units** (`SizeUnit`)
+#### **Size System**
+**SizeValue** (Semantic Behaviors):
+- **Responsive behaviors**: `FILL`, `AUTO`, `FIT`, `STRETCH`
+- **Constraint behaviors**: `MIN`, `MAX`
+
+**SizeUnit** (Measurement Types):
 - **Direct values**: `PIXEL` (fixed pixels)
-- **Responsive keywords**: `FILL`, `AUTO`, `FIT`, `STRETCH`
-- **Parent-relative**: `PARENT_WIDTH`, `PARENT_HEIGHT`, `PARENT_MIN`, `PARENT_MAX`
-- **Scene-relative**: `SCENE_WIDTH`, `SCENE_HEIGHT`, `SCENE_MIN`, `SCENE_MAX`
+- **Percentage**: `PERCENTAGE` (percentage of reference)
+- **Parent-relative**: `PARENT_WIDTH`, `PARENT_HEIGHT`
+- **Scene-relative**: `SCENE_WIDTH`, `SCENE_HEIGHT`
 - **Viewport units**: `VIEWPORT_WIDTH`, `VIEWPORT_HEIGHT`
-- **Content-based**: `CONTENT`, `INTRINSIC`
-- **Random**: `RANDOM` (for procedural generation)
 
-#### **Position Units** (`PositionUnit`)
+#### **Position System**
+**PositionValue** (Semantic Behaviors):
+- **Alignment behaviors**: `CENTER`, `LEFT`, `RIGHT`, `TOP`, `BOTTOM`
+- **Directional behaviors**: `START`, `END` (LTR/RTL aware)
+
+**PositionUnit** (Measurement Types):
 - **Direct values**: `PIXEL`
-- **Alignment**: `CENTER`, `LEFT`, `RIGHT`, `TOP`, `BOTTOM`
-- **Position types**: `STATIC`, `RELATIVE`, `ABSOLUTE`, `FIXED`
-- **Parent-relative**: `PARENT_LEFT`, `PARENT_RIGHT`, `PARENT_TOP`, `PARENT_BOTTOM`
-- **Scene-relative**: `SCENE_LEFT`, `SCENE_RIGHT`, `SCENE_TOP`, `SCENE_BOTTOM`
-- **Viewport units**: `VIEWPORT_LEFT`, `VIEWPORT_RIGHT`, `VIEWPORT_TOP`, `VIEWPORT_BOTTOM`
+- **Percentage**: `PERCENTAGE`
+- **Parent-relative**: `PARENT_LEFT`, `PARENT_RIGHT`, `PARENT_CENTER_X`, `PARENT_CENTER_Y`
+- **Scene-relative**: `SCENE_LEFT`, `SCENE_RIGHT`, `SCENE_CENTER_X`, `SCENE_CENTER_Y`
 
-#### **Scale Units** (`ScaleUnit`)
+#### **Scale System**
+**ScaleValue** (Semantic Behaviors):
+- **Responsive behaviors**: `FIT`, `STRETCH`, `FILL`, `AUTO`
+- **Special behaviors**: `RESPONSIVE`, `RANDOM`
+
+**ScaleUnit** (Measurement Types):
 - **Factors**: `FACTOR` (multiplier)
-- **Responsive**: `RESPONSIVE` (adapts to context)
-- **Content-based**: `CONTENT_FIT`, `CONTENT_FILL`
+- **Percentage**: `PERCENTAGE`
+- **Context-relative**: `PARENT_SCALE`, `SCENE_SCALE`, `VIEWPORT_SCALE`
 
-### 2. **Design Patterns Implementation**
+### 2. **Calculation Logic Flow (IMPROVED)**
+The system now follows a consistent **Unit → Value** calculation pattern:
+
+```typescript
+// 1. Determine measurement based on Unit (measurement type)
+let measuredValue: number;
+switch (this.unit) {
+  case Unit.PIXEL:
+    measuredValue = typeof this.baseValue === 'number' ? this.baseValue : fallback;
+    break;
+  case Unit.PARENT_WIDTH:
+    measuredValue = context.parent?.width ?? fallback;
+    break;
+  // ... other units
+}
+
+// 2. Apply behavior based on Value (semantic behavior)
+return this.applyValue(measuredValue, context);
+```
+
+**Benefits**:
+- **Consistent Logic**: All calculators follow the same pattern
+- **Correct Results**: `SizeValue.FILL` + `SizeUnit.PARENT_WIDTH` returns parent width
+- **Type Safety**: Proper handling of both enum values and numeric values
+- **Fallback Support**: Graceful handling of missing context
+
+### 3. **Design Patterns Implementation**
 
 #### **Factory Pattern** (`UnitCalculatorFactory`)
 - **Singleton factory** for creating unit calculators

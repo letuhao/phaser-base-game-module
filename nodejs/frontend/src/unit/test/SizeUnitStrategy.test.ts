@@ -58,7 +58,7 @@ describe('SizeUnitStrategy', () => {
     });
 
     it('should handle SizeValue enum', () => {
-      const input = { value: SizeValue.PARENT_WIDTH };
+      const input = { value: SizeValue.FILL };
       expect(strategy.canHandle(input)).toBe(true);
       
       const result = strategy.calculate(input, mockContext);
@@ -208,7 +208,7 @@ describe('SizeUnitStrategy', () => {
       const supportedInputs = [
         { value: 100 },
         { value: 'fill' },
-        { value: SizeValue.PARENT_WIDTH },
+        { value: SizeValue.FILL },
         { value: SizeUnit.PIXEL },
         { randomValue: { getRandomValue: () => 42 } },
         { parentSize: { getValue: () => 200 } },

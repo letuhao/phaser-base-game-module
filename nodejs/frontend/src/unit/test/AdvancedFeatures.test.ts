@@ -94,7 +94,7 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
       // Fill cache
       smallCache.set(SizeValue.FILL, SizeUnit.PARENT_WIDTH, mockContext, 800);
       smallCache.set(SizeValue.AUTO, SizeUnit.PIXEL, mockContext, 100);
-      smallCache.set(SizeValue.PARENT_WIDTH, SizeUnit.PARENT_WIDTH, mockContext, 800); // Should evict
+      smallCache.set(SizeValue.FILL, SizeUnit.PARENT_WIDTH, mockContext, 800); // Should evict
 
       expect(smallCache.getSize()).toBe(2);
       expect(smallCache.isFull()).toBe(true);
@@ -173,7 +173,7 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
 
     it('should track performance metrics', () => {
       const value = SizeValue.FILL;
-      const unit = SizeUnit.PARENT_WIDTH;
+      const unit = SizeUnit.PIXEL; // Use PIXEL unit which FillSizeValueCalculationStrategy can handle
       
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 }

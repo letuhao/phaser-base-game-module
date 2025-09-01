@@ -11,7 +11,7 @@ import {
   ICalculatedLayout
 } from './ILayout';
 import { 
-  LogLevel,
+
   ValidationSeverity,
   LayoutChangeType
 } from '../enums/LayoutEnums';

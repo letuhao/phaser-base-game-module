@@ -106,7 +106,7 @@ describe('Complete Calculator Refactoring', () => {
       );
 
       const result = calculator.calculate(mockContext);
-      expect(result).toBe(1920); // scene.width (matching original behavior)
+      expect(result).toBe(800); // parent.width (correct behavior)
     });
 
     it('should provide strategy statistics', () => {
@@ -125,7 +125,7 @@ describe('Complete Calculator Refactoring', () => {
         'Test Size Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         sizeStrategyRegistry
       );
@@ -299,7 +299,7 @@ describe('Complete Calculator Refactoring', () => {
       const position = positionCalculator.calculate(mockContext);
       const scale = scaleCalculator.calculate(mockContext);
 
-      expect(size).toBe(1920); // scene.width (matching original behavior)
+      expect(size).toBe(800); // parent.width (correct behavior)
       expect(position).toBe(960); // scene.width / 2
       expect(scale).toBe(1.5); // factor value
     });
@@ -406,7 +406,7 @@ describe('Complete Calculator Refactoring', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         sizeStrategyRegistry
       );
@@ -421,7 +421,7 @@ describe('Complete Calculator Refactoring', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         sizeStrategyRegistry
       );

@@ -1,16 +1,12 @@
 /**
  * SizeUnit Enum
- * Defines all possible size unit types for responsive sizing
+ * Defines measurement types for size calculations
+ * These represent HOW to measure the size
  */
 export enum SizeUnit {
-  // Direct numeric values (pixels)
-  PIXEL = 'pixel',
-
-  // Responsive keywords
-  FILL = 'fill', // Fill available space
-  AUTO = 'auto', // Auto-size based on content
-  FIT = 'fit', // Fit content while maintaining aspect ratio
-  STRETCH = 'stretch', // Stretch to fill available space
+  // Direct measurement units
+  PIXEL = 'pixel', // Absolute pixel values
+  PERCENTAGE = 'percentage', // Percentage values
 
   // Parent-relative units (like CSS vh/vw but for parent)
   PARENT_WIDTH = 'parent-width', // Percentage of parent width
@@ -27,11 +23,4 @@ export enum SizeUnit {
   // Viewport units
   VIEWPORT_WIDTH = 'viewport-width', // Percentage of viewport width
   VIEWPORT_HEIGHT = 'viewport-height', // Percentage of viewport height
-
-  // Random values
-  RANDOM = 'random', // Random value within a range
-
-  // Content-based sizing
-  CONTENT = 'content', // Size based on content dimensions
-  INTRINSIC = 'intrinsic', // Intrinsic size of the object
 }

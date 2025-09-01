@@ -1,7 +1,7 @@
 import type { IStrategyComposer } from './IStrategyComposer';
 import type { UnitContext } from '../../interfaces/IUnit';
-import { SizeValue } from '../../enums/SizeValue';
 import { SizeUnit } from '../../enums/SizeUnit';
+import { SizeValue } from '../../enums/SizeValue';
 import { Dimension } from '../../enums/Dimension';
 import { Logger } from '../../../core/Logger';
 

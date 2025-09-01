@@ -7,7 +7,7 @@
 
 import type { IGameObject } from '../IGameObject';
 import { GameObjectType } from '../../enums/GameObjectEnums';
-import * as Phaser from 'phaser';
+
 
 /**
  * Animation states

@@ -228,18 +228,20 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
    * Basic validation fallback
    */
   private validateBasic(context: UnitContext): boolean {
-    if (this.baseValue === SizeValue.PARENT_WIDTH || this.baseValue === SizeValue.PARENT_HEIGHT) {
+    // Check if the sizeUnit requires specific context
+    if (this.sizeUnit === SizeUnit.PARENT_WIDTH || this.sizeUnit === SizeUnit.PARENT_HEIGHT) {
       return !!context.parent;
     }
-    if (this.baseValue === SizeValue.SCENE_WIDTH || this.baseValue === SizeValue.SCENE_HEIGHT) {
+    if (this.sizeUnit === SizeUnit.SCENE_WIDTH || this.sizeUnit === SizeUnit.SCENE_HEIGHT) {
       return !!context.scene;
     }
     if (
-      this.baseValue === SizeValue.VIEWPORT_WIDTH ||
-      this.baseValue === SizeValue.VIEWPORT_HEIGHT
+      this.sizeUnit === SizeUnit.VIEWPORT_WIDTH ||
+      this.sizeUnit === SizeUnit.VIEWPORT_HEIGHT
     ) {
       return !!context.viewport;
     }
+    // Check if the baseValue requires specific context
     if (this.baseValue === SizeValue.CONTENT || this.baseValue === SizeValue.INTRINSIC) {
       return !!context.content;
     }

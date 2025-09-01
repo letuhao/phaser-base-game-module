@@ -6,7 +6,7 @@
 
 import type { ISceneElement } from '../ISceneElement';
 import type { SceneElementType, SceneElementState } from '../ISceneElement';
-import type { IGameObject } from '../../../game-object/interfaces/IGameObject';
+
 
 /**
  * Element manager operations

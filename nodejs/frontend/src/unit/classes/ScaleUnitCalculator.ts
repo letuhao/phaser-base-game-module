@@ -47,52 +47,84 @@ export class ScaleUnitCalculator implements IScaleUnit {
    * Calculate scale based on context
    */
   calculateScale(context: UnitContext): number {
-    if (typeof this.baseValue === 'number') {
-      return this.applyConstraints(this.baseValue);
+    // First determine the base scale based on ScaleUnit (measurement type)
+    let baseScale: number;
+    switch (this.scaleUnit) {
+      case ScaleUnit.FACTOR:
+        baseScale = typeof this.baseValue === 'number' ? this.baseValue : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
+        break;
+      case ScaleUnit.PERCENTAGE:
+        baseScale = typeof this.baseValue === 'number' ? this.baseValue / 100 : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
+        break;
+      case ScaleUnit.PARENT_SCALE:
+        baseScale = 1.0; // Default scale factor
+        break;
+      case ScaleUnit.PARENT_WIDTH_SCALE:
+        baseScale = (context.parent?.width ?? 1) / (context.scene?.width ?? 1);
+        break;
+      case ScaleUnit.PARENT_HEIGHT_SCALE:
+        baseScale = (context.parent?.height ?? 1) / (context.scene?.height ?? 1);
+        break;
+      case ScaleUnit.SCENE_SCALE:
+        baseScale = 1.0; // Default scale factor
+        break;
+      case ScaleUnit.SCENE_WIDTH_SCALE:
+        baseScale = (context.scene?.width ?? 1) / (context.viewport?.width ?? 1);
+        break;
+      case ScaleUnit.SCENE_HEIGHT_SCALE:
+        baseScale = (context.scene?.height ?? 1) / (context.viewport?.height ?? 1);
+        break;
+      case ScaleUnit.VIEWPORT_SCALE:
+        baseScale = 1.0; // Default scale factor
+        break;
+      case ScaleUnit.VIEWPORT_WIDTH_SCALE:
+        baseScale = (context.viewport?.width ?? 1) / (context.scene?.width ?? 1);
+        break;
+      case ScaleUnit.VIEWPORT_HEIGHT_SCALE:
+        baseScale = (context.viewport?.height ?? 1) / (context.scene?.height ?? 1);
+        break;
+      default:
+        baseScale = DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
     }
 
-    switch (this.baseValue) {
-      case ScaleValue.FIT:
-        return this.calculateFitScale(context);
-      case ScaleValue.STRETCH:
-        return this.calculateStretchScale(context);
-      case ScaleValue.FILL:
-        return this.calculateFillScale(context);
-      case ScaleValue.MAINTAIN_ASPECT:
-        return this.calculateMaintainAspectScale(context);
-      case ScaleValue.IGNORE_ASPECT:
-        return this.calculateIgnoreAspectScale(context);
-      case ScaleValue.CONTENT_SCALE:
-        return this.calculateContentScale(context);
-      case ScaleValue.INTRINSIC_SCALE:
-        return this.calculateIntrinsicScale(context);
-      case ScaleValue.PARENT_SCALE:
-        return this.calculateParentScale(context);
-      case ScaleValue.PARENT_WIDTH_SCALE:
-        return this.calculateParentWidthScale(context);
-      case ScaleValue.PARENT_HEIGHT_SCALE:
-        return this.calculateParentHeightScale(context);
-      case ScaleValue.SCENE_SCALE:
-        return this.calculateSceneScale(context);
-      case ScaleValue.SCENE_WIDTH_SCALE:
-        return this.calculateSceneWidthScale(context);
-      case ScaleValue.SCENE_HEIGHT_SCALE:
-        return this.calculateSceneHeightScale(context);
-      case ScaleValue.VIEWPORT_SCALE:
-        return this.calculateViewportScale(context);
-      case ScaleValue.VIEWPORT_WIDTH_SCALE:
-        return this.calculateViewportWidthScale(context);
-      case ScaleValue.VIEWPORT_HEIGHT_SCALE:
-        return this.calculateViewportHeightScale(context);
-      case ScaleValue.RANDOM:
-        return this.calculateRandomScale(context);
-      case ScaleValue.BREAKPOINT_SCALE:
-        return this.calculateBreakpointScale(context);
-      case ScaleValue.DEVICE_SCALE:
-        return this.calculateDeviceScale(context);
-      default:
-        return this.applyConstraints(DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT); // Default fallback
+    // Then apply the behavior based on ScaleValue
+    return this.applyScaleValue(baseScale, context);
+  }
+
+  /**
+   * Apply scale value behavior to base scale
+   */
+  private applyScaleValue(baseScale: number, context: UnitContext): number {
+    // If baseValue is a ScaleValue enum, use it for behavior
+    if (typeof this.baseValue === 'string' && Object.values(ScaleValue).includes(this.baseValue as ScaleValue)) {
+      switch (this.baseValue as ScaleValue) {
+        case ScaleValue.FIT:
+          return this.applyConstraints(this.calculateFitScale(context));
+        case ScaleValue.STRETCH:
+          return this.applyConstraints(this.calculateStretchScale(context));
+        case ScaleValue.FILL:
+          return this.applyConstraints(this.calculateFillScale(context));
+        case ScaleValue.MAINTAIN_ASPECT:
+          return this.applyConstraints(this.calculateMaintainAspectScale(context));
+        case ScaleValue.IGNORE_ASPECT:
+          return this.applyConstraints(this.calculateIgnoreAspectScale(context));
+        case ScaleValue.CONTENT_SCALE:
+          return this.applyConstraints(this.calculateContentScale(context));
+        case ScaleValue.INTRINSIC_SCALE:
+          return this.applyConstraints(this.calculateIntrinsicScale(context));
+        case ScaleValue.BREAKPOINT_SCALE:
+          return this.applyConstraints(this.calculateBreakpointScale(context));
+        case ScaleValue.DEVICE_SCALE:
+          return this.applyConstraints(this.calculateDeviceScale(context));
+        case ScaleValue.RANDOM:
+          return this.applyConstraints(this.calculateRandomScale(context));
+        default:
+          return this.applyConstraints(baseScale);
+      }
     }
+    
+    // If baseValue is a number, just return the base scale (direct value)
+    return this.applyConstraints(baseScale);
   }
 
   /**
@@ -170,27 +202,29 @@ export class ScaleUnitCalculator implements IScaleUnit {
    * Validate unit in given context
    */
   validate(context: UnitContext): boolean {
+    // Check if the scaleUnit requires specific context
     if (
-      this.baseValue === ScaleValue.PARENT_SCALE ||
-      this.baseValue === ScaleValue.PARENT_WIDTH_SCALE ||
-      this.baseValue === ScaleValue.PARENT_HEIGHT_SCALE
+      this.scaleUnit === ScaleUnit.PARENT_SCALE ||
+      this.scaleUnit === ScaleUnit.PARENT_WIDTH_SCALE ||
+      this.scaleUnit === ScaleUnit.PARENT_HEIGHT_SCALE
     ) {
       return !!context.parent;
     }
     if (
-      this.baseValue === ScaleValue.SCENE_SCALE ||
-      this.baseValue === ScaleValue.SCENE_WIDTH_SCALE ||
-      this.baseValue === ScaleValue.SCENE_HEIGHT_SCALE
+      this.scaleUnit === ScaleUnit.SCENE_SCALE ||
+      this.scaleUnit === ScaleUnit.SCENE_WIDTH_SCALE ||
+      this.scaleUnit === ScaleUnit.SCENE_HEIGHT_SCALE
     ) {
       return !!context.scene;
     }
     if (
-      this.baseValue === ScaleValue.VIEWPORT_SCALE ||
-      this.baseValue === ScaleValue.VIEWPORT_WIDTH_SCALE ||
-      this.baseValue === ScaleValue.VIEWPORT_HEIGHT_SCALE
+      this.scaleUnit === ScaleUnit.VIEWPORT_SCALE ||
+      this.scaleUnit === ScaleUnit.VIEWPORT_WIDTH_SCALE ||
+      this.scaleUnit === ScaleUnit.VIEWPORT_HEIGHT_SCALE
     ) {
       return !!context.viewport;
     }
+    // Check if the baseValue requires specific context
     if (
       this.baseValue === ScaleValue.CONTENT_SCALE ||
       this.baseValue === ScaleValue.INTRINSIC_SCALE
@@ -278,86 +312,86 @@ export class ScaleUnitCalculator implements IScaleUnit {
     return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT; // Intrinsic scale is typically 1 (original size)
   }
 
-  private calculateParentScale(context: UnitContext): number {
-    const parentWidth = context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
-    const parentHeight = context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
-    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  // private calculateParentScale(context: UnitContext): number {
+  //   const parentWidth = context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+  //   const parentHeight = context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+  //   const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
-    const scaleX = parentWidth / contentWidth;
-    const scaleY = parentHeight / contentHeight;
+  //   const scaleX = parentWidth / contentWidth;
+  //   const scaleY = parentHeight / contentHeight;
 
-    if (this.maintainAspectRatio) {
-      return Math.min(scaleX, scaleY);
-    }
-    return Math.min(scaleX, scaleY);
-  }
+  //   if (this.maintainAspectRatio) {
+  //     return Math.min(scaleX, scaleY);
+  //   }
+  //   return Math.min(scaleX, scaleY);
+  // }
 
-  private calculateParentWidthScale(context: UnitContext): number {
-    const parentWidth = context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
-    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    return parentWidth / contentWidth;
-  }
+  // private calculateParentWidthScale(context: UnitContext): number {
+  //   const parentWidth = context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+  //   const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   return parentWidth / contentWidth;
+  // }
 
-  private calculateParentHeightScale(context: UnitContext): number {
-    const parentHeight = context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
-    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    return parentHeight / contentHeight;
-  }
+  // private calculateParentHeightScale(context: UnitContext): number {
+  //   const parentHeight = context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+  //   const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   return parentHeight / contentHeight;
+  // }
 
-  private calculateSceneScale(context: UnitContext): number {
-    const sceneWidth = context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    const sceneHeight = context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  // private calculateSceneScale(context: UnitContext): number {
+  //   const sceneWidth = context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+  //   const sceneHeight = context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+  //   const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
-    const scaleX = sceneWidth / contentWidth;
-    const scaleY = sceneHeight / contentHeight;
+  //   const scaleX = sceneWidth / contentWidth;
+  //   const scaleY = sceneHeight / contentHeight;
 
-    if (this.maintainAspectRatio) {
-      return Math.min(scaleX, scaleY);
-    }
-    return Math.min(scaleX, scaleY);
-  }
+  //   if (this.maintainAspectRatio) {
+  //     return Math.min(scaleX, scaleY);
+  //   }
+  //   return Math.min(scaleX, scaleY);
+  // }
 
-  private calculateSceneWidthScale(context: UnitContext): number {
-    const sceneWidth = context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    return sceneWidth / contentWidth;
-  }
+  // private calculateSceneWidthScale(context: UnitContext): number {
+  //   const sceneWidth = context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+  //   const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   return sceneWidth / contentWidth;
+  // }
 
-  private calculateSceneHeightScale(context: UnitContext): number {
-    const sceneHeight = context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    return sceneHeight / contentHeight;
-  }
+  // private calculateSceneHeightScale(context: UnitContext): number {
+  //   const sceneHeight = context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+  //   const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   return sceneHeight / contentHeight;
+  // }
 
-  private calculateViewportScale(context: UnitContext): number {
-    const viewportWidth = context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
-    const viewportHeight = context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
-    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  // private calculateViewportScale(context: UnitContext): number {
+  //   const viewportWidth = context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+  //   const viewportHeight = context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+  //   const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
-    const scaleX = viewportWidth / contentWidth;
-    const scaleY = viewportHeight / contentHeight;
+  //   const scaleX = viewportWidth / contentWidth;
+  //   const scaleY = viewportHeight / contentHeight;
 
-    if (this.maintainAspectRatio) {
-      return Math.min(scaleX, scaleY);
-    }
-    return Math.min(scaleX, scaleY);
-  }
+  //   if (this.maintainAspectRatio) {
+  //     return Math.min(scaleX, scaleY);
+  //   }
+  //   return Math.min(scaleX, scaleY);
+  // }
 
-  private calculateViewportWidthScale(context: UnitContext): number {
-    const viewportWidth = context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
-    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    return viewportWidth / contentWidth;
-  }
+  // private calculateViewportWidthScale(context: UnitContext): number {
+  //   const viewportWidth = context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+  //   const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   return viewportWidth / contentWidth;
+  // }
 
-  private calculateViewportHeightScale(context: UnitContext): number {
-    const viewportHeight = context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
-    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    return viewportHeight / contentHeight;
-  }
+  // private calculateViewportHeightScale(context: UnitContext): number {
+  //   const viewportHeight = context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+  //   const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+  //   return viewportHeight / contentHeight;
+  // }
 
   private calculateRandomScale(_context: UnitContext): number {
     const min = this.minScale ?? DEFAULT_FALLBACK_VALUES.SCALE.RANDOM_MIN;

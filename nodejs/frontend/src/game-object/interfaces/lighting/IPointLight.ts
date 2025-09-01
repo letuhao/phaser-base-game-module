@@ -7,7 +7,7 @@
 
 import type { ILightObject } from './ILightObject';
 import { GameObjectType } from '../../enums/GameObjectEnums';
-import * as Phaser from 'phaser';
+
 
 /**
  * Interface for point light game objects

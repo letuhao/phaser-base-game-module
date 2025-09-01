@@ -112,7 +112,7 @@ describe('LegacySizeUnitAdapter', () => {
     });
 
     it('should not be responsive for auto units', () => {
-      const autoLegacyUnit = createLegacySizeUnit({ sizeUnit: SizeUnit.AUTO });
+      const autoLegacyUnit = createLegacySizeUnit({ sizeUnit: SizeUnit.PIXEL });
       const autoAdapter = new LegacySizeUnitAdapter('auto-adapter', 'Auto Adapter', autoLegacyUnit);
       
       expect(autoAdapter.isResponsive()).toBe(false);

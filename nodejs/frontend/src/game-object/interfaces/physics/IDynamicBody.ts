@@ -7,7 +7,7 @@
 
 import type { IPhysicsObject } from './IPhysicsObject';
 import { GameObjectType } from '../../enums/GameObjectEnums';
-import * as Phaser from 'phaser';
+
 
 /**
  * Interface for dynamic physics body game objects

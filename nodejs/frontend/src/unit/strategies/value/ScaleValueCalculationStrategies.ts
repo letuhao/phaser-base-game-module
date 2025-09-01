@@ -103,7 +103,7 @@ export class FactorScaleValueCalculationStrategy implements IScaleValueCalculati
 export class ResponsiveScaleValueCalculationStrategy implements IScaleValueCalculationStrategy {
   readonly strategyId = 'responsive-scale-calculation';
   readonly scaleValue = ScaleValue.FIT;
-  readonly scaleUnit = ScaleUnit.FIT;
+  readonly scaleUnit = ScaleUnit.FACTOR; // FIT behavior with factor measurement
 
   canHandle(scaleValue: ScaleValue, _scaleUnit: ScaleUnit): boolean {
     return scaleValue === ScaleValue.FIT;
@@ -166,10 +166,10 @@ export class ResponsiveScaleValueCalculationStrategy implements IScaleValueCalcu
 export class RandomScaleValueCalculationStrategy implements IScaleValueCalculationStrategy {
   readonly strategyId = 'random-scale-calculation';
   readonly scaleValue = ScaleValue.RANDOM;
-  readonly scaleUnit = ScaleUnit.RANDOM;
+  readonly scaleUnit = ScaleUnit.FACTOR; // RANDOM behavior with factor measurement
 
-  canHandle(scaleValue: ScaleValue, scaleUnit: ScaleUnit): boolean {
-    return scaleValue === ScaleValue.RANDOM && scaleUnit === ScaleUnit.RANDOM;
+  canHandle(scaleValue: ScaleValue, _scaleUnit: ScaleUnit): boolean {
+    return scaleValue === ScaleValue.RANDOM;
   }
 
   calculate(
@@ -209,10 +209,10 @@ export class RandomScaleValueCalculationStrategy implements IScaleValueCalculati
 export class ContentScaleValueCalculationStrategy implements IScaleValueCalculationStrategy {
   readonly strategyId = 'content-scale-calculation';
   readonly scaleValue = ScaleValue.CONTENT_SCALE;
-  readonly scaleUnit = ScaleUnit.CONTENT_SCALE;
+  readonly scaleUnit = ScaleUnit.FACTOR; // CONTENT_SCALE behavior with factor measurement
 
-  canHandle(scaleValue: ScaleValue, scaleUnit: ScaleUnit): boolean {
-    return scaleValue === ScaleValue.CONTENT_SCALE && scaleUnit === ScaleUnit.CONTENT_SCALE;
+  canHandle(scaleValue: ScaleValue, _scaleUnit: ScaleUnit): boolean {
+    return scaleValue === ScaleValue.CONTENT_SCALE;
   }
 
   calculate(

@@ -50,40 +50,70 @@ export class SizeUnitCalculator implements ISizeUnit {
    * Calculate size based on context
    */
   calculateSize(context: UnitContext): number {
-    if (typeof this.baseValue === 'number') {
-      return this.applyConstraints(this.baseValue);
+    // First determine what to measure based on SizeUnit (measurement type)
+    let measuredSize: number;
+    switch (this.sizeUnit) {
+      case SizeUnit.PIXEL:
+        measuredSize = typeof this.baseValue === 'number' ? this.baseValue : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+        break;
+      case SizeUnit.PERCENTAGE:
+        measuredSize = typeof this.baseValue === 'number' ? this.baseValue : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+        break;
+      case SizeUnit.PARENT_WIDTH:
+        measuredSize = this.calculateParentWidthSize(context);
+        break;
+      case SizeUnit.PARENT_HEIGHT:
+        measuredSize = this.calculateParentHeightSize(context);
+        break;
+      case SizeUnit.SCENE_WIDTH:
+        measuredSize = this.calculateSceneWidthSize(context);
+        break;
+      case SizeUnit.SCENE_HEIGHT:
+        measuredSize = this.calculateSceneHeightSize(context);
+        break;
+      case SizeUnit.VIEWPORT_WIDTH:
+        measuredSize = this.calculateViewportWidthSize(context);
+        break;
+      case SizeUnit.VIEWPORT_HEIGHT:
+        measuredSize = this.calculateViewportHeightSize(context);
+        break;
+      default:
+        measuredSize = DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     }
 
-    switch (this.baseValue) {
-      case SizeValue.FILL:
-        return this.calculateFillSize(context);
-      case SizeValue.AUTO:
-        return this.calculateAutoSize(context);
-      case SizeValue.FIT:
-        return this.calculateFitSize(context);
-      case SizeValue.STRETCH:
-        return this.calculateStretchSize(context);
-      case SizeValue.PARENT_WIDTH:
-        return this.calculateParentWidthSize(context);
-      case SizeValue.PARENT_HEIGHT:
-        return this.calculateParentHeightSize(context);
-      case SizeValue.SCENE_WIDTH:
-        return this.calculateSceneWidthSize(context);
-      case SizeValue.SCENE_HEIGHT:
-        return this.calculateSceneHeightSize(context);
-      case SizeValue.VIEWPORT_WIDTH:
-        return this.calculateViewportWidthSize(context);
-      case SizeValue.VIEWPORT_HEIGHT:
-        return this.calculateViewportHeightSize(context);
-      case SizeValue.CONTENT:
-        return this.calculateContentSize(context);
-      case SizeValue.INTRINSIC:
-        return this.calculateIntrinsicSize(context);
-      case SizeValue.RANDOM:
-        return this.calculateRandomSize(context);
-      default:
-        return this.applyConstraints(DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT); // Default fallback
+    // Then apply the behavior based on SizeValue
+    return this.applySizeValue(measuredSize, context);
+  }
+
+  /**
+   * Apply size value behavior to measured size
+   */
+  private applySizeValue(measuredSize: number, context: UnitContext): number {
+    // If baseValue is a SizeValue enum, use it for behavior
+    if (this.baseValue && Object.values(SizeValue).includes(this.baseValue as SizeValue)) {
+      switch (this.baseValue as SizeValue) {
+        case SizeValue.FILL:
+          // FILL should fill the available space, not use the measured size
+          return this.applyConstraints(this.calculateFillSize(context));
+        case SizeValue.AUTO:
+          return this.applyConstraints(this.calculateAutoSize(context));
+        case SizeValue.FIT:
+          return this.applyConstraints(this.calculateFitSize(context));
+        case SizeValue.STRETCH:
+          return this.applyConstraints(this.calculateStretchSize(context));
+        case SizeValue.CONTENT:
+          return this.applyConstraints(this.calculateContentSize(context));
+        case SizeValue.INTRINSIC:
+          return this.applyConstraints(this.calculateIntrinsicSize(context));
+        case SizeValue.RANDOM:
+          return this.applyConstraints(this.calculateRandomSize(context));
+        default:
+          return this.applyConstraints(measuredSize);
+      }
     }
+    
+    // If baseValue is a number, just return the measured size (direct value)
+    return this.applyConstraints(measuredSize);
   }
 
   /**
@@ -139,18 +169,20 @@ export class SizeUnitCalculator implements ISizeUnit {
    * Validate unit in given context
    */
   validate(context: UnitContext): boolean {
-    if (this.baseValue === SizeValue.PARENT_WIDTH || this.baseValue === SizeValue.PARENT_HEIGHT) {
+    // Check if the sizeUnit requires specific context
+    if (this.sizeUnit === SizeUnit.PARENT_WIDTH || this.sizeUnit === SizeUnit.PARENT_HEIGHT) {
       return !!context.parent;
     }
-    if (this.baseValue === SizeValue.SCENE_WIDTH || this.baseValue === SizeValue.SCENE_HEIGHT) {
+    if (this.sizeUnit === SizeUnit.SCENE_WIDTH || this.sizeUnit === SizeUnit.SCENE_HEIGHT) {
       return !!context.scene;
     }
     if (
-      this.baseValue === SizeValue.VIEWPORT_WIDTH ||
-      this.baseValue === SizeValue.VIEWPORT_HEIGHT
+      this.sizeUnit === SizeUnit.VIEWPORT_WIDTH ||
+      this.sizeUnit === SizeUnit.VIEWPORT_HEIGHT
     ) {
       return !!context.viewport;
     }
+    // Check if the baseValue requires specific context
     if (this.baseValue === SizeValue.CONTENT || this.baseValue === SizeValue.INTRINSIC) {
       return !!context.content;
     }
@@ -182,19 +214,6 @@ export class SizeUnitCalculator implements ISizeUnit {
   }
 
   // Private calculation methods
-  private calculateFillSize(context: UnitContext): number {
-    if (this.dimension === Dimension.WIDTH) {
-      return context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    }
-    if (this.dimension === Dimension.HEIGHT) {
-      return context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    }
-    return Math.min(
-      context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE,
-      context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
-    );
-  }
-
   private calculateAutoSize(context: UnitContext): number {
     return context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
   }
@@ -261,6 +280,31 @@ export class SizeUnitCalculator implements ISizeUnit {
     return Math.random() * (max - min) + min;
   }
 
+  private calculateFillSize(context: UnitContext): number {
+    // FILL should fill the available space based on the size unit
+    switch (this.sizeUnit) {
+      case SizeUnit.PARENT_WIDTH:
+        return context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+      case SizeUnit.PARENT_HEIGHT:
+        return context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+      case SizeUnit.SCENE_WIDTH:
+        return context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+      case SizeUnit.SCENE_HEIGHT:
+        return context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+      case SizeUnit.VIEWPORT_WIDTH:
+        return context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+      case SizeUnit.VIEWPORT_HEIGHT:
+        return context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+      case SizeUnit.PIXEL:
+      case SizeUnit.PERCENTAGE:
+      default:
+        // For PIXEL and PERCENTAGE, FILL should use the measured size
+        return this.dimension === Dimension.WIDTH
+          ? (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT)
+          : (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
+    }
+  }
+
   private applyConstraints(value: number): number {
     if (this.minSize !== undefined && value < this.minSize) {
       return this.minSize;
@@ -270,8 +314,6 @@ export class SizeUnitCalculator implements ISizeUnit {
     }
     return value;
   }
-
-
 
   /**
    * Get the aspect ratio if maintaining aspect ratio

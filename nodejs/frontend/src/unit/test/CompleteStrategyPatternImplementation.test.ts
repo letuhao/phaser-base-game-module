@@ -111,7 +111,7 @@ describe('Complete Strategy Pattern Implementation', () => {
 
     it('should calculate auto size values correctly', () => {
       const strategy = new AutoSizeValueCalculationStrategy();
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.AUTO, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
       expect(result).toBe(200); // content.width
     });
   });
@@ -146,13 +146,13 @@ describe('Complete Strategy Pattern Implementation', () => {
 
     it('should calculate center position values correctly', () => {
       const strategy = new CenterPositionValueCalculationStrategy();
-      const result = strategy.calculate(PositionValue.CENTER, PositionUnit.CENTER, AxisUnit.X, mockContext);
+      const result = strategy.calculate(PositionValue.CENTER, PositionUnit.PIXEL, AxisUnit.X, mockContext);
       expect(result).toBe(960); // scene.width / 2 (strategy uses scene first)
     });
 
     it('should calculate content left position values correctly', () => {
       const strategy = new ContentLeftPositionValueCalculationStrategy();
-      const result = strategy.calculate(PositionValue.CONTENT_LEFT, PositionUnit.CONTENT_LEFT, AxisUnit.X, mockContext);
+      const result = strategy.calculate(PositionValue.CONTENT_LEFT, PositionUnit.PIXEL, AxisUnit.X, mockContext);
       expect(result).toBe(0); // content left edge
     });
   });
@@ -193,14 +193,14 @@ describe('Complete Strategy Pattern Implementation', () => {
 
     it('should calculate responsive scale values correctly', () => {
       const strategy = new ResponsiveScaleValueCalculationStrategy();
-      const result = strategy.calculate(ScaleValue.FIT, ScaleUnit.FIT, mockContext);
+      const result = strategy.calculate(ScaleValue.FIT, ScaleUnit.FACTOR, mockContext);
       expect(result).toBeGreaterThan(0);
       expect(result).toBeLessThanOrEqual(1.0);
     });
 
     it('should calculate random scale values correctly', () => {
       const strategy = new RandomScaleValueCalculationStrategy();
-      const result = strategy.calculate(ScaleValue.RANDOM, ScaleUnit.RANDOM, mockContext);
+      const result = strategy.calculate(ScaleValue.RANDOM, ScaleUnit.FACTOR, mockContext);
       expect(result).toBeGreaterThan(0);
       expect(result).toBeLessThan(2.0);
     });

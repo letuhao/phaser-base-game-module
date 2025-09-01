@@ -5,7 +5,7 @@
  * This interface focuses solely on unit system concerns.
  */
 
-import type { UnitContext } from '../../unit/interfaces/IUnit';
+import type { UnitContext } from '../../../unit/interfaces/IUnit';
 
 /**
  * Interface for game object unit system integration

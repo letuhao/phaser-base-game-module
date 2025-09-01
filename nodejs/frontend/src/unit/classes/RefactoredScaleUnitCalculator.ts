@@ -190,24 +190,25 @@ export class RefactoredScaleUnitCalculator implements IScaleUnit {
    * Basic validation fallback
    */
   private validateBasic(context: UnitContext): boolean {
+    // Check if the scaleUnit requires specific context
     if (
-      this.baseValue === ScaleValue.PARENT_SCALE ||
-      this.baseValue === ScaleValue.PARENT_WIDTH_SCALE ||
-      this.baseValue === ScaleValue.PARENT_HEIGHT_SCALE
+      this.scaleUnit === ScaleUnit.PARENT_SCALE ||
+      this.scaleUnit === ScaleUnit.PARENT_WIDTH_SCALE ||
+      this.scaleUnit === ScaleUnit.PARENT_HEIGHT_SCALE
     ) {
       return !!context.parent;
     }
     if (
-      this.baseValue === ScaleValue.SCENE_SCALE ||
-      this.baseValue === ScaleValue.SCENE_WIDTH_SCALE ||
-      this.baseValue === ScaleValue.SCENE_HEIGHT_SCALE
+      this.scaleUnit === ScaleUnit.SCENE_SCALE ||
+      this.scaleUnit === ScaleUnit.SCENE_WIDTH_SCALE ||
+      this.scaleUnit === ScaleUnit.SCENE_HEIGHT_SCALE
     ) {
       return !!context.scene;
     }
     if (
-      this.baseValue === ScaleValue.VIEWPORT_SCALE ||
-      this.baseValue === ScaleValue.VIEWPORT_WIDTH_SCALE ||
-      this.baseValue === ScaleValue.VIEWPORT_HEIGHT_SCALE
+      this.scaleUnit === ScaleUnit.VIEWPORT_SCALE ||
+      this.scaleUnit === ScaleUnit.VIEWPORT_WIDTH_SCALE ||
+      this.scaleUnit === ScaleUnit.VIEWPORT_HEIGHT_SCALE
     ) {
       return !!context.viewport;
     }

@@ -10,9 +10,16 @@ The Unit System is a comprehensive, type-safe, and extensible framework for hand
 ```
 Unit System
 ├── Enums (Type-safe values)
+│   ├── *Value (Semantic Behaviors: FILL, AUTO, CENTER, etc.)
+│   └── *Unit (Measurement Types: PIXEL, PARENT_WIDTH, etc.)
 ├── Interfaces (Contracts)
 ├── Classes (Implementations)
+│   ├── SizeUnitCalculator
+│   ├── PositionUnitCalculator
+│   └── ScaleUnitCalculator
 ├── Strategies (Algorithms)
+│   ├── Value Calculation Strategies
+│   └── Strategy Composition
 ├── Commands (Operations)
 ├── Observers (Events)
 ├── Validators (Validation)
@@ -26,14 +33,49 @@ Unit System
 ├── Monitoring (Performance)
 ├── Deployment (Features)
 ├── Cache (Performance)
-├── Composition (Strategy)
-└── Value Calculation (Strategies)
-├── Monitoring (Performance)
-├── Deployment (Features)
-├── Cache (Performance)
-├── Composition (Strategy)
-└── Value Calculation (Strategies)
+└── Composition (Strategy)
 ```
+
+### **Enum Architecture (NEW)**
+The unit system now uses a clear separation between **semantic behaviors** and **measurement types**:
+
+#### **Size System**
+- **`SizeValue`** (Behaviors): `FILL`, `AUTO`, `FIT`, `STRETCH`, `MIN`, `MAX`
+- **`SizeUnit`** (Measurements): `PIXEL`, `PERCENTAGE`, `PARENT_WIDTH`, `PARENT_HEIGHT`, `SCENE_WIDTH`, `SCENE_HEIGHT`, `VIEWPORT_WIDTH`, `VIEWPORT_HEIGHT`
+
+#### **Position System**
+- **`PositionValue`** (Behaviors): `CENTER`, `LEFT`, `RIGHT`, `TOP`, `BOTTOM`, `START`, `END`
+- **`PositionUnit`** (Measurements): `PIXEL`, `PERCENTAGE`, `PARENT_LEFT`, `PARENT_RIGHT`, `PARENT_CENTER_X`, `PARENT_CENTER_Y`, `SCENE_LEFT`, `SCENE_RIGHT`, `SCENE_CENTER_X`, `SCENE_CENTER_Y`
+
+#### **Scale System**
+- **`ScaleValue`** (Behaviors): `FIT`, `STRETCH`, `FILL`, `AUTO`, `RESPONSIVE`, `RANDOM`
+- **`ScaleUnit`** (Measurements): `FACTOR`, `PERCENTAGE`, `PARENT_SCALE`, `SCENE_SCALE`, `VIEWPORT_SCALE`
+
+### **Calculation Logic Flow (UPDATED)**
+The unit system now follows a consistent **Unit → Value** calculation flow:
+
+```typescript
+// 1. Determine measurement based on Unit (measurement type)
+let measuredValue: number;
+switch (this.unit) {
+  case Unit.PIXEL:
+    measuredValue = typeof this.baseValue === 'number' ? this.baseValue : fallback;
+    break;
+  case Unit.PARENT_WIDTH:
+    measuredValue = context.parent?.width ?? fallback;
+    break;
+  // ... other units
+}
+
+// 2. Apply behavior based on Value (semantic behavior)
+return this.applyValue(measuredValue, context);
+```
+
+This ensures:
+- **Consistent Logic**: All calculators follow the same pattern
+- **Correct Results**: `SizeValue.FILL` + `SizeUnit.PARENT_WIDTH` returns parent width, not scene width
+- **Type Safety**: Proper handling of both enum values and numeric values
+- **Fallback Support**: Graceful handling of missing context
 
 ### **Design Patterns Used**
 - **Factory Pattern**: Object creation

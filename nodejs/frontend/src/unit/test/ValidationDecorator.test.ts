@@ -524,11 +524,10 @@ describe('ValidationDecorator', () => {
       });
       console.log('Context:', context);
       
-      // The SizeUnitCalculator with FILL value returns scene width (800)
-      // This is larger than parent width (100) * 2, so validation correctly flags it
-      // This is expected behavior, not a bug
-      expect(errors.length).toBe(1);
-      expect(errors[0].rule).toBe('size-bounds');
+      // The SizeUnitCalculator with FILL value + PARENT_WIDTH returns parent width (100)
+      // This is not larger than parent width (100) * 2, so no validation error is expected
+      // This is the correct behavior after refactoring
+      expect(errors.length).toBe(0);
     });
 
     it('should work with PositionUnitCalculator', () => {

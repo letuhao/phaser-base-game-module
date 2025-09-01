@@ -98,7 +98,7 @@ describe('Calculator Refactoring Comparison', () => {
       originalCalculator = new SizeUnitCalculator(
         'test-id',
         'Test Calculator',
-        SizeUnit.AUTO,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.AUTO
       );
@@ -106,7 +106,7 @@ describe('Calculator Refactoring Comparison', () => {
       refactoredCalculator = new RefactoredSizeUnitCalculator(
         'test-id',
         'Test Calculator',
-        SizeUnit.AUTO,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.AUTO,
         false,
@@ -125,7 +125,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH
+        SizeValue.FILL
       );
 
       refactoredCalculator = new RefactoredSizeUnitCalculator(
@@ -133,7 +133,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -150,7 +150,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.VIEWPORT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.VIEWPORT_WIDTH
+        SizeValue.FILL
       );
 
       refactoredCalculator = new RefactoredSizeUnitCalculator(
@@ -158,7 +158,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.VIEWPORT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.VIEWPORT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -177,7 +177,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH
+        SizeValue.FILL
       );
 
       refactoredCalculator = new RefactoredSizeUnitCalculator(
@@ -185,7 +185,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -272,7 +272,7 @@ describe('Calculator Refactoring Comparison', () => {
 
       // Test strategies in isolation
       expect(pixelStrategy.canHandle(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(true);
-      expect(fillStrategy.canHandle(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(true);
+      expect(fillStrategy.canHandle(SizeValue.FILL, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(true);
 
       // Test strategy calculations independently
       const pixelResult = pixelStrategy.calculate(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
@@ -293,7 +293,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -323,7 +323,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -339,7 +339,7 @@ describe('Calculator Refactoring Comparison', () => {
       expect(strategyRegistry.getStatistics).toBeDefined();
 
       // Strategies focus on specific calculations
-      const strategy = strategyRegistry.getBestStrategy(SizeValue.PARENT_WIDTH, SizeUnit.PARENT_WIDTH, Dimension.WIDTH);
+      const strategy = strategyRegistry.getBestStrategy(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH);
       expect(strategy?.calculate).toBeDefined();
       expect(strategy?.validateContext).toBeDefined();
     });
@@ -352,7 +352,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH
+        SizeValue.FILL
       );
 
       refactoredCalculator = new RefactoredSizeUnitCalculator(
@@ -360,7 +360,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );
@@ -431,7 +431,7 @@ describe('Calculator Refactoring Comparison', () => {
         'Test Calculator',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false,
         strategyRegistry
       );

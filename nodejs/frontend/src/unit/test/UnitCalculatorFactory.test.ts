@@ -61,7 +61,7 @@ describe('UnitCalculatorFactory', () => {
       const autoCalculator = factory.createSizeUnit(
         'auto-test',
         'Auto Calculator',
-        SizeUnit.AUTO,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.AUTO
       );

@@ -77,7 +77,7 @@ describe('PositionUnitCalculator', () => {
       calculator = new PositionUnitCalculator(
         'test-position',
         'Test Position',
-        PositionUnit.CENTER,
+        PositionUnit.PARENT_CENTER_X,
         Dimension.X,
         PositionValue.CENTER
       );
@@ -90,7 +90,7 @@ describe('PositionUnitCalculator', () => {
       calculator = new PositionUnitCalculator(
         'test-position',
         'Test Position',
-        PositionUnit.LEFT,
+        PositionUnit.PARENT_LEFT,
         Dimension.X,
         PositionValue.LEFT
       );
@@ -103,7 +103,7 @@ describe('PositionUnitCalculator', () => {
       calculator = new PositionUnitCalculator(
         'test-position',
         'Test Position',
-        PositionUnit.RIGHT,
+        PositionUnit.PARENT_RIGHT,
         Dimension.X,
         PositionValue.RIGHT
       );
@@ -116,7 +116,7 @@ describe('PositionUnitCalculator', () => {
       calculator = new PositionUnitCalculator(
         'test-position',
         'Test Position',
-        PositionUnit.RANDOM,
+        PositionUnit.PIXEL,
         Dimension.X,
         PositionValue.RANDOM
       );
@@ -146,7 +146,7 @@ describe('PositionUnitCalculator', () => {
         'Test Position',
         PositionUnit.PARENT_CENTER_X,
         Dimension.X,
-        PositionValue.PARENT_CENTER_X
+        PositionValue.CENTER
       );
 
       const contextWithoutParent = { ...mockContext, parent: undefined };

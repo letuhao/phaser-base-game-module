@@ -72,7 +72,7 @@ export class ResponsiveContainer extends (await import('../../object/container/C
       'Container Responsive Size',
       SizeUnit.PARENT_WIDTH,
       Dimension.WIDTH,
-      SizeValue.PARENT_WIDTH, // Use your existing unit system
+      SizeValue.FILL, // Use your existing unit system
       this.getStyle()?.maintainAspectRatio || false
     );
 

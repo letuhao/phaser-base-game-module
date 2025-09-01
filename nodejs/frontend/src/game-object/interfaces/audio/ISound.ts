@@ -4,7 +4,7 @@
  * Defines sound-specific functionality for audio game objects.
  */
 
-import * as Phaser from 'phaser';
+
 import type { IAudioObject } from './IAudioObject';
 
 /**

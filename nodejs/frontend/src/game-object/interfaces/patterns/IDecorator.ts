@@ -8,7 +8,7 @@
 import type { IGameObject } from '../IGameObject';
 import type { IDecoratorManager } from '../managers/IDecoratorManager';
 import { GameObjectType } from '../../enums/GameObjectEnums';
-import * as Phaser from 'phaser';
+
 
 /**
  * Decorator types

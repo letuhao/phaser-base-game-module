@@ -252,7 +252,7 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
     this.logger.debug('SizeValueCalculationStrategyRegistry', 'preWarmCache', 'Pre-warming strategy cache');
     
     // Pre-warm cache for common size value and unit combinations
-    const commonSizeValues = [SizeValue.PIXEL, SizeValue.FILL, SizeValue.AUTO, SizeValue.PARENT_WIDTH, SizeValue.VIEWPORT_WIDTH];
+    const commonSizeValues = [SizeValue.PIXEL, SizeValue.FILL, SizeValue.AUTO, SizeValue.CONTENT, SizeValue.INTRINSIC];
     const commonSizeUnits = [SizeUnit.PIXEL, SizeUnit.PARENT_WIDTH, SizeUnit.VIEWPORT_WIDTH, SizeUnit.SCENE_WIDTH];
     const dimensions: Array<Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH> = [Dimension.WIDTH, Dimension.HEIGHT, Dimension.BOTH];
 

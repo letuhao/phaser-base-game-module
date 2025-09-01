@@ -66,8 +66,15 @@ export class FillSizeValueCalculationStrategy implements ISizeValueCalculationSt
   readonly sizeUnit = SizeUnit.PARENT_WIDTH;
   readonly dimension = Dimension.WIDTH;
 
-  canHandle(sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
-    return sizeValue === SizeValue.FILL;
+  canHandle(sizeValue: SizeValue, sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+    // Only handle FILL when it's not a specific unit that has its own strategy
+    return sizeValue === SizeValue.FILL && 
+           sizeUnit !== SizeUnit.PARENT_WIDTH && 
+           sizeUnit !== SizeUnit.PARENT_HEIGHT &&
+           sizeUnit !== SizeUnit.VIEWPORT_WIDTH && 
+           sizeUnit !== SizeUnit.VIEWPORT_HEIGHT &&
+           sizeUnit !== SizeUnit.SCENE_WIDTH && 
+           sizeUnit !== SizeUnit.SCENE_HEIGHT;
   }
 
   calculate(
@@ -137,7 +144,7 @@ export class FillSizeValueCalculationStrategy implements ISizeValueCalculationSt
 export class AutoSizeValueCalculationStrategy implements ISizeValueCalculationStrategy {
   readonly strategyId = 'auto-size-calculation';
   readonly sizeValue = SizeValue.AUTO;
-  readonly sizeUnit = SizeUnit.AUTO;
+  readonly sizeUnit = SizeUnit.PIXEL; // AUTO behavior with pixel measurement
   readonly dimension = Dimension.WIDTH;
 
   canHandle(sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
@@ -191,12 +198,12 @@ export class AutoSizeValueCalculationStrategy implements ISizeValueCalculationSt
  */
 export class ParentWidthSizeValueCalculationStrategy implements ISizeValueCalculationStrategy {
   readonly strategyId = 'parent-width-size-calculation';
-  readonly sizeValue = SizeValue.PARENT_WIDTH;
-  readonly sizeUnit = SizeUnit.PARENT_WIDTH;
+  readonly sizeValue = SizeValue.FILL; // FILL behavior
+  readonly sizeUnit = SizeUnit.PARENT_WIDTH; // measured relative to parent width
   readonly dimension = Dimension.WIDTH;
 
   canHandle(sizeValue: SizeValue, sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
-    return sizeValue === SizeValue.PARENT_WIDTH && sizeUnit === SizeUnit.PARENT_WIDTH;
+    return sizeValue === SizeValue.FILL && sizeUnit === SizeUnit.PARENT_WIDTH;
   }
 
   calculate(
@@ -238,12 +245,12 @@ export class ParentWidthSizeValueCalculationStrategy implements ISizeValueCalcul
  */
 export class ViewportWidthSizeValueCalculationStrategy implements ISizeValueCalculationStrategy {
   readonly strategyId = 'viewport-width-size-calculation';
-  readonly sizeValue = SizeValue.VIEWPORT_WIDTH;
-  readonly sizeUnit = SizeUnit.VIEWPORT_WIDTH;
+  readonly sizeValue = SizeValue.FILL; // FILL behavior
+  readonly sizeUnit = SizeUnit.VIEWPORT_WIDTH; // measured relative to viewport width
   readonly dimension = Dimension.WIDTH;
 
   canHandle(sizeValue: SizeValue, sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
-    return sizeValue === SizeValue.VIEWPORT_WIDTH && sizeUnit === SizeUnit.VIEWPORT_WIDTH;
+    return sizeValue === SizeValue.FILL && sizeUnit === SizeUnit.VIEWPORT_WIDTH;
   }
 
   calculate(

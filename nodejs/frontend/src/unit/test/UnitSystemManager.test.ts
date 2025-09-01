@@ -30,7 +30,7 @@ describe('UnitSystemManager', () => {
       const config = createSizeUnitConfig(
         'test-size-unit',
         'Test Size Unit',
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         {
           sizeUnit: SizeUnit.PARENT_WIDTH,
           dimension: Dimension.WIDTH,

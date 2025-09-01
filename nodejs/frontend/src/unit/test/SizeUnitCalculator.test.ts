@@ -19,7 +19,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         true
       );
 
@@ -27,7 +27,7 @@ describe('SizeUnitCalculator', () => {
       expect(calculator.name).toBe('Test Size');
       expect(calculator.sizeUnit).toBe(SizeUnit.PARENT_WIDTH);
       expect(calculator.dimension).toBe(Dimension.WIDTH);
-      expect(calculator.baseValue).toBe(SizeValue.PARENT_WIDTH);
+      expect(calculator.baseValue).toBe(SizeValue.FILL);
       expect(calculator.maintainAspectRatio).toBe(true);
       expect(calculator.isActive).toBe(true);
     });
@@ -112,7 +112,7 @@ describe('SizeUnitCalculator', () => {
       calculator = new SizeUnitCalculator(
         'test-size',
         'Test Size',
-        SizeUnit.FILL,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.FILL,
         false
@@ -126,7 +126,7 @@ describe('SizeUnitCalculator', () => {
       calculator = new SizeUnitCalculator(
         'test-size',
         'Test Size',
-        SizeUnit.AUTO,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.AUTO,
         false
@@ -140,7 +140,7 @@ describe('SizeUnitCalculator', () => {
       calculator = new SizeUnitCalculator(
         'test-size',
         'Test Size',
-        SizeUnit.FIT,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.FIT,
         false
@@ -154,7 +154,7 @@ describe('SizeUnitCalculator', () => {
       calculator = new SizeUnitCalculator(
         'test-size',
         'Test Size',
-        SizeUnit.STRETCH,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.STRETCH,
         false
@@ -172,7 +172,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false
       );
 
@@ -186,7 +186,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.PARENT_HEIGHT,
         Dimension.HEIGHT,
-        SizeValue.PARENT_HEIGHT,
+        SizeValue.FILL,
         false
       );
 
@@ -202,7 +202,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.SCENE_WIDTH,
         Dimension.WIDTH,
-        SizeValue.SCENE_WIDTH,
+        SizeValue.FILL,
         false
       );
 
@@ -216,7 +216,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.SCENE_HEIGHT,
         Dimension.HEIGHT,
-        SizeValue.SCENE_HEIGHT,
+        SizeValue.FILL,
         false
       );
 
@@ -232,7 +232,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.VIEWPORT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.VIEWPORT_WIDTH,
+        SizeValue.FILL,
         false
       );
 
@@ -246,7 +246,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.VIEWPORT_HEIGHT,
         Dimension.HEIGHT,
-        SizeValue.VIEWPORT_HEIGHT,
+        SizeValue.FILL,
         false
       );
 
@@ -260,7 +260,7 @@ describe('SizeUnitCalculator', () => {
       calculator = new SizeUnitCalculator(
         'test-size',
         'Test Size',
-        SizeUnit.CONTENT,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.CONTENT,
         false
@@ -274,7 +274,7 @@ describe('SizeUnitCalculator', () => {
       calculator = new SizeUnitCalculator(
         'test-size',
         'Test Size',
-        SizeUnit.INTRINSIC,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.INTRINSIC,
         false
@@ -290,7 +290,7 @@ describe('SizeUnitCalculator', () => {
       calculator = new SizeUnitCalculator(
         'test-size',
         'Test Size',
-        SizeUnit.RANDOM,
+        SizeUnit.PIXEL,
         Dimension.WIDTH,
         SizeValue.RANDOM,
         false
@@ -414,7 +414,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.PARENT_WIDTH,
         Dimension.WIDTH,
-        SizeValue.PARENT_WIDTH,
+        SizeValue.FILL,
         false
       );
 
@@ -429,7 +429,7 @@ describe('SizeUnitCalculator', () => {
         'Test Size',
         SizeUnit.SCENE_WIDTH,
         Dimension.WIDTH,
-        SizeValue.SCENE_WIDTH,
+        SizeValue.FILL,
         false
       );
 

@@ -76,7 +76,7 @@ describe('ScaleUnitCalculator', () => {
       calculator = new ScaleUnitCalculator(
         'test-scale',
         'Test Scale',
-        ScaleUnit.FIT,
+        ScaleUnit.FACTOR,
         ScaleValue.FIT,
         false
       );
@@ -89,7 +89,7 @@ describe('ScaleUnitCalculator', () => {
       calculator = new ScaleUnitCalculator(
         'test-scale',
         'Test Scale',
-        ScaleUnit.STRETCH,
+        ScaleUnit.FACTOR,
         ScaleValue.STRETCH,
         false
       );
@@ -105,7 +105,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.PARENT_WIDTH_SCALE,
-        ScaleValue.PARENT_WIDTH_SCALE,
+        ScaleValue.FILL,
         false
       );
 
@@ -118,7 +118,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.PARENT_HEIGHT_SCALE,
-        ScaleValue.PARENT_HEIGHT_SCALE,
+        ScaleValue.FILL,
         false
       );
 
@@ -133,7 +133,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.SCENE_WIDTH_SCALE,
-        ScaleValue.SCENE_WIDTH_SCALE,
+        ScaleValue.FILL,
         false
       );
 
@@ -146,7 +146,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.SCENE_HEIGHT_SCALE,
-        ScaleValue.SCENE_HEIGHT_SCALE,
+        ScaleValue.FILL,
         false
       );
 
@@ -161,7 +161,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.VIEWPORT_WIDTH_SCALE,
-        ScaleValue.VIEWPORT_WIDTH_SCALE,
+        ScaleValue.FILL,
         false
       );
 
@@ -174,7 +174,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.VIEWPORT_HEIGHT_SCALE,
-        ScaleValue.VIEWPORT_HEIGHT_SCALE,
+        ScaleValue.FILL,
         false
       );
 
@@ -188,7 +188,7 @@ describe('ScaleUnitCalculator', () => {
       calculator = new ScaleUnitCalculator(
         'test-scale',
         'Test Scale',
-        ScaleUnit.CONTENT_SCALE,
+        ScaleUnit.FACTOR,
         ScaleValue.CONTENT_SCALE,
         false
       );
@@ -201,7 +201,7 @@ describe('ScaleUnitCalculator', () => {
       calculator = new ScaleUnitCalculator(
         'test-scale',
         'Test Scale',
-        ScaleUnit.INTRINSIC_SCALE,
+        ScaleUnit.FACTOR,
         ScaleValue.INTRINSIC_SCALE,
         false
       );
@@ -216,7 +216,7 @@ describe('ScaleUnitCalculator', () => {
       calculator = new ScaleUnitCalculator(
         'test-scale',
         'Test Scale',
-        ScaleUnit.RANDOM,
+        ScaleUnit.FACTOR,
         ScaleValue.RANDOM,
         false
       );
@@ -303,7 +303,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.PARENT_WIDTH_SCALE,
-        ScaleValue.PARENT_WIDTH_SCALE,
+        ScaleValue.FILL,
         false
       );
 
@@ -317,7 +317,7 @@ describe('ScaleUnitCalculator', () => {
         'test-scale',
         'Test Scale',
         ScaleUnit.SCENE_WIDTH_SCALE,
-        ScaleValue.SCENE_WIDTH_SCALE,
+        ScaleValue.FILL,
         false
       );
 

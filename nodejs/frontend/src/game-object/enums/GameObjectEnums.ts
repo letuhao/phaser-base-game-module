@@ -81,7 +81,6 @@ export enum GameObjectType {
   // Advanced Types
   PARTICLE_EMITTER = 'particle_emitter',
   VIDEO = 'video',
-  MESH = 'mesh',
   
   // Custom Types
   UI_PANEL = 'ui_panel',

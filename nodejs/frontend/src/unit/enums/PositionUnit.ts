@@ -1,23 +1,12 @@
 /**
  * PositionUnit Enum
- * Defines all possible position unit types for responsive positioning
+ * Defines measurement types for position calculations
+ * These represent HOW to measure the position
  */
 export enum PositionUnit {
-  // Direct numeric values (pixels)
-  PIXEL = 'pixel',
-
-  // Alignment keywords
-  CENTER = 'center', // Center on the specified axis
-  LEFT = 'left', // Align to left edge
-  RIGHT = 'right', // Align to right edge
-  TOP = 'top', // Align to top edge
-  BOTTOM = 'bottom', // Align to bottom edge
-
-  // Position types (CSS-like)
-  STATIC = 'static', // Normal document flow
-  RELATIVE = 'relative', // Relative to normal position
-  ABSOLUTE = 'absolute', // Absolute positioning
-  FIXED = 'fixed', // Fixed positioning relative to viewport
+  // Direct measurement units
+  PIXEL = 'pixel', // Absolute pixel values
+  PERCENTAGE = 'percentage', // Percentage values
 
   // Parent-relative units
   PARENT_LEFT = 'parent-left', // Percentage from parent's left edge
@@ -40,13 +29,4 @@ export enum PositionUnit {
   VIEWPORT_RIGHT = 'viewport-right', // Percentage from viewport's right edge
   VIEWPORT_TOP = 'viewport-top', // Percentage from viewport's top edge
   VIEWPORT_BOTTOM = 'viewport-bottom', // Percentage from viewport's bottom edge
-
-  // Random values
-  RANDOM = 'random', // Random value within a range
-
-  // Content-based positioning
-  CONTENT_LEFT = 'content-left', // Position based on content bounds
-  CONTENT_RIGHT = 'content-right', // Position based on content bounds
-  CONTENT_TOP = 'content-top', // Position based on content bounds
-  CONTENT_BOTTOM = 'content-bottom', // Position based on content bounds
 }

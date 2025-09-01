@@ -196,31 +196,32 @@ export class RefactoredPositionUnitCalculator implements IPositionUnit {
    * Basic validation fallback
    */
   private validateBasic(context: UnitContext): boolean {
+    // Check if the positionUnit requires specific context
     if (
-      this.baseValue === PositionValue.PARENT_LEFT ||
-      this.baseValue === PositionValue.PARENT_RIGHT ||
-      this.baseValue === PositionValue.PARENT_TOP ||
-      this.baseValue === PositionValue.PARENT_BOTTOM ||
-      this.baseValue === PositionValue.PARENT_CENTER_X ||
-      this.baseValue === PositionValue.PARENT_CENTER_Y
+      this.positionUnit === PositionUnit.PARENT_LEFT ||
+      this.positionUnit === PositionUnit.PARENT_RIGHT ||
+      this.positionUnit === PositionUnit.PARENT_TOP ||
+      this.positionUnit === PositionUnit.PARENT_BOTTOM ||
+      this.positionUnit === PositionUnit.PARENT_CENTER_X ||
+      this.positionUnit === PositionUnit.PARENT_CENTER_Y
     ) {
       return !!context.parent;
     }
     if (
-      this.baseValue === PositionValue.SCENE_LEFT ||
-      this.baseValue === PositionValue.SCENE_RIGHT ||
-      this.baseValue === PositionValue.SCENE_TOP ||
-      this.baseValue === PositionValue.SCENE_BOTTOM ||
-      this.baseValue === PositionValue.SCENE_CENTER_X ||
-      this.baseValue === PositionValue.SCENE_CENTER_Y
+      this.positionUnit === PositionUnit.SCENE_LEFT ||
+      this.positionUnit === PositionUnit.SCENE_RIGHT ||
+      this.positionUnit === PositionUnit.SCENE_TOP ||
+      this.positionUnit === PositionUnit.SCENE_BOTTOM ||
+      this.positionUnit === PositionUnit.SCENE_CENTER_X ||
+      this.positionUnit === PositionUnit.SCENE_CENTER_Y
     ) {
       return !!context.scene;
     }
     if (
-      this.baseValue === PositionValue.VIEWPORT_LEFT ||
-      this.baseValue === PositionValue.VIEWPORT_RIGHT ||
-      this.baseValue === PositionValue.VIEWPORT_TOP ||
-      this.baseValue === PositionValue.VIEWPORT_BOTTOM
+      this.positionUnit === PositionUnit.VIEWPORT_LEFT ||
+      this.positionUnit === PositionUnit.VIEWPORT_RIGHT ||
+      this.positionUnit === PositionUnit.VIEWPORT_TOP ||
+      this.positionUnit === PositionUnit.VIEWPORT_BOTTOM
     ) {
       return !!context.viewport;
     }
