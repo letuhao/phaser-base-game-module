@@ -15,6 +15,9 @@ export interface IUnitMemento {
   /** Get the memento version */
   getVersion(): string;
 
+  /** Get the memento description */
+  getDescription(): string;
+
   /** Get metadata about the saved state */
   getMetadata(): {
     unitType: string;
@@ -82,6 +85,10 @@ export class UnitMemento implements IUnitMemento {
 
   getVersion(): string {
     return this.version;
+  }
+
+  getDescription(): string {
+    return this.metadata.description;
   }
 
   getMetadata() {

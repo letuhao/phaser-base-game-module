@@ -36,13 +36,21 @@ export class TypeValidator extends BaseUnitValidator {
    * Check if this validator can handle the input
    */
   canHandle(input: IValidationInput): boolean {
-    return input !== null && input !== undefined;
+    // Accept all inputs, including null and undefined, so validation can handle them
+    return true;
   }
 
   /**
    * Perform the actual validation
    */
   protected performValidation(input: IValidationInput, context: UnitContext): boolean {
+    // In strict mode, check value type first
+    if (this.strictMode) {
+      if (!this.validateValueType(input, context)) {
+        return false;
+      }
+    }
+
     // Validate unit type
     if (!this.validateUnitType(input, context)) {
       return false;
@@ -53,9 +61,11 @@ export class TypeValidator extends BaseUnitValidator {
       return false;
     }
 
-    // Validate value type
-    if (!this.validateValueType(input, context)) {
-      return false;
+    // In relaxed mode, check value type last
+    if (!this.strictMode) {
+      if (!this.validateValueType(input, context)) {
+        return false;
+      }
     }
 
     // All validations passed
@@ -67,8 +77,8 @@ export class TypeValidator extends BaseUnitValidator {
    * Validate unit type compatibility
    */
   private validateUnitType(input: IValidationInput, _context: UnitContext): boolean {
-    // Check if input is a unit validation input
-    if ('unitType' in input && typeof input.unitType === 'string') {
+    // Only check unitType if input is an object
+    if (typeof input === 'object' && input !== null && 'unitType' in input && typeof input.unitType === 'string') {
       const inputType = input.unitType as UnitType;
 
       if (!this.allowedTypes.includes(inputType)) {
@@ -84,8 +94,8 @@ export class TypeValidator extends BaseUnitValidator {
    * Validate dimension compatibility
    */
   private validateDimension(input: IValidationInput, _context: UnitContext): boolean {
-    // Check if input has a dimension property
-    if (input && 'dimension' in input && input.dimension) {
+    // Only check dimension if input is an object
+    if (typeof input === 'object' && input !== null && 'dimension' in input && input.dimension) {
       const inputDimension = input.dimension as Dimension;
 
       if (!this.allowedDimensions.includes(inputDimension)) {
@@ -128,11 +138,16 @@ export class TypeValidator extends BaseUnitValidator {
       return true;
     }
     
+    // Reject null and undefined in strict mode
+    if (input === null || input === undefined) {
+      return false;
+    }
+    
     // Handle validation input objects
     if (typeof input === 'object' && input !== null) {
-      // Check for value property
-      if ('value' in input && typeof input.value === 'number') {
-        return true;
+      // Check for value property - must be numeric
+      if ('value' in input) {
+        return typeof input.value === 'number';
       }
       
       // Check for getValue method
@@ -142,6 +157,11 @@ export class TypeValidator extends BaseUnitValidator {
       
       // Check for unitType property
       if ('unitType' in input && typeof input.unitType === 'string') {
+        return true;
+      }
+      
+      // Check for dimension property
+      if ('dimension' in input && input.dimension) {
         return true;
       }
     }
@@ -159,7 +179,8 @@ export class TypeValidator extends BaseUnitValidator {
       typeof input === 'number' ||
       typeof input === 'string' ||
       typeof input === 'boolean' ||
-      typeof input === 'object'
+      typeof input === 'object' ||
+      typeof input === 'function'
     );
   }
 

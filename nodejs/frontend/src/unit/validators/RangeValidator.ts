@@ -42,6 +42,11 @@ export class RangeValidator extends BaseUnitValidator {
    * Check if this validator can handle the input
    */
   canHandle(input: IValidationInput): boolean {
+    // Handle null/undefined inputs
+    if (input === null || input === undefined) {
+      return false;
+    }
+    
     // Handle numeric inputs directly
     if (typeof input === 'number') {
       return true;
@@ -53,10 +58,23 @@ export class RangeValidator extends BaseUnitValidator {
       return true;
     }
     
+    // Handle scale-like inputs (with unit and value but no minScale)
+    if (typeof input === 'object' && input !== null && 'unit' in input && 'value' in input) {
+      return true;
+    }
+    
     // Handle legacy inputs that might have a value property
     if (isLegacyValidationInput(input)) {
       const legacyInput = input.input;
-      if (legacyInput && typeof legacyInput === 'object' && 'value' in legacyInput) {
+      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
+        return typeof (legacyInput as { value: unknown }).value === 'number';
+      }
+    }
+    
+    // Handle objects with 'input' property (partial legacy inputs)
+    if (typeof input === 'object' && input !== null && 'input' in input) {
+      const legacyInput = (input as { input: unknown }).input;
+      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
         return typeof (legacyInput as { value: unknown }).value === 'number';
       }
     }
@@ -91,6 +109,11 @@ export class RangeValidator extends BaseUnitValidator {
    * Extract numeric value from input
    */
   private extractValue(input: IValidationInput): number {
+    // Handle null/undefined inputs
+    if (input === null || input === undefined) {
+      return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    }
+    
     // Handle numeric inputs directly
     if (typeof input === 'number') {
       return input;
@@ -113,10 +136,25 @@ export class RangeValidator extends BaseUnitValidator {
       return typeof input.value === 'number' ? input.value : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
     }
 
+    // Handle scale-like inputs (with unit and value but no minScale)
+    if (typeof input === 'object' && input !== null && 'unit' in input && 'value' in input) {
+      const value = (input as { value: unknown }).value;
+      return typeof value === 'number' ? value : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
+    }
+
     // Handle legacy inputs
     if (isLegacyValidationInput(input)) {
       const legacyInput = input.input;
-      if (legacyInput && typeof legacyInput === 'object' && 'value' in legacyInput) {
+      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
+        const value = (legacyInput as { value: unknown }).value;
+        return typeof value === 'number' ? value : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+      }
+    }
+
+    // Handle objects with 'input' property (partial legacy inputs)
+    if (typeof input === 'object' && input !== null && 'input' in input) {
+      const legacyInput = (input as { input: unknown }).input;
+      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
         const value = (legacyInput as { value: unknown }).value;
         return typeof value === 'number' ? value : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
       }

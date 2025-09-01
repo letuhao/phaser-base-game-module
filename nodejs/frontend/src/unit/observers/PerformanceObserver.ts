@@ -105,6 +105,9 @@ export class PerformanceObserver implements IUnitObserver {
    * Called when unit calculation completes
    */
   onUnitCalculationCompleted(unitId: string, _result: number, duration: number): void {
+    // Increment total calculations counter
+    this.performanceMetrics.totalCalculations++;
+    
     // Update performance metrics
     this.updatePerformanceMetrics(duration);
 
