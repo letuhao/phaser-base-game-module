@@ -1,7 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect, jest } from '@jest/globals';
 import { RangeValidator } from '../validators/RangeValidator';
 import { createMockContext } from '../../test/setup';
-import { UnitType } from '../enums/UnitType';
 import { Dimension } from '../enums/Dimension';
 import { SizeUnit } from '../enums/SizeUnit';
 import { SizeValue } from '../enums/SizeValue';

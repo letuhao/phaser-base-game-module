@@ -1,5 +1,4 @@
 import type { IRandomValueNumber } from '../interfaces/IRandomValue';
-import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Concrete implementation of RandomValueNumber

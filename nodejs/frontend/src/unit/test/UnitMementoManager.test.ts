@@ -3,7 +3,6 @@ import { UnitMementoManager } from '../mementos/UnitMementoManager';
 import { UnitCalculationMemento } from '../mementos/UnitCalculationMemento';
 import { createMockContext } from '../../test/setup';
 import { SizeUnit } from '../enums/SizeUnit';
-import { UnitType } from '../enums/UnitType';
 
 // Mock template for testing
 class MockSizeCalculationTemplate {

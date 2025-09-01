@@ -7,8 +7,6 @@ import { SizeValue } from '../enums/SizeValue';
 import { Dimension } from '../enums/Dimension';
 import { createSizeTemplateInput, ITemplateInput } from '../interfaces/ITemplateInput';
 import { RangeValidator } from '../validators/RangeValidator';
-import { TypeValidator } from '../validators/TypeValidator';
-import { UnitType } from '../enums/UnitType';
 
 // Concrete implementation for testing
 class TestSizeCalculationTemplate extends SizeCalculationTemplate {

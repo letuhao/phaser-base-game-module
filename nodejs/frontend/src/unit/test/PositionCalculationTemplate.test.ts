@@ -7,8 +7,6 @@ import { PositionValue } from '../enums/PositionValue';
 import { Dimension } from '../enums/Dimension';
 import { createPositionTemplateInput, ITemplateInput } from '../interfaces/ITemplateInput';
 import { RangeValidator } from '../validators/RangeValidator';
-import { TypeValidator } from '../validators/TypeValidator';
-import { UnitType } from '../enums/UnitType';
 
 // Concrete implementation for testing
 class TestPositionCalculationTemplate extends PositionCalculationTemplate {

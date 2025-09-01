@@ -3,12 +3,6 @@ import { TypeValidator } from '../validators/TypeValidator';
 import { createMockContext } from '../../test/setup';
 import { UnitType } from '../enums/UnitType';
 import { Dimension } from '../enums/Dimension';
-import { SizeUnit } from '../enums/SizeUnit';
-import { SizeValue } from '../enums/SizeValue';
-import { PositionUnit } from '../enums/PositionUnit';
-import { PositionValue } from '../enums/PositionValue';
-import { ScaleUnit } from '../enums/ScaleUnit';
-import { ScaleValue } from '../enums/ScaleValue';
 
 describe('TypeValidator', () => {
   let validator: TypeValidator;

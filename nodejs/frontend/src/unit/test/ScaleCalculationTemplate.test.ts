@@ -4,11 +4,8 @@ import { createMockContext } from '../../test/setup';
 import { TemplateInputType } from '../enums/TemplateInputType';
 import { ScaleUnit } from '../enums/ScaleUnit';
 import { ScaleValue } from '../enums/ScaleValue';
-import { Dimension } from '../enums/Dimension';
 import { createScaleTemplateInput, ITemplateInput } from '../interfaces/ITemplateInput';
 import { RangeValidator } from '../validators/RangeValidator';
-import { TypeValidator } from '../validators/TypeValidator';
-import { UnitType } from '../enums/UnitType';
 
 // Concrete implementation for testing
 class TestScaleCalculationTemplate extends ScaleCalculationTemplate {

@@ -35,7 +35,7 @@ export class TypeValidator extends BaseUnitValidator {
   /**
    * Check if this validator can handle the input
    */
-  canHandle(input: IValidationInput): boolean {
+  canHandle(_input: IValidationInput): boolean {
     // Accept all inputs, including null and undefined, so validation can handle them
     return true;
   }
