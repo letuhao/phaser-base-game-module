@@ -6,6 +6,7 @@ import { SizeUnit } from '../enums/SizeUnit';
 import { Dimension } from '../enums/Dimension';
 import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
 import { convertToStrategyInput } from '../interfaces/IStrategyInput';
+import { DEFAULT_FALLBACK_VALUES, STRATEGY_PRIORITIES } from '../constants';
 
 /**
  * Size Unit Strategy
@@ -19,6 +20,41 @@ export class SizeUnitStrategy implements IUnitStrategy {
    * Calculate size value using the appropriate strategy
    */
   calculate(input: IStrategyInput, context: UnitContext): number {
+    // Handle null/undefined inputs
+    if (input === null || input === undefined) {
+      return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT; // Default fallback
+    }
+    
+    // First, try to handle direct inputs that bypass conversion
+    if (typeof input === 'number') {
+      return input;
+    }
+    
+    if (typeof input === 'string') {
+      return this.calculateStringSize(input, context);
+    }
+    
+    // Handle direct strategy input properties
+    if ('sizeArray' in input && input.sizeArray) {
+      return this.calculateSizeArray(input.sizeArray, context);
+    }
+    
+    if ('sizeObject' in input && input.sizeObject) {
+      return this.calculateSizeObject(input.sizeObject, context);
+    }
+    
+    if ('sizeString' in input && input.sizeString) {
+      return this.calculateStringSize(input.sizeString, context);
+    }
+    
+    if ('randomValue' in input && input.randomValue) {
+      return input.randomValue.getRandomValue();
+    }
+    
+    if ('parentSize' in input && input.parentSize) {
+      return this.calculateParentSize(input as ISizeStrategyInput, context);
+    }
+    
     // Convert legacy input to strategy input format
     const strategyInput = convertToStrategyInput(input);
     
@@ -45,39 +81,35 @@ export class SizeUnitStrategy implements IUnitStrategy {
       }
     }
 
-    // Handle random values
-    if ('randomValue' in strategyInput && strategyInput.randomValue) {
-      return strategyInput.randomValue.getRandomValue();
-    }
-
-    // Handle legacy ParentWidth/ParentHeight
-    if ('parentSize' in strategyInput && strategyInput.parentSize) {
-      return this.calculateParentSize(strategyInput as ISizeStrategyInput, context);
-    }
-
-    // Handle size arrays
-    if ('sizeArray' in strategyInput && strategyInput.sizeArray) {
-      return this.calculateSizeArray(strategyInput.sizeArray, context);
-    }
-
-    // Handle size objects
-    if ('sizeObject' in strategyInput && strategyInput.sizeObject) {
-      return this.calculateSizeObject(strategyInput.sizeObject, context);
-    }
-
-    // Handle size strings
-    if ('sizeString' in strategyInput && strategyInput.sizeString) {
-      return this.calculateStringSize(strategyInput.sizeString, context);
-    }
-
     // Default fallback
-    return 100;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**
    * Check if this strategy can handle the input
    */
   canHandle(input: IStrategyInput): boolean {
+    // Handle null/undefined inputs
+    if (input === null || input === undefined) {
+      return false;
+    }
+    
+    // Check direct inputs first
+    if (typeof input === 'number' || typeof input === 'string') {
+      return true;
+    }
+    
+    // Check direct strategy input properties
+    if (
+      ('sizeArray' in input && input.sizeArray !== undefined) ||
+      ('sizeObject' in input && input.sizeObject !== undefined) ||
+      ('sizeString' in input && input.sizeString !== undefined) ||
+      ('randomValue' in input && input.randomValue !== undefined) ||
+      ('parentSize' in input && input.parentSize !== undefined)
+    ) {
+      return true;
+    }
+    
     // Convert legacy input to strategy input format
     const strategyInput = convertToStrategyInput(input);
     
@@ -95,7 +127,7 @@ export class SizeUnitStrategy implements IUnitStrategy {
    * Get strategy priority (lower = higher priority)
    */
   getPriority(): number {
-    return 1; // High priority for size calculations
+    return STRATEGY_PRIORITIES.SIZE; // High priority for size calculations
   }
 
   /**
@@ -104,11 +136,11 @@ export class SizeUnitStrategy implements IUnitStrategy {
   private calculateStringSize(input: string, context: UnitContext): number {
     switch (input) {
       case 'fill':
-        return context.scene?.width ?? context.viewport?.width ?? 800;
+        return context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
       case 'auto':
-        return context.content?.width ?? 100;
+        return context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
       default:
-        return 100;
+        return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     }
   }
 
@@ -135,7 +167,7 @@ export class SizeUnitStrategy implements IUnitStrategy {
       'dynamic-size',
       input,
       Dimension.WIDTH,
-      100
+      DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT
     );
     return calculator.calculateSize(context);
   }
@@ -147,7 +179,7 @@ export class SizeUnitStrategy implements IUnitStrategy {
     if (context.parent && input.parentSize && typeof input.parentSize.getValue === 'function') {
       return input.parentSize.getValue(context.parent);
     }
-    return 100;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**
@@ -187,8 +219,23 @@ export class SizeUnitStrategy implements IUnitStrategy {
       return baseSize * multiplier;
     }
     
-    // Default: calculate average of all values
-    const results = input.map(item => this.calculate(item as IStrategyInput, context));
+    // Handle numeric arrays directly
+    if (input.every(item => typeof item === 'number')) {
+      const sum = input.reduce((acc, val) => acc + (val as number), 0);
+      return sum / input.length;
+    }
+    
+    // Default: calculate average of all values (convert each item properly)
+    const results = input.map(item => {
+      if (typeof item === 'number') {
+        return item;
+      }
+      if (typeof item === 'string') {
+        return this.calculateStringSize(item, context);
+      }
+      // For other types, try to convert and calculate
+      return this.calculate(item as IStrategyInput, context);
+    });
     return results.reduce((sum, val) => sum + val, 0) / results.length;
   }
 
@@ -238,7 +285,7 @@ export class SizeUnitStrategy implements IUnitStrategy {
     }
     
     // Default fallback
-    return 100;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
 

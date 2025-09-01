@@ -8,6 +8,7 @@ import { ScaleUnit } from '../enums/ScaleUnit';
 import { ScaleValue } from '../enums/ScaleValue';
 import { Dimension } from '../enums/Dimension';
 import { TemplateInputType } from '../enums/TemplateInputType';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Base input interface for all template calculations
@@ -278,15 +279,15 @@ export function convertLegacyInput(input: IUnit | UnitValue | number | string): 
     }
     
     // Default to size input
-    return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+    return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
   }
   
   // If it's an IUnit, extract its properties
   if (input && typeof input === 'object' && 'calculate' in input) {
     // It's an IUnit, use a default value since we can't extract size directly
-    return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+    return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
   }
   
   // Default fallback
-  return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+  return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
 }

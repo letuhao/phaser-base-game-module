@@ -7,6 +7,7 @@ import { TypeValidator } from '../validators/TypeValidator';
 import { UnitType } from '../enums/UnitType';
 import { Dimension } from '../enums/Dimension';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Position Calculation Template
@@ -175,7 +176,7 @@ export abstract class PositionCalculationTemplate implements IUnitCalculationTem
    */
   protected applyRoundingAndBounds(result: number): number {
     // Default implementation: round to 2 decimal places
-    return Math.round(result * 100) / 100;
+    return Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**

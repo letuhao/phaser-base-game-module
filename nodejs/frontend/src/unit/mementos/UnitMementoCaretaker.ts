@@ -1,6 +1,7 @@
 import type { IUnitMementoCaretaker, IUnitMemento } from './IUnitMemento';
 import { UnitMemento } from './IUnitMemento';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Unit Memento Caretaker Implementation
@@ -271,7 +272,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
    * Set maximum mementos per unit
    */
   setMaxMementosPerUnit(max: number): void {
-    this.maxMementosPerUnit = Math.max(1, max);
+    this.maxMementosPerUnit = Math.max(DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT / 100, max);
     this.enforceMementosPerUnitLimit();
   }
 
@@ -279,7 +280,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
    * Set maximum total mementos
    */
   setMaxTotalMementos(max: number): void {
-    this.maxTotalMementos = Math.max(1, max);
+    this.maxTotalMementos = Math.max(DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT / 100, max);
     this.enforceTotalMementosLimit();
   }
 

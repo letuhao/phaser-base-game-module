@@ -3,6 +3,7 @@ import type { UnitContext } from '../interfaces/IUnit';
 import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { Dimension } from '../enums/Dimension';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES, STRATEGY_PRIORITIES } from '../constants';
 
 /**
  * Mixed Unit Strategy
@@ -33,7 +34,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
     }
 
     // Default fallback
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**
@@ -51,14 +52,14 @@ export class MixedUnitStrategy implements IUnitStrategy {
    * Get strategy priority (lower = higher priority)
    */
   getPriority(): number {
-    return 1; // Highest priority for complex mixed calculations
+    return STRATEGY_PRIORITIES.MIXED; // Highest priority for complex mixed calculations
   }
 
   /**
    * Calculate from array of mixed units
    */
   private calculateMixedArray(input: unknown[], _context: UnitContext): number {
-    if (input.length === 0) return 0;
+    if (input.length === 0) return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     // Handle different array patterns
     if (input.length === 2 && typeof input[0] === 'string' && typeof input[1] === 'number') {
@@ -73,7 +74,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
 
     // Default: calculate average of all values
     const results = input.map(item => this.calculateSingleValue(item, _context));
-    return results.reduce((sum, val) => sum + val, 0) / results.length;
+    return results.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / results.length;
   }
 
   /**
@@ -200,7 +201,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   private calculateResponsiveValue(_input: unknown, _context: UnitContext): number {
     // This would integrate with responsive config system
     // For now, return a default value
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**
@@ -209,7 +210,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   private calculateThemeValue(_input: unknown, _context: UnitContext): number {
     // This would integrate with theme system
     // For now, return a default value
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**
@@ -232,7 +233,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
           error: error instanceof Error ? error.message : String(error),
         }
       );
-      return 0;
+      return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     }
   }
 
@@ -242,7 +243,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   private calculateUnitConversion(input: string, _context: UnitContext): number {
     // Extract numeric value and unit
     const match = input.match(/^([\d.]+)(\w+)$/);
-    if (!match) return 0;
+    if (!match) return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     const [, value, unit] = match;
     const numericValue = parseFloat(value);
@@ -267,7 +268,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
   private calculateCSSExpression(_input: string, _context: UnitContext): number {
     // Handle CSS calc() and var() functions
     // For now, return a default value
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**
@@ -275,37 +276,37 @@ export class MixedUnitStrategy implements IUnitStrategy {
    */
   private calculateSingleValue(value: unknown, _context: UnitContext): number {
     if (typeof value === 'number') return value;
-    if (typeof value === 'string') return parseFloat(value) || 0;
-    return 0;
+    if (typeof value === 'string') return parseFloat(value) || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   private calculateSizeValue(_value: unknown, _context: UnitContext): number {
     // Delegate to size strategy
-    return 0; // Placeholder
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT; // Placeholder
   }
 
   private calculatePositionValue(_value: unknown, _context: UnitContext): number {
     // Delegate to position strategy
-    return 0; // Placeholder
+    return DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT; // Placeholder
   }
 
   private calculateScaleValue(_value: unknown, _context: UnitContext): number {
     // Delegate to scale strategy
-    return 0; // Placeholder
+    return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT; // Placeholder
   }
 
   private calculatePercentage(value: number, _context: UnitContext): number {
-    const parentSize = _context.parent?.width || _context.scene?.width || 800;
+    const parentSize = _context.parent?.width || _context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     return (value / 100) * parentSize;
   }
 
   private calculateViewportWidth(value: number, _context: UnitContext): number {
-    const viewportWidth = _context.viewport?.width || _context.scene?.width || 800;
+    const viewportWidth = _context.viewport?.width || _context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     return (value / 100) * viewportWidth;
   }
 
   private calculateViewportHeight(value: number, context: UnitContext): number {
-    const viewportHeight = context.viewport?.height || context.scene?.height || 600;
+    const viewportHeight = context.viewport?.height || context.scene?.height || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     return (value / 100) * viewportHeight;
   }
 
@@ -324,10 +325,10 @@ export class MixedUnitStrategy implements IUnitStrategy {
   private processMathExpression(expression: string, context: UnitContext): string {
     // Replace unit references with calculated values
     return expression
-      .replace(/\bwidth\b/g, String(context.parent?.width || 100))
-      .replace(/\bheight\b/g, String(context.parent?.height || 100))
-      .replace(/\bscene\.width\b/g, String(context.scene?.width || 800))
-      .replace(/\bscene\.height\b/g, String(context.scene?.height || 600));
+      .replace(/\bwidth\b/g, String(context.parent?.width || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT))
+      .replace(/\bheight\b/g, String(context.parent?.height || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT))
+      .replace(/\bscene\.width\b/g, String(context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE))
+      .replace(/\bscene\.height\b/g, String(context.scene?.height || DEFAULT_FALLBACK_VALUES.SIZE.SCENE));
   }
 
   private isSimpleValue(input: unknown): boolean {
@@ -356,7 +357,7 @@ export class MixedUnitStrategy implements IUnitStrategy {
 
   private extractNumericValue(input: unknown): number {
     if (typeof input === 'number') return input;
-    if (typeof input === 'string') return parseFloat(input) || 0;
+    if (typeof input === 'string') return parseFloat(input) || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     if (
       typeof input === 'object' && 
       input !== null && 
@@ -365,6 +366,6 @@ export class MixedUnitStrategy implements IUnitStrategy {
     ) {
       return (input as { value: number }).value;
     }
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 }

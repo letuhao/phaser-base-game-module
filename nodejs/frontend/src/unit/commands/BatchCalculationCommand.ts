@@ -2,6 +2,7 @@ import type { IUnitCommand } from './IUnitCommand';
 import type { UnitContext } from '../interfaces/IUnit';
 import { BaseUnitCommand } from './IUnitCommand';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Batch Calculation Command
@@ -43,7 +44,7 @@ export class BatchCalculationCommand extends BaseUnitCommand {
               error: error instanceof Error ? error.message : String(error),
             }
           );
-          this.executionResults.push(0); // Default fallback
+          this.executionResults.push(DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT); // Default fallback
         }
       } else {
         this.logger.warn(
@@ -51,15 +52,15 @@ export class BatchCalculationCommand extends BaseUnitCommand {
           'execute',
           `Command cannot be executed: ${command.getDescription()}`
         );
-        this.executionResults.push(0); // Default fallback
+        this.executionResults.push(DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT); // Default fallback
       }
     }
 
     // Calculate aggregate result (average of all results)
     const aggregateResult =
       this.executionResults.length > 0
-        ? this.executionResults.reduce((sum, val) => sum + val, 0) / this.executionResults.length
-        : 0;
+        ? this.executionResults.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / this.executionResults.length
+        : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     // Set the result using the protected method
     this.setResult(aggregateResult);
@@ -77,8 +78,8 @@ export class BatchCalculationCommand extends BaseUnitCommand {
     // Calculate aggregate result from previous results
     const aggregateResult =
       this.previousResults.length > 0
-        ? this.previousResults.reduce((sum, val) => sum + val, 0) / this.previousResults.length
-        : 0;
+        ? this.previousResults.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / this.previousResults.length
+        : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     // Set the result using the protected method
     this.setResult(aggregateResult);
@@ -165,7 +166,7 @@ export class BatchCalculationCommand extends BaseUnitCommand {
     minResult: number;
     maxResult: number;
   } {
-    const validResults = this.executionResults.filter(r => r !== 0);
+    const validResults = this.executionResults.filter(r => r !== DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
     const failedCount = this.executionResults.length - validResults.length;
 
     return {
@@ -174,10 +175,10 @@ export class BatchCalculationCommand extends BaseUnitCommand {
       failedCommands: failedCount,
       averageResult:
         validResults.length > 0
-          ? validResults.reduce((sum, val) => sum + val, 0) / validResults.length
-          : 0,
-      minResult: validResults.length > 0 ? Math.min(...validResults) : 0,
-      maxResult: validResults.length > 0 ? Math.max(...validResults) : 0,
+          ? validResults.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / validResults.length
+          : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
+      minResult: validResults.length > 0 ? Math.min(...validResults) : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
+      maxResult: validResults.length > 0 ? Math.max(...validResults) : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
     };
   }
 }

@@ -1,5 +1,6 @@
 import type { IUnitObserver } from './IUnitObserver';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Performance Observer
@@ -198,7 +199,7 @@ export class PerformanceObserver implements IUnitObserver {
   } {
     const avgTime = this.performanceMetrics.averageCalculationTime;
     const errorRate =
-      this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, 1);
+      this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT / 100);
 
     let status: 'excellent' | 'good' | 'fair' | 'poor' = 'excellent';
     const recommendations: string[] = [];

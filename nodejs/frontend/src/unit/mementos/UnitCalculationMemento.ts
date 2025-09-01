@@ -1,6 +1,7 @@
 import type { UnitContext } from '../interfaces/IUnit';
 import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { UnitMemento } from './IUnitMemento';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Unit Calculation Memento
@@ -214,11 +215,11 @@ export class UnitCalculationMemento extends UnitMemento {
    * Get calculation efficiency score (0-100)
    */
   getEfficiencyScore(): number {
-    if (this.performanceMetrics.totalTime === 0) return 100;
+    if (this.performanceMetrics.totalTime === 0) return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     // Base score on time and memory usage
-    const timeScore = Math.max(0, 100 - this.performanceMetrics.totalTime * 10);
-    const memoryScore = Math.max(0, 100 - this.performanceMetrics.memoryUsage / 1000);
+    const timeScore = Math.max(0, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT - this.performanceMetrics.totalTime * 10);
+    const memoryScore = Math.max(0, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT - this.performanceMetrics.memoryUsage / 1000);
 
     return Math.round((timeScore + memoryScore) / 2);
   }

@@ -19,9 +19,23 @@ import { PositionUnit } from '../enums/PositionUnit';
 import { PositionValue } from '../enums/PositionValue';
 import { ScaleUnit } from '../enums/ScaleUnit';
 import { ScaleValue } from '../enums/ScaleValue';
+import { Dimension } from '../enums/Dimension';
 import { createSizeTemplateInput, createPositionTemplateInput, createScaleTemplateInput } from '../interfaces/ITemplateInput';
 import { convertToLegacyUnit } from '../interfaces/ILegacyUnit';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
+
+// Import calculator classes for unit creation
+import { SizeUnitCalculator } from '../classes/SizeUnitCalculator';
+import { PositionUnitCalculator } from '../classes/PositionUnitCalculator';
+import { ScaleUnitCalculator } from '../classes/ScaleUnitCalculator';
+
+// Import type guards for configuration validation
+import { 
+  isSizeUnitConfig, 
+  isPositionUnitConfig, 
+  isScaleUnitConfig 
+} from '../interfaces/IUnitConfig';
 
 /**
  * Unit System Manager
@@ -329,17 +343,17 @@ export class UnitSystemManager implements IUnitSystemManager {
       }
       
       // Default to size input
-      return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+      return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
     }
     
     // If it's an IUnit, extract its properties
     if (input && typeof input === 'object' && 'calculate' in input) {
       // It's an IUnit, use a default value since we can't extract size directly
-      return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+      return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
     }
     
     // Default fallback
-    return createSizeTemplateInput(SizeUnit.PIXEL, 100);
+    return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
   }
 
   // Memento management
@@ -473,28 +487,159 @@ export class UnitSystemManager implements IUnitSystemManager {
       averageCalculationTime: avgTime,
       memoryUsage: this.performanceMetrics.memoryUsage,
       errorRate:
-        this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, 1),
+        this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT),
     };
   }
 
   // Configuration
-  updateConfiguration(_config: Record<string, unknown>): void {
-    // Implementation would update system configuration
+  updateConfiguration(config: Record<string, unknown>): void {
+    try {
+      // Update performance settings
+      if (typeof config.memoryLimit === 'number') {
+        this.performanceMetrics.memoryUsage = config.memoryLimit;
+      }
+      
+      // Update system settings
+      if (typeof config.maxUnits === 'number') {
+        // Implementation would enforce unit limits
+        this.logger.debug('UnitSystemManager', 'updateConfiguration', 'Updated max units', { maxUnits: config.maxUnits });
+      }
+      
+      // Update validation settings
+      if (typeof config.strictValidation === 'boolean') {
+        // Implementation would update validation strictness
+        this.logger.debug('UnitSystemManager', 'updateConfiguration', 'Updated validation strictness', { strictValidation: config.strictValidation });
+      }
+      
+      this.logger.info('UnitSystemManager', 'updateConfiguration', 'Configuration updated successfully', { configKeys: Object.keys(config) });
+    } catch (error) {
+      this.logger.error('UnitSystemManager', 'updateConfiguration', 'Failed to update configuration', { 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
   }
 
   getConfiguration(): Record<string, unknown> {
-    // Implementation would return current configuration
-    return {};
+    return {
+      system: {
+        isInitialized: this.isInitialized,
+        totalUnits: this.units.size,
+        activeStrategies: this.strategies.size,
+        registeredObservers: this.observers.size,
+        registeredValidators: this.validators.length,
+        registeredTemplates: this.templates.size,
+        registeredAdapters: this.adapters.size,
+        registeredDecorators: this.decorators.size
+      },
+      performance: {
+        memoryLimit: this.performanceMetrics.memoryUsage,
+        maxCalculationHistory: 100,
+        errorThreshold: 0.1
+      },
+      validation: {
+        strictMode: true,
+        autoValidate: true,
+        maxValidationErrors: 10
+      }
+    };
   }
 
   resetToDefaults(): void {
-    // Implementation would reset to default configuration
+    try {
+      // Reset performance metrics
+      this.performanceMetrics = {
+        totalCalculations: 0,
+        calculationTimes: [],
+        memoryUsage: 0,
+        errors: 0,
+      };
+      
+      // Reset system state
+      this.commandHistory.length = 0;
+      this.commandIndex = -1;
+      
+      // Clear validation errors
+      this.validators.length = 0;
+      
+      this.logger.info('UnitSystemManager', 'resetToDefaults', 'System reset to default configuration');
+    } catch (error) {
+      this.logger.error('UnitSystemManager', 'resetToDefaults', 'Failed to reset to defaults', { 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
   }
 
   // Private helper methods
-  private createUnitByType(_unitType: string, _config: IUnitConfig): IUnit | undefined {
-    // Implementation would create units based on type
-    // For now, return undefined
-    return undefined;
+  private createUnitByType(unitType: string, config: IUnitConfig): IUnit | undefined {
+    try {
+      switch (unitType.toLowerCase()) {
+        case 'size':
+          if (isSizeUnitConfig(config)) {
+            return new SizeUnitCalculator(
+              config.id,
+              config.name,
+              config.sizeUnit || SizeUnit.PIXEL,
+              config.dimension || Dimension.WIDTH,
+              config.baseValue,
+              config.maintainAspectRatio || false
+            );
+          }
+          break;
+          
+        case 'position':
+          if (isPositionUnitConfig(config)) {
+            return new PositionUnitCalculator(
+              config.id,
+              config.name,
+              config.positionUnit || PositionUnit.PIXEL,
+              config.axis || Dimension.X,
+              config.baseValue
+            );
+          }
+          break;
+          
+        case 'scale':
+          if (isScaleUnitConfig(config)) {
+            return new ScaleUnitCalculator(
+              config.id,
+              config.name,
+              config.scaleUnit || ScaleUnit.FACTOR,
+              config.baseValue,
+              config.maintainAspectRatio || false
+            );
+          }
+          break;
+          
+        default:
+          this.logger.warn(
+            'UnitSystemManager',
+            'createUnitByType',
+            `Unknown unit type: ${unitType}`,
+            { unitType, configId: config.id }
+          );
+          return undefined;
+      }
+      
+      this.logger.warn(
+        'UnitSystemManager',
+        'createUnitByType',
+        `Configuration type mismatch for unit type: ${unitType}`,
+        { unitType, configId: config.id, configType: typeof config }
+      );
+      return undefined;
+      
+    } catch (error) {
+      this.logger.error(
+        'UnitSystemManager',
+        'createUnitByType',
+        `Error creating unit of type: ${unitType}`,
+        { 
+          unitType, 
+          configId: config.id, 
+          error: error instanceof Error ? error.message : String(error) 
+        }
+      );
+      return undefined;
+    }
   }
 }

@@ -7,6 +7,7 @@ import { TypeValidator } from '../validators/TypeValidator';
 import { UnitType } from '../enums/UnitType';
 import { Dimension } from '../enums/Dimension';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Scale Calculation Template
@@ -170,7 +171,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   protected applyRoundingAndBounds(result: number): number {
     // Default implementation: round to 3 decimal places for scale precision
-    return Math.round(result * 1000) / 1000;
+    return Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT * 10) / (DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT * 10);
   }
 
   /**

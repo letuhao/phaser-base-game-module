@@ -4,6 +4,7 @@ import { PositionUnit } from '../enums/PositionUnit';
 import { Dimension } from '../enums/Dimension';
 import { PositionValue } from '../enums/PositionValue';
 import { UnitType } from '../enums/UnitType';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * PositionUnitCalculator class
@@ -250,9 +251,9 @@ export class PositionUnitCalculator implements IPositionUnit {
   // Private calculation methods
   private calculateCenterPosition(context: UnitContext): number {
     if (this.axis === Dimension.X) {
-      return (context.scene?.width ?? context.viewport?.width ?? 800) / 2 + this.offset;
+      return (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
     }
-    return (context.scene?.height ?? context.viewport?.height ?? 600) / 2 + this.offset;
+    return (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
   }
 
   private calculateLeftPosition(_context: UnitContext): number {
@@ -261,7 +262,7 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateRightPosition(context: UnitContext): number {
     if (this.axis === Dimension.X) {
-      return (context.scene?.width ?? context.viewport?.width ?? 800) + this.offset;
+      return (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
     }
     return this.offset;
   }
@@ -272,7 +273,7 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateBottomPosition(context: UnitContext): number {
     if (this.axis === Dimension.Y) {
-      return (context.scene?.height ?? context.viewport?.height ?? 600) + this.offset;
+      return (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
     }
     return this.offset;
   }
@@ -282,7 +283,7 @@ export class PositionUnitCalculator implements IPositionUnit {
   }
 
   private calculateParentRightPosition(context: UnitContext): number {
-    return (context.parent?.x ?? 0) + (context.parent?.width ?? 100) + this.offset;
+    return (context.parent?.x ?? 0) + (context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) + this.offset;
   }
 
   private calculateParentTopPosition(context: UnitContext): number {
@@ -290,15 +291,15 @@ export class PositionUnitCalculator implements IPositionUnit {
   }
 
   private calculateParentBottomPosition(context: UnitContext): number {
-    return (context.parent?.y ?? 0) + (context.parent?.height ?? 100) + this.offset;
+    return (context.parent?.y ?? 0) + (context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) + this.offset;
   }
 
   private calculateParentCenterXPosition(context: UnitContext): number {
-    return (context.parent?.x ?? 0) + (context.parent?.width ?? 100) / 2 + this.offset;
+    return (context.parent?.x ?? 0) + (context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / 2 + this.offset;
   }
 
   private calculateParentCenterYPosition(context: UnitContext): number {
-    return (context.parent?.y ?? 0) + (context.parent?.height ?? 100) / 2 + this.offset;
+    return (context.parent?.y ?? 0) + (context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / 2 + this.offset;
   }
 
   private calculateSceneLeftPosition(_context: UnitContext): number {
@@ -307,7 +308,7 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateSceneRightPosition(context: UnitContext): number {
     if (this.axis === Dimension.X) {
-      return (context.scene?.width ?? 800) + this.offset;
+      return (context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
     }
     return this.offset;
   }
@@ -318,17 +319,17 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateSceneBottomPosition(context: UnitContext): number {
     if (this.axis === Dimension.Y) {
-      return (context.scene?.height ?? 600) + this.offset;
+      return (context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) + this.offset;
     }
     return this.offset;
   }
 
   private calculateSceneCenterXPosition(context: UnitContext): number {
-    return (context.scene?.width ?? 800) / 2 + this.offset;
+    return (context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
   }
 
   private calculateSceneCenterYPosition(context: UnitContext): number {
-    return (context.scene?.height ?? 600) / 2 + this.offset;
+    return (context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2 + this.offset;
   }
 
   private calculateViewportLeftPosition(_context: UnitContext): number {
@@ -337,7 +338,7 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateViewportRightPosition(context: UnitContext): number {
     if (this.axis === Dimension.X) {
-      return (context.viewport?.width ?? 800) + this.offset;
+      return (context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT) + this.offset;
     }
     return this.offset;
   }
@@ -348,7 +349,7 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateViewportBottomPosition(context: UnitContext): number {
     if (this.axis === Dimension.Y) {
-      return (context.viewport?.height ?? 600) + this.offset;
+      return (context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT) + this.offset;
     }
     return this.offset;
   }
@@ -356,8 +357,8 @@ export class PositionUnitCalculator implements IPositionUnit {
   private calculateRandomPosition(context: UnitContext): number {
     const max =
       this.axis === Dimension.X
-        ? (context.scene?.width ?? context.viewport?.width ?? 800)
-        : (context.scene?.height ?? context.viewport?.height ?? 600);
+        ? (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE)
+        : (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE);
     return Math.random() * max + this.offset;
   }
 
@@ -367,7 +368,7 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateContentRightPosition(context: UnitContext): number {
     if (this.axis === Dimension.X) {
-      return (context.content?.width ?? 100) + this.offset;
+      return (context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT) + this.offset;
     }
     return this.offset;
   }
@@ -378,7 +379,7 @@ export class PositionUnitCalculator implements IPositionUnit {
 
   private calculateContentBottomPosition(context: UnitContext): number {
     if (this.axis === Dimension.Y) {
-      return (context.content?.height ?? 100) + this.offset;
+      return (context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT) + this.offset;
     }
     return this.offset;
   }
@@ -405,11 +406,11 @@ export class PositionUnitCalculator implements IPositionUnit {
    */
   isWithinBounds(position: number, context: UnitContext): boolean {
     if (this.axis === Dimension.X) {
-      const maxX = context.scene?.width ?? context.viewport?.width ?? 800;
+      const maxX = context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
       return position >= 0 && position <= maxX;
     }
     if (this.axis === Dimension.Y) {
-      const maxY = context.scene?.height ?? context.viewport?.height ?? 600;
+      const maxY = context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
       return position >= 0 && position <= maxY;
     }
     return true;
@@ -422,13 +423,13 @@ export class PositionUnitCalculator implements IPositionUnit {
     if (this.axis === Dimension.X) {
       return {
         min: 0,
-        max: context.scene?.width ?? context.viewport?.width ?? 800
+        max: context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
       };
     }
     if (this.axis === Dimension.Y) {
       return {
         min: 0,
-        max: context.scene?.height ?? context.viewport?.height ?? 600
+        max: context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
       };
     }
     return { min: 0, max: 0 };

@@ -4,6 +4,7 @@ import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { ScaleValue } from '../enums/ScaleValue';
 import { ScaleUnit } from '../enums/ScaleUnit';
 import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
+import { DEFAULT_FALLBACK_VALUES, STRATEGY_PRIORITIES } from '../constants';
 
 /**
  * Scale Unit Strategy
@@ -58,7 +59,7 @@ export class ScaleUnitStrategy implements IUnitStrategy {
     }
 
     // Default fallback
-    return 1;
+    return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
   }
 
   /**
@@ -79,7 +80,7 @@ export class ScaleUnitStrategy implements IUnitStrategy {
    * Get strategy priority (lower = higher priority)
    */
   getPriority(): number {
-    return 3; // Medium priority for scale calculations
+    return STRATEGY_PRIORITIES.SCALE; // Medium priority for scale calculations
   }
 
   /**
@@ -168,19 +169,19 @@ export class ScaleUnitStrategy implements IUnitStrategy {
     ) {
       return (input as { getValue(parent: unknown): number }).getValue(context.parent);
     }
-    return 1;
+    return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
   }
 
   /**
    * Calculate fit scale based on context
    */
   private calculateFitScale(context: UnitContext): number {
-    if (!context.parent) return 1;
+    if (!context.parent) return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
 
-    const parentWidth = context.parent.width || 100;
-    const parentHeight = context.parent.height || 100;
-    const contentWidth = context.content?.width || 100;
-    const contentHeight = context.content?.height || 100;
+    const parentWidth = context.parent.width || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const parentHeight = context.parent.height || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const contentWidth = context.content?.width || DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const contentHeight = context.content?.height || DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
     const scaleX = parentWidth / contentWidth;
     const scaleY = parentHeight / contentHeight;
@@ -192,12 +193,12 @@ export class ScaleUnitStrategy implements IUnitStrategy {
    * Calculate fill scale based on context
    */
   private calculateFillScale(context: UnitContext): number {
-    if (!context.parent) return 1;
+    if (!context.parent) return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
 
-    const parentWidth = context.parent.width || 100;
-    const parentHeight = context.parent.height || 100;
-    const contentWidth = context.content?.width || 100;
-    const contentHeight = context.content?.height || 100;
+    const parentWidth = context.parent.width || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const parentHeight = context.parent.height || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const contentWidth = context.content?.width || DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const contentHeight = context.content?.height || DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
     const scaleX = parentWidth / contentWidth;
     const scaleY = parentHeight / contentHeight;

@@ -5,6 +5,7 @@ import type { UnitContext } from '../interfaces/IUnit';
 import type { IUnitCalculationTemplate } from '../templates/IUnitCalculationTemplate';
 import type { IStrategyInput } from '../interfaces/IStrategyInput';
 import { Logger } from '../../core/Logger';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Unit Memento Manager
@@ -14,7 +15,7 @@ import { Logger } from '../../core/Logger';
 export class UnitMementoManager {
   private readonly caretaker: IUnitMementoCaretaker;
   private autoSaveEnabled: boolean = true;
-  private autoSaveThreshold: number = 100; // ms
+  private autoSaveThreshold: number = DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT; // ms
   private significantChangeThresholds = {
     timeThreshold: 50, // ms
     resultThreshold: 0.01, // 1% change
@@ -459,7 +460,7 @@ export class UnitMementoManager {
       lateEfficiencies.reduce((sum, eff) => sum + eff, 0) / lateEfficiencies.length;
 
     const timeThreshold = 0.1; // 10% change
-    const efficiencyThreshold = 5; // 5 points change
+    const efficiencyThreshold = DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT / 20; // 5 points change
 
     const timeTrend: 'improving' | 'declining' | 'stable' =
       (avgLateTime - avgEarlyTime) / avgEarlyTime < -timeThreshold

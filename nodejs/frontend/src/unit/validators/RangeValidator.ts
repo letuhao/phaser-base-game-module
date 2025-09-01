@@ -8,6 +8,7 @@ import {
   isScaleValidationInput,
   isLegacyValidationInput 
 } from '../interfaces/IValidationInput';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Range Validator
@@ -101,15 +102,15 @@ export class RangeValidator extends BaseUnitValidator {
     }
 
     if (isSizeValidationInput(input)) {
-      return typeof input.value === 'number' ? input.value : 0;
+      return typeof input.value === 'number' ? input.value : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     }
 
     if (isPositionValidationInput(input)) {
-      return typeof input.value === 'number' ? input.value : 0;
+      return typeof input.value === 'number' ? input.value : DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
     }
 
     if (isScaleValidationInput(input)) {
-      return typeof input.value === 'number' ? input.value : 0;
+      return typeof input.value === 'number' ? input.value : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
     }
 
     // Handle legacy inputs
@@ -117,11 +118,11 @@ export class RangeValidator extends BaseUnitValidator {
       const legacyInput = input.input;
       if (legacyInput && typeof legacyInput === 'object' && 'value' in legacyInput) {
         const value = (legacyInput as { value: unknown }).value;
-        return typeof value === 'number' ? value : 0;
+        return typeof value === 'number' ? value : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
       }
     }
 
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   /**

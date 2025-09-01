@@ -4,6 +4,7 @@ import { SizeUnit } from '../enums/SizeUnit';
 import { Dimension } from '../enums/Dimension';
 import { SizeValue } from '../enums/SizeValue';
 import { UnitType } from '../enums/UnitType';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * SizeUnitCalculator class
@@ -81,7 +82,7 @@ export class SizeUnitCalculator implements ISizeUnit {
       case SizeValue.RANDOM:
         return this.calculateRandomSize(context);
       default:
-        return this.applyConstraints(100); // Default fallback
+        return this.applyConstraints(DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT); // Default fallback
     }
   }
 
@@ -183,70 +184,70 @@ export class SizeUnitCalculator implements ISizeUnit {
   // Private calculation methods
   private calculateFillSize(context: UnitContext): number {
     if (this.dimension === Dimension.WIDTH) {
-      return context.scene?.width ?? context.viewport?.width ?? 800;
+      return context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     }
     if (this.dimension === Dimension.HEIGHT) {
-      return context.scene?.height ?? context.viewport?.height ?? 600;
+      return context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     }
     return Math.min(
-      context.scene?.width ?? context.viewport?.width ?? 800,
-      context.scene?.height ?? context.viewport?.height ?? 600
+      context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE,
+      context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
     );
   }
 
   private calculateAutoSize(context: UnitContext): number {
-    return context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ?? 100;
+    return context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
   }
 
   private calculateFitSize(context: UnitContext): number {
     const contentSize =
-      context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ?? 100;
+      context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     const availableSize =
       this.dimension === Dimension.WIDTH
-        ? (context.scene?.width ?? context.viewport?.width ?? 800)
-        : (context.scene?.height ?? context.viewport?.height ?? 600);
+        ? (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE)
+        : (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE);
 
     return Math.min(contentSize, availableSize);
   }
 
   private calculateStretchSize(context: UnitContext): number {
     return this.dimension === Dimension.WIDTH
-      ? (context.scene?.width ?? context.viewport?.width ?? 800)
-      : (context.scene?.height ?? context.viewport?.height ?? 600);
+      ? (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE)
+      : (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE);
   }
 
   private calculateParentWidthSize(context: UnitContext): number {
-    return context.parent?.width ?? 100;
+    return context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   private calculateParentHeightSize(context: UnitContext): number {
-    return context.parent?.height ?? 100;
+    return context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
 
   private calculateSceneWidthSize(context: UnitContext): number {
-    return context.scene?.width ?? 800;
+    return context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
   }
 
   private calculateSceneHeightSize(context: UnitContext): number {
-    return context.scene?.height ?? 600;
+    return context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
   }
 
   private calculateViewportWidthSize(context: UnitContext): number {
-    return context.viewport?.width ?? 800;
+    return context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
   }
 
   private calculateViewportHeightSize(context: UnitContext): number {
-    return context.viewport?.height ?? 600;
+    return context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
   }
 
   private calculateContentSize(context: UnitContext): number {
     if (this.dimension === Dimension.WIDTH) {
-      return context.content?.width ?? 100;
+      return context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     }
     if (this.dimension === Dimension.HEIGHT) {
-      return context.content?.height ?? 100;
+      return context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     }
-    return Math.max(context.content?.width ?? 100, context.content?.height ?? 100);
+    return Math.max(context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT, context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT);
   }
 
   private calculateIntrinsicSize(context: UnitContext): number {
@@ -255,8 +256,8 @@ export class SizeUnitCalculator implements ISizeUnit {
   }
 
   private calculateRandomSize(_context: UnitContext): number {
-    const min = this.minSize ?? 50;
-    const max = this.maxSize ?? 200;
+    const min = this.minSize ?? DEFAULT_FALLBACK_VALUES.SIZE.MIN;
+    const max = this.maxSize ?? DEFAULT_FALLBACK_VALUES.SIZE.MAX;
     return Math.random() * (max - min) + min;
   }
 

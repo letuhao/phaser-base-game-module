@@ -3,6 +3,7 @@ import type { UnitContext } from '../interfaces/IUnit';
 import { ScaleUnit } from '../enums/ScaleUnit';
 import { ScaleValue } from '../enums/ScaleValue';
 import { UnitType } from '../enums/UnitType';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * ScaleUnitCalculator class
@@ -90,7 +91,7 @@ export class ScaleUnitCalculator implements IScaleUnit {
       case ScaleValue.DEVICE_SCALE:
         return this.calculateDeviceScale(context);
       default:
-        return this.applyConstraints(1); // Default fallback
+        return this.applyConstraints(DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT); // Default fallback
     }
   }
 
@@ -228,10 +229,10 @@ export class ScaleUnitCalculator implements IScaleUnit {
 
   // Private calculation methods
   private calculateFitScale(context: UnitContext): number {
-    const contentWidth = context.content?.width ?? 100;
-    const contentHeight = context.content?.height ?? 100;
-    const availableWidth = context.scene?.width ?? context.viewport?.width ?? 800;
-    const availableHeight = context.scene?.height ?? context.viewport?.height ?? 600;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const availableWidth = context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const availableHeight = context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
 
     const scaleX = availableWidth / contentWidth;
     const scaleY = availableHeight / contentHeight;
@@ -243,10 +244,10 @@ export class ScaleUnitCalculator implements IScaleUnit {
   }
 
   private calculateStretchScale(context: UnitContext): number {
-    const contentWidth = context.content?.width ?? 100;
-    const contentHeight = context.content?.height ?? 100;
-    const availableWidth = context.scene?.width ?? context.viewport?.width ?? 800;
-    const availableHeight = context.scene?.height ?? context.viewport?.height ?? 600;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const availableWidth = context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const availableHeight = context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
 
     const scaleX = availableWidth / contentWidth;
     const scaleY = availableHeight / contentHeight;
@@ -270,18 +271,18 @@ export class ScaleUnitCalculator implements IScaleUnit {
   }
 
   private calculateContentScale(_context: UnitContext): number {
-    return 1; // Content-based scaling typically maintains original size
+    return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT; // Content-based scaling typically maintains original size
   }
 
   private calculateIntrinsicScale(_context: UnitContext): number {
-    return 1; // Intrinsic scale is typically 1 (original size)
+    return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT; // Intrinsic scale is typically 1 (original size)
   }
 
   private calculateParentScale(context: UnitContext): number {
-    const parentWidth = context.parent?.width ?? 100;
-    const parentHeight = context.parent?.height ?? 100;
-    const contentWidth = context.content?.width ?? 100;
-    const contentHeight = context.content?.height ?? 100;
+    const parentWidth = context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const parentHeight = context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
     const scaleX = parentWidth / contentWidth;
     const scaleY = parentHeight / contentHeight;
@@ -293,22 +294,22 @@ export class ScaleUnitCalculator implements IScaleUnit {
   }
 
   private calculateParentWidthScale(context: UnitContext): number {
-    const parentWidth = context.parent?.width ?? 100;
-    const contentWidth = context.content?.width ?? 100;
+    const parentWidth = context.parent?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     return parentWidth / contentWidth;
   }
 
   private calculateParentHeightScale(context: UnitContext): number {
-    const parentHeight = context.parent?.height ?? 100;
-    const contentHeight = context.content?.height ?? 100;
+    const parentHeight = context.parent?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     return parentHeight / contentHeight;
   }
 
   private calculateSceneScale(context: UnitContext): number {
-    const sceneWidth = context.scene?.width ?? 800;
-    const sceneHeight = context.scene?.height ?? 600;
-    const contentWidth = context.content?.width ?? 100;
-    const contentHeight = context.content?.height ?? 100;
+    const sceneWidth = context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const sceneHeight = context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
     const scaleX = sceneWidth / contentWidth;
     const scaleY = sceneHeight / contentHeight;
@@ -320,22 +321,22 @@ export class ScaleUnitCalculator implements IScaleUnit {
   }
 
   private calculateSceneWidthScale(context: UnitContext): number {
-    const sceneWidth = context.scene?.width ?? 800;
-    const contentWidth = context.content?.width ?? 100;
+    const sceneWidth = context.scene?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     return sceneWidth / contentWidth;
   }
 
   private calculateSceneHeightScale(context: UnitContext): number {
-    const sceneHeight = context.scene?.height ?? 600;
-    const contentHeight = context.content?.height ?? 100;
+    const sceneHeight = context.scene?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     return sceneHeight / contentHeight;
   }
 
   private calculateViewportScale(context: UnitContext): number {
-    const viewportWidth = context.viewport?.width ?? 800;
-    const viewportHeight = context.viewport?.height ?? 600;
-    const contentWidth = context.content?.width ?? 100;
-    const contentHeight = context.content?.height ?? 100;
+    const viewportWidth = context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+    const viewportHeight = context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
 
     const scaleX = viewportWidth / contentWidth;
     const scaleY = viewportHeight / contentHeight;
@@ -347,31 +348,31 @@ export class ScaleUnitCalculator implements IScaleUnit {
   }
 
   private calculateViewportWidthScale(context: UnitContext): number {
-    const viewportWidth = context.viewport?.width ?? 800;
-    const contentWidth = context.content?.width ?? 100;
+    const viewportWidth = context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+    const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     return viewportWidth / contentWidth;
   }
 
   private calculateViewportHeightScale(context: UnitContext): number {
-    const viewportHeight = context.viewport?.height ?? 600;
-    const contentHeight = context.content?.height ?? 100;
+    const viewportHeight = context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.VIEWPORT;
+    const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     return viewportHeight / contentHeight;
   }
 
   private calculateRandomScale(_context: UnitContext): number {
-    const min = this.minScale ?? 0.5;
-    const max = this.maxScale ?? 2.0;
+    const min = this.minScale ?? DEFAULT_FALLBACK_VALUES.SCALE.RANDOM_MIN;
+    const max = this.maxScale ?? DEFAULT_FALLBACK_VALUES.SCALE.RANDOM_MAX;
     return Math.random() * (max - min) + min;
   }
 
   private calculateBreakpointScale(_context: UnitContext): number {
     // Breakpoint-based scaling could be implemented based on breakpoint rules
-    return 1;
+    return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
   }
 
   private calculateDeviceScale(_context: UnitContext): number {
     // Device-based scaling could be implemented based on device capabilities
-    return 1;
+    return DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
   }
 
   private applyConstraints(value: number): number {

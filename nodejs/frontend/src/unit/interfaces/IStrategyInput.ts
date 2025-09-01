@@ -5,6 +5,7 @@ import type { PositionUnit } from '../enums/PositionUnit';
 import type { ScaleValue } from '../enums/ScaleValue';
 import type { ScaleUnit } from '../enums/ScaleUnit';
 import { Dimension } from '../enums/Dimension';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Base strategy input interface
@@ -360,7 +361,7 @@ export function createMixedStrategyInput(
  */
 export function convertToStrategyInput(input: unknown): IStrategyInput {
   if (!input || typeof input !== 'object') {
-    return createSizeStrategyInput({ value: 100 });
+    return createSizeStrategyInput({ value: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT });
   }
   
   // Handle primitive types

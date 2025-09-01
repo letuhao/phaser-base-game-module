@@ -6,6 +6,7 @@ import { PositionUnit } from '../enums/PositionUnit';
 import { Dimension } from '../enums/Dimension';
 import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
 import { convertToStrategyInput } from '../interfaces/IStrategyInput';
+import { DEFAULT_FALLBACK_VALUES, STRATEGY_PRIORITIES } from '../constants';
 
 /**
  * Position Unit Strategy
@@ -73,7 +74,7 @@ export class PositionUnitStrategy implements IUnitStrategy {
     }
 
     // Default fallback
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
   }
 
   /**
@@ -97,7 +98,7 @@ export class PositionUnitStrategy implements IUnitStrategy {
    * Get strategy priority (lower = higher priority)
    */
   getPriority(): number {
-    return 2; // High priority for position calculations
+    return STRATEGY_PRIORITIES.POSITION; // High priority for position calculations
   }
 
   /**
@@ -176,7 +177,7 @@ export class PositionUnitStrategy implements IUnitStrategy {
     if (context.parent && input.parentPosition && typeof input.parentPosition.getValue === 'function') {
       return input.parentPosition.getValue(context.parent);
     }
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
   }
 
   /**
@@ -185,27 +186,27 @@ export class PositionUnitStrategy implements IUnitStrategy {
   private calculateCenterPosition(context: UnitContext): number {
     const dimension = this.getDimensionFromContext(context);
     if (dimension === Dimension.X) {
-      return (context.scene?.width ?? context.viewport?.width ?? 800) / 2;
+      return (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2;
     } else if (dimension === Dimension.Y) {
-      return (context.scene?.height ?? context.viewport?.height ?? 600) / 2;
+      return (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE) / 2;
     }
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
   }
 
   private calculateLeftPosition(_context: UnitContext): number {
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
   }
 
   private calculateRightPosition(context: UnitContext): number {
-    return context.scene?.width ?? context.viewport?.width ?? 800;
+    return context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
   }
 
   private calculateTopPosition(_context: UnitContext): number {
-    return 0;
+    return DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
   }
 
   private calculateBottomPosition(_context: UnitContext): number {
-    return _context.scene?.height ?? _context.viewport?.height ?? 600;
+    return _context.scene?.height ?? _context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
   }
 
   /**
@@ -253,7 +254,7 @@ export class PositionUnitStrategy implements IUnitStrategy {
    * Calculate position from array input
    */
   private calculatePositionArray(input: unknown[], context: UnitContext): number {
-    if (input.length === 0) return 0;
+    if (input.length === 0) return DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
     
     // Handle pattern: ['position', 'center', 10] (position type, alignment, offset)
     if (input.length === 3 && input[0] === 'position') {

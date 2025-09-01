@@ -1,5 +1,6 @@
 import type { GameObjects, Scene, Game } from 'phaser';
 import type { UnitContext } from './IUnit';
+import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
 /**
  * Phaser-specific unit context interface
@@ -133,7 +134,7 @@ export class PhaserUnitContext implements IPhaserUnitContext {
         height: obj.height
       };
     }
-    return { width: 100, height: 100 };
+    return { width: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT, height: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT };
   }
 
   // Enhanced properties for your Container system
