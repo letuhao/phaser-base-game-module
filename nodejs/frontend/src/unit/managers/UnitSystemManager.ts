@@ -4,95 +4,25 @@ import type { IUnitStrategy } from '../strategies/IUnitStrategy';
 import type { IUnitCommand } from '../commands/IUnitCommand';
 import type { IUnitObserver } from '../observers/IUnitObserver';
 import type { IUnitValidator } from '../validators/IUnitValidator';
-import type { IUnitCalculationTemplate } from '../templates/IUnitCalculationTemplate';
-import type { IUnitMemento } from '../mementos/IUnitMemento';
-import type { IUnitComposite } from '../composites/IUnitComposite';
-import type { IUnitAdapter } from '../adapters/IUnitAdapter';
-import type { IUnitDecorator } from '../decorators/IUnitDecorator';
 import type { IUnitConfig } from '../interfaces/IUnitConfig';
-import type { UnitValue } from '../types/UnitValue';
-import type { ITemplateInput } from '../interfaces/ITemplateInput';
-import type { IStrategyInput } from '../interfaces/IStrategyInput';
-import { SizeUnit } from '../enums/SizeUnit';
-import { SizeValue } from '../enums/SizeValue';
-import { PositionUnit } from '../enums/PositionUnit';
-import { PositionValue } from '../enums/PositionValue';
-import { ScaleUnit } from '../enums/ScaleUnit';
-import { ScaleValue } from '../enums/ScaleValue';
-import { Dimension } from '../enums/Dimension';
-import { createSizeTemplateInput, createPositionTemplateInput, createScaleTemplateInput } from '../interfaces/ITemplateInput';
-import { convertToLegacyUnit } from '../interfaces/ILegacyUnit';
+
+// Import focused managers
+import { UnitRegistryManager, IUnitRegistryManager } from './UnitRegistryManager';
+import { StrategyManager, IStrategyManager } from './StrategyManager';
+import { CommandManager, ICommandManager } from './CommandManager';
+import { ObserverManager, IObserverManager } from './ObserverManager';
+import { ValidationManager, IValidationManager } from './ValidationManager';
+import { PerformanceManager, IPerformanceManager } from './PerformanceManager';
+
 import { Logger } from '../../core/Logger';
-import { DEFAULT_FALLBACK_VALUES } from '../constants';
-
-// Import calculator classes for unit creation
-import { SizeUnitCalculator } from '../classes/SizeUnitCalculator';
-import { PositionUnitCalculator } from '../classes/PositionUnitCalculator';
-import { ScaleUnitCalculator } from '../classes/ScaleUnitCalculator';
-
-// Import type guards for configuration validation
-import { 
-  isSizeUnitConfig, 
-  isPositionUnitConfig, 
-  isScaleUnitConfig 
-} from '../interfaces/IUnitConfig';
 
 /**
  * Unit System Manager
- * Central manager that coordinates all unit system components and design patterns
+ * Orchestrates all unit system components using focused managers
+ * Follows Single Responsibility Principle - only coordinates between managers
  */
 export interface IUnitSystemManager {
-  // Core unit management
-  createUnit(unitType: string, config: IUnitConfig): IUnit;
-  getUnit(unitId: string): IUnit | undefined;
-  getAllUnits(): IUnit[];
-  removeUnit(unitId: string): boolean;
-
-  // Strategy management
-  registerStrategy(strategy: IUnitStrategy): void;
-  getStrategy(input: IStrategyInput): IUnitStrategy | undefined;
-  getStrategiesByType(type: string): IUnitStrategy[];
-
-  // Command management
-  executeCommand(command: IUnitCommand, context: UnitContext): number;
-  undoLastCommand(): boolean;
-  redoLastCommand(): boolean;
-  getCommandHistory(): IUnitCommand[];
-
-  // Observer management
-  addObserver(observer: IUnitObserver): void;
-  removeObserver(observer: IUnitObserver): boolean;
-  notifyObservers(eventType: string, data: Record<string, string | number | boolean>): void;
-
-  // Validation management
-  addValidator(validator: IUnitValidator): void;
-  validateUnit(unit: IUnit, context: UnitContext): boolean;
-  getValidationErrors(): string[];
-
-  // Template management
-  registerTemplate(template: IUnitCalculationTemplate): void;
-  getTemplate(input: IUnit | UnitValue | number): IUnitCalculationTemplate | undefined;
-
-  // Memento management
-  saveUnitState(unitId: string, _description?: string): IUnitMemento | undefined;
-  restoreUnitState(_unitId: string, _memento: IUnitMemento): boolean;
-  getUnitMementos(unitId: string): IUnitMemento[];
-
-  // Composite management
-  createComposite(_unitType: string, _config: IUnitConfig): IUnitComposite;
-  addChildToComposite(compositeId: string, child: IUnit): boolean;
-  removeChildFromComposite(compositeId: string, childId: string): boolean;
-
-  // Adapter management
-  registerAdapter(adapter: IUnitAdapter): void;
-  adaptLegacyUnit(legacyUnit: unknown): IUnit | undefined;
-
-  // Decorator management
-  addDecorator(unitId: string, decorator: IUnitDecorator): boolean;
-  removeDecorator(unitId: string, decoratorId: string): boolean;
-  getUnitDecorators(unitId: string): IUnitDecorator[];
-
-  // System operations
+  // System lifecycle
   initialize(): void;
   shutdown(): void;
   getSystemStatus(): {
@@ -112,534 +42,287 @@ export interface IUnitSystemManager {
   };
 
   // Configuration
-  updateConfiguration(_config: Record<string, unknown>): void;
+  updateConfiguration(config: Record<string, unknown>): void;
   getConfiguration(): Record<string, unknown>;
   resetToDefaults(): void;
+
+  // Manager access (for advanced usage)
+  getUnitRegistryManager(): IUnitRegistryManager;
+  getStrategyManager(): IStrategyManager;
+  getCommandManager(): ICommandManager;
+  getObserverManager(): IObserverManager;
+  getValidationManager(): IValidationManager;
+  getPerformanceManager(): IPerformanceManager;
 }
 
 /**
  * Unit System Manager Implementation
- * Concrete implementation of the unit system manager
+ * Refactored to use focused managers for better separation of concerns
  */
 export class UnitSystemManager implements IUnitSystemManager {
-  private units: Map<string, IUnit> = new Map();
-  private strategies: Map<string, IUnitStrategy> = new Map();
-  private observers: Set<IUnitObserver> = new Set();
-  private validators: IUnitValidator[] = [];
-  private templates: Map<string, IUnitCalculationTemplate> = new Map();
-  private mementos: Map<string, IUnitMemento[]> = new Map();
-  private composites: Map<string, IUnitComposite> = new Map();
-  private adapters: Map<string, IUnitAdapter> = new Map();
-  private decorators: Map<string, IUnitDecorator[]> = new Map();
+  // Focused managers
+  private readonly unitRegistryManager: UnitRegistryManager;
+  private readonly strategyManager: StrategyManager;
+  private readonly commandManager: CommandManager;
+  private readonly observerManager: ObserverManager;
+  private readonly validationManager: ValidationManager;
+  private readonly performanceManager: PerformanceManager;
 
-  private commandHistory: IUnitCommand[] = [];
-  private commandIndex: number = -1;
-  private isInitialized: boolean = false;
   private readonly logger: Logger = Logger.getInstance();
+  private isInitialized: boolean = false;
+  private configuration: Record<string, unknown> = {};
 
-  private performanceMetrics = {
-    totalCalculations: 0,
-    calculationTimes: [] as number[],
-    memoryUsage: 0,
-    errors: 0,
-  };
-
-  // Core unit management
-  createUnit(unitType: string, config: IUnitConfig): IUnit {
-    // Implementation would create units based on type and config
-    const unit = this.createUnitByType(unitType, config);
-    if (unit) {
-      this.units.set(unit.id, unit);
-      this.notifyObservers('unit_created', { unitId: unit.id, unitType });
-      return unit;
-    }
-    throw new Error(`Failed to create unit of type: ${unitType}`);
+  constructor() {
+    // Initialize focused managers
+    this.unitRegistryManager = new UnitRegistryManager();
+    this.strategyManager = new StrategyManager();
+    this.commandManager = new CommandManager();
+    this.observerManager = new ObserverManager();
+    this.validationManager = new ValidationManager();
+    this.performanceManager = new PerformanceManager();
   }
 
-  getUnit(unitId: string): IUnit | undefined {
-    return this.units.get(unitId);
-  }
-
-  getAllUnits(): IUnit[] {
-    return Array.from(this.units.values());
-  }
-
-  removeUnit(unitId: string): boolean {
-    const unit = this.units.get(unitId);
-    if (unit) {
-      this.units.delete(unitId);
-      this.notifyObservers('unit_destroyed', { unitId });
-      return true;
-    }
-    return false;
-  }
-
-  // Strategy management
-  registerStrategy(strategy: IUnitStrategy): void {
-    this.strategies.set(strategy.unitType, strategy);
-  }
-
-  getStrategy(input: IStrategyInput): IUnitStrategy | undefined {
-    // Find the best strategy for the input
-    for (const strategy of Array.from(this.strategies.values())) {
-      if (strategy.canHandle(input)) {
-        return strategy;
-      }
-    }
-    return undefined;
-  }
-
-  getStrategiesByType(type: string): IUnitStrategy[] {
-    return Array.from(this.strategies.values()).filter(s => s.unitType === type);
-  }
-
-  // Command management
-  executeCommand(command: IUnitCommand, context: UnitContext): number {
-    const startTime = performance.now();
+  /**
+   * Initialize the unit system
+   */
+  public initialize(): void {
+    this.logger.info('UnitSystemManager', 'initialize', 'Initializing unit system');
 
     try {
-      const result = command.execute(context);
-
-      // Add to history
-      this.commandHistory.splice(this.commandIndex + 1);
-      this.commandHistory.push(command);
-      this.commandIndex++;
-
-      // Update performance metrics
-      const duration = performance.now() - startTime;
-      this.performanceMetrics.totalCalculations++;
-      this.performanceMetrics.calculationTimes.push(duration);
-
-      // Keep only last 100 calculation times
-      if (this.performanceMetrics.calculationTimes.length > 100) {
-        this.performanceMetrics.calculationTimes.shift();
-      }
-
-      return result;
+      // Initialize all managers
+      this.performanceManager.startMeasurement('system_initialization');
+      
+      // Set up default configuration
+      this.resetToDefaults();
+      
+      this.logger.info('UnitSystemManager', 'initialize', 'Unit system initialized successfully');
+      this.isInitialized = true;
+      
+      this.performanceManager.endMeasurement('system_initialization');
     } catch (error) {
-      this.performanceMetrics.errors++;
+      this.logger.error('UnitSystemManager', 'initialize', 'Failed to initialize unit system', {
+        error: error instanceof Error ? error.message : String(error)
+      });
       throw error;
     }
   }
 
-  undoLastCommand(): boolean {
-    if (this.commandIndex >= 0) {
-      const command = this.commandHistory[this.commandIndex];
-      command.undo();
-      this.commandIndex--;
-      return true;
+  /**
+   * Shutdown the unit system
+   */
+  public shutdown(): void {
+    this.logger.info('UnitSystemManager', 'shutdown', 'Shutting down unit system');
+
+    try {
+      this.performanceManager.startMeasurement('system_shutdown');
+      
+      // Clear all data
+      this.unitRegistryManager.getAllUnits().forEach(unit => {
+        this.unitRegistryManager.removeUnit(unit.id);
+      });
+      
+      this.strategyManager.clearStrategies();
+      this.commandManager.clearCommandHistory();
+      this.observerManager.clearObservers();
+      this.validationManager.clearValidators();
+      this.performanceManager.clearPerformanceData();
+      
+      this.isInitialized = false;
+      
+      this.performanceManager.endMeasurement('system_shutdown');
+      this.logger.info('UnitSystemManager', 'shutdown', 'Unit system shut down successfully');
+    } catch (error) {
+      this.logger.error('UnitSystemManager', 'shutdown', 'Failed to shut down unit system', {
+        error: error instanceof Error ? error.message : String(error)
+      });
+      throw error;
     }
-    return false;
-  }
-
-  redoLastCommand(): boolean {
-    if (this.commandIndex < this.commandHistory.length - 1) {
-      this.commandIndex++;
-      // Re-execute the command
-      return true;
-    }
-    return false;
-  }
-
-  getCommandHistory(): IUnitCommand[] {
-    return [...this.commandHistory];
-  }
-
-  // Observer management
-  addObserver(observer: IUnitObserver): void {
-    this.observers.add(observer);
-  }
-
-  removeObserver(observer: IUnitObserver): boolean {
-    return this.observers.delete(observer);
-  }
-
-  notifyObservers(eventType: string, data: Record<string, string | number | boolean>): void {
-    this.observers.forEach(observer => {
-      try {
-        // Call appropriate observer method based on event type
-        switch (eventType) {
-          case 'unit_created':
-            if (typeof data.unitId === 'string' && typeof data.unitType === 'string') {
-              observer.onUnitCreated(data.unitId, data.unitType);
-            }
-            break;
-          case 'unit_destroyed':
-            if (typeof data.unitId === 'string') {
-              observer.onUnitDestroyed(data.unitId);
-            }
-            break;
-          case 'value_changed':
-            if (typeof data.unitId === 'string' && typeof data.oldValue === 'number' && typeof data.newValue === 'number') {
-              observer.onUnitValueChanged(data.unitId, data.oldValue, data.newValue);
-            }
-            break;
-          // Add more event types as needed
-        }
-      } catch (error) {
-        this.logger.error('UnitSystemManager', 'notifyObservers', 'Error notifying observer', {
-          error: error instanceof Error ? error.message : String(error),
-        });
-      }
-    });
-  }
-
-  // Validation management
-  addValidator(validator: IUnitValidator): void {
-    this.validators.push(validator);
-  }
-
-  validateUnit(unit: IUnit, context: UnitContext): boolean {
-    // Create a validation chain
-    let currentValidator = this.validators[0];
-    for (let i = 1; i < this.validators.length; i++) {
-      currentValidator.setNext(this.validators[i]);
-      currentValidator = this.validators[i];
-    }
-
-    return currentValidator ? currentValidator.validate(unit, context) : true;
-  }
-
-  getValidationErrors(): string[] {
-    // Implementation would collect errors from validators
-    return [];
-  }
-
-  // Template management
-  registerTemplate(template: IUnitCalculationTemplate): void {
-    this.templates.set(template.getCalculationMetadata().templateName, template);
-  }
-
-  getTemplate(input: IUnit | UnitValue | number): IUnitCalculationTemplate | undefined {
-    // Convert legacy input to template input format
-    const templateInput = this.convertToTemplateInput(input);
-    
-    for (const template of Array.from(this.templates.values())) {
-      if (template.canHandle(templateInput)) {
-        return template;
-      }
-    }
-    return undefined;
   }
 
   /**
-   * Convert legacy input types to template input format
+   * Get system status
    */
-  private convertToTemplateInput(input: IUnit | UnitValue | number): ITemplateInput {
-    if (typeof input === 'number') {
-      return createSizeTemplateInput(SizeUnit.PIXEL, input);
-    }
-    
-    if (typeof input === 'string') {
-      // Try to parse as a unit value
-      if (Object.values(SizeValue).includes(input as SizeValue)) {
-        return createSizeTemplateInput(SizeUnit.PIXEL, input as SizeValue);
-      }
-      if (Object.values(PositionValue).includes(input as PositionValue)) {
-        return createPositionTemplateInput(PositionUnit.PIXEL, input as PositionValue);
-      }
-      if (Object.values(ScaleValue).includes(input as ScaleValue)) {
-        return createScaleTemplateInput(ScaleUnit.FACTOR, input as ScaleValue);
-      }
-      
-      // Default to size input
-      return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
-    }
-    
-    // If it's an IUnit, extract its properties
-    if (input && typeof input === 'object' && 'calculate' in input) {
-      // It's an IUnit, use a default value since we can't extract size directly
-      return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
-    }
-    
-    // Default fallback
-    return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
-  }
-
-  // Memento management
-  saveUnitState(unitId: string, _description?: string): IUnitMemento | undefined {
-    const unit = this.units.get(unitId);
-    if (!unit) return undefined;
-
-    // Implementation would create memento from unit state
-    // For now, return undefined
-    return undefined;
-  }
-
-  restoreUnitState(_unitId: string, _memento: IUnitMemento): boolean {
-    // Implementation would restore unit state from memento
-    return false;
-  }
-
-  getUnitMementos(unitId: string): IUnitMemento[] {
-    return this.mementos.get(unitId) || [];
-  }
-
-  // Composite management
-  createComposite(_unitType: string, _config: IUnitConfig): IUnitComposite {
-    // Implementation would create composite units
-    // For now, return undefined
-    return undefined as never;
-  }
-
-  addChildToComposite(compositeId: string, child: IUnit): boolean {
-    const composite = this.composites.get(compositeId);
-    if (composite) {
-      composite.addChild(child);
-      return true;
-    }
-    return false;
-  }
-
-  removeChildFromComposite(compositeId: string, childId: string): boolean {
-    const composite = this.composites.get(compositeId);
-    if (composite) {
-      const child = composite.getChildById(childId);
-      if (child) {
-        return composite.removeChild(child);
-      }
-    }
-    return false;
-  }
-
-  // Adapter management
-  registerAdapter(adapter: IUnitAdapter): void {
-    this.adapters.set(adapter.id, adapter);
-  }
-
-  adaptLegacyUnit(legacyUnit: unknown): IUnit | undefined {
-    // Convert unknown input to legacy unit format
-    const legacyUnitInput = convertToLegacyUnit(legacyUnit);
-    
-    for (const adapter of Array.from(this.adapters.values())) {
-      if (adapter.canAdapt(legacyUnitInput)) {
-        return adapter;
-      }
-    }
-    return undefined;
-  }
-
-  // Decorator management
-  addDecorator(unitId: string, decorator: IUnitDecorator): boolean {
-    const unitDecorators = this.decorators.get(unitId) || [];
-    unitDecorators.push(decorator);
-    this.decorators.set(unitId, unitDecorators);
-    return true;
-  }
-
-  removeDecorator(unitId: string, decoratorId: string): boolean {
-    const unitDecorators = this.decorators.get(unitId);
-    if (unitDecorators) {
-      const index = unitDecorators.findIndex(d => d.id === decoratorId);
-      if (index > -1) {
-        unitDecorators.splice(index, 1);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  getUnitDecorators(unitId: string): IUnitDecorator[] {
-    return this.decorators.get(unitId) || [];
-  }
-
-  // System operations
-  initialize(): void {
-    this.isInitialized = true;
-    this.notifyObservers('system_initialized', {});
-  }
-
-  shutdown(): void {
-    this.isInitialized = false;
-    this.units.clear();
-    this.strategies.clear();
-    this.observers.clear();
-    this.validators.length = 0;
-    this.templates.clear();
-    this.mementos.clear();
-    this.composites.clear();
-    this.adapters.clear();
-    this.decorators.clear();
-    this.commandHistory.length = 0;
-    this.commandIndex = -1;
-  }
-
-  getSystemStatus() {
+  public getSystemStatus(): {
+    isInitialized: boolean;
+    totalUnits: number;
+    activeStrategies: number;
+    registeredObservers: number;
+    validationErrors: number;
+  } {
     return {
       isInitialized: this.isInitialized,
-      totalUnits: this.units.size,
-      activeStrategies: this.strategies.size,
-      registeredObservers: this.observers.size,
-      validationErrors: this.getValidationErrors().length,
+      totalUnits: this.unitRegistryManager.getUnitCount(),
+      activeStrategies: this.strategyManager.getStrategyCount(),
+      registeredObservers: this.observerManager.getObserverCount(),
+      validationErrors: this.validationManager.getErrorCount()
     };
   }
 
-  // Performance and monitoring
-  getPerformanceMetrics() {
-    const avgTime =
-      this.performanceMetrics.calculationTimes.length > 0
-        ? this.performanceMetrics.calculationTimes.reduce((a, b) => a + b, 0) /
-          this.performanceMetrics.calculationTimes.length
-        : 0;
-
+  /**
+   * Get performance metrics
+   */
+  public getPerformanceMetrics(): {
+    totalCalculations: number;
+    averageCalculationTime: number;
+    memoryUsage: number;
+    errorRate: number;
+  } {
+    const metrics = this.performanceManager.getPerformanceMetrics();
     return {
-      totalCalculations: this.performanceMetrics.totalCalculations,
-      averageCalculationTime: avgTime,
-      memoryUsage: this.performanceMetrics.memoryUsage,
-      errorRate:
-        this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT),
+      totalCalculations: metrics.totalOperations,
+      averageCalculationTime: metrics.averageExecutionTime,
+      memoryUsage: metrics.memoryUsage,
+      errorRate: metrics.errorRate
     };
   }
 
-  // Configuration
-  updateConfiguration(config: Record<string, unknown>): void {
-    try {
-      // Update performance settings
-      if (typeof config.memoryLimit === 'number') {
-        this.performanceMetrics.memoryUsage = config.memoryLimit;
-      }
-      
-      // Update system settings
-      if (typeof config.maxUnits === 'number') {
-        // Implementation would enforce unit limits
-        this.logger.debug('UnitSystemManager', 'updateConfiguration', 'Updated max units', { maxUnits: config.maxUnits });
-      }
-      
-      // Update validation settings
-      if (typeof config.strictValidation === 'boolean') {
-        // Implementation would update validation strictness
-        this.logger.debug('UnitSystemManager', 'updateConfiguration', 'Updated validation strictness', { strictValidation: config.strictValidation });
-      }
-      
-      this.logger.info('UnitSystemManager', 'updateConfiguration', 'Configuration updated successfully', { configKeys: Object.keys(config) });
-    } catch (error) {
-      this.logger.error('UnitSystemManager', 'updateConfiguration', 'Failed to update configuration', { 
-        error: error instanceof Error ? error.message : String(error) 
-      });
+  /**
+   * Update system configuration
+   */
+  public updateConfiguration(config: Record<string, unknown>): void {
+    this.logger.info('UnitSystemManager', 'updateConfiguration', 'Updating system configuration', {
+      configKeys: Object.keys(config)
+    });
+
+    this.configuration = { ...this.configuration, ...config };
+    
+    // Apply configuration to managers
+    if ('performanceThreshold' in config) {
+      this.performanceManager.setPerformanceThreshold(config.performanceThreshold as number);
+    }
+    
+    if ('memoryLimit' in config) {
+      this.performanceManager.setMemoryLimit(config.memoryLimit as number);
     }
   }
 
-  getConfiguration(): Record<string, unknown> {
-    return {
-      system: {
-        isInitialized: this.isInitialized,
-        totalUnits: this.units.size,
-        activeStrategies: this.strategies.size,
-        registeredObservers: this.observers.size,
-        registeredValidators: this.validators.length,
-        registeredTemplates: this.templates.size,
-        registeredAdapters: this.adapters.size,
-        registeredDecorators: this.decorators.size
-      },
-      performance: {
-        memoryLimit: this.performanceMetrics.memoryUsage,
-        maxCalculationHistory: 100,
-        errorThreshold: 0.1
-      },
-      validation: {
-        strictMode: true,
-        autoValidate: true,
-        maxValidationErrors: 10
-      }
+  /**
+   * Get current configuration
+   */
+  public getConfiguration(): Record<string, unknown> {
+    return { ...this.configuration };
+  }
+
+  /**
+   * Reset to default configuration
+   */
+  public resetToDefaults(): void {
+    this.logger.info('UnitSystemManager', 'resetToDefaults', 'Resetting to default configuration');
+    
+    this.configuration = {
+      performanceThreshold: 100,
+      memoryLimit: 1000,
+      maxValidationErrors: 10,
+      enablePerformanceMonitoring: true
     };
   }
 
-  resetToDefaults(): void {
+  /**
+   * Get unit registry manager
+   */
+  public getUnitRegistryManager(): IUnitRegistryManager {
+    return this.unitRegistryManager;
+  }
+
+  /**
+   * Get strategy manager
+   */
+  public getStrategyManager(): IStrategyManager {
+    return this.strategyManager;
+  }
+
+  /**
+   * Get command manager
+   */
+  public getCommandManager(): ICommandManager {
+    return this.commandManager;
+  }
+
+  /**
+   * Get observer manager
+   */
+  public getObserverManager(): IObserverManager {
+    return this.observerManager;
+  }
+
+  /**
+   * Get validation manager
+   */
+  public getValidationManager(): IValidationManager {
+    return this.validationManager;
+  }
+
+  /**
+   * Get performance manager
+   */
+  public getPerformanceManager(): IPerformanceManager {
+    return this.performanceManager;
+  }
+
+  // Convenience methods that delegate to appropriate managers
+  
+  /**
+   * Create a unit (delegates to UnitRegistryManager)
+   */
+  public createUnit(unitType: string, config: IUnitConfig): IUnit {
+    this.performanceManager.startMeasurement('create_unit');
+    
     try {
-      // Reset performance metrics
-      this.performanceMetrics = {
-        totalCalculations: 0,
-        calculationTimes: [],
-        memoryUsage: 0,
-        errors: 0,
-      };
+      const unit = this.unitRegistryManager.createUnit(unitType, config);
+      this.observerManager.notifyUnitCreated(unit.id, unit.unitType);
       
-      // Reset system state
-      this.commandHistory.length = 0;
-      this.commandIndex = -1;
-      
-      // Clear validation errors
-      this.validators.length = 0;
-      
-      this.logger.info('UnitSystemManager', 'resetToDefaults', 'System reset to default configuration');
+      this.performanceManager.endMeasurement('create_unit');
+      return unit;
     } catch (error) {
-      this.logger.error('UnitSystemManager', 'resetToDefaults', 'Failed to reset to defaults', { 
-        error: error instanceof Error ? error.message : String(error) 
-      });
+      this.performanceManager.recordError();
+      this.performanceManager.endMeasurement('create_unit');
+      throw error;
     }
   }
 
-  // Private helper methods
-  private createUnitByType(unitType: string, config: IUnitConfig): IUnit | undefined {
-    try {
-      switch (unitType.toLowerCase()) {
-        case 'size':
-          if (isSizeUnitConfig(config)) {
-            return new SizeUnitCalculator(
-              config.id,
-              config.name,
-              config.sizeUnit || SizeUnit.PIXEL,
-              config.dimension || Dimension.WIDTH,
-              config.baseValue,
-              config.maintainAspectRatio || false
-            );
-          }
-          break;
-          
-        case 'position':
-          if (isPositionUnitConfig(config)) {
-            return new PositionUnitCalculator(
-              config.id,
-              config.name,
-              config.positionUnit || PositionUnit.PIXEL,
-              config.axis || Dimension.X,
-              config.baseValue
-            );
-          }
-          break;
-          
-        case 'scale':
-          if (isScaleUnitConfig(config)) {
-            return new ScaleUnitCalculator(
-              config.id,
-              config.name,
-              config.scaleUnit || ScaleUnit.FACTOR,
-              config.baseValue,
-              config.maintainAspectRatio || false
-            );
-          }
-          break;
-          
-        default:
-          this.logger.warn(
-            'UnitSystemManager',
-            'createUnitByType',
-            `Unknown unit type: ${unitType}`,
-            { unitType, configId: config.id }
-          );
-          return undefined;
-      }
-      
-      this.logger.warn(
-        'UnitSystemManager',
-        'createUnitByType',
-        `Configuration type mismatch for unit type: ${unitType}`,
-        { unitType, configId: config.id, configType: typeof config }
-      );
-      return undefined;
-      
-    } catch (error) {
-      this.logger.error(
-        'UnitSystemManager',
-        'createUnitByType',
-        `Error creating unit of type: ${unitType}`,
-        { 
-          unitType, 
-          configId: config.id, 
-          error: error instanceof Error ? error.message : String(error) 
-        }
-      );
-      return undefined;
+  /**
+   * Get a unit (delegates to UnitRegistryManager)
+   */
+  public getUnit(unitId: string): IUnit | undefined {
+    return this.unitRegistryManager.getUnit(unitId);
+  }
+
+  /**
+   * Remove a unit (delegates to UnitRegistryManager)
+   */
+  public removeUnit(unitId: string): boolean {
+    const removed = this.unitRegistryManager.removeUnit(unitId);
+    if (removed) {
+      this.observerManager.notifyUnitDestroyed(unitId);
     }
+    return removed;
+  }
+
+  /**
+   * Register a strategy (delegates to StrategyManager)
+   */
+  public registerStrategy(strategy: IUnitStrategy): void {
+    this.strategyManager.registerStrategy(strategy);
+  }
+
+  /**
+   * Execute a command (delegates to CommandManager)
+   */
+  public executeCommand(command: IUnitCommand, context: UnitContext): number {
+    return this.commandManager.executeCommand(command, context);
+  }
+
+  /**
+   * Add an observer (delegates to ObserverManager)
+   */
+  public addObserver(observer: IUnitObserver): void {
+    this.observerManager.addObserver(observer);
+  }
+
+  /**
+   * Add a validator (delegates to ValidationManager)
+   */
+  public addValidator(validator: IUnitValidator): void {
+    this.validationManager.addValidator(validator);
   }
 }
