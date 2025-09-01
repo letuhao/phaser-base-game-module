@@ -88,6 +88,18 @@ export * from './lighting';
 export * from './performance';
 
 // ============================================================================
+// DESIGN PATTERN INTERFACES
+// ============================================================================
+
+export * from './patterns';
+
+// ============================================================================
+// MANAGER INTERFACES
+// ============================================================================
+
+export * from './managers';
+
+// ============================================================================
 // TYPE-SPECIFIC INTERFACES
 // ============================================================================
 
@@ -105,6 +117,19 @@ export const CORE_GAMEOBJECT_INTERFACES = {
   IGameObject: 'IGameObject',
   IGameObjectComponent: 'IGameObjectComponent',
   IDebugInfo: 'IDebugInfo',
+} as const;
+
+/**
+ * Manager game object interfaces
+ */
+export const MANAGER_GAMEOBJECT_INTERFACES = {
+  IFactoryManager: 'IFactoryManager',
+  IObserverManager: 'IObserverManager',
+  IDecoratorManager: 'IDecoratorManager',
+  IStrategyManager: 'IStrategyManager',
+  ICommandManager: 'ICommandManager',
+  IBuilderManager: 'IBuilderManager',
+  ISingletonManager: 'ISingletonManager',
 } as const;
 
 /**
@@ -173,6 +198,14 @@ export const TYPESPECIFIC_GAMEOBJECT_INTERFACES = {
   IOptimizedObject: 'IOptimizedObject',
   INetworkObject: 'INetworkObject',
   ISyncObject: 'ISyncObject',
+  // Design Pattern Types
+  IFactory: 'IFactory',
+  IBuilder: 'IBuilder',
+  IObserver: 'IObserver',
+  IStrategy: 'IStrategy',
+  ICommand: 'ICommand',
+  ISingleton: 'ISingleton',
+  IDecorator: 'IDecorator',
   // ... other type-specific interfaces will be added here
 } as const;
 
@@ -181,6 +214,7 @@ export const TYPESPECIFIC_GAMEOBJECT_INTERFACES = {
  */
 export const GAMEOBJECT_INTERFACES = {
   ...CORE_GAMEOBJECT_INTERFACES,
+  ...MANAGER_GAMEOBJECT_INTERFACES,
   ...TYPESPECIFIC_GAMEOBJECT_INTERFACES,
 } as const;
 
@@ -189,5 +223,6 @@ export const GAMEOBJECT_INTERFACES = {
 // ============================================================================
 
 export type CoreGameObjectInterface = typeof CORE_GAMEOBJECT_INTERFACES[keyof typeof CORE_GAMEOBJECT_INTERFACES];
+export type ManagerGameObjectInterface = typeof MANAGER_GAMEOBJECT_INTERFACES[keyof typeof MANAGER_GAMEOBJECT_INTERFACES];
 export type TypeSpecificGameObjectInterface = typeof TYPESPECIFIC_GAMEOBJECT_INTERFACES[keyof typeof TYPESPECIFIC_GAMEOBJECT_INTERFACES];
 export type GameObjectInterface = typeof GAMEOBJECT_INTERFACES[keyof typeof GAMEOBJECT_INTERFACES];

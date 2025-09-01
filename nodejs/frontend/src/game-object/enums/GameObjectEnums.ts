@@ -64,6 +64,15 @@ export enum GameObjectType {
   NETWORK_OBJECT = 'networkObject',
   SYNC_OBJECT = 'syncObject',
   
+  // Design Pattern Types
+  FACTORY = 'factory',
+  BUILDER = 'builder',
+  OBSERVER = 'observer',
+  STRATEGY = 'strategy',
+  COMMAND = 'command',
+  SINGLETON = 'singleton',
+  DECORATOR = 'decorator',
+  
   // Interactive Types
   BUTTON = 'button',
   ZONE = 'zone',
