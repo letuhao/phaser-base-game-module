@@ -6,7 +6,7 @@
  */
 
 import { IStyle, IStyleComposition, IStyleBuilder } from './IStyle';
-import { BreakpointName, GameObjectType } from '../enums/LayoutEnums';
+import { BreakpointName, GameObjectType, StyleCompositionStrategy } from '../enums/LayoutEnums';
 
 /**
  * Style manager interface
@@ -144,14 +144,14 @@ export interface IStyleManager {
    * @param aspects Style aspects to combine
    * @param strategy Composition strategy
    */
-  buildStyle(aspects: Partial<IStyle>[], strategy?: 'merge' | 'override' | 'extend'): IStyle;
+  buildStyle(aspects: Partial<IStyle>[], strategy?: StyleCompositionStrategy): IStyle;
   
   /**
    * Merge multiple styles into one
    * @param styles Styles to merge
    * @param strategy Merge strategy
    */
-  mergeStyles(styles: IStyle[], strategy?: 'merge' | 'override' | 'extend'): IStyle;
+  mergeStyles(styles: IStyle[], strategy?: StyleCompositionStrategy): IStyle;
   
   /**
    * Get computed style for an element

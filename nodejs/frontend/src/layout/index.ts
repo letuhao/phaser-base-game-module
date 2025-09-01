@@ -40,6 +40,14 @@ export type {
   ILegacyUnit,
   IStrategyInput,
   UnitValue,
+  IUnitStrategy,
+  IUnitCommand,
+  IUnitObserver,
+  IUnitValidator,
+  IUnitCalculationTemplate,
+  IUnitComposite,
+  IUnitAdapter,
+  IUnitDecorator,
 } from '../unit';
 
 // Re-export Unit System classes
@@ -52,38 +60,28 @@ export {
   RandomValueNumber,
   
   // Unit System strategies
-  IUnitStrategy,
   SizeUnitStrategy,
   PositionUnitStrategy,
   ScaleUnitStrategy,
   MixedUnitStrategy,
   
   // Unit System commands
-  IUnitCommand,
   CalculateSizeCommand,
   CalculatePositionCommand,
   BatchCalculationCommand,
   
   // Unit System observers
-  IUnitObserver,
   PerformanceObserver,
   LoggingObserver,
   
   // Unit System validators
-  IUnitValidator,
   RangeValidator,
   TypeValidator,
   
   // Unit System templates
-  IUnitCalculationTemplate,
   SizeCalculationTemplate,
   PositionCalculationTemplate,
   ScaleCalculationTemplate,
-  
-  // Unit System patterns
-  IUnitComposite,
-  IUnitAdapter,
-  IUnitDecorator,
   
   // Unit System manager
   UnitSystemManager,
@@ -105,6 +103,16 @@ export {
   PERFORMANCE_CONSTANTS,
   VALIDATION_CONSTANTS,
   LOGGING_CONSTANTS,
+  GAMEOBJECT_CONSTANTS,
+  THEME_CONSTANTS,
+  STRATEGY_CONSTANTS,
+  UNIT_CONSTANTS,
+  COMMAND_CONSTANTS,
+  STATE_CONSTANTS,
+  CHAIN_CONSTANTS,
+  TRANSFORM_CONSTANTS,
+  REFERENCE_CONSTANTS,
+  UTILITY_CONSTANTS,
   LAYOUT_SYSTEM_CONSTANTS,
 } from './constants/LayoutConstants';
 
@@ -145,10 +153,11 @@ export {
   AnimationDuration,
   AnimationEasing,
   AnimationProperty,
+  AnimationDirection,
+  AnimationFillMode,
   
   // Device enums
   DeviceType,
-  DeviceOrientation,
   DeviceCapability,
   
   // Performance enums
@@ -157,7 +166,6 @@ export {
   
   // Validation enums
   ValidationRule,
-  ValidationSeverity,
   
   // Logging enums
   LogLevel,
@@ -170,14 +178,110 @@ export {
   // Theme enums
   ThemeType,
   ThemeVariant,
+  ThemeMode,
   
   // Strategy enums
   LayoutStrategy,
   ScaleStrategy,
   
+  // Position enums
+  HorizontalAlignment,
+  VerticalAlignment,
+  
+  // Size enums
+  SizeValueType,
+  
+  // Border enums
+  BorderStyle,
+  
+  // Text enums
+  TextBaseline,
+  TextDecoration,
+  
+  // Transform enums
+  TransformStyle,
+  BackfaceVisibility,
+  
+  // Interaction enums
+  PointerEvents,
+  UserSelect,
+  
+  // Unit enums
+  UnitTypeSpec,
+  UnitDimension,
+  RoundingStrategy,
+  
+  // Composition enums
+  StyleCompositionStrategy,
+  
+  // Command enums
+  LayoutChangeType,
+  
+  // State enums
+  LayoutStateChangeType,
+  LayoutStateType,
+  
+  // Chain enums
+  LayoutChainHandlerType,
+  
+  // Reference enums
+  PositionReference,
+  SizeReference,
+  Orientation,
+  AlignmentSelf,
+  PatternRepeat,
+  GradientType,
+  AnimationEventType,
+  PerformanceAlertType,
+  AlignmentReference,
+  DisplayType,
+  BackgroundSize,
+  BackgroundPosition,
+  BackgroundAttachment,
+  BackgroundRepeat,
+  BackgroundClip,
+  TextTransform,
+  TextOverflow,
+  WhiteSpace,
+  CSSUnit,
+  ButtonState,
+  PhysicsBodyType,
+  PriorityLevel,
+  ValueType,
+  ExtendedValueType,
+  BorderImageRepeat,
+  HorizontalAlignmentValue,
+  VerticalAlignmentValue,
+  BorderStyleValue,
+  TextDecorationValue,
+  AnimationDirectionValue,
+  AnimationFillModeValue,
+  ShadowFilter,
+  
   // All enums bundle
   LAYOUT_SYSTEM_ENUMS,
 } from './enums/LayoutEnums';
+
+// ============================================================================
+// LAYOUT SYSTEM INTERFACES
+// ============================================================================
+
+export {
+  // Interface bundles
+  BREAKPOINT_INTERFACES,
+  THEME_INTERFACES,
+  STYLE_INTERFACES,
+  LAYOUT_INTERFACES,
+  STRATEGY_INTERFACES,
+  MANAGER_INTERFACES,
+  COMMAND_INTERFACES,
+  STATE_INTERFACES,
+  CHAIN_INTERFACES,
+  DI_INTERFACES,
+  PLUGIN_INTERFACES,
+  GRANULAR_INTERFACES,
+  LAYOUT_SYSTEM_INTERFACES,
+} from './interfaces';
 
 // ============================================================================
 // TYPE EXPORTS
@@ -199,6 +303,19 @@ export type GameObjectTypeType = keyof typeof GameObjectType;
 
 // Import enums for utility functions
 import { ColorName as ColorNameEnum, GameObjectType as GameObjectTypeEnum } from './enums/LayoutEnums';
+
+// Import Unit System classes and enums for integration
+import { 
+  SizeUnit, 
+  PositionUnit, 
+  ScaleUnit, 
+  UnitCalculatorFactory
+} from '../unit';
+
+// Import local constants and enums
+import { LAYOUT_SYSTEM_CONSTANTS } from './constants/LayoutConstants';
+import { LAYOUT_SYSTEM_ENUMS } from './enums/LayoutEnums';
+import { LAYOUT_SYSTEM_INTERFACES } from './interfaces';
 
 // Export utility functions for working with constants and enums
 export const LayoutSystemUtils = {
@@ -307,6 +424,7 @@ export default {
   // Layout System
   constants: LAYOUT_SYSTEM_CONSTANTS,
   enums: LAYOUT_SYSTEM_ENUMS,
+  interfaces: LAYOUT_SYSTEM_INTERFACES,
   utils: LayoutSystemUtils,
   
   // Integration helpers

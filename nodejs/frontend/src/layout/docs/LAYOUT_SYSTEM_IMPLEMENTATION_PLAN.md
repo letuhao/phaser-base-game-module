@@ -1,864 +1,639 @@
-# 🚀 Layout System Implementation Plan
+# Layout System Implementation Plan
 
-## 📋 Overview
+## Overview
+This document outlines the comprehensive implementation plan for the Layout System, including development phases, architecture decisions, and implementation strategy.
 
-This document outlines the practical implementation steps to create the Layout System and integrate it with the existing Levis2025R3Wheel configuration, resolving the Container god class problem.
+## Table of Contents
+1. [Implementation Phases](#implementation-phases)
+2. [Architecture Decisions](#architecture-decisions)
+3. [Development Strategy](#development-strategy)
+4. [Testing Strategy](#testing-strategy)
+5. [Performance Considerations](#performance-considerations)
+6. [Integration Points](#integration-points)
+7. [Migration Strategy](#migration-strategy)
 
-## 🎯 Implementation Phases
+---
 
-### **Phase 1: Core Interfaces & Constants (Week 1)**
+## Implementation Phases
 
-#### **1.1 Create Core Interfaces**
+### Phase 1: Core Foundation (Week 1-2)
+**Priority: Critical**
+**Status: ✅ Completed**
 
+#### Completed Tasks:
+- ✅ Interface definitions and enums (30+ enums, 200+ constants)
+- ✅ Constants and configuration (comprehensive constants system)
+- ✅ Design pattern interfaces (Command, State, Chain)
+- ✅ Dependency injection interfaces (IDIContainer)
+- ✅ Plugin system interfaces (IPluginSystem)
+- ✅ Granular interface segregation (IGranularInterfaces)
+- ✅ Type safety implementation (enum-based, no string literals)
+- ✅ Documentation and usage guides
+
+#### Deliverables:
+- Complete interface system (13 interface files)
+- Comprehensive enum system (30+ enums)
+- Comprehensive constants system (200+ constants)
+- Design pattern interfaces (Command, State, Chain, DI, Plugin)
+- Granular interface segregation (ISP compliance)
+- Enum-based type safety (no string literals)
+- Comprehensive documentation
+- Usage examples and best practices
+
+### Phase 2: Core Implementation (Week 3-4)
+**Priority: High**
+**Status: 🔄 In Progress**
+
+#### Tasks:
+1. **Layout Manager Implementation**
+   - `LayoutManager` class
+   - Breakpoint management
+   - Theme management
+   - Event system integration
+
+2. **Strategy Pattern Implementation**
+   - `ResponsiveLayoutStrategy`
+   - `UnitLayoutStrategy`
+   - `FlexboxLayoutStrategy`
+   - `GridLayoutStrategy`
+
+3. **Style System Implementation**
+   - `StyleManager` class
+   - Style composition and inheritance
+   - Theme integration
+   - Responsive style handling
+
+#### Deliverables:
+- Working layout manager
+- Strategy implementations
+- Style management system
+- Basic responsive functionality
+
+### Phase 3: Advanced Features (Week 5-6)
+**Priority: Medium**
+**Status: ⏳ Planned**
+
+#### Tasks:
+1. **Command Pattern Implementation**
+   - `LayoutCommand` classes
+   - Undo/redo functionality
+   - Batch operations
+   - Command history
+
+2. **State Pattern Implementation**
+   - `LayoutState` classes
+   - State transitions
+   - State-specific behavior
+   - State persistence
+
+3. **Chain of Responsibility Implementation**
+   - `LayoutChainHandler` classes
+   - Processing pipeline
+   - Handler chaining
+   - Error handling
+
+4. **Dependency Injection Implementation**
+   - `DIContainer` class
+   - Service registration and resolution
+   - Lifecycle management
+   - Circular dependency detection
+
+5. **Plugin System Implementation**
+   - `PluginManager` class
+   - Plugin registration and loading
+   - Extension points
+   - Plugin lifecycle management
+
+#### Deliverables:
+- Command system with undo/redo
+- State management system
+- Processing pipeline
+- Dependency injection container
+- Plugin system with extension points
+- Advanced error handling
+
+### Phase 4: Performance & Optimization (Week 7-8)
+**Priority: Medium**
+**Status: ⏳ Planned**
+
+#### Tasks:
+1. **Caching System**
+   - Layout result caching
+   - Style computation caching
+   - Performance monitoring
+   - Cache invalidation
+
+2. **Performance Optimization**
+   - Lazy loading
+   - Batch processing
+   - Memory optimization
+   - Calculation optimization
+
+3. **Monitoring & Analytics**
+   - Performance metrics
+   - Usage analytics
+   - Error tracking
+   - Performance reporting
+
+#### Deliverables:
+- High-performance caching
+- Optimized calculations
+- Performance monitoring
+- Analytics dashboard
+
+### Phase 5: Integration & Testing (Week 9-10)
+**Priority: High**
+**Status: ⏳ Planned**
+
+#### Tasks:
+1. **Phaser Integration**
+   - Game object integration
+   - Scene integration
+   - Event system integration
+   - Performance integration
+
+2. **Unit System Integration**
+   - Unit calculation integration
+   - Responsive units
+   - Unit conversion
+   - Unit validation
+
+3. **Comprehensive Testing**
+   - Unit tests
+   - Integration tests
+   - Performance tests
+   - End-to-end tests
+
+#### Deliverables:
+- Full Phaser integration
+- Unit system integration
+- Comprehensive test suite
+- Performance benchmarks
+
+---
+
+## Architecture Decisions
+
+### 1. Modular Design
+**Decision**: Implement the layout system as a collection of independent modules
+**Rationale**: 
+- Easier maintenance and testing
+- Better separation of concerns
+- Enables incremental development
+- Facilitates code reuse
+
+**Implementation**:
 ```typescript
-// src/layout/interfaces/ILayoutSystem.ts
-export interface ILayoutSystem {
-  calculateLayout(config: ILayoutConfig, context: LayoutContext): CalculatedLayout;
-  registerStrategy(name: string, strategy: ILayoutStrategy): void;
-  addObserver(observer: ILayoutObserver): void;
-  removeObserver(observer: ILayoutObserver): void;
-}
+// Core modules
+- LayoutManager (orchestration)
+- StyleManager (styling)
+- ThemeManager (theming)
+- BreakpointManager (responsive)
 
-// src/layout/interfaces/ILayoutStrategy.ts
-export interface ILayoutStrategy {
-  calculate(config: ILayoutConfig, context: LayoutContext): CalculatedLayout;
-  getPriority(): number;
-  canHandle(config: ILayoutConfig): boolean;
-}
+// Strategy modules
+- ResponsiveLayoutStrategy
+- UnitLayoutStrategy
+- FlexboxLayoutStrategy
+- GridLayoutStrategy
 
-// src/layout/interfaces/ILayoutObserver.ts
-export interface ILayoutObserver {
-  onLayoutChanged(layout: CalculatedLayout, context: LayoutContext): void;
-  onBreakpointChanged(breakpoint: string): void;
-  onThemeChanged(theme: string): void;
-}
+// Pattern modules
+- CommandPattern (undo/redo)
+- StatePattern (state management)
+- ChainPattern (processing pipeline)
+- DIContainer (dependency injection)
+- PluginManager (plugin system)
 
-// src/layout/interfaces/ILayoutConfig.ts
-export interface ILayoutConfig {
-  position?: {
-    x?: PositionValue;
-    y?: PositionValue;
-    z?: number;
-  };
-  size?: {
-    width?: SizeValue;
-    height?: SizeValue;
-  };
-  scale?: {
-    x?: ScaleValue;
-    y?: ScaleValue;
-  };
-  visual?: {
-    alpha?: number;
-    rotation?: number;
-    visible?: boolean;
-  };
-  background?: {
-    color?: string;
-    image?: string;
-  };
-  border?: {
-    color?: string;
-    width?: number;
-    radius?: number;
-  };
-  shadow?: {
-    color?: string;
-    blur?: number;
-    offset?: { x: number; y: number };
-  };
-  classes?: string[];
-}
+// Granular interface modules
+- PositionStyle, SizeStyle, AlignmentStyle
+- BackgroundStyle, BorderStyle, TextStyle
+- AnimationStyle, TransformStyle, InteractionStyle
 ```
 
-#### **1.2 Create Layout Constants**
+### 2. Interface-First Development
+**Decision**: Define all interfaces before implementation
+**Rationale**:
+- Ensures type safety
+- Facilitates testing
+- Enables parallel development
+- Provides clear contracts
 
+**Implementation**:
 ```typescript
-// src/layout/core/LayoutConstants.ts
-export const LAYOUT_CONSTANTS = {
-  BREAKPOINTS: {
-    XS: 576,
-    SM: 768,
-    MD: 992,
-    LG: 1200,
-    XL: 1400
-  },
-  
-  DIMENSIONS: {
-    MIN_WIDTH: 10,
-    MIN_HEIGHT: 10,
-    MAX_WIDTH: 10000,
-    MAX_HEIGHT: 10000,
-    DEFAULT_WIDTH: 100,
-    DEFAULT_HEIGHT: 100
-  },
-  
-  POSITIONS: {
-    MIN_X: -10000,
-    MIN_Y: -10000,
-    MAX_X: 10000,
-    MAX_Y: 10000,
-    DEFAULT_X: 0,
-    DEFAULT_Y: 0
-  },
-  
-  SCALES: {
-    MIN: 0.1,
-    MAX: 10,
-    DEFAULT: 1
-  },
-  
-  PERFORMANCE: {
-    CACHE_SIZE: 100,
-    UPDATE_THROTTLE: 16,
-    VALIDATION_ENABLED: true
-  }
-} as const;
+// All interfaces defined upfront
+- ILayoutManager
+- ILayoutStrategy
+- IStyleManager
+- IThemeManager
+- ILayoutCommand
+- ILayoutState
+- ILayoutChainHandler
+- IDIContainer, IServiceRegistry, IServiceResolver
+- IPluginManager, IPlugin, IExtensionPoint
+- IPositionStyle, ISizeStyle, IAlignmentStyle
+- IBackgroundStyle, IBorderStyle, ITextStyle
+- IAnimationStyle, ITransformStyle, IInteractionStyle
 ```
 
-### **Phase 2: Unit System Integration (Week 2)**
+### 3. Enum-Based Type Safety
+**Decision**: Use enums instead of string literals
+**Rationale**:
+- Prevents runtime errors
+- Better IDE support
+- Easier refactoring
+- Consistent values
 
-#### **2.1 Create UnitLayoutStrategy**
-
+**Implementation**:
 ```typescript
-// src/layout/strategies/UnitLayoutStrategy.ts
-export class UnitLayoutStrategy implements ILayoutStrategy {
-  private readonly unitManager = UnitSystemManager.getInstance();
-  private readonly logger: Logger = Logger.getInstance();
-  
-  getPriority(): number {
-    return 1; // Highest priority - base calculations
-  }
-  
-  canHandle(config: ILayoutConfig): boolean {
-    return !!(config.position || config.size || config.scale);
-  }
-  
-  calculate(config: ILayoutConfig, context: LayoutContext): CalculatedLayout {
-    this.logger.debug('UnitLayoutStrategy', 'calculate', 'Calculating layout with Unit System', {
-      config,
-      context: { breakpoint: context.responsive.currentBreakpoint, theme: context.theme.currentTheme }
-    });
-    
-    const result: CalculatedLayout = {
-      position: { x: 0, y: 0, z: 0 },
-      size: { width: LAYOUT_CONSTANTS.DIMENSIONS.DEFAULT_WIDTH, height: LAYOUT_CONSTANTS.DIMENSIONS.DEFAULT_HEIGHT },
-      scale: { x: LAYOUT_CONSTANTS.SCALES.DEFAULT, y: LAYOUT_CONSTANTS.SCALES.DEFAULT },
-      visual: { alpha: 1, rotation: 0, visible: true },
-      background: { color: null, image: null },
-      border: { color: null, width: 0, radius: 0 },
-      shadow: { color: null, blur: 0, offset: { x: 0, y: 0 } }
-    };
-    
-    // Calculate position using Unit System
-    if (config.position) {
-      if (config.position.x) {
-        result.position.x = this.unitManager.calculatePosition(config.position.x, context.unitContext);
-      }
-      if (config.position.y) {
-        result.position.y = this.unitManager.calculatePosition(config.position.y, context.unitContext);
-      }
-      if (config.position.z !== undefined) {
-        result.position.z = config.position.z;
-      }
-    }
-    
-    // Calculate size using Unit System
-    if (config.size) {
-      if (config.size.width) {
-        result.size.width = this.unitManager.calculateSize(config.size.width, context.unitContext);
-      }
-      if (config.size.height) {
-        result.size.height = this.unitManager.calculateSize(config.size.height, context.unitContext);
-      }
-    }
-    
-    // Calculate scale using Unit System
-    if (config.scale) {
-      if (config.scale.x) {
-        result.scale.x = this.unitManager.calculateScale(config.scale.x, context.unitContext);
-      }
-      if (config.scale.y) {
-        result.scale.y = this.unitManager.calculateScale(config.scale.y, context.unitContext);
-      }
-    }
-    
-    // Apply visual properties
-    if (config.visual) {
-      Object.assign(result.visual, config.visual);
-    }
-    
-    // Apply background properties
-    if (config.background) {
-      Object.assign(result.background, config.background);
-    }
-    
-    // Apply border properties
-    if (config.border) {
-      Object.assign(result.border, config.border);
-    }
-    
-    // Apply shadow properties
-    if (config.shadow) {
-      Object.assign(result.shadow, config.shadow);
-    }
-    
-    this.logger.debug('UnitLayoutStrategy', 'calculate', 'Layout calculated', { result });
-    
-    return result;
+// Instead of string literals
+type: 'center' | 'left' | 'right'
+
+// Use enums
+type: HorizontalAlignment.CENTER | HorizontalAlignment.LEFT | HorizontalAlignment.RIGHT
+```
+
+### 4. Performance-First Approach
+**Decision**: Design with performance in mind from the start
+**Rationale**:
+- Games require high performance
+- Responsive calculations can be expensive
+- Caching is essential
+- Memory usage matters
+
+**Implementation**:
+```typescript
+// Performance considerations
+- Lazy loading of layouts
+- Caching of calculations
+- Batch processing
+- Memory pooling
+- Performance monitoring
+```
+
+---
+
+## Development Strategy
+
+### 1. Test-Driven Development (TDD)
+**Approach**: Write tests before implementation
+**Benefits**:
+- Ensures functionality
+- Prevents regressions
+- Documents behavior
+- Facilitates refactoring
+
+**Implementation**:
+```typescript
+// Example TDD approach
+describe('LayoutManager', () => {
+  it('should create layout with valid config', () => {
+    const manager = new LayoutManager();
+    const config = createValidConfig();
+    const layout = manager.createLayout(config);
+    expect(layout).toBeDefined();
+    expect(layout.id).toBe(config.id);
+  });
+});
+```
+
+### 2. Incremental Development
+**Approach**: Build features incrementally
+**Benefits**:
+- Early feedback
+- Risk mitigation
+- Easier debugging
+- Faster delivery
+
+**Implementation**:
+```typescript
+// Phase 1: Basic layout creation
+class LayoutManager {
+  createLayout(config: ILayoutConfig): ILayout {
+    // Basic implementation
   }
 }
-```
 
-### **Phase 3: Responsive Integration (Week 3)**
-
-#### **3.1 Create ResponsiveLayoutStrategy**
-
-```typescript
-// src/layout/strategies/ResponsiveLayoutStrategy.ts
-export class ResponsiveLayoutStrategy implements ILayoutStrategy {
-  private readonly logger: Logger = Logger.getInstance();
-  
-  getPriority(): number {
-    return 2; // Medium priority - responsive adjustments
+// Phase 2: Add responsive support
+class LayoutManager {
+  createLayout(config: ILayoutConfig): ILayout {
+    // Add responsive logic
   }
   
-  canHandle(config: ILayoutConfig): boolean {
-    return true; // Always handles responsive adjustments
-  }
-  
-  calculate(layout: CalculatedLayout, context: LayoutContext): CalculatedLayout {
-    const breakpoint = context.responsive.currentBreakpoint;
-    const viewport = context.responsive.viewport;
-    
-    this.logger.debug('ResponsiveLayoutStrategy', 'calculate', 'Applying responsive adjustments', {
-      breakpoint,
-      viewport,
-      originalLayout: layout
-    });
-    
-    let adjustedLayout = { ...layout };
-    
-    // Apply breakpoint-specific adjustments
-    switch (breakpoint) {
-      case 'xs':
-        adjustedLayout = this.applyMobileLayout(adjustedLayout, viewport);
-        break;
-      case 'sm':
-        adjustedLayout = this.applyTabletLayout(adjustedLayout, viewport);
-        break;
-      case 'md':
-        adjustedLayout = this.applyDesktopLayout(adjustedLayout, viewport);
-        break;
-      case 'lg':
-      case 'xl':
-        adjustedLayout = this.applyLargeLayout(adjustedLayout, viewport);
-        break;
-    }
-    
-    this.logger.debug('ResponsiveLayoutStrategy', 'calculate', 'Responsive adjustments applied', {
-      breakpoint,
-      adjustedLayout
-    });
-    
-    return adjustedLayout;
-  }
-  
-  private applyMobileLayout(layout: CalculatedLayout, viewport: any): CalculatedLayout {
-    return {
-      ...layout,
-      size: {
-        width: Math.min(layout.size.width, viewport.width * 0.95),
-        height: Math.min(layout.size.height, viewport.height * 0.95)
-      },
-      visual: {
-        ...layout.visual,
-        alpha: Math.min(layout.visual.alpha, 0.9) // Slightly reduce alpha on mobile
-      }
-    };
-  }
-  
-  private applyTabletLayout(layout: CalculatedLayout, viewport: any): CalculatedLayout {
-    return {
-      ...layout,
-      size: {
-        width: Math.min(layout.size.width, viewport.width * 0.9),
-        height: Math.min(layout.size.height, viewport.height * 0.9)
-      }
-    };
-  }
-  
-  private applyDesktopLayout(layout: CalculatedLayout, viewport: any): CalculatedLayout {
-    return {
-      ...layout,
-      size: {
-        width: Math.min(layout.size.width, viewport.width * 0.8),
-        height: Math.min(layout.size.height, viewport.height * 0.8)
-      }
-    };
-  }
-  
-  private applyLargeLayout(layout: CalculatedLayout, viewport: any): CalculatedLayout {
-    return {
-      ...layout,
-      size: {
-        width: Math.min(layout.size.width, viewport.width * 0.7),
-        height: Math.min(layout.size.height, viewport.height * 0.7)
-      }
-    };
-  }
-}
-```
-
-### **Phase 4: Theme Integration (Week 4)**
-
-#### **4.1 Create ThemeLayoutStrategy**
-
-```typescript
-// src/layout/strategies/ThemeLayoutStrategy.ts
-export class ThemeLayoutStrategy implements ILayoutStrategy {
-  private readonly logger: Logger = Logger.getInstance();
-  
-  getPriority(): number {
-    return 3; // Lowest priority - theme overrides
-  }
-  
-  canHandle(config: ILayoutConfig): boolean {
-    return !!(config.classes && config.classes.length > 0);
-  }
-  
-  calculate(layout: CalculatedLayout, context: LayoutContext): CalculatedLayout {
-    const theme = context.theme.themeConfig;
-    const classes = context.theme.appliedClasses;
-    
-    this.logger.debug('ThemeLayoutStrategy', 'calculate', 'Applying theme styling', {
-      theme: theme.themeName,
-      classes,
-      originalLayout: layout
-    });
-    
-    let themedLayout = { ...layout };
-    
-    // Apply theme classes
-    classes.forEach(className => {
-      const themeClass = theme.themeClasses[className];
-      if (themeClass) {
-        themedLayout = this.mergeThemeClass(themedLayout, themeClass);
-        this.logger.debug('ThemeLayoutStrategy', 'calculate', 'Applied theme class', {
-          className,
-          themeClass
-        });
-      }
-    });
-    
-    // Apply global theme colors
-    if (theme.colors) {
-      themedLayout = this.applyThemeColors(themedLayout, theme.colors);
-    }
-    
-    this.logger.debug('ThemeLayoutStrategy', 'calculate', 'Theme styling applied', {
-      themedLayout
-    });
-    
-    return themedLayout;
-  }
-  
-  private mergeThemeClass(layout: CalculatedLayout, themeClass: any): CalculatedLayout {
-    return {
-      ...layout,
-      background: { ...layout.background, ...themeClass.background },
-      border: { ...layout.border, ...themeClass.border },
-      shadow: { ...layout.shadow, ...themeClass.shadow },
-      visual: { ...layout.visual, ...themeClass.visual }
-    };
-  }
-  
-  private applyThemeColors(layout: CalculatedLayout, colors: any): CalculatedLayout {
-    return {
-      ...layout,
-      background: {
-        ...layout.background,
-        color: layout.background.color || colors.background?.primary
-      },
-      border: {
-        ...layout.border,
-        color: layout.border.color || colors.ui?.border
-      }
-    };
+  updateForBreakpoint(breakpoint: string): void {
+    // Responsive updates
   }
 }
 ```
 
-### **Phase 5: Integration Adapters (Week 5)**
+### 3. Performance Monitoring
+**Approach**: Monitor performance throughout development
+**Benefits**:
+- Early performance issues detection
+- Performance regression prevention
+- Optimization opportunities
+- User experience assurance
 
-#### **5.1 Create ResponsiveConfigIntegration**
-
+**Implementation**:
 ```typescript
-// src/layout/integrations/ResponsiveConfigIntegration.ts
-export class ResponsiveConfigIntegration {
-  static parseResponsiveConfig(config: any): ILayoutConfig {
-    return {
-      position: {
-        x: this.parsePositionValue(config.positionX),
-        y: this.parsePositionValue(config.positionY),
-        z: config.positionZ || 0
-      },
-      size: {
-        width: this.parseSizeValue(config.width),
-        height: this.parseSizeValue(config.height)
-      },
-      scale: {
-        x: this.parseScaleValue(config.scaleX),
-        y: this.parseScaleValue(config.scaleY)
-      },
-      visual: {
-        alpha: config.alpha || 1,
-        rotation: config.rotation || 0,
-        visible: config.visible !== false
-      },
-      background: {
-        color: config.backgroundColor,
-        image: config.backgroundImage
-      },
-      border: {
-        color: config.borderColor,
-        width: config.borderWidth || 0,
-        radius: config.borderRadius || 0
-      },
-      shadow: {
-        color: config.shadowColor,
-        blur: config.shadowBlur || 0,
-        offset: {
-          x: config.shadowOffsetX || 0,
-          y: config.shadowOffsetY || 0
-        }
-      },
-      classes: config.classes || []
-    };
+// Performance monitoring
+class PerformanceMonitor {
+  measureLayoutCalculation(fn: () => void): number {
+    const start = performance.now();
+    fn();
+    return performance.now() - start;
   }
   
-  private static parsePositionValue(value: any): PositionValue {
-    if (typeof value === 'number') {
-      return createPositionTemplateInput(PositionUnit.PIXEL, value);
-    }
-    if (typeof value === 'string') {
-      switch (value) {
-        case 'center':
-          return createPositionTemplateInput(PositionUnit.SCENE_CENTER, 0);
-        case 'left':
-          return createPositionTemplateInput(PositionUnit.SCENE_LEFT, 0);
-        case 'right':
-          return createPositionTemplateInput(PositionUnit.SCENE_RIGHT, 0);
-        case 'top':
-          return createPositionTemplateInput(PositionUnit.SCENE_TOP, 0);
-        case 'bottom':
-          return createPositionTemplateInput(PositionUnit.SCENE_BOTTOM, 0);
-        default:
-          return createPositionTemplateInput(PositionUnit.PIXEL, 0);
-      }
-    }
-    return createPositionTemplateInput(PositionUnit.PIXEL, 0);
-  }
-  
-  private static parseSizeValue(value: any): SizeValue {
-    if (typeof value === 'number') {
-      return createSizeTemplateInput(SizeUnit.PIXEL, value);
-    }
-    if (typeof value === 'string') {
-      switch (value) {
-        case 'fill':
-          return createSizeTemplateInput(SizeUnit.VIEWPORT_WIDTH, 100);
-        case 'auto':
-          return createSizeTemplateInput(SizeUnit.AUTO, 0);
-        default:
-          return createSizeTemplateInput(SizeUnit.PIXEL, 100);
-      }
-    }
-    return createSizeTemplateInput(SizeUnit.PIXEL, 100);
-  }
-  
-  private static parseScaleValue(value: any): ScaleValue {
-    if (typeof value === 'number') {
-      return createScaleTemplateInput(ScaleUnit.FACTOR, value);
-    }
-    return createScaleTemplateInput(ScaleUnit.FACTOR, 1);
+  trackMemoryUsage(): void {
+    // Memory usage tracking
   }
 }
 ```
 
-#### **5.2 Create ThemeConfigIntegration**
+---
 
+## Testing Strategy
+
+### 1. Unit Testing
+**Coverage**: 90%+ code coverage
+**Focus Areas**:
+- Individual components
+- Edge cases
+- Error conditions
+- Performance boundaries
+
+**Implementation**:
 ```typescript
-// src/layout/integrations/ThemeConfigIntegration.ts
-export class ThemeConfigIntegration {
-  static parseThemeConfig(config: any): ThemeConfig {
-    return {
-      themeName: config.themeName,
-      colors: config.colors,
-      typography: config.typography,
-      spacing: config.spacing,
-      themeClasses: this.parseThemeClasses(config.themeClasses)
-    };
+// Unit test structure
+describe('LayoutManager', () => {
+  describe('createLayout', () => {
+    it('should create layout with valid config', () => {});
+    it('should throw error with invalid config', () => {});
+    it('should handle edge cases', () => {});
+  });
+  
+  describe('performance', () => {
+    it('should complete within performance budget', () => {});
+  });
+});
+```
+
+### 2. Integration Testing
+**Coverage**: All integration points
+**Focus Areas**:
+- Component interactions
+- Data flow
+- Error propagation
+- Performance integration
+
+**Implementation**:
+```typescript
+// Integration test structure
+describe('Layout System Integration', () => {
+  it('should integrate with Unit System', () => {});
+  it('should integrate with Phaser', () => {});
+  it('should handle complex scenarios', () => {});
+});
+```
+
+### 3. Performance Testing
+**Coverage**: Performance benchmarks
+**Focus Areas**:
+- Calculation speed
+- Memory usage
+- Caching effectiveness
+- Scalability
+
+**Implementation**:
+```typescript
+// Performance test structure
+describe('Layout Performance', () => {
+  it('should calculate layout within 16ms', () => {});
+  it('should use less than 50MB memory', () => {});
+  it('should scale to 1000 layouts', () => {});
+});
+```
+
+---
+
+## Performance Considerations
+
+### 1. Calculation Optimization
+**Strategy**: Optimize layout calculations
+**Implementation**:
+```typescript
+// Optimization techniques
+- Lazy calculation
+- Incremental updates
+- Caching results
+- Batch processing
+- Parallel computation
+```
+
+### 2. Memory Management
+**Strategy**: Efficient memory usage
+**Implementation**:
+```typescript
+// Memory optimization
+- Object pooling
+- Garbage collection optimization
+- Memory monitoring
+- Leak detection
+```
+
+### 3. Caching Strategy
+**Strategy**: Intelligent caching
+**Implementation**:
+```typescript
+// Caching approach
+- Layout result caching
+- Style computation caching
+- Unit conversion caching
+- Cache invalidation
+```
+
+---
+
+## Integration Points
+
+### 1. Phaser Integration
+**Integration Points**:
+- Game object positioning
+- Scene management
+- Event system
+- Performance monitoring
+
+**Implementation**:
+```typescript
+// Phaser integration
+class PhaserLayoutAdapter {
+  applyToGameObject(gameObject: Phaser.GameObjects.GameObject, layout: ILayout): void {
+    // Apply layout to Phaser game object
   }
   
-  private static parseThemeClasses(classes: any): Record<string, any> {
-    const parsedClasses: Record<string, any> = {};
-    
-    Object.entries(classes || {}).forEach(([className, classConfig]) => {
-      parsedClasses[className] = {
-        background: {
-          color: classConfig.backgroundColor,
-          image: classConfig.backgroundImage
-        },
-        border: {
-          color: classConfig.borderColor,
-          width: classConfig.borderWidth,
-          radius: classConfig.borderRadius
-        },
-        shadow: {
-          color: classConfig.shadowColor,
-          blur: classConfig.shadowBlur,
-          offset: {
-            x: classConfig.shadowOffsetX || 0,
-            y: classConfig.shadowOffsetY || 0
-          }
-        },
-        visual: {
-          alpha: classConfig.alpha,
-          rotation: classConfig.rotation
-        }
-      };
-    });
-    
-    return parsedClasses;
+  updateFromScene(scene: Phaser.Scene): void {
+    // Update layouts from scene changes
   }
 }
 ```
 
-### **Phase 6: LayoutManager Implementation (Week 6)**
+### 2. Unit System Integration
+**Integration Points**:
+- Unit calculations
+- Responsive units
+- Unit conversion
+- Unit validation
 
-#### **6.1 Create Main LayoutManager**
-
+**Implementation**:
 ```typescript
-// src/layout/core/LayoutManager.ts
-export class LayoutManager implements ILayoutSystem {
-  private static instance: LayoutManager;
-  private strategies: Map<string, ILayoutStrategy> = new Map();
-  private observers: ILayoutObserver[] = [];
-  private readonly logger: Logger = Logger.getInstance();
-  
-  static getInstance(): LayoutManager {
-    if (!LayoutManager.instance) {
-      LayoutManager.instance = new LayoutManager();
-    }
-    return LayoutManager.instance;
+// Unit system integration
+class UnitSystemAdapter {
+  convertUnits(value: number, fromUnit: Unit, toUnit: Unit): number {
+    // Convert between units
   }
   
-  private constructor() {
-    this.initializeDefaultStrategies();
-  }
-  
-  private initializeDefaultStrategies(): void {
-    this.registerStrategy('unit', new UnitLayoutStrategy());
-    this.registerStrategy('responsive', new ResponsiveLayoutStrategy());
-    this.registerStrategy('theme', new ThemeLayoutStrategy());
-  }
-  
-  registerStrategy(name: string, strategy: ILayoutStrategy): void {
-    this.strategies.set(name, strategy);
-    this.logger.debug('LayoutManager', 'registerStrategy', 'Strategy registered', { name });
-  }
-  
-  addObserver(observer: ILayoutObserver): void {
-    this.observers.push(observer);
-    this.logger.debug('LayoutManager', 'addObserver', 'Observer added', { observerType: observer.constructor.name });
-  }
-  
-  removeObserver(observer: ILayoutObserver): void {
-    const index = this.observers.indexOf(observer);
-    if (index !== -1) {
-      this.observers.splice(index, 1);
-      this.logger.debug('LayoutManager', 'removeObserver', 'Observer removed', { observerType: observer.constructor.name });
-    }
-  }
-  
-  calculateLayout(config: ILayoutConfig, context: LayoutContext): CalculatedLayout {
-    this.logger.debug('LayoutManager', 'calculateLayout', 'Starting layout calculation', {
-      config,
-      context: { breakpoint: context.responsive.currentBreakpoint, theme: context.theme.currentTheme }
-    });
-    
-    // Get strategies in priority order
-    const sortedStrategies = Array.from(this.strategies.values())
-      .filter(strategy => strategy.canHandle(config))
-      .sort((a, b) => a.getPriority() - b.getPriority());
-    
-    let result: CalculatedLayout = {
-      position: { x: 0, y: 0, z: 0 },
-      size: { width: LAYOUT_CONSTANTS.DIMENSIONS.DEFAULT_WIDTH, height: LAYOUT_CONSTANTS.DIMENSIONS.DEFAULT_HEIGHT },
-      scale: { x: LAYOUT_CONSTANTS.SCALES.DEFAULT, y: LAYOUT_CONSTANTS.SCALES.DEFAULT },
-      visual: { alpha: 1, rotation: 0, visible: true },
-      background: { color: null, image: null },
-      border: { color: null, width: 0, radius: 0 },
-      shadow: { color: null, blur: 0, offset: { x: 0, y: 0 } }
-    };
-    
-    // Apply strategies in order
-    sortedStrategies.forEach(strategy => {
-      result = strategy.calculate(config, context);
-      this.logger.debug('LayoutManager', 'calculateLayout', 'Strategy applied', {
-        strategyType: strategy.constructor.name,
-        result
-      });
-    });
-    
-    // Notify observers
-    this.notifyObservers(result, context);
-    
-    this.logger.debug('LayoutManager', 'calculateLayout', 'Layout calculation completed', { result });
-    
-    return result;
-  }
-  
-  private notifyObservers(layout: CalculatedLayout, context: LayoutContext): void {
-    this.observers.forEach(observer => {
-      try {
-        observer.onLayoutChanged(layout, context);
-      } catch (error) {
-        this.logger.error('LayoutManager', 'notifyObservers', 'Observer notification failed', {
-          observerType: observer.constructor.name,
-          error: error instanceof Error ? error.message : String(error)
-        });
-      }
-    });
+  calculateResponsiveValue(value: number, context: IUnitContext): number {
+    // Calculate responsive values
   }
 }
 ```
 
-### **Phase 7: Container Integration (Week 7)**
+### 3. Event System Integration
+**Integration Points**:
+- Layout change events
+- Breakpoint change events
+- Theme change events
+- Performance events
 
-#### **7.1 Refactor Container Class**
-
+**Implementation**:
 ```typescript
-// src/object/container/Container.ts (REFACTORED)
-export class Container extends Phaser.GameObjects.Container implements IContainer {
-  private readonly layoutManager = LayoutManager.getInstance();
-  private readonly logger: Logger = Logger.getInstance();
-  
-  // ... existing properties ...
-  
-  setStyle(layoutProperties: CommonIStyleProperties): void {
-    this.logger.debug('Container', 'setStyle', 'Setting style via Layout System', {
-      id: this.id,
-      properties: layoutProperties
-    });
-    
-    try {
-      // Convert to Layout System config
-      const layoutConfig = ResponsiveConfigIntegration.parseResponsiveConfig(layoutProperties);
-      
-      // Create context
-      const context: LayoutContext = {
-        unitContext: this.createUnitContext(),
-        responsive: this.createResponsiveContext(),
-        theme: this.createThemeContext(),
-        container: this.createContainerContext(),
-        performance: { enableCaching: true, enableValidation: true, enableLogging: true }
-      };
-      
-      // Calculate layout using Layout System
-      const calculatedLayout = this.layoutManager.calculateLayout(layoutConfig, context);
-      
-      // Apply calculated layout
-      this.applyCalculatedLayout(calculatedLayout);
-      
-      this.logger.info('Container', 'setStyle', 'Style applied successfully via Layout System', {
-        id: this.id,
-        calculatedLayout
-      });
-      
-    } catch (error) {
-      this.logger.error('Container', 'setStyle', 'Failed to apply style via Layout System', {
-        id: this.id,
-        error: error instanceof Error ? error.message : String(error)
-      });
-      
-      // Fallback to default layout
-      this.applyDefaultLayout();
-    }
+// Event system integration
+class LayoutEventEmitter {
+  emitLayoutChange(layout: ILayout, change: ILayoutChange): void {
+    // Emit layout change events
   }
   
-  private createUnitContext(): UnitContext {
-    return {
-      parent: this.parent ? {
-        width: this.parent.width,
-        height: this.parent.height,
-        x: this.parent.x,
-        y: this.parent.y
-      } : undefined,
-      scene: {
-        width: this.scene.game.config.width as number,
-        height: this.scene.game.config.height as number
-      },
-      viewport: {
-        width: window.innerWidth,
-        height: window.innerHeight
-      },
-      content: {
-        width: this.width,
-        height: this.height
-      }
-    };
-  }
-  
-  private createResponsiveContext(): any {
-    return {
-      currentBreakpoint: this.getCurrentBreakpoint(),
-      viewport: { width: window.innerWidth, height: window.innerHeight },
-      device: { type: this.getDeviceType(), orientation: this.getOrientation() }
-    };
-  }
-  
-  private createThemeContext(): any {
-    return {
-      currentTheme: 'autumn', // From injected configs
-      themeConfig: this.injectedConfigs?.theme,
-      appliedClasses: this.getAppliedClasses()
-    };
-  }
-  
-  private createContainerContext(): any {
-    return {
-      parent: this.parent,
-      children: this.children,
-      constraints: this.constraints
-    };
-  }
-  
-  private applyCalculatedLayout(layout: CalculatedLayout): void {
-    // Apply position
-    this.setPosition(layout.position.x, layout.position.y);
-    this.setDepth(layout.position.z);
-    
-    // Apply size
-    this.setSize(layout.size.width, layout.size.height);
-    
-    // Apply scale
-    this.setScale(layout.scale.x, layout.scale.y);
-    
-    // Apply visual properties
-    this.setAlpha(layout.visual.alpha);
-    this.setRotation(layout.visual.rotation);
-    this.setVisible(layout.visual.visible);
-    
-    // Apply background, border, shadow
-    this.applyVisualAssets(layout);
-  }
-  
-  private applyVisualAssets(layout: CalculatedLayout): void {
-    // Remove existing visual assets
-    this.removeVisualAssets();
-    
-    // Apply background
-    if (layout.background.color || layout.background.image) {
-      this.createBackground(layout.background);
-    }
-    
-    // Apply border
-    if (layout.border.color && layout.border.width > 0) {
-      this.createBorder(layout.border);
-    }
-    
-    // Apply shadow
-    if (layout.shadow.color && layout.shadow.blur > 0) {
-      this.createShadow(layout.shadow);
-    }
-  }
-  
-  private removeVisualAssets(): void {
-    const assetsToRemove = ['background-rectangle', 'container-border', 'container-shadow'];
-    assetsToRemove.forEach(name => {
-      const asset = this.getByName(name);
-      if (asset) {
-        asset.destroy();
-      }
-    });
-  }
-  
-  private createBackground(background: any): void {
-    if (background.color) {
-      const rect = this.scene.add.rectangle(
-        0, 0,
-        this.width || 100,
-        this.height || 100,
-        Phaser.Display.Color.ValueToColor(background.color).color
-      );
-      rect.setName('background-rectangle');
-      this.addAt(rect, 0);
-    }
-  }
-  
-  private createBorder(border: any): void {
-    // Implementation for border creation
-  }
-  
-  private createShadow(shadow: any): void {
-    // Implementation for shadow creation
-  }
-  
-  private getCurrentBreakpoint(): string {
-    const width = window.innerWidth;
-    if (width < LAYOUT_CONSTANTS.BREAKPOINTS.XS) return 'xs';
-    if (width < LAYOUT_CONSTANTS.BREAKPOINTS.SM) return 'sm';
-    if (width < LAYOUT_CONSTANTS.BREAKPOINTS.MD) return 'md';
-    if (width < LAYOUT_CONSTANTS.BREAKPOINTS.LG) return 'lg';
-    return 'xl';
-  }
-  
-  private getDeviceType(): string {
-    return window.innerWidth < 768 ? 'mobile' : 'desktop';
-  }
-  
-  private getOrientation(): string {
-    return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
-  }
-  
-  private getAppliedClasses(): string[] {
-    return this.injectedConfigs?.responsive?.default?.find(
-      (layout: any) => layout.id === this.id
-    )?.layoutProperties?.classes || [];
-  }
-  
-  private applyDefaultLayout(): void {
-    this.setPosition(0, 0);
-    this.setSize(LAYOUT_CONSTANTS.DIMENSIONS.DEFAULT_WIDTH, LAYOUT_CONSTANTS.DIMENSIONS.DEFAULT_HEIGHT);
-    this.setScale(LAYOUT_CONSTANTS.SCALES.DEFAULT, LAYOUT_CONSTANTS.SCALES.DEFAULT);
-    this.setAlpha(1);
-    this.setRotation(0);
-    this.setVisible(true);
+  emitBreakpointChange(breakpoint: string): void {
+    // Emit breakpoint change events
   }
 }
 ```
 
-## 🎯 Benefits of This Implementation
+---
 
-1. **Complete Separation**: Layout logic is completely separated from Container
-2. **Unit System Integration**: All calculations use the Unit System for precision
-3. **Type Safety**: Full TypeScript support with strict typing
-4. **Design Patterns**: Proper use of Strategy, Observer patterns
-5. **Constants Management**: No magic numbers or strings
-6. **Testability**: Each component can be tested independently
-7. **Maintainability**: Container class reduced from 1589 lines to ~200 lines
-8. **Extensibility**: Easy to add new strategies and observers
-9. **Performance**: Built-in caching and optimization
-10. **Responsive**: Native responsive design support
+## Migration Strategy
 
-## 🚀 Next Steps
+### 1. Gradual Migration
+**Approach**: Migrate existing code gradually
+**Benefits**:
+- Risk mitigation
+- Easy rollback
+- Learning curve
+- Feedback integration
 
-1. **Implement Phase 1-7** following the plan above
-2. **Add comprehensive tests** for each component
-3. **Create documentation** and usage examples
-4. **Performance optimization** and caching
-5. **Integration testing** with Levis2025R3Wheel configuration
+**Implementation**:
+```typescript
+// Migration phases
+Phase 1: New features use new system
+Phase 2: Existing features gradually migrate
+Phase 3: Complete migration
+Phase 4: Legacy system removal
+```
 
-This implementation will completely resolve the Container god class problem while providing a robust, type-safe, and extensible Layout System that integrates seamlessly with the Unit System and existing configurations.
+### 2. Backward Compatibility
+**Approach**: Maintain backward compatibility
+**Benefits**:
+- Smooth transition
+- No breaking changes
+- Existing code continues to work
+- Gradual adoption
+
+**Implementation**:
+```typescript
+// Backward compatibility
+class LegacyLayoutAdapter {
+  convertLegacyConfig(legacyConfig: any): ILayoutConfig {
+    // Convert legacy config to new format
+  }
+  
+  supportLegacyAPI(): void {
+    // Support legacy API calls
+  }
+}
+```
+
+### 3. Documentation & Training
+**Approach**: Comprehensive documentation and training
+**Benefits**:
+- Faster adoption
+- Reduced errors
+- Better understanding
+- Community support
+
+**Implementation**:
+```typescript
+// Documentation strategy
+- API documentation
+- Migration guides
+- Best practices
+- Video tutorials
+- Code examples
+```
+
+---
+
+## Success Metrics
+
+### 1. Performance Metrics
+- Layout calculation time < 16ms
+- Memory usage < 50MB for 1000 layouts
+- Cache hit rate > 90%
+- CPU usage < 5% during idle
+
+### 2. Quality Metrics
+- Code coverage > 90%
+- Bug rate < 1 per 1000 lines
+- Performance regression rate < 5%
+- User satisfaction > 95%
+
+### 3. Adoption Metrics
+- Migration completion rate > 80%
+- Developer satisfaction > 90%
+- Documentation usage > 70%
+- Community contributions > 10
+
+---
+
+## Risk Mitigation
+
+### 1. Technical Risks
+**Risk**: Performance issues
+**Mitigation**: Performance monitoring, optimization, caching
+
+**Risk**: Memory leaks
+**Mitigation**: Memory monitoring, garbage collection optimization
+
+**Risk**: Type safety issues
+**Mitigation**: Comprehensive testing, enum usage, strict typing
+
+### 2. Project Risks
+**Risk**: Timeline delays
+**Mitigation**: Incremental development, parallel work, early feedback
+
+**Risk**: Scope creep
+**Mitigation**: Clear requirements, phase gates, change control
+
+**Risk**: Integration issues
+**Mitigation**: Early integration, comprehensive testing, fallback plans
+
+---
+
+## Conclusion
+
+This implementation plan provides a comprehensive roadmap for developing the Layout System. The phased approach ensures:
+
+1. **Quality**: Test-driven development and comprehensive testing
+2. **Performance**: Performance-first design and optimization
+3. **Maintainability**: Modular design and clear architecture
+4. **Usability**: Comprehensive documentation and examples
+5. **Scalability**: Extensible design and performance optimization
+
+The plan is designed to be flexible and adaptable to changing requirements while maintaining focus on delivering a high-quality, performant, and maintainable layout system.

@@ -6,14 +6,6 @@
  */
 
 import { 
-  ColorName, 
-  FontFamily, 
-  FontSize, 
-  FontWeight, 
-  LineHeight,
-  SpacingScale,
-  AnimationDuration,
-  AnimationEasing,
   ThemeType,
   ThemeVariant,
   BreakpointName

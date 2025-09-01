@@ -17,7 +17,7 @@
     "test:coverage:watch": "jest --coverage --watch"
   },
   "dependencies": {
-    "phaser": "^3.70.0"
+    "phaser": "^3.90.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

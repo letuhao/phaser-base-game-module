@@ -8,7 +8,7 @@
  */
 
 // Import Unit System for compatibility
-import { SizeUnit, PositionUnit, ScaleUnit } from '../../unit';
+import { SizeUnit } from '../../unit';
 
 // ============================================================================
 // BREAKPOINT CONSTANTS
@@ -320,6 +320,20 @@ export const ANIMATION_CONSTANTS = {
     COLOR: 'color',
     BACKGROUND: 'background',
   },
+
+  // Cursor styles (inspired by CSS cursor property)
+  CURSOR: {
+    DEFAULT: 'default',
+    POINTER: 'pointer',
+    HAND: 'hand',
+    TEXT: 'text',
+    MOVE: 'move',
+    NOT_ALLOWED: 'not-allowed',
+    WAIT: 'wait',
+    CROSSHAIR: 'crosshair',
+    GRAB: 'grab',
+    GRABBING: 'grabbing',
+  },
 } as const;
 
 // ============================================================================
@@ -420,6 +434,548 @@ export const LOGGING_CONSTANTS = {
     THEME: 'theme',
     ANIMATION: 'animation',
     PERFORMANCE: 'performance',
+    VALIDATION: 'validation',
+  },
+} as const;
+
+// ============================================================================
+// GAMEOBJECT CONSTANTS
+// ============================================================================
+
+export const GAMEOBJECT_CONSTANTS = {
+  // GameObject types for Phaser objects
+  TYPES: {
+    CONTAINER: 'container',
+    RECTANGLE: 'rectangle',
+    CIRCLE: 'circle',
+    SPRITE: 'sprite',
+    TEXT: 'text',
+    IMAGE: 'image',
+    GRAPHICS: 'graphics',
+    LINE: 'line',
+    ARC: 'arc',
+    ELLIPSE: 'ellipse',
+    POLYGON: 'polygon',
+    CUSTOM: 'custom',
+  },
+
+  // GameObject states
+  STATES: {
+    CREATED: 'created',
+    INITIALIZED: 'initialized',
+    ACTIVE: 'active',
+    INACTIVE: 'inactive',
+    DESTROYED: 'destroyed',
+  },
+} as const;
+
+// ============================================================================
+// THEME CONSTANTS
+// ============================================================================
+
+export const THEME_CONSTANTS = {
+  // Theme types
+  TYPES: {
+    LIGHT: 'light',
+    DARK: 'dark',
+    AUTO: 'auto',
+    CUSTOM: 'custom',
+  },
+
+  // Theme variants
+  VARIANTS: {
+    DEFAULT: 'default',
+    PRIMARY: 'primary',
+    SECONDARY: 'secondary',
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    ERROR: 'error',
+    INFO: 'info',
+  },
+
+  // Theme modes
+  MODES: {
+    LIGHT: 'light',
+    DARK: 'dark',
+    AUTO: 'auto',
+  },
+} as const;
+
+// ============================================================================
+// STRATEGY CONSTANTS
+// ============================================================================
+
+export const STRATEGY_CONSTANTS = {
+  // Layout strategies
+  LAYOUT: {
+    FLUID: 'fluid',
+    ADAPTIVE: 'adaptive',
+    FIXED: 'fixed',
+    HYBRID: 'hybrid',
+  },
+
+  // Scale strategies
+  SCALE: {
+    STRETCH: 'stretch',
+    FIT: 'fit',
+    FILL: 'fill',
+    NONE: 'none',
+  },
+} as const;
+
+// ============================================================================
+// UNIT CONSTANTS
+// ============================================================================
+
+export const UNIT_CONSTANTS = {
+  // Unit type specifications
+  TYPE_SPECS: {
+    SIZE: 'size',
+    POSITION: 'position',
+    SCALE: 'scale',
+  },
+
+  // Unit dimensions
+  DIMENSIONS: {
+    WIDTH: 'width',
+    HEIGHT: 'height',
+    DEPTH: 'depth',
+  },
+
+  // Rounding strategies
+  ROUNDING: {
+    FLOOR: 'floor',
+    CEIL: 'ceil',
+    ROUND: 'round',
+  },
+
+  // Style composition strategies
+  COMPOSITION: {
+    MERGE: 'merge',
+    OVERRIDE: 'override',
+    EXTEND: 'extend',
+  },
+} as const;
+
+// ============================================================================
+// COMMAND PATTERN CONSTANTS
+// ============================================================================
+
+export const COMMAND_CONSTANTS = {
+  // Layout change types
+  CHANGE_TYPES: {
+    CREATE: 'create',
+    UPDATE: 'update',
+    DELETE: 'delete',
+    MOVE: 'move',
+    RESIZE: 'resize',
+    STYLE: 'style',
+  },
+} as const;
+
+// ============================================================================
+// STATE PATTERN CONSTANTS
+// ============================================================================
+
+export const STATE_CONSTANTS = {
+  // Layout state change types
+  CHANGE_TYPES: {
+    STATE_ENTER: 'state_enter',
+    STATE_EXIT: 'state_exit',
+    STATE_UPDATE: 'state_update',
+    ACTION_HANDLED: 'action_handled',
+  },
+
+  // Layout state types
+  STATE_TYPES: {
+    IDLE: 'idle',
+    CALCULATING: 'calculating',
+    CACHED: 'cached',
+    ERROR: 'error',
+    VALIDATING: 'validating',
+    TRANSITIONING: 'transitioning',
+  },
+} as const;
+
+// ============================================================================
+// CHAIN OF RESPONSIBILITY CONSTANTS
+// ============================================================================
+
+export const CHAIN_CONSTANTS = {
+  // Layout chain handler types
+  HANDLER_TYPES: {
+    VALIDATION: 'validation',
+    UNIT_CONVERSION: 'unit_conversion',
+    RESPONSIVE: 'responsive',
+    THEME: 'theme',
+    CALCULATION: 'calculation',
+    OPTIMIZATION: 'optimization',
+    CACHING: 'caching',
+  },
+} as const;
+
+// ============================================================================
+// TRANSFORM CONSTANTS
+// ============================================================================
+
+export const TRANSFORM_CONSTANTS = {
+  // Transform styles
+  STYLES: {
+    FLAT: 'flat',
+    PRESERVE_3D: 'preserve-3d',
+  },
+
+  // Backface visibility
+  BACKFACE_VISIBILITY: {
+    VISIBLE: 'visible',
+    HIDDEN: 'hidden',
+  },
+
+  // Pointer events
+  POINTER_EVENTS: {
+    AUTO: 'auto',
+    NONE: 'none',
+  },
+
+  // User select
+  USER_SELECT: {
+    AUTO: 'auto',
+    NONE: 'none',
+    TEXT: 'text',
+    ALL: 'all',
+  },
+} as const;
+
+// ============================================================================
+// REFERENCE CONSTANTS
+// ============================================================================
+
+export const REFERENCE_CONSTANTS = {
+  // Position reference types
+  POSITION: {
+    PARENT: 'parent',
+    SCENE: 'scene',
+    VIEWPORT: 'viewport',
+    ABSOLUTE: 'absolute',
+  },
+
+  // Size reference types
+  SIZE: {
+    PARENT: 'parent',
+    SCENE: 'scene',
+    VIEWPORT: 'viewport',
+    CONTENT: 'content',
+    AUTO: 'auto',
+  },
+
+  // Orientation types
+  ORIENTATION: {
+    HORIZONTAL: 'horizontal',
+    VERTICAL: 'vertical',
+  },
+
+  // Alignment self types
+  ALIGNMENT_SELF: {
+    AUTO: 'auto',
+    START: 'start',
+    END: 'end',
+    CENTER: 'center',
+    STRETCH: 'stretch',
+  },
+
+  // Pattern repeat types
+  PATTERN_REPEAT: {
+    REPEAT: 'repeat',
+    REPEAT_X: 'repeat-x',
+    REPEAT_Y: 'repeat-y',
+    NO_REPEAT: 'no-repeat',
+  },
+
+  // Gradient types
+  GRADIENT: {
+    LINEAR: 'linear',
+    RADIAL: 'radial',
+    CONIC: 'conic',
+  },
+
+  // Animation event types
+  ANIMATION_EVENT: {
+    START: 'start',
+    END: 'end',
+    ITERATION: 'iteration',
+    CANCEL: 'cancel',
+  },
+
+  // Performance alert types
+  PERFORMANCE_ALERT: {
+    WARNING: 'warning',
+    ERROR: 'error',
+    CRITICAL: 'critical',
+  },
+
+  // Alignment reference types
+  ALIGNMENT_REFERENCE: {
+    PARENT: 'parent',
+    SIBLINGS: 'siblings',
+    CONTAINER: 'container',
+  },
+
+  // Display types
+  DISPLAY: {
+    BLOCK: 'block',
+    INLINE: 'inline',
+    NONE: 'none',
+  },
+
+  // Background size types
+  BACKGROUND_SIZE: {
+    COVER: 'cover',
+    CONTAIN: 'contain',
+    AUTO: 'auto',
+    FULL: '100%',
+    INITIAL: 'initial',
+  },
+
+  // Background position types
+  BACKGROUND_POSITION: {
+    CENTER: 'center',
+    TOP: 'top',
+    BOTTOM: 'bottom',
+    LEFT: 'left',
+    RIGHT: 'right',
+  },
+
+  // Background attachment types
+  BACKGROUND_ATTACHMENT: {
+    SCROLL: 'scroll',
+    FIXED: 'fixed',
+    LOCAL: 'local',
+  },
+
+  // Background repeat types
+  BACKGROUND_REPEAT: {
+    NO_REPEAT: 'no-repeat',
+    REPEAT: 'repeat',
+    REPEAT_X: 'repeat-x',
+    REPEAT_Y: 'repeat-y',
+  },
+
+  // Background clip types
+  BACKGROUND_CLIP: {
+    BORDER_BOX: 'border-box',
+    PADDING_BOX: 'padding-box',
+    CONTENT_BOX: 'content-box',
+  },
+
+  // Text transform types
+  TEXT_TRANSFORM: {
+    NONE: 'none',
+    CAPITALIZE: 'capitalize',
+    UPPERCASE: 'uppercase',
+    LOWERCASE: 'lowercase',
+  },
+
+  // Text overflow types
+  TEXT_OVERFLOW: {
+    CLIP: 'clip',
+    ELLIPSIS: 'ellipsis',
+    FADE: 'fade',
+  },
+
+  // White space types
+  WHITE_SPACE: {
+    NORMAL: 'normal',
+    NOWRAP: 'nowrap',
+    PRE: 'pre',
+    PRE_WRAP: 'pre-wrap',
+    PRE_LINE: 'pre-line',
+  },
+
+  // CSS unit types
+  CSS_UNIT: {
+    PX: 'px',
+    EM: 'em',
+    REM: 'rem',
+    PERCENT: '%',
+    VW: 'vw',
+    VH: 'vh',
+  },
+
+  // Button state types
+  BUTTON_STATE: {
+    IDLE: 'idle',
+    HOVER: 'hover',
+    ACTIVE: 'active',
+    DISABLED: 'disabled',
+  },
+
+  // Physics body type types
+  PHYSICS_BODY_TYPE: {
+    STATIC: 'static',
+    DYNAMIC: 'dynamic',
+    KINEMATIC: 'kinematic',
+  },
+
+  // Priority levels
+  PRIORITY_LEVEL: {
+    LOW: 'low',
+    MEDIUM: 'medium',
+    HIGH: 'high',
+  },
+
+  // Value types
+  VALUE_TYPE: {
+    NUMBER: 'number',
+    PERCENTAGE: 'percentage',
+    UNIT: 'unit',
+    KEYWORD: 'keyword',
+  },
+
+  // Extended value types (includes auto)
+  EXTENDED_VALUE_TYPE: {
+    NUMBER: 'number',
+    PERCENTAGE: 'percentage',
+    UNIT: 'unit',
+    KEYWORD: 'keyword',
+    AUTO: 'auto',
+  },
+
+  // Border image repeat types
+  BORDER_IMAGE_REPEAT: {
+    STRETCH: 'stretch',
+    REPEAT: 'repeat',
+    ROUND: 'round',
+    SPACE: 'space',
+  },
+
+  // Horizontal alignment values
+  HORIZONTAL_ALIGNMENT_VALUE: {
+    LEFT: 'left',
+    CENTER: 'center',
+    RIGHT: 'right',
+    START: 'start',
+    END: 'end',
+    STRETCH: 'stretch',
+  },
+
+  // Vertical alignment values
+  VERTICAL_ALIGNMENT_VALUE: {
+    TOP: 'top',
+    MIDDLE: 'middle',
+    BOTTOM: 'bottom',
+    START: 'start',
+    END: 'end',
+    STRETCH: 'stretch',
+  },
+
+  // Border style values
+  BORDER_STYLE_VALUE: {
+    NONE: 'none',
+    SOLID: 'solid',
+    DASHED: 'dashed',
+    DOTTED: 'dotted',
+    DOUBLE: 'double',
+    GROOVE: 'groove',
+    RIDGE: 'ridge',
+    INSET: 'inset',
+    OUTSET: 'outset',
+  },
+
+  // Text decoration values
+  TEXT_DECORATION_VALUE: {
+    NONE: 'none',
+    UNDERLINE: 'underline',
+    OVERLINE: 'overline',
+    LINE_THROUGH: 'line-through',
+    BLINK: 'blink',
+  },
+
+  // Animation direction values
+  ANIMATION_DIRECTION_VALUE: {
+    NORMAL: 'normal',
+    REVERSE: 'reverse',
+    ALTERNATE: 'alternate',
+    ALTERNATE_REVERSE: 'alternate-reverse',
+  },
+
+  // Animation fill mode values
+  ANIMATION_FILL_MODE_VALUE: {
+    NONE: 'none',
+    FORWARDS: 'forwards',
+    BACKWARDS: 'backwards',
+    BOTH: 'both',
+  },
+
+  // Shadow filter types
+  SHADOW_FILTER: {
+    DROP_SHADOW: 'drop-shadow',
+    BOX_SHADOW: 'box-shadow',
+  },
+} as const;
+
+// ============================================================================
+// UTILITY CONSTANTS
+// ============================================================================
+
+export const UTILITY_CONSTANTS = {
+  // Common values
+  VALUES: {
+    NONE: 'none',
+    AUTO: 'auto',
+    INITIAL: 'initial',
+    INHERIT: 'inherit',
+    UNSET: 'unset',
+  },
+
+  // Common numbers
+  NUMBERS: {
+    ZERO: 0,
+    ONE: 1,
+    HALF: 0.5,
+    QUARTER: 0.25,
+    THIRD: 0.333,
+    TWO_THIRDS: 0.667,
+    THREE_QUARTERS: 0.75,
+  },
+
+  // Common percentages
+  PERCENTAGES: {
+    ZERO: '0%',
+    QUARTER: '25%',
+    THIRD: '33.333%',
+    HALF: '50%',
+    TWO_THIRDS: '66.667%',
+    THREE_QUARTERS: '75%',
+    FULL: '100%',
+  },
+
+  // Common angles
+  ANGLES: {
+    ZERO: '0deg',
+    QUARTER: '90deg',
+    HALF: '180deg',
+    THREE_QUARTERS: '270deg',
+    FULL: '360deg',
+  },
+
+  // Common durations
+  DURATIONS: {
+    INSTANT: 0,
+    FAST: 150,
+    NORMAL: 300,
+    SLOW: 500,
+    SLOWER: 1000,
+  },
+
+  // Common easing functions
+  EASING: {
+    LINEAR: 'linear',
+    EASE: 'ease',
+    EASE_IN: 'ease-in',
+    EASE_OUT: 'ease-out',
+    EASE_IN_OUT: 'ease-in-out',
+    BOUNCE: 'bounce',
+    ELASTIC: 'elastic',
   },
 } as const;
 
@@ -439,4 +995,14 @@ export const LAYOUT_SYSTEM_CONSTANTS = {
   PERFORMANCE: PERFORMANCE_CONSTANTS,
   VALIDATION: VALIDATION_CONSTANTS,
   LOGGING: LOGGING_CONSTANTS,
+  GAMEOBJECT: GAMEOBJECT_CONSTANTS,
+  THEME: THEME_CONSTANTS,
+  STRATEGY: STRATEGY_CONSTANTS,
+  UNIT: UNIT_CONSTANTS,
+  COMMAND: COMMAND_CONSTANTS,
+  STATE: STATE_CONSTANTS,
+  CHAIN: CHAIN_CONSTANTS,
+  TRANSFORM: TRANSFORM_CONSTANTS,
+  REFERENCE: REFERENCE_CONSTANTS,
+  UTILITY: UTILITY_CONSTANTS,
 } as const;

@@ -23,7 +23,26 @@ import {
   TextAlign,
   CursorStyle,
   AnimationEasing,
-  BreakpointName
+  BreakpointName,
+  HorizontalAlignment,
+  VerticalAlignment,
+  SizeValueType,
+  BorderStyle,
+  TextBaseline,
+  TextDecoration,
+  AnimationDirection,
+  AnimationFillMode,
+  AnimationPlayState,
+  AnimationIterationCount,
+  TransformStyle,
+  BackfaceVisibility,
+  PointerEvents,
+  UserSelect,
+  ThemeMode,
+  UnitTypeSpec,
+  UnitDimension,
+  RoundingStrategy,
+  StyleCompositionStrategy
 } from '../enums/LayoutEnums';
 
 // ============================================================================
@@ -115,19 +134,19 @@ export interface IStyle extends IBaseStyle {
  */
 export interface ILayoutStyle {
   /** X position with Unit System support */
-  positionX?: number | PositionValue | PositionUnit | 'center' | 'left' | 'right' | IRandomValueNumber;
+  positionX?: number | PositionValue | PositionUnit | HorizontalAlignment | IRandomValueNumber;
   
   /** Y position with Unit System support */
-  positionY?: number | PositionValue | PositionUnit | 'center' | 'top' | 'bottom' | IRandomValueNumber;
+  positionY?: number | PositionValue | PositionUnit | VerticalAlignment | IRandomValueNumber;
   
   /** Z position (depth) */
   positionZ?: number | IRandomValueNumber;
   
   /** Width with Unit System support */
-  width?: number | SizeValue | SizeUnit | 'fill' | 'auto' | IRandomValueNumber;
+  width?: number | SizeValue | SizeUnit | SizeValueType | IRandomValueNumber;
   
   /** Height with Unit System support */
-  height?: number | SizeValue | SizeUnit | 'fill' | 'auto' | IRandomValueNumber;
+  height?: number | SizeValue | SizeUnit | SizeValueType | IRandomValueNumber;
   
   /** Position type */
   position?: PositionType;
@@ -223,7 +242,7 @@ export interface IBorderStyle {
   borderRadius?: number | IRandomValueNumber;
   
   /** Border style */
-  borderStyle?: 'solid' | 'dashed' | 'dotted' | 'none';
+  borderStyle?: BorderStyle;
   
   /** Border top width */
   borderTopWidth?: number | IRandomValueNumber;
@@ -342,10 +361,10 @@ export interface ITextStyle {
   wordWrapWidth?: number | IRandomValueNumber;
   
   /** Text baseline */
-  textBaseline?: 'top' | 'hanging' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom';
+  textBaseline?: TextBaseline;
   
   /** Text decoration */
-  textDecoration?: 'none' | 'underline' | 'line-through' | 'overline';
+  textDecoration?: TextDecoration;
 }
 
 // ============================================================================
@@ -404,10 +423,10 @@ export interface ITransformStyle {
   transformOriginZ?: number | IRandomValueNumber;
   
   /** Transform style */
-  transformStyle?: 'flat' | 'preserve-3d';
+  transformStyle?: TransformStyle;
   
   /** Backface visibility */
-  backfaceVisibility?: 'visible' | 'hidden';
+  backfaceVisibility?: BackfaceVisibility;
 }
 
 // ============================================================================
@@ -432,16 +451,16 @@ export interface IAnimationStyle {
   delay?: number | IRandomValueNumber;
   
   /** Animation direction */
-  direction?: 'normal' | 'reverse' | 'alternate' | 'alternate-reverse';
+  direction?: AnimationDirection;
   
   /** Animation fill mode */
-  fillMode?: 'none' | 'forwards' | 'backwards' | 'both';
+  fillMode?: AnimationFillMode;
   
   /** Animation iteration count */
-  iterationCount?: number | 'infinite';
+  iterationCount?: number | AnimationIterationCount;
   
   /** Animation play state */
-  playState?: 'running' | 'paused';
+  playState?: AnimationPlayState;
   
   /** Animation timing function */
   timingFunction?: string;
@@ -500,10 +519,10 @@ export interface IInteractiveStyle {
   cursor?: CursorStyle;
   
   /** Whether to enable pointer events */
-  pointerEvents?: 'auto' | 'none';
+  pointerEvents?: PointerEvents;
   
   /** Whether to enable user selection */
-  userSelect?: 'auto' | 'none' | 'text' | 'all';
+  userSelect?: UserSelect;
   
   /** Whether to enable drag */
   draggable?: boolean;
@@ -555,7 +574,7 @@ export interface IThemeStyle {
   variant?: string;
   
   /** Theme mode */
-  mode?: 'light' | 'dark' | 'auto';
+  mode?: ThemeMode;
   
   /** Theme context */
   context?: Record<string, unknown>;
@@ -571,10 +590,10 @@ export interface IThemeStyle {
  */
 export interface IUnitStyle {
   /** Unit type specification */
-  unitType?: 'size' | 'position' | 'scale';
+  unitType?: UnitTypeSpec;
   
   /** Unit dimension */
-  dimension?: 'width' | 'height' | 'depth';
+  dimension?: UnitDimension;
   
   /** Unit constraints */
   constraints?: {
@@ -594,7 +613,7 @@ export interface IUnitStyle {
   conversion?: {
     autoConvert?: boolean;
     precision?: number;
-    rounding?: 'floor' | 'ceil' | 'round';
+    rounding?: RoundingStrategy;
   };
 }
 
@@ -642,7 +661,7 @@ export interface IStyleComposition {
   aspects: Partial<IStyle>[];
   
   /** Composition strategy */
-  strategy: 'merge' | 'override' | 'extend';
+  strategy: StyleCompositionStrategy;
   
   /** Priority order for resolution */
   priority?: number[];

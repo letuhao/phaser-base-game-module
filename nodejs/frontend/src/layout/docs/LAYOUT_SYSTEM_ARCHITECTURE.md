@@ -9,7 +9,7 @@ The Layout System is a comprehensive, type-safe framework that handles all layou
 1. **Single Responsibility**: Layout System handles only layout concerns
 2. **Unit System Integration**: All calculations use the Unit System
 3. **Type Safety**: Full TypeScript support with strict typing
-4. **Design Patterns**: Strategy, Observer, Decorator, Template Method, Factory
+4. **Design Patterns**: Strategy, Observer, Decorator, Template Method, Factory, Command, State, Chain of Responsibility, Dependency Injection, Plugin System
 5. **Constants Management**: No magic numbers or strings
 6. **Responsive First**: Built-in responsive design support
 7. **Theme Integration**: Seamless theme system integration
@@ -26,7 +26,13 @@ Layout System
 │   ├── ILayoutSystem.ts           # Main interface
 │   ├── ILayoutStrategy.ts         # Strategy pattern
 │   ├── ILayoutObserver.ts         # Observer pattern
-│   └── ILayoutConfig.ts           # Configuration interface
+│   ├── ILayoutConfig.ts           # Configuration interface
+│   ├── ILayoutCommand.ts          # Command pattern
+│   ├── ILayoutState.ts            # State pattern
+│   ├── ILayoutChain.ts            # Chain of Responsibility
+│   ├── IDIContainer.ts            # Dependency injection
+│   ├── IPluginSystem.ts           # Plugin system
+│   └── IGranularInterfaces.ts     # Interface segregation
 ├── Strategies/
 │   ├── ResponsiveLayoutStrategy.ts
 │   ├── ThemeLayoutStrategy.ts
@@ -36,6 +42,27 @@ Layout System
 │   ├── LayoutChangeObserver.ts
 │   ├── ResponsiveObserver.ts
 │   └── ThemeObserver.ts
+├── Commands/
+│   ├── LayoutCommand.ts
+│   ├── LayoutCommandInvoker.ts
+│   └── LayoutCommandHistory.ts
+├── States/
+│   ├── LayoutState.ts
+│   ├── LayoutStateContext.ts
+│   └── LayoutStateManager.ts
+├── Chains/
+│   ├── LayoutChainHandler.ts
+│   ├── ValidationHandler.ts
+│   ├── UnitConversionHandler.ts
+│   └── ResponsiveHandler.ts
+├── DI/
+│   ├── DIContainer.ts
+│   ├── ServiceRegistry.ts
+│   └── ServiceResolver.ts
+├── Plugins/
+│   ├── PluginManager.ts
+│   ├── PluginLoader.ts
+│   └── ExtensionPoint.ts
 ├── Decorators/
 │   ├── CachingLayoutDecorator.ts
 │   ├── ValidationLayoutDecorator.ts

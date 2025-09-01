@@ -168,7 +168,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     let oldestMemento: Date | undefined;
     let newestMemento: Date | undefined;
 
-    for (const unitMementos of this.mementos.values()) {
+    for (const unitMementos of Array.from(this.mementos.values())) {
       totalMementos += unitMementos.length;
 
       for (const memento of unitMementos) {
@@ -365,7 +365,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
    * Enforce maximum mementos per unit limit
    */
   private enforceMementosPerUnitLimit(): void {
-    for (const [_unitId, unitMementos] of this.mementos.entries()) {
+    for (const [_unitId, unitMementos] of Array.from(this.mementos.entries())) {
       while (unitMementos.length > this.maxMementosPerUnit) {
         const removed = unitMementos.shift();
         if (removed) {
@@ -390,7 +390,7 @@ export class UnitMementoCaretaker implements IUnitMementoCaretaker {
     // Remove oldest mementos across all units
     const allMementos: Array<{ unitId: string; memento: IUnitMemento }> = [];
 
-    for (const [unitId, unitMementos] of this.mementos.entries()) {
+    for (const [unitId, unitMementos] of Array.from(this.mementos.entries())) {
       for (const memento of unitMementos) {
         allMementos.push({ unitId, memento });
       }
