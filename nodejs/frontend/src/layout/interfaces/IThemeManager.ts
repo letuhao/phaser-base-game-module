@@ -11,7 +11,7 @@ import { ThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
 /**
  * Theme manager interface
  * Manages the lifecycle and switching of themes
- * 
+ *
  * NOTE: This interface now uses the segregated structure for better ISP compliance
  * For new implementations, consider using the individual interfaces directly
  */

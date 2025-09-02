@@ -1,20 +1,23 @@
 /**
  * Theme Manager - Core Theme Management
- * 
+ *
  * Minimal implementation focused on getting the fortune wheel game running.
  * Provides essential theme registration, switching, and application functionality.
  */
 
 import { ITheme, IThemeClass } from '../interfaces/ITheme';
-import { IThemeManager, IThemeListener, IThemeStatistics, IThemeConfiguration } from '../interfaces/IThemeManager';
+import {
+  IThemeManager,
+  IThemeListener,
+  IThemeStatistics,
+  IThemeConfiguration,
+} from '../interfaces/IThemeManager';
 import { ThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
 import { logger } from '../../core/Logger';
 
-
-
 /**
  * Core Theme Manager Implementation
- * 
+ *
  * Provides essential theme management functionality:
  * - Theme registration and storage
  * - Active theme management
@@ -68,14 +71,14 @@ export class ThemeManager implements IThemeManager {
    */
   async initialize(defaultTheme?: string): Promise<void> {
     logger.info('ThemeManager', 'initialize', 'Initializing theme manager', { defaultTheme });
-    
+
     try {
       this.isInitializedInstance = true;
-      
+
       if (defaultTheme && this.themesMap.has(defaultTheme)) {
         await this.activateTheme(defaultTheme);
       }
-      
+
       logger.info('ThemeManager', 'initialize', 'Theme manager initialized successfully');
     } catch (error) {
       logger.error('ThemeManager', 'initialize', 'Failed to initialize theme manager', { error });
@@ -88,20 +91,25 @@ export class ThemeManager implements IThemeManager {
    */
   registerTheme(theme: ITheme): void {
     logger.info('ThemeManager', 'registerTheme', 'Registering theme', { themeId: theme.id });
-    
+
     try {
       // Validate theme
       this.validateTheme(theme);
-      
+
       // Store theme
       this.themesMap.set(theme.id, theme);
-      
+
       // Cache theme classes for performance
       this.cacheThemeClasses(theme);
-      
-      logger.info('ThemeManager', 'registerTheme', 'Theme registered successfully', { themeId: theme.id });
+
+      logger.info('ThemeManager', 'registerTheme', 'Theme registered successfully', {
+        themeId: theme.id,
+      });
     } catch (error) {
-      logger.error('ThemeManager', 'registerTheme', 'Failed to register theme', { error, themeId: theme.id });
+      logger.error('ThemeManager', 'registerTheme', 'Failed to register theme', {
+        error,
+        themeId: theme.id,
+      });
       throw error;
     }
   }
@@ -111,30 +119,37 @@ export class ThemeManager implements IThemeManager {
    */
   unregisterTheme(id: string): boolean {
     logger.info('ThemeManager', 'unregisterTheme', 'Unregistering theme', { themeId: id });
-    
+
     try {
       // Don't allow unregistering the active theme
       if (this.activeThemeInstance?.id === id) {
-        logger.warn('ThemeManager', 'unregisterTheme', 'Cannot unregister active theme', { themeId: id });
+        logger.warn('ThemeManager', 'unregisterTheme', 'Cannot unregister active theme', {
+          themeId: id,
+        });
         return false;
       }
-      
+
       // Check if theme exists
       if (!this.themesMap.has(id)) {
         logger.warn('ThemeManager', 'unregisterTheme', 'Theme not found', { themeId: id });
         return false;
       }
-      
+
       // Remove from storage
       this.themesMap.delete(id);
-      
+
       // Clear cache
       this.clearThemeCache(id);
-      
-      logger.info('ThemeManager', 'unregisterTheme', 'Theme unregistered successfully', { themeId: id });
+
+      logger.info('ThemeManager', 'unregisterTheme', 'Theme unregistered successfully', {
+        themeId: id,
+      });
       return true;
     } catch (error) {
-      logger.error('ThemeManager', 'unregisterTheme', 'Failed to unregister theme', { error, themeId: id });
+      logger.error('ThemeManager', 'unregisterTheme', 'Failed to unregister theme', {
+        error,
+        themeId: id,
+      });
       return false;
     }
   }
@@ -196,7 +211,7 @@ export class ThemeManager implements IThemeManager {
    */
   async activateTheme(themeId: string): Promise<void> {
     logger.info('ThemeManager', 'activateTheme', 'Activating theme', { themeId });
-    
+
     try {
       const theme = this.themesMap.get(themeId);
       if (!theme) {
@@ -211,13 +226,13 @@ export class ThemeManager implements IThemeManager {
       // Activate new theme
       this.activeThemeInstance = theme;
       this.currentThemeTypeInstance = theme.type;
-      
+
       // Apply theme to DOM
       await this.applyThemeToDOM(theme);
-      
+
       // Notify listeners
       this.notifyThemeActivated(theme);
-      
+
       logger.info('ThemeManager', 'activateTheme', 'Theme activated successfully', { themeId });
     } catch (error) {
       logger.error('ThemeManager', 'activateTheme', 'Failed to activate theme', { error, themeId });
@@ -230,21 +245,24 @@ export class ThemeManager implements IThemeManager {
    */
   async deactivateTheme(themeId: string): Promise<void> {
     logger.info('ThemeManager', 'deactivateTheme', 'Deactivating theme', { themeId });
-    
+
     try {
       if (this.activeThemeInstance?.id === themeId) {
         // Remove theme from DOM
         await this.removeThemeFromDOM(this.activeThemeInstance);
-        
+
         // Notify listeners
         this.notifyThemeDeactivated(this.activeThemeInstance);
-        
+
         this.activeThemeInstance = null;
       }
-      
+
       logger.info('ThemeManager', 'deactivateTheme', 'Theme deactivated successfully', { themeId });
     } catch (error) {
-      logger.error('ThemeManager', 'deactivateTheme', 'Failed to deactivate theme', { error, themeId });
+      logger.error('ThemeManager', 'deactivateTheme', 'Failed to deactivate theme', {
+        error,
+        themeId,
+      });
       throw error;
     }
   }
@@ -316,7 +334,7 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.themeClasses) {
       return undefined;
     }
-    
+
     return this.activeThemeInstance.themeClasses[className];
   }
 
@@ -327,11 +345,11 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.colors) {
       return '#000000'; // Default black color
     }
-    
+
     // Simple path resolution (e.g., "primary.main" -> colors.primary.main)
     const pathParts = path.split('.');
     let current: any = this.activeThemeInstance.colors;
-    
+
     for (const part of pathParts) {
       if (current && typeof current === 'object' && part in current) {
         current = current[part];
@@ -339,7 +357,7 @@ export class ThemeManager implements IThemeManager {
         return '#000000'; // Default black color
       }
     }
-    
+
     return typeof current === 'string' ? current : '#000000';
   }
 
@@ -350,8 +368,11 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.spacing?.scale) {
       return 0;
     }
-    
-    const spacingValue = this.activeThemeInstance.spacing.scale[size as keyof typeof this.activeThemeInstance.spacing.scale];
+
+    const spacingValue =
+      this.activeThemeInstance.spacing.scale[
+        size as keyof typeof this.activeThemeInstance.spacing.scale
+      ];
     return typeof spacingValue === 'number' ? spacingValue : 0;
   }
 
@@ -362,8 +383,11 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.typography?.fontSize) {
       return 16; // Default font size
     }
-    
-    const fontSizeValue = this.activeThemeInstance.typography.fontSize[size as keyof typeof this.activeThemeInstance.typography.fontSize];
+
+    const fontSizeValue =
+      this.activeThemeInstance.typography.fontSize[
+        size as keyof typeof this.activeThemeInstance.typography.fontSize
+      ];
     return typeof fontSizeValue === 'number' ? fontSizeValue : 16;
   }
 
@@ -374,8 +398,11 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.borderRadius) {
       return 0;
     }
-    
-    const borderRadiusValue = this.activeThemeInstance.borderRadius[size as keyof typeof this.activeThemeInstance.borderRadius];
+
+    const borderRadiusValue =
+      this.activeThemeInstance.borderRadius[
+        size as keyof typeof this.activeThemeInstance.borderRadius
+      ];
     return typeof borderRadiusValue === 'number' ? borderRadiusValue : 0;
   }
 
@@ -386,8 +413,9 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.shadows) {
       return 'none';
     }
-    
-    const shadowValue = this.activeThemeInstance.shadows[size as keyof typeof this.activeThemeInstance.shadows];
+
+    const shadowValue =
+      this.activeThemeInstance.shadows[size as keyof typeof this.activeThemeInstance.shadows];
     return typeof shadowValue === 'string' ? shadowValue : 'none';
   }
 
@@ -398,8 +426,11 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.animation?.duration) {
       return 300; // Default 300ms
     }
-    
-    const durationValue = this.activeThemeInstance.animation.duration[size as keyof typeof this.activeThemeInstance.animation.duration];
+
+    const durationValue =
+      this.activeThemeInstance.animation.duration[
+        size as keyof typeof this.activeThemeInstance.animation.duration
+      ];
     return typeof durationValue === 'number' ? durationValue : 300;
   }
 
@@ -410,7 +441,7 @@ export class ThemeManager implements IThemeManager {
     if (!this.activeThemeInstance?.breakpoints) {
       return false;
     }
-    
+
     return breakpoint in this.activeThemeInstance.breakpoints;
   }
 
@@ -507,13 +538,13 @@ export class ThemeManager implements IThemeManager {
       performance: {
         totalSwitchTime: 0,
         switchesPerSecond: 0,
-        cacheEfficiency: 0
+        cacheEfficiency: 0,
       },
       themeTypes: {
         light: this.getThemesByType(ThemeType.LIGHT).length,
         dark: this.getThemesByType(ThemeType.DARK).length,
         auto: this.getThemesByType(ThemeType.AUTO).length,
-        custom: this.getThemesByType(ThemeType.CUSTOM).length
+        custom: this.getThemesByType(ThemeType.CUSTOM).length,
       },
       themeVariants: {
         default: 0, // TODO: Implement variant counting
@@ -522,8 +553,8 @@ export class ThemeManager implements IThemeManager {
         success: 0,
         warning: 0,
         error: 0,
-        info: 0
-      }
+        info: 0,
+      },
     };
   }
 
@@ -540,9 +571,9 @@ export class ThemeManager implements IThemeManager {
       metadata: {
         version: '1.0.0',
         exportedAt: new Date(),
-        exportedBy: 'ThemeManager'
+        exportedBy: 'ThemeManager',
       },
-      theme: theme
+      theme: theme,
     };
 
     return JSON.stringify(config, null, 2);
@@ -595,11 +626,11 @@ export class ThemeManager implements IThemeManager {
     if (!theme.id || !theme.name) {
       throw new Error('Theme must have id and name');
     }
-    
+
     if (!theme.colors) {
       throw new Error('Theme must have colors defined');
     }
-    
+
     if (!theme.typography) {
       throw new Error('Theme must have typography defined');
     }
@@ -621,13 +652,13 @@ export class ThemeManager implements IThemeManager {
    */
   private clearThemeCache(themeId: string): void {
     const keysToDelete: string[] = [];
-    
+
     this.themeCacheMap.forEach((_, key) => {
       if (key.startsWith(`${themeId}:`)) {
         keysToDelete.push(key);
       }
     });
-    
+
     keysToDelete.forEach(key => this.themeCacheMap.delete(key));
   }
 
@@ -638,15 +669,18 @@ export class ThemeManager implements IThemeManager {
     try {
       // Create or update CSS custom properties
       this.injectCSSVariables(theme);
-      
+
       // Apply theme classes to body
       if (theme.themeClasses) {
         this.applyThemeClasses(theme);
       }
-      
+
       logger.info('ThemeManager', 'applyThemeToDOM', 'Theme applied to DOM', { themeId: theme.id });
     } catch (error) {
-      logger.error('ThemeManager', 'applyThemeToDOM', 'Failed to apply theme to DOM', { error, themeId: theme.id });
+      logger.error('ThemeManager', 'applyThemeToDOM', 'Failed to apply theme to DOM', {
+        error,
+        themeId: theme.id,
+      });
       throw error;
     }
   }
@@ -658,10 +692,15 @@ export class ThemeManager implements IThemeManager {
     try {
       // Remove theme-specific CSS classes
       this.removeThemeClasses(theme);
-      
-      logger.info('ThemeManager', 'removeThemeFromDOM', 'Theme removed from DOM', { themeId: theme.id });
+
+      logger.info('ThemeManager', 'removeThemeFromDOM', 'Theme removed from DOM', {
+        themeId: theme.id,
+      });
     } catch (error) {
-      logger.error('ThemeManager', 'removeThemeFromDOM', 'Failed to remove theme from DOM', { error, themeId: theme.id });
+      logger.error('ThemeManager', 'removeThemeFromDOM', 'Failed to remove theme from DOM', {
+        error,
+        themeId: theme.id,
+      });
       throw error;
     }
   }
@@ -671,19 +710,19 @@ export class ThemeManager implements IThemeManager {
    */
   private injectCSSVariables(theme: ITheme): void {
     const root = document.documentElement;
-    
+
     // Inject color variables
     if (theme.colors) {
       this.injectColorVariables(root, theme.colors, '--theme-color');
     }
-    
+
     // Inject spacing variables
     if (theme.spacing?.scale) {
       Object.entries(theme.spacing.scale).forEach(([key, value]) => {
         root.style.setProperty(`--theme-spacing-${key}`, `${value}px`);
       });
     }
-    
+
     // Inject typography variables
     if (theme.typography?.fontSize) {
       Object.entries(theme.typography.fontSize).forEach(([key, value]) => {
@@ -710,10 +749,10 @@ export class ThemeManager implements IThemeManager {
    */
   private applyThemeClasses(theme: ITheme): void {
     const body = document.body;
-    
+
     // Add theme identifier class
     body.classList.add(`theme-${theme.id}`);
-    
+
     // Apply theme classes
     if (theme.themeClasses) {
       Object.keys(theme.themeClasses).forEach(selector => {
@@ -728,10 +767,10 @@ export class ThemeManager implements IThemeManager {
    */
   private removeThemeClasses(theme: ITheme): void {
     const body = document.body;
-    
+
     // Remove theme identifier class
     body.classList.remove(`theme-${theme.id}`);
-    
+
     // Remove theme classes
     if (theme.themeClasses) {
       Object.keys(theme.themeClasses).forEach(selector => {
@@ -749,7 +788,10 @@ export class ThemeManager implements IThemeManager {
       try {
         listener.onThemeActivated?.(theme, this.activeThemeInstance);
       } catch (error) {
-        logger.error('ThemeManager', 'notifyThemeActivated', 'Error in theme listener', { error, themeId: theme.id });
+        logger.error('ThemeManager', 'notifyThemeActivated', 'Error in theme listener', {
+          error,
+          themeId: theme.id,
+        });
       }
     });
   }
@@ -762,7 +804,10 @@ export class ThemeManager implements IThemeManager {
       try {
         listener.onThemeDeactivated?.(theme, null);
       } catch (error) {
-        logger.error('ThemeManager', 'notifyThemeDeactivated', 'Error in theme listener', { error, themeId: theme.id });
+        logger.error('ThemeManager', 'notifyThemeDeactivated', 'Error in theme listener', {
+          error,
+          themeId: theme.id,
+        });
       }
     });
   }

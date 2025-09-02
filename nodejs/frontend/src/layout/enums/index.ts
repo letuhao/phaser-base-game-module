@@ -13,11 +13,7 @@ export * from './LayoutEnums';
 // BREAKPOINT ENUMS (Only unique enums to avoid conflicts)
 // ============================================================================
 
-export {
-  BreakpointOperator,
-  DeviceOrientation,
-  DeviceType
-} from './BreakpointEnums';
+export { BreakpointOperator, DeviceOrientation, DeviceType } from './BreakpointEnums';
 
 // ============================================================================
 // THEME ENUMS

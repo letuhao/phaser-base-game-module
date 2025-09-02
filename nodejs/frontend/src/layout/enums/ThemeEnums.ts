@@ -18,7 +18,7 @@ export enum CursorType {
   WAIT = 'wait',
   CROSSHAIR = 'crosshair',
   GRAB = 'grab',
-  GRABBING = 'grabbing'
+  GRABBING = 'grabbing',
 }
 
 // ============================================================================
@@ -29,13 +29,13 @@ export enum FlexDirection {
   ROW = 'row',
   ROW_REVERSE = 'row-reverse',
   COLUMN = 'column',
-  COLUMN_REVERSE = 'column-reverse'
+  COLUMN_REVERSE = 'column-reverse',
 }
 
 export enum FlexWrap {
   NOWRAP = 'nowrap',
   WRAP = 'wrap',
-  WRAP_REVERSE = 'wrap-reverse'
+  WRAP_REVERSE = 'wrap-reverse',
 }
 
 export enum JustifyContent {
@@ -44,7 +44,7 @@ export enum JustifyContent {
   CENTER = 'center',
   SPACE_BETWEEN = 'space-between',
   SPACE_AROUND = 'space-around',
-  SPACE_EVENLY = 'space-evenly'
+  SPACE_EVENLY = 'space-evenly',
 }
 
 export enum AlignItems {
@@ -52,7 +52,7 @@ export enum AlignItems {
   FLEX_START = 'flex-start',
   FLEX_END = 'flex-end',
   CENTER = 'center',
-  BASELINE = 'baseline'
+  BASELINE = 'baseline',
 }
 
 export enum AlignSelf {
@@ -61,7 +61,7 @@ export enum AlignSelf {
   FLEX_END = 'flex-end',
   CENTER = 'center',
   BASELINE = 'baseline',
-  STRETCH = 'stretch'
+  STRETCH = 'stretch',
 }
 
 // ============================================================================
@@ -71,7 +71,7 @@ export enum AlignSelf {
 export enum VisibilityType {
   VISIBLE = 'visible',
   HIDDEN = 'hidden',
-  COLLAPSE = 'collapse'
+  COLLAPSE = 'collapse',
 }
 
 // ============================================================================
@@ -80,7 +80,7 @@ export enum VisibilityType {
 
 export enum FontVariant {
   NORMAL = 'normal',
-  SMALL_CAPS = 'small-caps'
+  SMALL_CAPS = 'small-caps',
 }
 
 // ============================================================================
@@ -91,13 +91,13 @@ export enum WordBreak {
   NORMAL = 'normal',
   BREAK_ALL = 'break-all',
   KEEP_ALL = 'keep-all',
-  BREAK_WORD = 'break-word'
+  BREAK_WORD = 'break-word',
 }
 
 export enum OverflowWrap {
   NORMAL = 'normal',
   BREAK_WORD = 'break-word',
-  ANYWHERE = 'anywhere'
+  ANYWHERE = 'anywhere',
 }
 
 // ============================================================================
@@ -106,7 +106,7 @@ export enum OverflowWrap {
 
 export enum BoxSizing {
   CONTENT_BOX = 'content-box',
-  BORDER_BOX = 'border-box'
+  BORDER_BOX = 'border-box',
 }
 
 // ============================================================================
@@ -116,5 +116,5 @@ export enum BoxSizing {
 export enum MemoryUsageTrend {
   INCREASING = 'increasing',
   DECREASING = 'decreasing',
-  STABLE = 'stable'
+  STABLE = 'stable',
 }

@@ -1,6 +1,6 @@
 /**
  * Theme System Usage Example
- * 
+ *
  * This file demonstrates how to use the flexible theme system
  * without concrete implementations. Shows the power of our
  * abstract, configurable design.
@@ -12,7 +12,7 @@ import { logger } from '../../../../core/Logger';
 
 /**
  * Simple Theme Usage Example
- * 
+ *
  * This example shows how to use the theme system in a flexible way.
  * You can adapt this pattern to any game or application.
  */
@@ -28,17 +28,19 @@ export class ThemeUsageExample {
    */
   async initializeTheme(): Promise<void> {
     logger.info('ThemeUsageExample', 'initializeTheme', 'Initializing theme system');
-    
+
     try {
       // Register the fortune wheel theme
       await this.themeManager.registerTheme(fortuneWheelTheme);
-      
+
       // Initialize with the theme
       await this.themeManager.initialize('fortune-wheel-theme');
-      
+
       logger.info('ThemeUsageExample', 'initializeTheme', 'Theme system initialized successfully');
     } catch (error) {
-      logger.error('ThemeUsageExample', 'initializeTheme', 'Failed to initialize theme system', { error });
+      logger.error('ThemeUsageExample', 'initializeTheme', 'Failed to initialize theme system', {
+        error,
+      });
       throw error;
     }
   }
@@ -51,7 +53,7 @@ export class ThemeUsageExample {
       primary: this.themeManager.getColor('primary.main'),
       secondary: this.themeManager.getColor('secondary.main'),
       background: this.themeManager.getColor('background.main'),
-      text: this.themeManager.getColor('text.primary')
+      text: this.themeManager.getColor('text.primary'),
     };
   }
 
@@ -63,7 +65,7 @@ export class ThemeUsageExample {
       small: this.themeManager.getSpacing('sm'),
       medium: this.themeManager.getSpacing('md'),
       large: this.themeManager.getSpacing('lg'),
-      extraLarge: this.themeManager.getSpacing('xl')
+      extraLarge: this.themeManager.getSpacing('xl'),
     };
   }
 
@@ -75,7 +77,7 @@ export class ThemeUsageExample {
       small: this.themeManager.getFontSize('sm'),
       base: this.themeManager.getFontSize('base'),
       large: this.themeManager.getFontSize('lg'),
-      extraLarge: this.themeManager.getFontSize('xl')
+      extraLarge: this.themeManager.getFontSize('xl'),
     };
   }
 
@@ -84,9 +86,11 @@ export class ThemeUsageExample {
    */
   applyThemeToElement(element: HTMLElement, themeClass: string): void {
     const themeClassData = this.themeManager.getThemeClass(themeClass);
-    
+
     if (!themeClassData) {
-      logger.warn('ThemeUsageExample', 'applyThemeToElement', 'Theme class not found', { themeClass });
+      logger.warn('ThemeUsageExample', 'applyThemeToElement', 'Theme class not found', {
+        themeClass,
+      });
       return;
     }
 
@@ -160,13 +164,13 @@ export class ThemeUsageExample {
    */
   createThemedElement(tagName: string, themeClass: string, content?: string): HTMLElement {
     const element = document.createElement(tagName);
-    
+
     if (content) {
       element.textContent = content;
     }
-    
+
     this.applyThemeToElement(element, themeClass);
-    
+
     return element;
   }
 
@@ -178,10 +182,12 @@ export class ThemeUsageExample {
       isInitialized: this.themeManager.isInitialized,
       activeTheme: this.themeManager.activeTheme?.id || null,
       registeredThemes: Array.from(this.themeManager.themes.keys()),
-      themeClasses: this.themeManager.activeTheme?.themeClasses ? Object.keys(this.themeManager.activeTheme.themeClasses) : [],
+      themeClasses: this.themeManager.activeTheme?.themeClasses
+        ? Object.keys(this.themeManager.activeTheme.themeClasses)
+        : [],
       colors: this.getThemeColors(),
       spacing: this.getThemeSpacing(),
-      typography: this.getThemeTypography()
+      typography: this.getThemeTypography(),
     };
   }
 }
@@ -192,27 +198,27 @@ export class ThemeUsageExample {
 
 /**
  * Example 1: Basic Theme Usage
- * 
+ *
  * ```typescript
  * import { ThemeManager } from '../../../../layout/classes/ThemeManager';
- * 
+ *
  * // Create concrete theme manager implementation
  * const themeManager = new ThemeManager();
- * 
+ *
  * // Inject theme manager into example (using interface)
  * const themeExample = new ThemeUsageExample(themeManager);
- * 
+ *
  * // Initialize theme
  * await themeExample.initializeTheme();
- * 
+ *
  * // Create themed elements
  * const button = themeExample.createThemedElement('button', '.spin-button', 'Click Me');
  * const container = themeExample.createThemedElement('div', '.game-container');
- * 
+ *
  * // Apply theme to existing elements
  * const existingElement = document.getElementById('my-element');
  * themeExample.applyThemeToElement(existingElement, '.prize-modal');
- * 
+ *
  * // Get theme values
  * const colors = themeExample.getThemeColors();
  * const spacing = themeExample.getThemeSpacing();
@@ -221,40 +227,40 @@ export class ThemeUsageExample {
 
 /**
  * Example 2: Flexible Game Integration
- * 
+ *
  * ```typescript
  * import { IThemeManager } from '../../../../layout/interfaces/IThemeManager';
  * import { ThemeManager } from '../../../../layout/classes/ThemeManager';
- * 
+ *
  * // In your game class
  * class MyGame {
  *   private themeExample: ThemeUsageExample;
- *   
+ *
  *   constructor(themeManager: IThemeManager) {
  *     this.themeExample = new ThemeUsageExample(themeManager);
  *   }
- *   
+ *
  *   async initialize() {
  *     // Initialize theme
  *     await this.themeExample.initializeTheme();
- *     
+ *
  *     // Create game UI with theme
  *     this.createGameUI();
  *   }
- *   
+ *
  *   private createGameUI() {
  *     // Create any game elements with theme
  *     const gameContainer = this.themeExample.createThemedElement('div', '.game-container');
  *     const wheel = this.themeExample.createThemedElement('div', '.wheel-container');
  *     const button = this.themeExample.createThemedElement('button', '.spin-button', 'SPIN');
- *     
+ *
  *     // Add to DOM
  *     document.body.appendChild(gameContainer);
  *     gameContainer.appendChild(wheel);
  *     gameContainer.appendChild(button);
  *   }
  * }
- * 
+ *
  * // Usage - create concrete implementation and inject via interface
  * const themeManager = new ThemeManager();
  * const game = new MyGame(themeManager);
@@ -264,13 +270,13 @@ export class ThemeUsageExample {
 
 /**
  * Example 3: Dynamic Theme Switching
- * 
+ *
  * ```typescript
  * import { IThemeManager } from '../../../../layout/interfaces/IThemeManager';
- * 
+ *
  * // Switch themes dynamically
  * await themeManager.switchTheme('different-theme-id');
- * 
+ *
  * // Reapply theme to all elements
  * document.querySelectorAll('.themed-element').forEach(element => {
  *   themeExample.applyThemeToElement(element, '.spin-button');

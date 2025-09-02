@@ -15,7 +15,7 @@ import type { IAssetCacheManager } from '../../interfaces/managers/IAssetCacheMa
 import type { IAssetPoolManager } from '../../interfaces/managers/IAssetPoolManager';
 import type { IAssetValidationManager } from '../../interfaces/managers/IAssetValidationManager';
 import type { IAssetStatisticsManager } from '../../interfaces/managers/IAssetStatisticsManager';
-import type { AssetManagerConfig } from '../../interfaces/managers/IAssetManager';
+import type { AssetManagerConfig } from '../../interfaces/IAssetManager';
 
 // Mock implementations for testing
 class MockAssetFactory implements IAssetFactory {
@@ -413,12 +413,12 @@ describe('AssetManager', () => {
 
     // Set up the manager with mock dependencies
     manager
-      .setAssetFactory(mockAssetFactory)
-      .setBundleFactory(mockBundleFactory)
-      .setCacheManager(mockCacheManager)
-      .setPoolManager(mockPoolManager)
-      .setValidationManager(mockValidationManager)
-      .setStatisticsManager(mockStatisticsManager);
+      .setAssetFactory(mockAssetFactory as any)
+      .setBundleFactory(mockBundleFactory as any)
+      .setCacheManager(mockCacheManager as any)
+      .setPoolManager(mockPoolManager as any)
+      .setValidationManager(mockValidationManager as any)
+      .setStatisticsManager(mockStatisticsManager as any);
   });
 
   describe('Constructor', () => {
@@ -516,11 +516,11 @@ describe('AssetManager', () => {
           retryAttempts: 3,
           retryDelay: 1000,
         })
-        .setAssetFactory(mockAssetFactory)
-        .setBundleFactory(mockBundleFactory)
-        .setCacheManager(mockCacheManager)
-        .setPoolManager(mockPoolManager)
-        .setValidationManager(mockValidationManager)
+        .setAssetFactory(mockAssetFactory as any)
+        .setBundleFactory(mockBundleFactory as any)
+        .setCacheManager(mockCacheManager as any)
+        .setPoolManager(mockPoolManager as any)
+        .setValidationManager(mockValidationManager as any)
         .setStatisticsManager(mockStatisticsManager)
         .setManagerMetadata({});
 
@@ -727,9 +727,9 @@ describe('AssetManager', () => {
       const uiBundle = new AssetBundle('ui-bundle', BundleType.UI, {} as BundleConfig);
 
       // Mock the bundle loading methods
-      jest.spyOn(sceneBundle, 'loadBundle').mockResolvedValue(undefined);
+      jest.spyOn(sceneBundle, 'loadBundle').mockResolvedValue(undefined as any);
       jest.spyOn(sceneBundle, 'isBundleLoaded').mockReturnValue(true);
-      jest.spyOn(uiBundle, 'loadBundle').mockResolvedValue(undefined);
+      jest.spyOn(uiBundle, 'loadBundle').mockResolvedValue(undefined as any);
       jest.spyOn(uiBundle, 'isBundleLoaded').mockReturnValue(true);
 
       // Add bundles directly to the manager's assetBundles map

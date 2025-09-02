@@ -17,8 +17,8 @@ jest.mock('../../../core/Logger', () => ({
     warn: jest.fn(),
     error: jest.fn(),
     debug: jest.fn(),
-    trace: jest.fn()
-  }
+    trace: jest.fn(),
+  },
 }));
 
 describe('ThemeManager', () => {
@@ -31,7 +31,7 @@ describe('ThemeManager', () => {
   beforeEach(() => {
     // Reset the theme manager for each test
     themeManager = new ThemeManager();
-    
+
     // Create mock theme class
     mockThemeClass = {
       backgroundColor: '#ffffff',
@@ -44,7 +44,7 @@ describe('ThemeManager', () => {
       textAlign: 'left' as any,
       display: 'block' as any,
       cursor: 'default' as any,
-      boxSizing: 'border-box' as any
+      boxSizing: 'border-box' as any,
     };
 
     // Create mock themes
@@ -64,21 +64,21 @@ describe('ThemeManager', () => {
         primary: {
           main: '#1976d2',
           light: '#42a5f5',
-          dark: '#1565c0'
+          dark: '#1565c0',
         },
         secondary: {
           main: '#dc004e',
           light: '#ff5983',
-          dark: '#9a0036'
+          dark: '#9a0036',
         },
         background: {
           default: '#ffffff',
-          paper: '#f5f5f5'
+          paper: '#f5f5f5',
         },
         text: {
           primary: '#000000',
-          secondary: '#666666'
-        }
+          secondary: '#666666',
+        },
       },
       typography: {
         fontFamily: 'Arial, sans-serif',
@@ -87,19 +87,19 @@ describe('ThemeManager', () => {
           sm: 14,
           base: 16,
           lg: 18,
-          xl: 20
+          xl: 20,
         },
         fontWeight: {
           light: 300,
           normal: 400,
           medium: 500,
-          bold: 700
+          bold: 700,
         },
         lineHeight: {
           tight: 1.2,
           normal: 1.5,
-          relaxed: 1.8
-        }
+          relaxed: 1.8,
+        },
       },
       spacing: {
         scale: {
@@ -107,8 +107,8 @@ describe('ThemeManager', () => {
           sm: 8,
           base: 16,
           lg: 24,
-          xl: 32
-        }
+          xl: 32,
+        },
       },
       borderRadius: {
         none: 0,
@@ -116,7 +116,7 @@ describe('ThemeManager', () => {
         base: 4,
         lg: 8,
         xl: 16,
-        full: 9999
+        full: 9999,
       },
       shadows: {
         sm: '0 1px 2px rgba(0,0,0,0.05)',
@@ -124,20 +124,20 @@ describe('ThemeManager', () => {
         md: '0 4px 6px rgba(0,0,0,0.1)',
         lg: '0 10px 15px rgba(0,0,0,0.1)',
         xl: '0 20px 25px rgba(0,0,0,0.1)',
-        '2xl': '0 25px 50px rgba(0,0,0,0.25)'
+        '2xl': '0 25px 50px rgba(0,0,0,0.25)',
       },
       animation: {
         duration: {
           fast: 150,
           normal: 300,
-          slow: 500
+          slow: 500,
         },
         easing: {
           ease: 'ease',
           easeIn: 'ease-in',
           easeOut: 'ease-out',
-          easeInOut: 'ease-in-out'
-        }
+          easeInOut: 'ease-in-out',
+        },
       },
       breakpoints: {
         xs: 0,
@@ -145,7 +145,7 @@ describe('ThemeManager', () => {
         md: 768,
         lg: 992,
         xl: 1200,
-        '2xl': 1400
+        '2xl': 1400,
       },
       themeClasses: {
         '.test-class': mockThemeClass,
@@ -154,9 +154,9 @@ describe('ThemeManager', () => {
           color: '#ffffff',
           padding: 12,
           borderRadius: 4,
-          cursor: 'pointer' as any
-        }
-      }
+          cursor: 'pointer' as any,
+        },
+      },
     };
 
     mockTheme2 = {
@@ -169,13 +169,13 @@ describe('ThemeManager', () => {
         ...mockTheme.colors,
         background: {
           default: '#121212',
-          paper: '#1e1e1e'
+          paper: '#1e1e1e',
         },
         text: {
           primary: '#ffffff',
-          secondary: '#cccccc'
-        }
-      }
+          secondary: '#cccccc',
+        },
+      },
     };
 
     // Create mock listener
@@ -186,7 +186,7 @@ describe('ThemeManager', () => {
       onThemeUnregistered: jest.fn(),
       onThemeModeChanged: jest.fn(),
       onThemeClassApplied: jest.fn(),
-      onThemeClassRemoved: jest.fn()
+      onThemeClassRemoved: jest.fn(),
     };
   });
 
@@ -248,12 +248,16 @@ describe('ThemeManager', () => {
 
     it('should throw error when registering theme without colors', () => {
       const invalidTheme = { ...mockTheme, colors: undefined as any };
-      expect(() => themeManager.registerTheme(invalidTheme)).toThrow('Theme must have colors defined');
+      expect(() => themeManager.registerTheme(invalidTheme)).toThrow(
+        'Theme must have colors defined'
+      );
     });
 
     it('should throw error when registering theme without typography', () => {
       const invalidTheme = { ...mockTheme, typography: undefined as any };
-      expect(() => themeManager.registerTheme(invalidTheme)).toThrow('Theme must have typography defined');
+      expect(() => themeManager.registerTheme(invalidTheme)).toThrow(
+        'Theme must have typography defined'
+      );
     });
 
     it('should unregister a theme successfully', () => {
@@ -345,7 +349,9 @@ describe('ThemeManager', () => {
     });
 
     it('should throw error when activating non-existent theme', async () => {
-      await expect(themeManager.activateTheme('non-existent')).rejects.toThrow('Theme not found: non-existent');
+      await expect(themeManager.activateTheme('non-existent')).rejects.toThrow(
+        'Theme not found: non-existent'
+      );
     });
 
     it('should deactivate current theme when activating new one', async () => {
@@ -360,7 +366,9 @@ describe('ThemeManager', () => {
     });
 
     it('should throw error when activating non-existent theme by name', async () => {
-      await expect(themeManager.activateThemeByName('Non-existent')).rejects.toThrow('Theme not found with name: Non-existent');
+      await expect(themeManager.activateThemeByName('Non-existent')).rejects.toThrow(
+        'Theme not found with name: Non-existent'
+      );
     });
 
     it('should get active theme', async () => {
@@ -568,7 +576,9 @@ describe('ThemeManager', () => {
     });
 
     it('should throw error when exporting non-existent theme', () => {
-      expect(() => themeManager.exportTheme('non-existent')).toThrow('Theme not found: non-existent');
+      expect(() => themeManager.exportTheme('non-existent')).toThrow(
+        'Theme not found: non-existent'
+      );
     });
 
     it('should import theme configuration', () => {

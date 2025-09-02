@@ -6,7 +6,17 @@
 
 import { ThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
 import { MemoryUsageTrend } from '../enums/ThemeEnums';
-import { IThemeColors, IThemeTypography, IThemeSpacing, IThemeBorderRadius, IThemeShadows, IThemeAnimation, IThemeBreakpoints, IThemeClass, IThemeMetadata } from './ITheme';
+import {
+  IThemeColors,
+  IThemeTypography,
+  IThemeSpacing,
+  IThemeBorderRadius,
+  IThemeShadows,
+  IThemeAnimation,
+  IThemeBreakpoints,
+  IThemeClass,
+  IThemeMetadata,
+} from './ITheme';
 
 // ============================================================================
 // RESULT TYPES FOR BETTER ERROR HANDLING
@@ -249,15 +259,14 @@ export interface ITheme extends IThemeData, IThemeProperties, IThemeOperations {
  * Complete theme manager interface
  * Combines all theme manager interfaces
  */
-export interface IThemeManager extends 
-  IThemeRegistry, 
-  IThemeActivator, 
-  IThemeAccessor, 
-  IThemeClassManager, 
-  IThemeEventManager,
-  IThemeStatisticsProvider,
-  IThemeImportExport {
-  
+export interface IThemeManager
+  extends IThemeRegistry,
+    IThemeActivator,
+    IThemeAccessor,
+    IThemeClassManager,
+    IThemeEventManager,
+    IThemeStatisticsProvider,
+    IThemeImportExport {
   /** Current active theme */
   readonly activeTheme: ITheme | null;
   /** All registered themes */
@@ -270,7 +279,7 @@ export interface IThemeManager extends
   readonly listeners: Set<IThemeListener>;
   /** Theme cache for performance */
   readonly themeCache: Map<string, IThemeClass>;
-  
+
   /** Initialize the theme manager */
   initialize(defaultTheme?: string): Promise<IThemeResult<void>>;
   /** Reset the manager to initial state */

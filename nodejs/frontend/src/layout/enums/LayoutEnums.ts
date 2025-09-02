@@ -1211,6 +1211,27 @@ export enum ShadowFilter {
 }
 
 // ============================================================================
+// CSS STYLE ENGINE ENUMS (Layout-specific, not in Unit System)
+// ============================================================================
+
+/**
+ * CSS preload priority levels
+ */
+export enum CSSPreloadPriority {
+  HIGH = 'high',
+  LOW = 'low',
+}
+
+/**
+ * CSS validation severity levels
+ */
+export enum CSSValidationSeverity {
+  ERROR = 'error',
+  WARNING = 'warning',
+  INFO = 'info',
+}
+
+// ============================================================================
 // EXPORT ALL ENUMS
 // ============================================================================
 
@@ -1378,5 +1399,9 @@ export const LAYOUT_SYSTEM_ENUMS = {
     ANIMATION_DIRECTION_VALUE: AnimationDirectionValue,
     ANIMATION_FILL_MODE_VALUE: AnimationFillModeValue,
     SHADOW_FILTER: ShadowFilter,
+  },
+  CSS_STYLE_ENGINE: {
+    PRELOAD_PRIORITY: CSSPreloadPriority,
+    VALIDATION_SEVERITY: CSSValidationSeverity,
   },
 } as const;

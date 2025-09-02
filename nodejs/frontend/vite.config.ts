@@ -27,6 +27,16 @@ export default defineConfig({
           phaser: ['phaser'],
         },
       },
+      external: (id) => {
+        // Exclude test files and Jest dependencies from build
+        return id.includes('.test.') || 
+               id.includes('.spec.') || 
+               id.includes('/test/') || 
+               id.includes('/tests/') || 
+               id.includes('/integration/') ||
+               id.startsWith('@jest/') ||
+               id === 'jest';
+      },
     },
   },
   optimizeDeps: {

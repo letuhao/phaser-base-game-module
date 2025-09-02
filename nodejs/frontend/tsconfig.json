@@ -29,7 +29,9 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/tests/**",
-    "**/test/**"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "**/test/**",
+    "**/integration/**",
+    "dist",
+    "node_modules"
+  ]
 }

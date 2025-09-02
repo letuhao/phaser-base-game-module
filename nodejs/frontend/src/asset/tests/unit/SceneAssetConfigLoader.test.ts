@@ -113,7 +113,6 @@ class MockSceneAssetConfigData {
     },
     defaultBreakpoint: 'desktop',
   };
-
 }
 
 describe('SceneAssetConfigLoader', () => {

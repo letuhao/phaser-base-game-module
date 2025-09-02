@@ -9,8 +9,28 @@
  */
 
 import { ITheme } from '../../../../layout/interfaces/ITheme';
-import { ThemeType, ThemeVariant, BreakpointName, TextAlign, DisplayType, PositionType, OverflowType, WhiteSpace, TextOverflow } from '../../../../layout/enums/LayoutEnums';
-import { CursorType, FlexDirection, FlexWrap, JustifyContent, AlignItems, VisibilityType, WordBreak, OverflowWrap, BoxSizing } from '../../../../layout/enums/ThemeEnums';
+import {
+  ThemeType,
+  ThemeVariant,
+  BreakpointName,
+  TextAlign,
+  DisplayType,
+  PositionType,
+  OverflowType,
+  WhiteSpace,
+  TextOverflow,
+} from '../../../../layout/enums/LayoutEnums';
+import {
+  CursorType,
+  FlexDirection,
+  FlexWrap,
+  JustifyContent,
+  AlignItems,
+  VisibilityType,
+  WordBreak,
+  OverflowWrap,
+  BoxSizing,
+} from '../../../../layout/enums/ThemeEnums';
 import { SizeUnit } from '../../../../unit';
 
 /**

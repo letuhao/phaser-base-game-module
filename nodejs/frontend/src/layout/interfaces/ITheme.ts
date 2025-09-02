@@ -5,36 +5,36 @@
  * Fully compatible with the Unit System
  */
 
-import { 
-  ThemeType, 
-  ThemeVariant, 
+import {
+  ThemeType,
+  ThemeVariant,
   BreakpointName,
-  TextAlign, 
-  TextDecoration, 
-  TextTransform, 
-  DisplayType, 
-  PositionType, 
-  OverflowType, 
-  BorderStyle, 
-  BackgroundSize, 
-  BackgroundRepeat, 
-  BackgroundAttachment, 
-  FontStyle, 
-  WhiteSpace, 
-  TextOverflow
+  TextAlign,
+  TextDecoration,
+  TextTransform,
+  DisplayType,
+  PositionType,
+  OverflowType,
+  BorderStyle,
+  BackgroundSize,
+  BackgroundRepeat,
+  BackgroundAttachment,
+  FontStyle,
+  WhiteSpace,
+  TextOverflow,
 } from '../enums/LayoutEnums';
-import { 
-  CursorType, 
-  FlexDirection, 
-  FlexWrap, 
-  JustifyContent, 
-  AlignItems, 
-  AlignSelf, 
-  VisibilityType, 
-  FontVariant, 
-  WordBreak, 
+import {
+  CursorType,
+  FlexDirection,
+  FlexWrap,
+  JustifyContent,
+  AlignItems,
+  AlignSelf,
+  VisibilityType,
+  FontVariant,
+  WordBreak,
   OverflowWrap,
-  BoxSizing
+  BoxSizing,
 } from '../enums/ThemeEnums';
 import { SizeUnit, PositionUnit, ScaleUnit } from '../../unit';
 
@@ -45,7 +45,7 @@ import { SizeUnit, PositionUnit, ScaleUnit } from '../../unit';
 /**
  * Main theme configuration interface
  * Defines a complete theme with all styling properties
- * 
+ *
  * NOTE: This interface now extends the segregated interfaces for better ISP compliance
  * For new implementations, consider using the individual interfaces directly
  */

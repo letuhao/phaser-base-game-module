@@ -40,7 +40,7 @@ export type {
   IThemeEventManager,
   IThemeStatisticsProvider,
   IThemeImportExport,
-  IThemePerformanceMetrics
+  IThemePerformanceMetrics,
 } from './IThemeSegregated';
 
 // ============================================================================
@@ -48,10 +48,7 @@ export type {
 // ============================================================================
 
 // Breakpoint interfaces bundle
-export const BREAKPOINT_INTERFACES = [
-  'IBreakpoint',
-  'IBreakpointManager'
-] as const;
+export const BREAKPOINT_INTERFACES = ['IBreakpoint', 'IBreakpointManager'] as const;
 
 // Theme interfaces bundle
 export const THEME_INTERFACES = [
@@ -68,63 +65,43 @@ export const THEME_INTERFACES = [
   'IThemeEventManager',
   'IThemeStatisticsProvider',
   'IThemeImportExport',
-  'IThemePerformanceMetrics'
+  'IThemePerformanceMetrics',
 ] as const;
 
 // Style interfaces bundle
-export const STYLE_INTERFACES = [
-  'IStyle',
-  'IStyleManager'
-] as const;
+export const STYLE_INTERFACES = ['IStyle', 'IStyleManager'] as const;
 
 // Layout interfaces bundle
-export const LAYOUT_INTERFACES = [
-  'ILayout',
-  'ILayoutManager'
-] as const;
+export const LAYOUT_INTERFACES = ['ILayout', 'ILayoutManager'] as const;
 
 // Strategy interfaces bundle
-export const STRATEGY_INTERFACES = [
-  'ILayoutStrategy'
-] as const;
+export const STRATEGY_INTERFACES = ['ILayoutStrategy'] as const;
 
 // Manager interfaces bundle
 export const MANAGER_INTERFACES = [
   'ILayoutManager',
   'IThemeManager',
   'IStyleManager',
-  'IBreakpointManager'
+  'IBreakpointManager',
 ] as const;
 
 // Command interfaces bundle
-export const COMMAND_INTERFACES = [
-  'ILayoutCommand'
-] as const;
+export const COMMAND_INTERFACES = ['ILayoutCommand'] as const;
 
 // State interfaces bundle
-export const STATE_INTERFACES = [
-  'ILayoutState'
-] as const;
+export const STATE_INTERFACES = ['ILayoutState'] as const;
 
 // Chain interfaces bundle
-export const CHAIN_INTERFACES = [
-  'ILayoutChain'
-] as const;
+export const CHAIN_INTERFACES = ['ILayoutChain'] as const;
 
 // Dependency injection interfaces bundle
-export const DI_INTERFACES = [
-  'IDIContainer'
-] as const;
+export const DI_INTERFACES = ['IDIContainer'] as const;
 
 // Plugin interfaces bundle
-export const PLUGIN_INTERFACES = [
-  'IPluginSystem'
-] as const;
+export const PLUGIN_INTERFACES = ['IPluginSystem'] as const;
 
 // Granular interfaces bundle
-export const GRANULAR_INTERFACES = [
-  'IGranularInterfaces'
-] as const;
+export const GRANULAR_INTERFACES = ['IGranularInterfaces'] as const;
 
 // Complete layout system interfaces bundle
 export const LAYOUT_SYSTEM_INTERFACES = [
@@ -139,7 +116,7 @@ export const LAYOUT_SYSTEM_INTERFACES = [
   ...CHAIN_INTERFACES,
   ...DI_INTERFACES,
   ...PLUGIN_INTERFACES,
-  ...GRANULAR_INTERFACES
+  ...GRANULAR_INTERFACES,
 ] as const;
 
 // ============================================================================
@@ -148,16 +125,16 @@ export const LAYOUT_SYSTEM_INTERFACES = [
 
 /**
  * RECOMMENDED USAGE PATTERNS:
- * 
+ *
  * 1. For new implementations, use the segregated interfaces:
  *    import { IThemeData, IThemeProperties, IThemeOperations } from './IThemeSegregated';
- * 
+ *
  * 2. For backward compatibility, use the original interfaces:
  *    import { ITheme, IThemeManager } from './ITheme';
- * 
+ *
  * 3. For specific functionality, use focused interfaces:
  *    import { IThemeRegistry, IThemeActivator } from './IThemeSegregated';
- * 
+ *
  * 4. For better error handling, use result types:
  *    import { IThemeResult } from './IThemeSegregated';
  */
@@ -168,10 +145,10 @@ export const LAYOUT_SYSTEM_INTERFACES = [
 
 /**
  * Example: Creating a minimal theme data interface
- * 
+ *
  * ```typescript
  * import { IThemeData } from './IThemeSegregated';
- * 
+ *
  * class MinimalTheme implements IThemeData {
  *   readonly id: string;
  *   readonly name: string;
@@ -187,10 +164,10 @@ export const LAYOUT_SYSTEM_INTERFACES = [
 
 /**
  * Example: Creating a theme registry only
- * 
+ *
  * ```typescript
  * import { IThemeRegistry } from './IThemeSegregated';
- * 
+ *
  * class ThemeRegistry implements IThemeRegistry {
  *   registerTheme(theme: ITheme): IThemeResult<void> {
  *     // Implementation
@@ -202,10 +179,10 @@ export const LAYOUT_SYSTEM_INTERFACES = [
 
 /**
  * Example: Using result types for better error handling
- * 
+ *
  * ```typescript
  * import { IThemeResult } from './IThemeSegregated';
- * 
+ *
  * function getThemeColor(theme: ITheme, path: string): IThemeResult<string> {
  *   try {
  *     const color = theme.getColor(path);
