@@ -1,349 +1,279 @@
 /**
- * Fortune Wheel Theme Usage Example
- *
- * This file demonstrates how to use the new Layout System theme
- * in your fortune wheel game implementation.
+ * Theme System Usage Example
+ * 
+ * This file demonstrates how to use the flexible theme system
+ * without concrete implementations. Shows the power of our
+ * abstract, configurable design.
  */
 
+import { IThemeManager } from '../../../../layout/interfaces/IThemeManager';
 import { fortuneWheelTheme } from './fortune-wheel-theme.config';
-import { BreakpointName } from '../../../../layout/enums/LayoutEnums';
+import { logger } from '../../../../core/Logger';
 
 /**
- * Example class showing how to use the fortune wheel theme
+ * Simple Theme Usage Example
+ * 
+ * This example shows how to use the theme system in a flexible way.
+ * You can adapt this pattern to any game or application.
  */
-export class FortuneWheelThemeExample {
-  private theme = fortuneWheelTheme;
+export class ThemeUsageExample {
+  private themeManager: IThemeManager;
 
-  /**
-   * Example: Get colors for different game elements
-   */
-  getGameColors() {
-    return {
-      // Primary colors
-      primaryColor: this.theme.getColor('primary.main'), // '#ff6b35'
-      primaryLight: this.theme.getColor('primary.light'), // '#ff8c69'
-      primaryDark: this.theme.getColor('primary.dark'), // '#e55a2b'
-
-      // Secondary colors
-      secondaryColor: this.theme.getColor('secondary.main'), // '#3b82f6'
-
-      // Background colors
-      gameBackground: this.theme.getColor('background.variants.game-bg'), // '#1a1a2e'
-      wheelBackground: this.theme.getColor('background.variants.wheel-bg'), // '#2a2a3e'
-      modalBackground: this.theme.getColor('background.variants.modal-bg'), // 'rgba(255, 255, 255, 0.95)'
-
-      // Text colors
-      primaryText: this.theme.getColor('text.primary'), // '#1f2937'
-      accentText: this.theme.getColor('text.variants.accent'), // '#ff6b35'
-
-      // Status colors
-      successColor: this.theme.getColor('status.success'), // '#10b981'
-      warningColor: this.theme.getColor('status.warning'), // '#f59e0b'
-      errorColor: this.theme.getColor('status.error'), // '#ef4444'
-
-      // Game-specific colors
-      bigWinColor: this.theme.getColor('status.variants.big-win'), // '#fbbf24'
-      jackpotColor: this.theme.getColor('status.variants.jackpot'), // '#ff6b35'
-
-      // Wheel segment colors
-      segment1: this.theme.getColor('semantic.custom.wheel-segment-1'), // '#ff6b35'
-      segment2: this.theme.getColor('semantic.custom.wheel-segment-2'), // '#3b82f6'
-      segment3: this.theme.getColor('semantic.custom.wheel-segment-3'), // '#10b981'
-
-      // Custom colors
-      pointerColor: this.theme.getColor('custom.pointer-color'), // '#ff6b35'
-      wheelGlow: this.theme.getColor('custom.wheel-glow'), // 'rgba(251, 191, 36, 0.5)'
-      prizeGlow: this.theme.getColor('custom.prize-glow'), // 'rgba(16, 185, 129, 0.3)'
-    };
+  constructor(themeManager: IThemeManager) {
+    this.themeManager = themeManager;
   }
 
   /**
-   * Example: Get spacing values for layout
+   * Initialize theme system
    */
-  getLayoutSpacing() {
-    return {
-      // Standard spacing
-      xs: this.theme.getSpacing('xs'), // 4
-      sm: this.theme.getSpacing('sm'), // 8
-      md: this.theme.getSpacing('md'), // 16
-      lg: this.theme.getSpacing('lg'), // 24
-      xl: this.theme.getSpacing('xl'), // 32
-
-      // Custom spacing
-      wheelPadding: this.theme.getSpacing('lg'), // 20
-      buttonPadding: this.theme.getSpacing('md'), // 12
-      modalPadding: this.theme.getSpacing('xl'), // 24
-
-      // Game-specific spacing
-      wheelRadius: this.theme.spacing.custom?.['wheel-radius'], // 400
-      pointerOffset: this.theme.spacing.custom?.['pointer-offset'], // 50
-    };
-  }
-
-  /**
-   * Example: Get typography values
-   */
-  getTypography() {
-    return {
-      // Font families
-      primaryFont: this.theme.typography.fontFamily.primary, // 'Inter, system-ui, -apple-system, sans-serif'
-      gameTitleFont: this.theme.typography.fontFamily.variants?.['game-title'], // 'Poppins, sans-serif'
-
-      // Font sizes
-      smallText: this.theme.getFontSize('xs'), // 12
-      normalText: this.theme.getFontSize('base'), // 16
-      largeText: this.theme.getFontSize('lg'), // 18
-      gameTitle: this.theme.getFontSize('xl'), // 36
-      prizeAmount: this.theme.getFontSize('lg'), // 28
-
-      // Font weights
-      normalWeight: this.theme.typography.fontWeight.normal, // 400
-      mediumWeight: this.theme.typography.fontWeight.medium, // 500
-      boldWeight: this.theme.typography.fontWeight.bold, // 700
-      gameTitleWeight: this.theme.typography.fontWeight.variants?.['game-title'], // 700
-
-      // Line heights
-      tightLineHeight: this.theme.typography.lineHeight.tight, // 1.25
-      normalLineHeight: this.theme.typography.lineHeight.normal, // 1.5
-      relaxedLineHeight: this.theme.typography.lineHeight.relaxed, // 1.75
-    };
-  }
-
-  /**
-   * Example: Get animation values
-   */
-  getAnimationValues() {
-    return {
-      // Standard durations
-      fast: this.theme.getAnimationDuration('fast'), // 150
-      normal: this.theme.getAnimationDuration('normal'), // 300
-      slow: this.theme.getAnimationDuration('slow'), // 500
-
-      // Custom durations
-      wheelSpin: this.theme.animation.duration.variants?.['wheel-spin'], // 3000
-      wheelSlow: this.theme.animation.duration.variants?.['wheel-slow'], // 2000
-      buttonHover: this.theme.animation.duration.variants?.['button-hover'], // 200
-
-      // Easing functions
-      easeInOut: this.theme.animation.easing.easeInOut, // 'ease-in-out'
-      wheelSpinEasing: this.theme.animation.easing.variants?.['wheel-spin'], // 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-      buttonBounce: this.theme.animation.easing.variants?.['button-bounce'], // 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-    };
-  }
-
-  /**
-   * Example: Get theme class properties
-   */
-  getThemeClassProperties() {
-    const spinButtonClass = this.theme.themeClasses?.['.spin-button'];
-    const wheelContainerClass = this.theme.themeClasses?.['.wheel-container'];
-    const prizeModalClass = this.theme.themeClasses?.['.prize-modal'];
-
-    return {
-      spinButton: {
-        backgroundColor: spinButtonClass?.backgroundColor, // '#ff6b35'
-        color: spinButtonClass?.color, // '#ffffff'
-        padding: spinButtonClass?.padding, // 16
-        borderRadius: spinButtonClass?.borderRadiusValue, // 8
-        width: spinButtonClass?.width, // { value: 200, unit: SizeUnit.PIXEL }
-        height: spinButtonClass?.height, // { value: 60, unit: SizeUnit.PIXEL }
-        boxShadow: spinButtonClass?.boxShadow, // '0 4px 12px rgba(255, 107, 53, 0.3)'
-      },
-
-      wheelContainer: {
-        backgroundColor: wheelContainerClass?.backgroundColor, // '#2a2a3e'
-        borderRadius: wheelContainerClass?.borderRadiusValue, // 9999
-        padding: wheelContainerClass?.padding, // 20
-        width: wheelContainerClass?.width, // { value: 800, unit: SizeUnit.PIXEL }
-        height: wheelContainerClass?.height, // { value: 800, unit: SizeUnit.PIXEL }
-      },
-
-      prizeModal: {
-        backgroundColor: prizeModalClass?.backgroundColor, // 'rgba(255, 255, 255, 0.95)'
-        color: prizeModalClass?.color, // '#1f2937'
-        padding: prizeModalClass?.padding, // 32
-        borderRadius: prizeModalClass?.borderRadiusValue, // 12
-        width: prizeModalClass?.width, // { value: 400, unit: SizeUnit.PIXEL }
-        height: prizeModalClass?.height, // { value: 300, unit: SizeUnit.PIXEL }
-      },
-    };
-  }
-
-  /**
-   * Example: Get custom game properties
-   */
-  getGameProperties() {
-    return {
-      // Wheel configuration
-      wheelSegments: this.theme.custom?.['wheel-segments'], // 12
-      wheelColors: this.theme.custom?.['wheel-colors'], // Array of 12 colors
-      prizeValues: this.theme.custom?.['prize-values'], // Array of 12 prize values
-
-      // Animation speeds
-      animationSpeeds: this.theme.custom?.['animation-speeds'], // { fast: 1000, normal: 3000, slow: 5000 }
-
-      // Sound effects
-      soundEffects: this.theme.custom?.['sound-effects'], // Object with sound file mappings
-    };
-  }
-
-  /**
-   * Example: Check responsive support
-   */
-  checkResponsiveSupport() {
-    return {
-      supportsMobile: this.theme.supportsBreakpoint(BreakpointName.XS), // true
-      supportsTablet: this.theme.supportsBreakpoint(BreakpointName.MD), // true
-      supportsDesktop: this.theme.supportsBreakpoint(BreakpointName.LG), // true
-      supportsLargeDesktop: this.theme.supportsBreakpoint(BreakpointName.XL), // true
-    };
-  }
-
-  /**
-   * Example: Get theme metadata
-   */
-  getThemeMetadata() {
-    return {
-      id: this.theme.id, // 'fortune-wheel-theme'
-      name: this.theme.name, // 'fortune-wheel'
-      displayName: this.theme.displayName, // 'Fortune Wheel Theme'
-      description: this.theme.description,
-      type: this.theme.type, // ThemeType.CUSTOM
-      variant: this.theme.variant, // ThemeVariant.PRIMARY
-      version: this.theme.version, // '1.0.0'
-      author: this.theme.author, // 'Fortune Wheel Game Team'
-      tags: this.theme.tags, // ['game', 'fortune-wheel', 'vibrant', 'engaging', 'casino-style']
-      supportsDarkMode: this.theme.supportsDarkMode, // false
-      isActive: this.theme.isActive, // true
-    };
-  }
-
-  /**
-   * Example: Apply theme classes to elements
-   */
-  applyThemeClasses(element: HTMLElement) {
-    // Apply spin button styling (simplified example)
-    const baseClass = this.theme.themeClasses?.['.spin-button'];
-    if (baseClass) {
-      element.style.backgroundColor = baseClass.backgroundColor || '';
-      element.style.color = baseClass.color || '';
-      element.style.padding = `${baseClass.padding}px` || '';
-    }
-
-    // Apply hover effects
-    element.addEventListener('mouseenter', () => {
-      const hoverClass = this.theme.themeClasses?.['.spin-button:hover'];
-      if (hoverClass) {
-        element.style.backgroundColor = hoverClass.backgroundColor || '';
-      }
-    });
-
-    element.addEventListener('mouseleave', () => {
-      const baseClass = this.theme.themeClasses?.['.spin-button'];
-      if (baseClass) {
-        element.style.backgroundColor = baseClass.backgroundColor || '';
-      }
-    });
-
-    // Apply active state
-    element.addEventListener('mousedown', () => {
-      const activeClass = this.theme.themeClasses?.['.spin-button:active'];
-      if (activeClass) {
-        element.style.backgroundColor = activeClass.backgroundColor || '';
-      }
-    });
-
-    element.addEventListener('mouseup', () => {
-      const baseClass = this.theme.themeClasses?.['.spin-button'];
-      if (baseClass) {
-        element.style.backgroundColor = baseClass.backgroundColor || '';
-      }
-    });
-  }
-
-  /**
-   * Example: Create responsive wheel sizing
-   */
-  getResponsiveWheelSize(breakpoint: BreakpointName) {
-    switch (breakpoint) {
-      case BreakpointName.XS:
-        return this.theme.themeClasses?.['.mobile-wheel']?.width; // { value: 600, unit: SizeUnit.PIXEL }
-      case BreakpointName.MD:
-        return this.theme.themeClasses?.['.tablet-wheel']?.width; // { value: 700, unit: SizeUnit.PIXEL }
-      case BreakpointName.LG:
-        return this.theme.themeClasses?.['.desktop-wheel']?.width; // { value: 800, unit: SizeUnit.PIXEL }
-      default:
-        return this.theme.themeClasses?.['.desktop-wheel']?.width; // { value: 800, unit: SizeUnit.PIXEL }
+  async initializeTheme(): Promise<void> {
+    logger.info('ThemeUsageExample', 'initializeTheme', 'Initializing theme system');
+    
+    try {
+      // Register the fortune wheel theme
+      await this.themeManager.registerTheme(fortuneWheelTheme);
+      
+      // Initialize with the theme
+      await this.themeManager.initialize('fortune-wheel-theme');
+      
+      logger.info('ThemeUsageExample', 'initializeTheme', 'Theme system initialized successfully');
+    } catch (error) {
+      logger.error('ThemeUsageExample', 'initializeTheme', 'Failed to initialize theme system', { error });
+      throw error;
     }
   }
 
   /**
-   * Example: Get wheel segment colors
+   * Get theme colors for any element
    */
-  getWheelSegmentColors() {
-    const colors: string[] = [];
-    for (let i = 1; i <= 12; i++) {
-      const color = this.theme.getColor(`semantic.custom.wheel-segment-${i}`);
-      colors.push(color);
+  getThemeColors() {
+    return {
+      primary: this.themeManager.getColor('primary.main'),
+      secondary: this.themeManager.getColor('secondary.main'),
+      background: this.themeManager.getColor('background.main'),
+      text: this.themeManager.getColor('text.primary')
+    };
+  }
+
+  /**
+   * Get theme spacing values
+   */
+  getThemeSpacing() {
+    return {
+      small: this.themeManager.getSpacing('sm'),
+      medium: this.themeManager.getSpacing('md'),
+      large: this.themeManager.getSpacing('lg'),
+      extraLarge: this.themeManager.getSpacing('xl')
+    };
+  }
+
+  /**
+   * Get theme typography
+   */
+  getThemeTypography() {
+    return {
+      small: this.themeManager.getFontSize('sm'),
+      base: this.themeManager.getFontSize('base'),
+      large: this.themeManager.getFontSize('lg'),
+      extraLarge: this.themeManager.getFontSize('xl')
+    };
+  }
+
+  /**
+   * Apply theme to any DOM element
+   */
+  applyThemeToElement(element: HTMLElement, themeClass: string): void {
+    const themeClassData = this.themeManager.getThemeClass(themeClass);
+    
+    if (!themeClassData) {
+      logger.warn('ThemeUsageExample', 'applyThemeToElement', 'Theme class not found', { themeClass });
+      return;
     }
-    return colors;
+
+    // Apply styles flexibly
+    this.applyStylesToElement(element, themeClassData);
   }
 
   /**
-   * Example: Get prize values
+   * Apply styles from theme class to element
    */
-  getPrizeValues() {
-    return (this.theme.custom?.['prize-values'] as number[]) || [];
+  private applyStylesToElement(element: HTMLElement, themeClass: any): void {
+    // Apply any available styles
+    if (themeClass.backgroundColor) {
+      element.style.backgroundColor = themeClass.backgroundColor;
+    }
+    if (themeClass.color) {
+      element.style.color = themeClass.color;
+    }
+    if (themeClass.padding) {
+      element.style.padding = `${themeClass.padding}px`;
+    }
+    if (themeClass.margin) {
+      element.style.margin = `${themeClass.margin}px`;
+    }
+    if (themeClass.borderRadius) {
+      element.style.borderRadius = `${themeClass.borderRadius}px`;
+    }
+    if (themeClass.fontSize) {
+      element.style.fontSize = `${themeClass.fontSize}px`;
+    }
+    if (themeClass.fontWeight) {
+      element.style.fontWeight = themeClass.fontWeight.toString();
+    }
+    if (themeClass.textAlign) {
+      element.style.textAlign = themeClass.textAlign;
+    }
+    if (themeClass.display) {
+      element.style.display = themeClass.display;
+    }
+    if (themeClass.flexDirection) {
+      element.style.flexDirection = themeClass.flexDirection;
+    }
+    if (themeClass.alignItems) {
+      element.style.alignItems = themeClass.alignItems;
+    }
+    if (themeClass.justifyContent) {
+      element.style.justifyContent = themeClass.justifyContent;
+    }
+    if (themeClass.cursor) {
+      element.style.cursor = themeClass.cursor;
+    }
+    if (themeClass.boxSizing) {
+      element.style.boxSizing = themeClass.boxSizing;
+    }
+    if (themeClass.position) {
+      element.style.position = themeClass.position;
+    }
+    if (themeClass.boxShadow) {
+      element.style.boxShadow = themeClass.boxShadow;
+    }
+    if (themeClass.transition) {
+      element.style.transition = themeClass.transition;
+    }
+    if (themeClass.cssAnimation) {
+      element.style.animation = themeClass.cssAnimation;
+    }
   }
 
   /**
-   * Example: Get sound effect mappings
+   * Create a themed element with any tag and class
    */
-  getSoundEffectMappings() {
-    return (this.theme.custom?.['sound-effects'] as Record<string, string>) || {};
+  createThemedElement(tagName: string, themeClass: string, content?: string): HTMLElement {
+    const element = document.createElement(tagName);
+    
+    if (content) {
+      element.textContent = content;
+    }
+    
+    this.applyThemeToElement(element, themeClass);
+    
+    return element;
+  }
+
+  /**
+   * Get theme status for debugging
+   */
+  getThemeStatus() {
+    return {
+      isInitialized: this.themeManager.isInitialized,
+      activeTheme: this.themeManager.activeTheme?.id || null,
+      registeredThemes: Array.from(this.themeManager.themes.keys()),
+      themeClasses: this.themeManager.activeTheme?.themeClasses ? Object.keys(this.themeManager.activeTheme.themeClasses) : [],
+      colors: this.getThemeColors(),
+      spacing: this.getThemeSpacing(),
+      typography: this.getThemeTypography()
+    };
   }
 }
 
+// ============================================================================
+// USAGE EXAMPLES
+// ============================================================================
+
 /**
- * Example usage in your game
+ * Example 1: Basic Theme Usage
+ * 
+ * ```typescript
+ * import { ThemeManager } from '../../../../layout/classes/ThemeManager';
+ * 
+ * // Create concrete theme manager implementation
+ * const themeManager = new ThemeManager();
+ * 
+ * // Inject theme manager into example (using interface)
+ * const themeExample = new ThemeUsageExample(themeManager);
+ * 
+ * // Initialize theme
+ * await themeExample.initializeTheme();
+ * 
+ * // Create themed elements
+ * const button = themeExample.createThemedElement('button', '.spin-button', 'Click Me');
+ * const container = themeExample.createThemedElement('div', '.game-container');
+ * 
+ * // Apply theme to existing elements
+ * const existingElement = document.getElementById('my-element');
+ * themeExample.applyThemeToElement(existingElement, '.prize-modal');
+ * 
+ * // Get theme values
+ * const colors = themeExample.getThemeColors();
+ * const spacing = themeExample.getThemeSpacing();
+ * ```
  */
-export function exampleUsage() {
-  const themeExample = new FortuneWheelThemeExample();
 
-  // Get colors for your game elements
-  const colors = themeExample.getGameColors();
-  console.log('Primary color:', colors.primaryColor); // '#ff6b35'
-  console.log('Wheel glow:', colors.wheelGlow); // 'rgba(251, 191, 36, 0.5)'
+/**
+ * Example 2: Flexible Game Integration
+ * 
+ * ```typescript
+ * import { IThemeManager } from '../../../../layout/interfaces/IThemeManager';
+ * import { ThemeManager } from '../../../../layout/classes/ThemeManager';
+ * 
+ * // In your game class
+ * class MyGame {
+ *   private themeExample: ThemeUsageExample;
+ *   
+ *   constructor(themeManager: IThemeManager) {
+ *     this.themeExample = new ThemeUsageExample(themeManager);
+ *   }
+ *   
+ *   async initialize() {
+ *     // Initialize theme
+ *     await this.themeExample.initializeTheme();
+ *     
+ *     // Create game UI with theme
+ *     this.createGameUI();
+ *   }
+ *   
+ *   private createGameUI() {
+ *     // Create any game elements with theme
+ *     const gameContainer = this.themeExample.createThemedElement('div', '.game-container');
+ *     const wheel = this.themeExample.createThemedElement('div', '.wheel-container');
+ *     const button = this.themeExample.createThemedElement('button', '.spin-button', 'SPIN');
+ *     
+ *     // Add to DOM
+ *     document.body.appendChild(gameContainer);
+ *     gameContainer.appendChild(wheel);
+ *     gameContainer.appendChild(button);
+ *   }
+ * }
+ * 
+ * // Usage - create concrete implementation and inject via interface
+ * const themeManager = new ThemeManager();
+ * const game = new MyGame(themeManager);
+ * await game.initialize();
+ * ```
+ */
 
-  // Get spacing for layout
-  const spacing = themeExample.getLayoutSpacing();
-  console.log('Wheel radius:', spacing.wheelRadius); // 400
-  console.log('Button padding:', spacing.buttonPadding); // 12
-
-  // Get typography for text
-  const typography = themeExample.getTypography();
-  console.log('Game title font:', typography.gameTitleFont); // 'Poppins, sans-serif'
-  console.log('Game title size:', typography.gameTitle); // 36
-
-  // Get animation values
-  const animations = themeExample.getAnimationValues();
-  console.log('Wheel spin duration:', animations.wheelSpin); // 3000
-  console.log('Wheel spin easing:', animations.wheelSpinEasing); // 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-
-  // Get wheel segment colors
-  const segmentColors = themeExample.getWheelSegmentColors();
-  console.log('Segment colors:', segmentColors); // Array of 12 colors
-
-  // Get prize values
-  const prizeValues = themeExample.getPrizeValues();
-  console.log('Prize values:', prizeValues); // Array of 12 prize values
-
-  // Get sound effect mappings
-  const soundEffects = themeExample.getSoundEffectMappings();
-  console.log('Sound effects:', soundEffects); // Object with sound file mappings
-
-  // Check responsive support
-  const responsive = themeExample.checkResponsiveSupport();
-  console.log('Supports mobile:', responsive.supportsMobile); // true
-  console.log('Supports desktop:', responsive.supportsDesktop); // true
-}
+/**
+ * Example 3: Dynamic Theme Switching
+ * 
+ * ```typescript
+ * import { IThemeManager } from '../../../../layout/interfaces/IThemeManager';
+ * 
+ * // Switch themes dynamically
+ * await themeManager.switchTheme('different-theme-id');
+ * 
+ * // Reapply theme to all elements
+ * document.querySelectorAll('.themed-element').forEach(element => {
+ *   themeExample.applyThemeToElement(element, '.spin-button');
+ * });
+ * ```
+ */

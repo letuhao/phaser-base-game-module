@@ -79,78 +79,54 @@ class MockAssetManager {
   }
 }
 
-// Mock ISceneAssetConfig
-class MockSceneAssetConfig {
-  public readonly configId: string = 'mock-config';
+// Mock ISceneAssetConfigData
+class MockSceneAssetConfigData {
   public readonly sceneId: string = 'mock-scene';
-  public sceneAssetConfig: any = {
-    sceneId: 'mock-scene',
-    basePath: '/test',
-    assets: new Map(),
-    bundles: new Map(),
-    loading: {
-      preload: true,
-      priority: [AssetPriority.HIGH, AssetPriority.NORMAL],
-      strategy: 'parallel' as any,
+  public readonly basePath: string = '/test';
+  public assets: any[] = [];
+  public bundles: any[] = [];
+  public loading: {
+    preload: boolean;
+    priority: AssetPriority[];
+    strategy: any;
+  } = {
+    preload: true,
+    priority: [AssetPriority.HIGH, AssetPriority.NORMAL],
+    strategy: 'parallel' as any,
+  };
+  public validation: {
+    required: string[];
+    optional: string[];
+    fallbacks: Record<string, string>;
+  } = {
+    required: ['asset1', 'asset2'],
+    optional: ['asset3', 'asset4'],
+    fallbacks: { asset1: 'fallback1' },
+  };
+  public responsive: {
+    breakpoints: Record<string, { assets: string[]; bundles: string[] }>;
+    defaultBreakpoint: string;
+  } = {
+    breakpoints: {
+      mobile: { assets: ['asset1'], bundles: ['bundle1'] },
+      desktop: { assets: ['asset1', 'asset2'], bundles: ['bundle1', 'bundle2'] },
     },
-    validation: {
-      required: ['asset1', 'asset2'],
-      optional: ['asset3', 'asset4'],
-      fallbacks: { asset1: 'fallback1' },
-    },
-    responsive: {
-      breakpoints: {
-        mobile: { assets: ['asset1'], bundles: ['bundle1'] },
-        desktop: { assets: ['asset1', 'asset2'], bundles: ['bundle1', 'bundle2'] },
-      },
-      defaultBreakpoint: 'desktop',
-    },
+    defaultBreakpoint: 'desktop',
   };
 
-  getSceneAssetConfig(): any {
-    return this.sceneAssetConfig;
-  }
-
-  getResponsiveAssets(breakpoint: string): { assets: any[]; bundles: any[] } {
-    const breakpointConfig = this.sceneAssetConfig.responsive.breakpoints[breakpoint];
-    if (!breakpointConfig) {
-      return { assets: [], bundles: [] };
-    }
-
-    const assets = breakpointConfig.assets
-      .map((key: string) => this.sceneAssetConfig.assets.get(key))
-      .filter(Boolean);
-    const bundles = breakpointConfig.bundles
-      .map((id: string) => this.sceneAssetConfig.bundles.get(id))
-      .filter(Boolean);
-
-    return { assets, bundles };
-  }
-
-  validateConfiguration(): any {
-    return {
-      isValid: true,
-      errors: [],
-      warnings: [],
-      missingAssets: [],
-      missingBundles: [],
-      invalidAssets: [],
-      invalidBundles: [],
-    };
-  }
 }
 
 describe('SceneAssetConfigLoader', () => {
   let loader: SceneAssetConfigLoader;
   let mockAssetManager: MockAssetManager;
-  let mockSceneAssetConfig: MockSceneAssetConfig;
+  let mockSceneAssetConfig: MockSceneAssetConfigData;
   let mockAsset1: Asset;
   let mockAsset2: Asset;
   let mockBundle1: AssetBundle;
 
   beforeEach(() => {
     mockAssetManager = new MockAssetManager();
-    mockSceneAssetConfig = new MockSceneAssetConfig();
+    mockSceneAssetConfig = new MockSceneAssetConfigData();
 
     // Create mock assets
     mockAsset1 = new Asset('asset1', 'asset1', AssetType.IMAGE, {
@@ -185,10 +161,9 @@ describe('SceneAssetConfigLoader', () => {
     mockAssetManager.managedAssets.set('asset2', mockAsset2);
     mockAssetManager.assetBundles.set('bundle1', mockBundle1);
 
-    // Add assets to mock config
-    mockSceneAssetConfig.sceneAssetConfig.assets.set('asset1', mockAsset1);
-    mockSceneAssetConfig.sceneAssetConfig.assets.set('asset2', mockAsset2);
-    mockSceneAssetConfig.sceneAssetConfig.bundles.set('bundle1', mockBundle1);
+    // Add assets to mock config (as arrays, not Maps)
+    mockSceneAssetConfig.assets = [mockAsset1, mockAsset2];
+    mockSceneAssetConfig.bundles = [mockBundle1];
 
     loader = new SceneAssetConfigLoader(
       'test-loader',
@@ -282,7 +257,7 @@ describe('SceneAssetConfigLoader', () => {
     });
 
     it('should set scene asset configuration correctly', () => {
-      const newConfig = new MockSceneAssetConfig();
+      const newConfig = new MockSceneAssetConfigData();
       loader.setSceneAssetConfig(newConfig as any);
       expect(loader.getSceneAssetConfig()).toBe(newConfig);
     });

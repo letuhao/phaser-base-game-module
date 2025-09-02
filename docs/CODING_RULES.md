@@ -25,6 +25,7 @@ This document defines the coding rules and standards for the Phaser Base Game Mo
 | **15** | **Enum/Interface Single Responsibility** | Prevent duplicate enums/interfaces across systems |
 | **16** | **Interface Dependency Inversion** | Force use of interfaces in properties and parameters |
 | **17** | **Require Statement Prohibition** | Prohibit CommonJS require() statements in browser environments |
+| **18** | **Logger Import Rule** | Always import `logger` from Logger, never import `Logger` class from LoggerOptimized |
 
 ## 🏗️ Architecture Principles
 
@@ -1673,6 +1674,60 @@ import config from './config.json';
 import { func1, func2 } from './utils';
 ```
 
+## 📝 **Rule #18: Logger Import Rule**
+
+### ❌ **FORBIDDEN - Importing Logger Class**
+```typescript
+// ❌ FORBIDDEN - Importing the Logger class
+import { Logger } from '../core/LoggerOptimized';
+
+export class MyClass {
+  private readonly logger: Logger = Logger.getInstance();
+  
+  public doSomething(): void {
+    this.logger.info('MyClass', 'doSomething', 'Message');
+  }
+}
+```
+
+### ✅ **CORRECT - Importing logger Instance**
+```typescript
+// ✅ CORRECT - Importing the logger instance directly
+import { logger } from '../core/Logger';
+
+export class MyClass {
+  public doSomething(): void {
+    logger.info('MyClass', 'doSomething', 'Message');
+  }
+}
+```
+
+### **Why This Rule Exists**
+- **Consistency**: All classes should use the same logger instance
+- **Simplicity**: No need to create logger instances in every class
+- **Performance**: Avoids multiple logger instance creation
+- **Maintainability**: Single point of logger configuration
+
+### **Implementation Guidelines**
+```typescript
+// ✅ CORRECT - Direct logger usage
+import { logger } from '../core/Logger';
+
+export class ThemeManager {
+  async initialize(): Promise<void> {
+    logger.info('ThemeManager', 'initialize', 'Initializing theme manager');
+    
+    try {
+      // Implementation
+      logger.info('ThemeManager', 'initialize', 'Theme manager initialized successfully');
+    } catch (error) {
+      logger.error('ThemeManager', 'initialize', 'Failed to initialize theme manager', { error });
+      throw error;
+    }
+  }
+}
+```
+
 ## 🚀 Best Practices Summary
 
 1. **Always use the Logger** - Never use `console.*`
@@ -1693,7 +1748,8 @@ import { func1, func2 } from './utils';
 16. **Prevent duplication** - Use shared enums/interfaces across systems
 17. **Use interfaces in dependencies** - Force interface usage in properties and parameters
 18. **Prohibit require() statements** - Use ES6 imports instead of CommonJS require()
-19. **Follow design patterns** - Implement SOLID principles
+19. **Import logger correctly** - Always import `logger` from Logger, never import `Logger` class
+20. **Follow design patterns** - Implement SOLID principles
 20. **Handle errors properly** - Never ignore exceptions
 21. **Write comprehensive tests** - Cover all scenarios
 22. **Use type safety** - Leverage TypeScript's type system

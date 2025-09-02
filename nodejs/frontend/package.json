@@ -17,9 +17,9 @@
     "test:coverage:watch": "jest --coverage --watch",
     "test:build": "tsc --project tsconfig.test.json",
     "test:type-check": "tsc --noEmit --project tsconfig.test.json",
-    "integration:verify": "ts-node src/integration/verify-loading-logic.ts",
+    "integration:verify": "tsc --project tsconfig.node.json && node dist/integration/verify-loading-logic.js",
     "integration:test": "jest src/integration/AssetLoadingIntegration.test.ts",
-    "integration:manual": "ts-node src/integration/manual-loading-test.ts"
+    "integration:manual": "tsc --project tsconfig.node.json && node dist/integration/manual-loading-test.js"
   },
   "dependencies": {
     "phaser": "^3.90.0"
@@ -38,6 +38,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.0",
     "vite": "^5.0.0"
   },
