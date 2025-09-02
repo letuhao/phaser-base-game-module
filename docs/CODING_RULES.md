@@ -22,6 +22,7 @@ This document defines the coding rules and standards for the Phaser Base Game Mo
 | **12** | **Testing Rules** | Use mock context in tests |
 | **13** | **System Documentation Rules** | Document system progression, usage, and structure |
 | **14** | **Documentation File Organization** | Place documentation files in system docs folders |
+| **15** | **Enum/Interface Single Responsibility** | Prevent duplicate enums/interfaces across systems |
 
 ## 🏗️ Architecture Principles
 
@@ -1156,6 +1157,223 @@ docs/
 └── system-structure.md    # Should be in system/docs/
 ```
 
+### 15. **Enum/Interface Single Responsibility** 🎯
+
+#### ✅ **ENUMS/INTERFACES MUST HAVE SINGLE RESPONSIBILITY**
+```typescript
+// ✅ CORRECT - Single responsibility enums
+// src/unit/enums/UnitType.ts
+export enum UnitType {
+  SIZE = 'size',
+  POSITION = 'position',
+  SCALE = 'scale'
+}
+
+// src/unit/enums/SizeUnit.ts
+export enum SizeUnit {
+  PIXEL = 'pixel',
+  PARENT_WIDTH = 'parent-width',
+  VIEWPORT_WIDTH = 'viewport-width',
+  AUTO = 'auto'
+}
+
+// ✅ CORRECT - Single responsibility interfaces
+// src/unit/interfaces/IUnit.ts
+export interface IUnit {
+  readonly id: string;
+  readonly unitType: UnitType;
+  calculate(): number;
+}
+
+// src/unit/interfaces/ISizeUnit.ts
+export interface ISizeUnit extends IUnit {
+  readonly sizeUnit: SizeUnit;
+  getSize(): number;
+}
+```
+
+#### ✅ **ALL SYSTEMS MUST USE ONE ENUM/INTERFACE**
+```typescript
+// ✅ CORRECT - Shared enum across systems
+// src/shared/enums/LogLevel.ts
+export enum LogLevel {
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error'
+}
+
+// ✅ CORRECT - All systems import from shared location
+// src/unit/classes/UnitCalculator.ts
+import { LogLevel } from '../../shared/enums/LogLevel';
+
+// src/scene/classes/SceneManager.ts
+import { LogLevel } from '../../shared/enums/LogLevel';
+
+// src/game-object/classes/GameObjectManager.ts
+import { LogLevel } from '../../shared/enums/LogLevel';
+```
+
+#### ❌ **DUPLICATE ENUMS/INTERFACES ARE FORBIDDEN**
+```typescript
+// ❌ FORBIDDEN - Duplicate enums across systems
+// src/unit/enums/LogLevel.ts
+export enum LogLevel {
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error'
+}
+
+// ❌ FORBIDDEN - Same enum in different system
+// src/scene/enums/LogLevel.ts
+export enum LogLevel {
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error'
+}
+
+// ❌ FORBIDDEN - Duplicate interfaces
+// src/unit/interfaces/IConfig.ts
+export interface IConfig {
+  readonly id: string;
+  readonly name: string;
+}
+
+// ❌ FORBIDDEN - Same interface in different system
+// src/scene/interfaces/IConfig.ts
+export interface IConfig {
+  readonly id: string;
+  readonly name: string;
+}
+```
+
+#### ✅ **SHARED ENUM/INTERFACE ORGANIZATION**
+```typescript
+// ✅ CORRECT - Shared enums in shared folder
+src/
+├── shared/
+│   ├── enums/
+│   │   ├── LogLevel.ts
+│   │   ├── ErrorType.ts
+│   │   ├── ValidationType.ts
+│   │   └── index.ts
+│   ├── interfaces/
+│   │   ├── IConfig.ts
+│   │   ├── IError.ts
+│   │   ├── IValidation.ts
+│   │   └── index.ts
+│   └── constants/
+│       ├── SystemConstants.ts
+│       └── index.ts
+├── unit/
+│   ├── enums/
+│   │   ├── UnitType.ts      # Unit-specific only
+│   │   ├── SizeUnit.ts      # Unit-specific only
+│   │   └── index.ts
+│   └── interfaces/
+│       ├── IUnit.ts         # Unit-specific only
+│       └── index.ts
+├── scene/
+│   ├── enums/
+│   │   ├── SceneType.ts     # Scene-specific only
+│   │   ├── SceneState.ts    # Scene-specific only
+│   │   └── index.ts
+│   └── interfaces/
+│       ├── IScene.ts        # Scene-specific only
+│       └── index.ts
+└── game-object/
+    ├── enums/
+    │   ├── GameObjectType.ts # GameObject-specific only
+    │   └── index.ts
+    └── interfaces/
+        ├── IGameObject.ts    # GameObject-specific only
+        └── index.ts
+```
+
+#### ✅ **ENUM/INTERFACE CONFLICT RESOLUTION**
+```typescript
+// ✅ CORRECT - Resolve conflicts by using shared enum
+// Before: Duplicate LogLevel enums
+// src/unit/enums/LogLevel.ts (REMOVE)
+// src/scene/enums/LogLevel.ts (REMOVE)
+
+// After: Use shared LogLevel
+// src/shared/enums/LogLevel.ts
+export enum LogLevel {
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error'
+}
+
+// ✅ CORRECT - Update all imports to use shared enum
+// src/unit/classes/UnitCalculator.ts
+import { LogLevel } from '../../shared/enums/LogLevel';
+
+// src/scene/classes/SceneManager.ts
+import { LogLevel } from '../../shared/enums/LogLevel';
+```
+
+#### ✅ **ENUM/INTERFACE RESPONSIBILITY GUIDELINES**
+```typescript
+// ✅ CORRECT - Each enum has single, clear responsibility
+export enum UnitType {
+  SIZE = 'size',           // Only for unit types
+  POSITION = 'position',   // Only for unit types
+  SCALE = 'scale'          // Only for unit types
+}
+
+export enum SceneType {
+  MENU = 'menu',           // Only for scene types
+  GAME = 'game',           // Only for scene types
+  PAUSE = 'pause'          // Only for scene types
+}
+
+// ✅ CORRECT - Each interface has single, clear responsibility
+export interface IUnit {
+  readonly id: string;     // Only unit-related properties
+  readonly unitType: UnitType;
+  calculate(): number;     // Only unit-related methods
+}
+
+export interface IScene {
+  readonly id: string;     // Only scene-related properties
+  readonly sceneType: SceneType;
+  initialize(): void;      // Only scene-related methods
+}
+```
+
+#### ❌ **MULTIPLE RESPONSIBILITIES FORBIDDEN**
+```typescript
+// ❌ FORBIDDEN - Enum with multiple responsibilities
+export enum MixedEnum {
+  // Unit-related values
+  SIZE = 'size',
+  POSITION = 'position',
+  // Scene-related values
+  MENU = 'menu',
+  GAME = 'game',
+  // Log-related values
+  DEBUG = 'debug',
+  INFO = 'info'
+}
+
+// ❌ FORBIDDEN - Interface with multiple responsibilities
+export interface IMixedInterface {
+  // Unit-related properties
+  readonly unitType: UnitType;
+  calculate(): number;
+  // Scene-related properties
+  readonly sceneType: SceneType;
+  initialize(): void;
+  // Log-related properties
+  readonly logLevel: LogLevel;
+  log(message: string): void;
+}
+```
+
 ## 📋 Code Review Checklist
 
 ### **Before Submitting Code**
@@ -1174,6 +1392,9 @@ docs/
 - [ ] **System structure and purpose documented**
 - [ ] **All documentation files placed in system docs folders**
 - [ ] **All required documentation files present (PROGRESSION.md, IMPLEMENTATION.md, SOLID_SCORE.md, USAGE.md, STRUCTURE.md, README.md)**
+- [ ] **All enums/interfaces have single responsibility**
+- [ ] **No duplicate enums/interfaces across systems**
+- [ ] **Shared enums/interfaces used consistently**
 - [ ] All design patterns properly implemented
 - [ ] All error scenarios handled
 - [ ] All public methods have tests
@@ -1194,6 +1415,9 @@ docs/
 - [ ] **System structure clearly documented**
 - [ ] **Documentation files properly organized in system docs folders**
 - [ ] **All required documentation files present and complete**
+- [ ] **Enums/interfaces follow single responsibility principle**
+- [ ] **No duplicate enums/interfaces across systems**
+- [ ] **Shared enums/interfaces used consistently**
 - [ ] Proper logging implemented
 - [ ] Error handling comprehensive
 - [ ] Design patterns correctly applied
@@ -1217,12 +1441,14 @@ docs/
 12. **Document system usage** - Provide comprehensive usage guides
 13. **Document system structure** - Explain architecture and purpose
 14. **Organize documentation files** - Place in system docs folders
-15. **Follow design patterns** - Implement SOLID principles
-16. **Handle errors properly** - Never ignore exceptions
-17. **Write comprehensive tests** - Cover all scenarios
-18. **Use type safety** - Leverage TypeScript's type system
-19. **Follow naming conventions** - Be consistent
-20. **Document your code** - Use JSDoc comments
+15. **Enforce single responsibility** - Each enum/interface has one purpose
+16. **Prevent duplication** - Use shared enums/interfaces across systems
+17. **Follow design patterns** - Implement SOLID principles
+18. **Handle errors properly** - Never ignore exceptions
+19. **Write comprehensive tests** - Cover all scenarios
+20. **Use type safety** - Leverage TypeScript's type system
+21. **Follow naming conventions** - Be consistent
+22. **Document your code** - Use JSDoc comments
 
 ## 📚 Additional Resources
 

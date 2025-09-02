@@ -7,12 +7,26 @@ import { IUnitConfig } from '../interfaces/IUnitConfig';
 import { SizeUnit } from '../enums/SizeUnit';
 import { Dimension } from '../enums/Dimension';
 import { SizeValue } from '../enums/SizeValue';
+import { Logger } from '../../core/Logger';
 
 describe('ProductionMonitoringSystem', () => {
   let monitoringSystem: ProductionMonitoringSystem;
   let config: MonitoringConfig;
+  let loggerSpy: any;
 
   beforeEach(() => {
+    // Mock Logger instance
+    const mockLogger = {
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+      debug: jest.fn(),
+      log: jest.fn()
+    };
+    
+    loggerSpy = mockLogger.info;
+    jest.spyOn(Logger, 'getInstance').mockReturnValue(mockLogger as any);
+
     config = {
       enabled: true,
       metricsCollectionInterval: 1000,
@@ -30,6 +44,7 @@ describe('ProductionMonitoringSystem', () => {
 
   afterEach(() => {
     monitoringSystem.stop();
+    jest.restoreAllMocks();
   });
 
   describe('Constructor and Configuration', () => {
@@ -56,41 +71,37 @@ describe('ProductionMonitoringSystem', () => {
 
   describe('Start and Stop', () => {
     it('should start monitoring successfully', () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-
       monitoringSystem.start();
 
-      expect(consoleSpy).toHaveBeenCalledWith('Production monitoring started');
-      consoleSpy.mockRestore();
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'ProductionMonitoringSystem',
+        'start',
+        'Production monitoring started'
+      );
     });
 
     it('should stop monitoring successfully', () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-
       monitoringSystem.start();
       monitoringSystem.stop();
 
-      expect(consoleSpy).toHaveBeenCalledWith('Production monitoring stopped');
-      consoleSpy.mockRestore();
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'ProductionMonitoringSystem',
+        'stop',
+        'Production monitoring stopped'
+      );
     });
 
     it('should not start if already running', () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-
       monitoringSystem.start();
       monitoringSystem.start(); // Second start should be ignored
 
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      consoleSpy.mockRestore();
+      expect(loggerSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not stop if not running', () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-
       monitoringSystem.stop(); // Stop without starting
 
-      expect(consoleSpy).not.toHaveBeenCalled();
-      consoleSpy.mockRestore();
+      expect(loggerSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -440,11 +451,13 @@ describe('ProductionMonitoringSystem', () => {
 
   describe('Integration Scenarios', () => {
     it('should handle full monitoring lifecycle', () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-
       // Start monitoring
       monitoringSystem.start();
-      expect(consoleSpy).toHaveBeenCalledWith('Production monitoring started');
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'ProductionMonitoringSystem',
+        'start',
+        'Production monitoring started'
+      );
 
       // Record various metrics
       monitoringSystem.recordMetric('test.metric', 100, 'ms');
@@ -470,9 +483,11 @@ describe('ProductionMonitoringSystem', () => {
 
       // Stop monitoring
       monitoringSystem.stop();
-      expect(consoleSpy).toHaveBeenCalledWith('Production monitoring stopped');
-
-      consoleSpy.mockRestore();
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'ProductionMonitoringSystem',
+        'stop',
+        'Production monitoring stopped'
+      );
     });
 
     it('should handle high-volume metric recording', () => {

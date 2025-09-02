@@ -1,8 +1,10 @@
 import { describe, beforeEach, afterEach, it, expect, jest } from '@jest/globals';
 import { UnitGroupComposite } from '../composites/UnitGroupComposite';
+import { CalculationStrategy } from '../enums/CalculationStrategy';
 import type { IUnit } from '../interfaces/IUnit';
 import type { UnitContext } from '../interfaces/IUnit';
 import { UnitType } from '../enums/UnitType';
+import { Logger } from '../../core/Logger';
 
 // Mock unit for testing
 class MockUnit implements IUnit {
@@ -51,9 +53,22 @@ class MockUnit implements IUnit {
 describe('UnitGroupComposite', () => {
   let composite: UnitGroupComposite;
   let mockContext: UnitContext;
+  let loggerSpy: any;
 
   beforeEach(() => {
-    composite = new UnitGroupComposite('test-group', 'Test Group', 0, 'sum');
+    // Mock Logger instance
+    const mockLogger = {
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+      debug: jest.fn(),
+      log: jest.fn()
+    };
+    
+    loggerSpy = mockLogger.warn;
+    jest.spyOn(Logger, 'getInstance').mockReturnValue(mockLogger as any);
+
+    composite = new UnitGroupComposite('test-group', 'Test Group', 0, CalculationStrategy.SUM);
     mockContext = {
       parent: { width: 800, height: 600, x: 100, y: 50 },
       scene: { width: 1200, height: 800 },
@@ -61,7 +76,7 @@ describe('UnitGroupComposite', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('constructor', () => {
@@ -70,15 +85,15 @@ describe('UnitGroupComposite', () => {
       expect(composite.name).toBe('Test Group');
       expect(composite.unitType).toBe(UnitType.SIZE);
       expect(composite.isActive).toBe(true);
-      expect(composite.getCalculationStrategy()).toBe('sum');
+      expect(composite.getCalculationStrategy()).toBe(CalculationStrategy.SUM);
     });
 
     it('should create a unit group composite with custom settings', () => {
-      const customComposite = new UnitGroupComposite('custom-group', 'Custom Group', 50, 'average');
+      const customComposite = new UnitGroupComposite('custom-group', 'Custom Group', 50, CalculationStrategy.AVERAGE);
 
       expect(customComposite.id).toBe('custom-group');
       expect(customComposite.name).toBe('Custom Group');
-      expect(customComposite.getCalculationStrategy()).toBe('average');
+      expect(customComposite.getCalculationStrategy()).toBe(CalculationStrategy.AVERAGE);
     });
   });
 
@@ -142,7 +157,7 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should calculate sum strategy correctly', () => {
-      composite.setCalculationStrategy('sum');
+      composite.setCalculationStrategy(CalculationStrategy.SUM);
       const result = composite.calculate(mockContext);
 
       // child1: 800 + 10 = 810
@@ -153,7 +168,7 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should calculate average strategy correctly', () => {
-      composite.setCalculationStrategy('average');
+      composite.setCalculationStrategy(CalculationStrategy.AVERAGE);
       const result = composite.calculate(mockContext);
 
       // Average of 810, 820, 830 = 820
@@ -161,7 +176,7 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should calculate min strategy correctly', () => {
-      composite.setCalculationStrategy('min');
+      composite.setCalculationStrategy(CalculationStrategy.MIN);
       const result = composite.calculate(mockContext);
 
       // Min of 810, 820, 830 = 810
@@ -169,7 +184,7 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should calculate max strategy correctly', () => {
-      composite.setCalculationStrategy('max');
+      composite.setCalculationStrategy(CalculationStrategy.MAX);
       const result = composite.calculate(mockContext);
 
       // Max of 810, 820, 830 = 830
@@ -294,18 +309,15 @@ describe('UnitGroupComposite', () => {
         throw new Error('Child calculation failed');
       });
 
-      // Should not throw, but log a warning
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
       const result = composite.calculate(mockContext);
 
       expect(result).toBe(0); // Should return base value
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Error calculating child unit error-child:'),
-        expect.any(Error)
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'UnitGroupComposite',
+        'calculate',
+        'Error calculating child unit error-child',
+        { error: 'Child calculation failed' }
       );
-
-      consoleSpy.mockRestore();
     });
 
     it('should handle invalid context', () => {
@@ -333,16 +345,16 @@ describe('UnitGroupComposite', () => {
       composite.addChild(scaleChild);
 
       // Test different strategies
-      composite.setCalculationStrategy('sum');
+      composite.setCalculationStrategy(CalculationStrategy.SUM);
       const sumResult = composite.calculate(mockContext);
 
-      composite.setCalculationStrategy('average');
+      composite.setCalculationStrategy(CalculationStrategy.AVERAGE);
       const avgResult = composite.calculate(mockContext);
 
-      composite.setCalculationStrategy('min');
+      composite.setCalculationStrategy(CalculationStrategy.MIN);
       const minResult = composite.calculate(mockContext);
 
-      composite.setCalculationStrategy('max');
+      composite.setCalculationStrategy(CalculationStrategy.MAX);
       const maxResult = composite.calculate(mockContext);
 
       // Verify results are reasonable
@@ -356,7 +368,7 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should handle nested composites', () => {
-      const nestedComposite = new UnitGroupComposite('nested', 'Nested Group', 0, 'sum');
+      const nestedComposite = new UnitGroupComposite('nested', 'Nested Group', 0, CalculationStrategy.SUM);
       const child1 = new MockUnit('child-1', 'Child 1');
       const child2 = new MockUnit('child-2', 'Child 2');
 

@@ -2,23 +2,27 @@ import { BaseUnitComposite } from './IUnitComposite';
 import type { IUnit } from '../interfaces/IUnit';
 import type { UnitContext } from '../interfaces/IUnit';
 import { UnitType } from '../enums/UnitType';
+import { CalculationStrategy } from '../enums/CalculationStrategy';
+import { Logger } from '../../core/Logger';
 
 /**
  * Unit Group Composite
  * Groups multiple units together and manages their collective behavior
  */
 export class UnitGroupComposite extends BaseUnitComposite {
-  private calculationStrategy: 'sum' | 'average' | 'min' | 'max' | 'custom' = 'sum';
+  private calculationStrategy: CalculationStrategy = CalculationStrategy.SUM;
   private customCalculator?: (results: number[]) => number;
+  private readonly logger: Logger;
 
   constructor(
     id: string,
     name: string,
     baseValue: number = 0,
-    calculationStrategy: 'sum' | 'average' | 'min' | 'max' | 'custom' = 'sum'
+    calculationStrategy: CalculationStrategy = CalculationStrategy.SUM
   ) {
     super(id, name, UnitType.SIZE, baseValue);
     this.calculationStrategy = calculationStrategy;
+    this.logger = Logger.getInstance();
   }
 
   calculate(context: UnitContext): number {
@@ -35,7 +39,7 @@ export class UnitGroupComposite extends BaseUnitComposite {
           results.push(result);
         } catch (error) {
           // Log error but continue with other children
-          console.warn(`Error calculating child unit ${child.id}:`, error);
+          this.logger.warn('UnitGroupComposite', 'calculate', `Error calculating child unit ${child.id}`, { error: error instanceof Error ? error.message : String(error) });
         }
       }
     }
@@ -56,7 +60,7 @@ export class UnitGroupComposite extends BaseUnitComposite {
   /**
    * Set the calculation strategy for the group
    */
-  setCalculationStrategy(strategy: 'sum' | 'average' | 'min' | 'max' | 'custom'): void {
+  setCalculationStrategy(strategy: CalculationStrategy): void {
     this.calculationStrategy = strategy;
   }
 
@@ -65,13 +69,13 @@ export class UnitGroupComposite extends BaseUnitComposite {
    */
   setCustomCalculator(calculator: (results: number[]) => number): void {
     this.customCalculator = calculator;
-    this.calculationStrategy = 'custom';
+    this.calculationStrategy = CalculationStrategy.CUSTOM;
   }
 
   /**
    * Get the current calculation strategy
    */
-  getCalculationStrategy(): string {
+  getCalculationStrategy(): CalculationStrategy {
     return this.calculationStrategy;
   }
 
@@ -125,19 +129,19 @@ export class UnitGroupComposite extends BaseUnitComposite {
    */
   private applyCalculationStrategy(results: number[]): number {
     switch (this.calculationStrategy) {
-      case 'sum':
+      case CalculationStrategy.SUM:
         return results.reduce((sum, result) => sum + result, 0);
 
-      case 'average':
+      case CalculationStrategy.AVERAGE:
         return results.reduce((sum, result) => sum + result, 0) / results.length;
 
-      case 'min':
+      case CalculationStrategy.MIN:
         return Math.min(...results);
 
-      case 'max':
+      case CalculationStrategy.MAX:
         return Math.max(...results);
 
-      case 'custom':
+      case CalculationStrategy.CUSTOM:
         if (this.customCalculator) {
           return this.customCalculator(results);
         }

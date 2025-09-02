@@ -7,6 +7,7 @@ import { PositionUnit } from '../enums/PositionUnit';
 import { PositionValue } from '../enums/PositionValue';
 import { ScaleUnit } from '../enums/ScaleUnit';
 import { ScaleValue } from '../enums/ScaleValue';
+import { ValidationType } from '../enums/ValidationType';
 
 /**
  * Base validation input interface
@@ -152,7 +153,7 @@ export interface ILegacyValidationInput extends IBaseValidationInput {
   input: unknown;
 
   /** Expected input type for validation */
-  expectedType: 'unit' | 'value' | 'size' | 'position' | 'scale' | 'mixed';
+  expectedType: ValidationType;
 
   /** Whether to perform strict type checking */
   strictTypeChecking?: boolean;
@@ -428,5 +429,5 @@ export function convertToValidationInput(input: unknown): IValidationInput {
   }
 
   // Default to legacy validation input
-  return createLegacyValidationInput(input, 'mixed');
+  return createLegacyValidationInput(input, ValidationType.MIXED);
 }

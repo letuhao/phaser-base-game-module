@@ -1,5 +1,6 @@
 import { UnitContext } from '../interfaces/IUnit';
 import { IUnitConfig } from '../interfaces/IUnitConfig';
+import { Logger } from '../../core/Logger';
 
 export interface PerformanceMetric {
   timestamp: Date;
@@ -51,9 +52,11 @@ export class ProductionMonitoringSystem {
   private isRunning: boolean = false;
   private metricsInterval?: NodeJS.Timeout;
   private healthCheckInterval?: NodeJS.Timeout;
+  private readonly logger: Logger;
 
   constructor(config: MonitoringConfig) {
     this.config = config;
+    this.logger = Logger.getInstance();
   }
 
   /**
@@ -77,7 +80,7 @@ export class ProductionMonitoringSystem {
         this.performHealthChecks();
       }, this.config.healthCheckInterval);
 
-      console.log('Production monitoring started');
+      this.logger.info('ProductionMonitoringSystem', 'start', 'Production monitoring started');
     }
   }
 
@@ -101,7 +104,7 @@ export class ProductionMonitoringSystem {
       this.healthCheckInterval = undefined;
     }
 
-    console.log('Production monitoring stopped');
+    this.logger.info('ProductionMonitoringSystem', 'stop', 'Production monitoring stopped');
   }
 
   /**
@@ -459,7 +462,7 @@ export class ProductionMonitoringSystem {
       this.alerts = this.alerts.slice(-100);
     }
 
-    console.log(`Alert created: ${alert.title} - ${alert.message}`);
+    this.logger.warn('ProductionMonitoringSystem', 'createAlert', `Alert created: ${alert.title} - ${alert.message}`);
   }
 
   /**

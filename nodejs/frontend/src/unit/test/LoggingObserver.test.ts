@@ -1,5 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect, jest } from '@jest/globals';
 import { LoggingObserver } from '../observers/LoggingObserver';
+import { LogLevel } from '../enums/LogLevel';
 import { Logger } from '../../core/Logger';
 
 // Mock the Logger
@@ -26,7 +27,7 @@ describe('LoggingObserver', () => {
     // Mock the Logger.getInstance() method
     (Logger.getInstance as jest.Mock).mockReturnValue(mockLogger);
 
-    observer = new LoggingObserver('info');
+    observer = new LoggingObserver(LogLevel.INFO);
   });
 
   afterEach(() => {
@@ -40,9 +41,9 @@ describe('LoggingObserver', () => {
     });
 
     it('should create observer with custom log level', () => {
-      const debugObserver = new LoggingObserver('debug');
-      const warnObserver = new LoggingObserver('warn');
-      const errorObserver = new LoggingObserver('error');
+      const debugObserver = new LoggingObserver(LogLevel.DEBUG);
+      const warnObserver = new LoggingObserver(LogLevel.WARN);
+      const errorObserver = new LoggingObserver(LogLevel.ERROR);
 
       expect(debugObserver).toBeInstanceOf(LoggingObserver);
       expect(warnObserver).toBeInstanceOf(LoggingObserver);
@@ -160,7 +161,7 @@ describe('LoggingObserver', () => {
 
   describe('onUnitCalculationStarted', () => {
     it('should log calculation start with debug level when log level is debug', () => {
-      observer = new LoggingObserver('debug');
+      observer = new LoggingObserver(LogLevel.DEBUG);
       const startTime = performance.now();
       observer.onUnitCalculationStarted('test-unit-1');
 
@@ -183,7 +184,7 @@ describe('LoggingObserver', () => {
     });
 
     it('should not log calculation start when log level is info', () => {
-      observer = new LoggingObserver('info');
+      observer = new LoggingObserver(LogLevel.INFO);
       observer.onUnitCalculationStarted('test-unit-1');
 
       expect(mockLogger.debug).not.toHaveBeenCalled();
@@ -291,42 +292,42 @@ describe('LoggingObserver', () => {
 
   describe('log level filtering', () => {
     it('should not log debug messages when log level is info', () => {
-      observer = new LoggingObserver('info');
+      observer = new LoggingObserver(LogLevel.INFO);
       observer.onUnitCalculationStarted('test-unit-1');
 
       expect(mockLogger.debug).not.toHaveBeenCalled();
     });
 
     it('should log debug messages when log level is debug', () => {
-      observer = new LoggingObserver('debug');
+      observer = new LoggingObserver(LogLevel.DEBUG);
       observer.onUnitCalculationStarted('test-unit-1');
 
       expect(mockLogger.debug).toHaveBeenCalled();
     });
 
     it('should not log info messages when log level is warn', () => {
-      observer = new LoggingObserver('warn');
+      observer = new LoggingObserver(LogLevel.WARN);
       observer.onUnitValueChanged('test-unit-1', 100, 150);
 
       expect(mockLogger.info).not.toHaveBeenCalled();
     });
 
     it('should log warn messages when log level is warn', () => {
-      observer = new LoggingObserver('warn');
+      observer = new LoggingObserver(LogLevel.WARN);
       // Note: We don't have a warn-level event in the current implementation
       // This test verifies the log level filtering works
       expect(observer).toBeInstanceOf(LoggingObserver);
     });
 
     it('should not log info messages when log level is error', () => {
-      observer = new LoggingObserver('error');
+      observer = new LoggingObserver(LogLevel.ERROR);
       observer.onUnitValueChanged('test-unit-1', 100, 150);
 
       expect(mockLogger.info).not.toHaveBeenCalled();
     });
 
     it('should log error messages when log level is error', () => {
-      observer = new LoggingObserver('error');
+      observer = new LoggingObserver(LogLevel.ERROR);
       const error = new Error('Test error');
       observer.onUnitCalculationFailed('test-unit-1', error);
 
@@ -336,29 +337,29 @@ describe('LoggingObserver', () => {
 
   describe('setLogLevel', () => {
     it('should change log level', () => {
-      observer = new LoggingObserver('info');
+      observer = new LoggingObserver(LogLevel.INFO);
 
       // Initially should not log debug
       observer.onUnitCalculationStarted('test-unit-1');
       expect(mockLogger.debug).not.toHaveBeenCalled();
 
       // Change to debug level
-      observer.setLogLevel('debug');
+      observer.setLogLevel(LogLevel.DEBUG);
       observer.onUnitCalculationStarted('test-unit-2');
       expect(mockLogger.debug).toHaveBeenCalled();
     });
 
     it('should handle all log level changes', () => {
-      observer.setLogLevel('debug');
+      observer.setLogLevel(LogLevel.DEBUG);
       expect(observer).toBeInstanceOf(LoggingObserver);
 
-      observer.setLogLevel('info');
+      observer.setLogLevel(LogLevel.INFO);
       expect(observer).toBeInstanceOf(LoggingObserver);
 
-      observer.setLogLevel('warn');
+      observer.setLogLevel(LogLevel.WARN);
       expect(observer).toBeInstanceOf(LoggingObserver);
 
-      observer.setLogLevel('error');
+      observer.setLogLevel(LogLevel.ERROR);
       expect(observer).toBeInstanceOf(LoggingObserver);
     });
   });
@@ -387,25 +388,20 @@ describe('LoggingObserver', () => {
         throw new Error('Fallback logger error');
       });
 
-      // Should not throw, should fall back to console.error
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
+      // Should not throw, should fail silently (no console fallback per coding rules)
       expect(() => {
         observer.onUnitValueChanged('test-unit-1', 100, 150);
       }).not.toThrow();
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        '[LoggingObserver] Both loggers failed:',
-        expect.any(Error)
-      );
-
-      consoleSpy.mockRestore();
+      // Verify that both logger calls were attempted
+      expect(mockLogger.info).toHaveBeenCalled();
+      expect(mockLogger.log).toHaveBeenCalled();
     });
   });
 
   describe('integration scenarios', () => {
     it('should handle complete unit lifecycle', () => {
-      observer = new LoggingObserver('debug'); // Set to debug to see all logs
+      observer = new LoggingObserver(LogLevel.DEBUG); // Set to debug to see all logs
       observer.onUnitCreated('test-unit-1', 'size');
       observer.onUnitCalculationStarted('test-unit-1');
       observer.onUnitCalculationCompleted('test-unit-1', 150, 25);
@@ -417,7 +413,7 @@ describe('LoggingObserver', () => {
     });
 
     it('should handle calculation failure scenario', () => {
-      observer = new LoggingObserver('debug'); // Set to debug to see all logs
+      observer = new LoggingObserver(LogLevel.DEBUG); // Set to debug to see all logs
       observer.onUnitCreated('test-unit-1', 'size');
       observer.onUnitCalculationStarted('test-unit-1');
 

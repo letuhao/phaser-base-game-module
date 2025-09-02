@@ -1,5 +1,6 @@
 import type { IUnitObserver } from './IUnitObserver';
 import { Logger } from '../../core/Logger';
+import { LogLevel, shouldLogLevel } from '../enums/LogLevel';
 
 /**
  * Logging Observer
@@ -7,10 +8,10 @@ import { Logger } from '../../core/Logger';
  * Logs unit events for debugging and monitoring purposes
  */
 export class LoggingObserver implements IUnitObserver {
-  private logLevel: 'debug' | 'info' | 'warn' | 'error';
+  private logLevel: LogLevel;
   private readonly logger: Logger;
 
-  constructor(logLevel: 'debug' | 'info' | 'warn' | 'error' = 'info') {
+  constructor(logLevel: LogLevel = LogLevel.INFO) {
     this.logLevel = logLevel;
     this.logger = Logger.getInstance();
   }
@@ -22,7 +23,7 @@ export class LoggingObserver implements IUnitObserver {
     const event = 'unit_value_changed';
     const data = { unitId, oldValue, newValue, change: newValue - oldValue };
 
-    this.log('info', event, data);
+    this.log(LogLevel.INFO, event, data);
   }
 
   /**
@@ -32,7 +33,7 @@ export class LoggingObserver implements IUnitObserver {
     const event = 'unit_created';
     const data = { unitId, unitType };
 
-    this.log('info', event, data);
+    this.log(LogLevel.INFO, event, data);
   }
 
   /**
@@ -42,7 +43,7 @@ export class LoggingObserver implements IUnitObserver {
     const event = 'unit_destroyed';
     const data = { unitId };
 
-    this.log('info', event, data);
+    this.log(LogLevel.INFO, event, data);
   }
 
   /**
@@ -52,7 +53,7 @@ export class LoggingObserver implements IUnitObserver {
     const event = 'unit_calculation_started';
     const data = { unitId, startTime: performance.now() };
 
-    this.log('debug', event, data);
+    this.log(LogLevel.DEBUG, event, data);
   }
 
   /**
@@ -62,7 +63,7 @@ export class LoggingObserver implements IUnitObserver {
     const event = 'unit_calculation_completed';
     const data = { unitId, result, duration: `${duration.toFixed(2)}ms` };
 
-    this.log('info', event, data);
+    this.log(LogLevel.INFO, event, data);
   }
 
   /**
@@ -77,15 +78,15 @@ export class LoggingObserver implements IUnitObserver {
       timestamp: new Date().toISOString(),
     };
 
-    this.log('error', event, data);
+    this.log(LogLevel.ERROR, event, data);
   }
 
   /**
    * Log an event using the project's Logger system
    */
-  private log(level: string, event: string, data: Record<string, unknown>): void {
+  private log(level: LogLevel, event: string, data: Record<string, unknown>): void {
     // Check if we should log this level
-    if (!this.shouldLog(level)) {
+    if (!shouldLogLevel(this.logLevel, level)) {
       return;
     }
 
@@ -94,16 +95,16 @@ export class LoggingObserver implements IUnitObserver {
 
     try {
       switch (level) {
-        case 'debug':
+        case LogLevel.DEBUG:
           this.logger.debug(objectName, 'LoggingObserver', message, data);
           break;
-        case 'info':
+        case LogLevel.INFO:
           this.logger.info(objectName, 'LoggingObserver', message, data);
           break;
-        case 'warn':
+        case LogLevel.WARN:
           this.logger.warn(objectName, 'LoggingObserver', message, data);
           break;
-        case 'error':
+        case LogLevel.ERROR:
           this.logger.error(objectName, 'LoggingObserver', message, data);
           break;
         default:
@@ -117,27 +118,16 @@ export class LoggingObserver implements IUnitObserver {
         });
         this.logger.log('LoggingObserver', 'log', `[${level.toUpperCase()}] ${event}`, data);
       } catch (fallbackError) {
-        // Final fallback to console if both loggers fail
-        console.error('[LoggingObserver] Both loggers failed:', fallbackError);
+        // Silent failure - no console fallback to maintain compliance
+        // Logging failure is not critical enough to break the application
       }
     }
   }
 
   /**
-   * Check if we should log the specified level
-   */
-  private shouldLog(level: string): boolean {
-    const levels = { debug: 0, info: 1, warn: 2, error: 3 };
-    const currentLevel = levels[this.logLevel] || 0;
-    const messageLevel = levels[level as keyof typeof levels] || 0;
-
-    return messageLevel >= currentLevel;
-  }
-
-  /**
    * Set log level
    */
-  setLogLevel(level: 'debug' | 'info' | 'warn' | 'error'): void {
+  setLogLevel(level: LogLevel): void {
     this.logLevel = level;
   }
 }
