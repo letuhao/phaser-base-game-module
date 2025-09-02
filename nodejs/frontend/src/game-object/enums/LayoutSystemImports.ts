@@ -1,6 +1,6 @@
 /**
  * Layout System Imports for Game Object System
- * 
+ *
  * This file imports enums from the Layout System and re-exports them
  * for use in the Game Object System to avoid duplication.
  */
@@ -85,7 +85,7 @@ export {
   AnimationDirectionValue,
   AnimationFillModeValue,
   ShadowFilter,
-  LAYOUT_SYSTEM_ENUMS
+  LAYOUT_SYSTEM_ENUMS,
 } from '../../layout/enums/LayoutEnums';
 
 // ============================================================================
@@ -102,7 +102,7 @@ export {
   SizeValue,
   PositionValue,
   ScaleValue,
-  TemplateInputType
+  TemplateInputType,
 } from '../../unit';
 
 // ============================================================================
@@ -121,5 +121,5 @@ export {
   HorizontalAlignment as HAlign,
   VerticalAlignment as VAlign,
   TextAlign as TextAlignment,
-  PositionType as Position
+  PositionType as Position,
 } from '../../layout/enums/LayoutEnums';

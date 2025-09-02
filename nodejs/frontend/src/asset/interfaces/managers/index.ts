@@ -1,6 +1,6 @@
 /**
  * Asset Manager Interfaces Index
- * 
+ *
  * Centralized export for all asset manager interfaces
  */
 
@@ -24,4 +24,5 @@ export const ASSET_MANAGER_INTERFACES = {
   IAssetStatisticsManager: 'IAssetStatisticsManager',
 } as const;
 
-export type AssetManagerInterface = typeof ASSET_MANAGER_INTERFACES[keyof typeof ASSET_MANAGER_INTERFACES];
+export type AssetManagerInterface =
+  (typeof ASSET_MANAGER_INTERFACES)[keyof typeof ASSET_MANAGER_INTERFACES];

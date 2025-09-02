@@ -1,6 +1,6 @@
 /**
  * Debug System Enums
- * 
+ *
  * Enums for debugging, logging, and development tools
  */
 

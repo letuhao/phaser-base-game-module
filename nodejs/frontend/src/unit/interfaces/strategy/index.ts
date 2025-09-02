@@ -16,23 +16,23 @@ export * from './IScaleStrategyInput';
 export type {
   IStrategyInput,
   IStrategyInputFactory,
-  IStrategyInputValidator
+  IStrategyInputValidator,
 } from './IStrategyInput';
 
 export type {
   ISizeStrategyInput,
   ISizeStrategyInputFactory,
-  ISizeStrategyInputValidator
+  ISizeStrategyInputValidator,
 } from './ISizeStrategyInput';
 
 export type {
   IPositionStrategyInput,
   IPositionStrategyInputFactory,
-  IPositionStrategyInputValidator
+  IPositionStrategyInputValidator,
 } from './IPositionStrategyInput';
 
 export type {
   IScaleStrategyInput,
   IScaleStrategyInputFactory,
-  IScaleStrategyInputValidator
+  IScaleStrategyInputValidator,
 } from './IScaleStrategyInput';

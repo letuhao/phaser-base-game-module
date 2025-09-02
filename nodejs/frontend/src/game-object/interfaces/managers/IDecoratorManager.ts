@@ -1,6 +1,6 @@
 /**
  * Decorator Manager Interface
- * 
+ *
  * Defines management functionality for decorator pattern implementations.
  * Handles decorator lifecycle, composition, and behavior management.
  */
@@ -62,94 +62,98 @@ export interface DecoratorBehavior {
  */
 export interface IDecoratorManager {
   readonly decoratorManagerId: string;
-  
+
   /** Decorator manager configuration */
   decoratorManagerConfig: DecoratorManagerConfig;
-  
+
   /** Managed decorators */
   managedDecorators: Map<string, IDecorator>;
-  
+
   /** Decorator compositions */
   decoratorCompositions: Map<string, DecoratorComposition[]>;
-  
+
   /** Decorator behaviors */
   decoratorBehaviors: Map<string, DecoratorBehavior[]>;
-  
+
   /** Decorator manager statistics */
   decoratorManagerStatistics: DecoratorManagerStatistics;
-  
+
   /** Decorator manager metadata */
   decoratorManagerMetadata: Record<string, any>;
-  
+
   /** Set decorator manager configuration */
   setDecoratorManagerConfig(config: DecoratorManagerConfig): this;
-  
+
   /** Set decorator manager metadata */
   setDecoratorManagerMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get decorator manager configuration */
   getDecoratorManagerConfig(): DecoratorManagerConfig;
-  
+
   /** Get managed decorators */
   getManagedDecorators(): Map<string, IDecorator>;
-  
+
   /** Get decorator compositions */
   getDecoratorCompositions(): Map<string, DecoratorComposition[]>;
-  
+
   /** Get decorator behaviors */
   getDecoratorBehaviors(): Map<string, DecoratorBehavior[]>;
-  
+
   /** Get decorator manager statistics */
   getDecoratorManagerStatistics(): DecoratorManagerStatistics;
-  
+
   /** Get decorator manager metadata */
   getDecoratorManagerMetadata(): Record<string, any>;
-  
+
   /** Create decorator */
   createDecorator(decoratorId: string): Promise<IDecorator>;
-  
+
   /** Destroy decorator */
   destroyDecorator(decoratorId: string): Promise<boolean>;
-  
+
   /** Manage decorator */
   manageDecorator(decorator: IDecorator): Promise<this>;
-  
+
   /** Compose decorator */
-  composeDecorator(decoratorId: string, targetObject: IGameObject, compositionOrder?: number): Promise<boolean>;
-  
+  composeDecorator(
+    decoratorId: string,
+    targetObject: IGameObject,
+    compositionOrder?: number
+  ): Promise<boolean>;
+
   /** Decompose decorator */
   decomposeDecorator(decoratorId: string, targetObject: IGameObject): Promise<boolean>;
-  
+
   /** Add decorator behavior */
   addDecoratorBehavior(decoratorId: string, behavior: DecoratorBehavior): Promise<this>;
-  
+
   /** Remove decorator behavior */
   removeDecoratorBehavior(decoratorId: string, behaviorId: string): Promise<boolean>;
-  
+
   /** Get decorator by ID */
   getDecorator(decoratorId: string): IDecorator | null;
-  
+
   /** Check if decorator exists */
   hasDecorator(decoratorId: string): boolean;
-  
+
   /** Get decorators by type */
   getDecoratorsByType(type: string): IDecorator[];
-  
+
   /** Get compositions for decorator */
   getCompositionsForDecorator(decoratorId: string): DecoratorComposition[];
-  
+
   /** Get behaviors for decorator */
   getBehaviorsForDecorator(decoratorId: string): DecoratorBehavior[];
-  
+
   /** Validate decorator composition */
   validateDecoratorComposition(decoratorId: string, targetObject: IGameObject): Promise<boolean>;
-  
+
   /** Clear decorator compositions */
   clearDecoratorCompositions(decoratorId: string): Promise<this>;
-  
+
   /** Clear all compositions */
   clearAllCompositions(): Promise<this>;
-  
+
   /** Update decorator manager */
   updateDecoratorManager(deltaTime: number): void;
 }

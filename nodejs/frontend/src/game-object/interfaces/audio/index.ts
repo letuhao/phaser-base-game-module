@@ -1,6 +1,6 @@
 /**
  * Audio Game Object Interfaces Index
- * 
+ *
  * Centralized export for all audio-specific game object interfaces
  */
 
@@ -43,6 +43,7 @@ export const AUDIO_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreAudioInterface = typeof CORE_AUDIO_INTERFACES[keyof typeof CORE_AUDIO_INTERFACES];
-export type SpecificAudioInterface = typeof SPECIFIC_AUDIO_INTERFACES[keyof typeof SPECIFIC_AUDIO_INTERFACES];
-export type AudioInterface = typeof AUDIO_INTERFACES[keyof typeof AUDIO_INTERFACES];
+export type CoreAudioInterface = (typeof CORE_AUDIO_INTERFACES)[keyof typeof CORE_AUDIO_INTERFACES];
+export type SpecificAudioInterface =
+  (typeof SPECIFIC_AUDIO_INTERFACES)[keyof typeof SPECIFIC_AUDIO_INTERFACES];
+export type AudioInterface = (typeof AUDIO_INTERFACES)[keyof typeof AUDIO_INTERFACES];

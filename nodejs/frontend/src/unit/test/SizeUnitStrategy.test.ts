@@ -20,7 +20,7 @@ describe('SizeUnitStrategy', () => {
 
     it('should return correct strategy information', () => {
       const info = strategy.getStrategyInfo();
-      
+
       expect(info.unitType).toBe('size');
       expect(info.priority).toBe(1);
       expect(info.supportedInputs).toContain('number');
@@ -29,7 +29,7 @@ describe('SizeUnitStrategy', () => {
       expect(info.supportedInputs).toContain('SizeUnit');
       expect(info.supportedInputs).toContain('array');
       expect(info.supportedInputs).toContain('object');
-      
+
       expect(info.capabilities).toContain('direct numeric values');
       expect(info.capabilities).toContain('string keywords');
       expect(info.capabilities).toContain('enum values');
@@ -44,7 +44,7 @@ describe('SizeUnitStrategy', () => {
     it('should handle numeric values', () => {
       const input = { value: 150 };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBe(150);
     });
@@ -52,7 +52,7 @@ describe('SizeUnitStrategy', () => {
     it('should handle string values', () => {
       const input = { value: 'fill' };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBe(1200); // mockContext.scene.width
     });
@@ -60,7 +60,7 @@ describe('SizeUnitStrategy', () => {
     it('should handle SizeValue enum', () => {
       const input = { value: SizeValue.FILL };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);
     });
@@ -68,7 +68,7 @@ describe('SizeUnitStrategy', () => {
     it('should handle SizeUnit enum', () => {
       const input = { value: SizeUnit.PIXEL };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);
     });
@@ -76,12 +76,12 @@ describe('SizeUnitStrategy', () => {
     it('should handle random values', () => {
       const input = {
         randomValue: {
-          getRandomValue: () => 42
+          getRandomValue: () => 42,
         },
-        sizeUnit: SizeUnit.PIXEL // Add size-related property to trigger size input conversion
+        sizeUnit: SizeUnit.PIXEL, // Add size-related property to trigger size input conversion
       };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBe(42);
     });
@@ -89,12 +89,12 @@ describe('SizeUnitStrategy', () => {
     it('should handle parent size references', () => {
       const input = {
         parentSize: {
-          getValue: (parent: unknown) => (parent as any)?.width || 100
+          getValue: (parent: unknown) => (parent as any)?.width || 100,
         },
-        sizeUnit: SizeUnit.PIXEL // Add size-related property to trigger size input conversion
+        sizeUnit: SizeUnit.PIXEL, // Add size-related property to trigger size input conversion
       };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBe(800); // mockContext.parent.width
     });
@@ -102,7 +102,7 @@ describe('SizeUnitStrategy', () => {
     it('should handle size arrays', () => {
       const input = { sizeArray: [100, 200, 300] };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBe(200); // average of [100, 200, 300]
     });
@@ -110,7 +110,7 @@ describe('SizeUnitStrategy', () => {
     it('should handle size objects', () => {
       const input = { sizeObject: { width: 250, height: 150 } };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);
     });
@@ -118,7 +118,7 @@ describe('SizeUnitStrategy', () => {
     it('should handle size strings', () => {
       const input = { sizeString: 'auto' };
       expect(strategy.canHandle(input)).toBe(true);
-      
+
       const result = strategy.calculate(input, mockContext);
       expect(result).toBe(400); // mockContext.content.width (actual value from mock)
     });
@@ -126,7 +126,7 @@ describe('SizeUnitStrategy', () => {
     it('should reject invalid inputs', () => {
       const invalidInput = { invalidProperty: 'test' } as any;
       expect(strategy.canHandle(invalidInput)).toBe(false);
-      
+
       const result = strategy.calculate(invalidInput, mockContext);
       expect(result).toBe(100); // default fallback
     });
@@ -214,7 +214,7 @@ describe('SizeUnitStrategy', () => {
         { parentSize: { getValue: () => 200 } },
         { sizeArray: [100, 200] },
         { sizeObject: { width: 300 } },
-        { sizeString: 'auto' }
+        { sizeString: 'auto' },
       ];
 
       supportedInputs.forEach(input => {
@@ -226,7 +226,7 @@ describe('SizeUnitStrategy', () => {
       const unsupportedInputs = [
         { invalidProperty: 'test' } as any,
         { randomProperty: 123 } as any,
-        { nested: { invalid: 'data' } } as any
+        { nested: { invalid: 'data' } } as any,
       ];
 
       unsupportedInputs.forEach(input => {

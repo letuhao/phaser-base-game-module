@@ -1,6 +1,6 @@
 /**
  * Scene Performance Interfaces Index
- * 
+ *
  * Centralized export for all scene performance interfaces
  */
 
@@ -15,4 +15,5 @@ export const SCENE_PERFORMANCE_INTERFACES = {
   IScenePerformanceMonitor: 'IScenePerformanceMonitor',
 } as const;
 
-export type ScenePerformanceInterface = typeof SCENE_PERFORMANCE_INTERFACES[keyof typeof SCENE_PERFORMANCE_INTERFACES];
+export type ScenePerformanceInterface =
+  (typeof SCENE_PERFORMANCE_INTERFACES)[keyof typeof SCENE_PERFORMANCE_INTERFACES];

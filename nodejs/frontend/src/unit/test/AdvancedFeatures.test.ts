@@ -1,12 +1,16 @@
 import { StrategyCache } from '../strategies/cache/StrategyCache';
-import { WeightedAverageSizeComposer, PriorityBasedSizeComposer, AdaptiveSizeComposer } from '../strategies/composition/SizeStrategyComposers';
+import {
+  WeightedAverageSizeComposer,
+  PriorityBasedSizeComposer,
+  AdaptiveSizeComposer,
+} from '../strategies/composition/SizeStrategyComposers';
 import { SizeValueCalculationStrategyRegistry } from '../strategies/value/SizeValueCalculationStrategyRegistry';
 import {
   PixelSizeValueCalculationStrategy,
   FillSizeValueCalculationStrategy,
   AutoSizeValueCalculationStrategy,
   ParentWidthSizeValueCalculationStrategy,
-  ViewportWidthSizeValueCalculationStrategy
+  ViewportWidthSizeValueCalculationStrategy,
 } from '../strategies/value';
 import { SizeValue } from '../enums/SizeValue';
 import { SizeUnit } from '../enums/SizeUnit';
@@ -22,7 +26,7 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
   beforeEach(() => {
     // Initialize strategy registry
     strategyRegistry = new SizeValueCalculationStrategyRegistry();
-    
+
     // Register all size strategies
     strategyRegistry.registerStrategy(new PixelSizeValueCalculationStrategy());
     strategyRegistry.registerStrategy(new FillSizeValueCalculationStrategy());
@@ -42,7 +46,7 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
       parent: { width: 800, height: 600, x: 0, y: 0 },
       scene: { width: 1920, height: 1080 },
       viewport: { width: 1366, height: 768 },
-      content: { width: 200, height: 150 }
+      content: { width: 200, height: 150 },
     };
   });
 
@@ -102,9 +106,9 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
 
     it('should clean up expired entries', () => {
       const shortTtlCache = new StrategyCache<SizeValue, SizeUnit, number>('short-cache', 10, 1); // 1ms TTL
-      
+
       shortTtlCache.set(SizeValue.FILL, SizeUnit.PARENT_WIDTH, mockContext, 800);
-      
+
       // Wait for expiration
       setTimeout(() => {
         const cleaned = shortTtlCache.cleanup();
@@ -118,10 +122,10 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should compose strategies using weighted average', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 0.6 },
-        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 0.4 }
+        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 0.4 },
       ];
 
       const result = weightedComposer.compose(value, unit, mockContext, strategies);
@@ -132,10 +136,10 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should compose strategies using priority-based selection', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 },
-        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 }
+        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 },
       ];
 
       const result = priorityComposer.compose(value, unit, mockContext, strategies);
@@ -146,10 +150,10 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should compose strategies using adaptive weighting', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 },
-        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 }
+        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 },
       ];
 
       const result = adaptiveComposer.compose(value, unit, mockContext, strategies);
@@ -174,14 +178,12 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should track performance metrics', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PIXEL; // Use PIXEL unit which FillSizeValueCalculationStrategy can handle
-      
-      const strategies = [
-        { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 }
-      ];
+
+      const strategies = [{ strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 }];
 
       // Perform composition
       weightedComposer.compose(value, unit, mockContext, strategies);
-      
+
       const metrics = weightedComposer.getPerformanceMetrics();
       expect(metrics.totalExecutions).toBe(1);
       expect(metrics.successRate).toBe(1);
@@ -193,10 +195,10 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should work together seamlessly', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 0.7 },
-        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 0.3 }
+        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 0.3 },
       ];
 
       // First calculation (cache miss)
@@ -205,7 +207,7 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
 
       // Second calculation (cache hit)
       const result2 = cache.get(value, unit, mockContext);
-      
+
       expect(result1).toBe(result2);
       expect(cache.getStatistics().hitCount).toBe(1);
     });
@@ -213,10 +215,10 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should handle multiple composition strategies', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 },
-        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 }
+        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 },
       ];
 
       // Test all composers
@@ -258,10 +260,10 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should demonstrate composition performance', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 },
-        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 }
+        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 },
       ];
 
       const iterations = 100;
@@ -285,7 +287,7 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should handle composition errors gracefully', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       // Empty strategies array
       const result = weightedComposer.compose(value, unit, mockContext, []);
       expect(result).toBe(0); // Fallback value
@@ -294,7 +296,7 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should handle cache errors gracefully', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       // Invalid context
       const result = cache.get(value, unit, {});
       expect(result).toBeNull();
@@ -303,10 +305,8 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should handle strategy validation failures', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
-      const strategies = [
-        { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 }
-      ];
+
+      const strategies = [{ strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 }];
 
       // Invalid context
       const result = weightedComposer.compose(value, unit, {}, strategies);
@@ -318,10 +318,10 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should demonstrate adaptive learning', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       const strategies = [
         { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 },
-        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 }
+        { strategy: new ParentWidthSizeValueCalculationStrategy(), weight: 1.0 },
       ];
 
       // Perform multiple compositions to build performance history
@@ -337,25 +337,23 @@ describe('Advanced Features: Strategy Composition and Caching', () => {
     it('should demonstrate cache key generation', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       // Set initial cache entry
       cache.set(value, unit, mockContext, 800);
-      
+
       // Different contexts should generate different keys
       const differentContext = { ...mockContext, parent: { width: 1000, height: 800 } };
       cache.set(value, unit, differentContext, 1000);
-      
+
       expect(cache.getKeys().length).toBeGreaterThan(1);
     });
 
     it('should demonstrate composer priority handling', () => {
       const value = SizeValue.FILL;
       const unit = SizeUnit.PARENT_WIDTH;
-      
+
       // Strategies array (unused but kept for demonstration)
-      [
-        { strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 }
-      ];
+      [{ strategy: new FillSizeValueCalculationStrategy(), weight: 1.0 }];
 
       // Test priority-based selection
       expect(priorityComposer.canCompose(value, unit)).toBe(true);

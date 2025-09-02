@@ -23,10 +23,15 @@ export class ContainerFactory extends BaseGameObjectFactory {
   createGameObject(input: IFactoryInput): Phaser.GameObjects.Container | null {
     // Type guard to ensure we have a container factory input
     if (input.type !== 'container') {
-      logger.error('ContainerFactory', 'createGameObject', 'Invalid input type for container factory', {
-        expectedType: 'container',
-        actualType: input.type,
-      });
+      logger.error(
+        'ContainerFactory',
+        'createGameObject',
+        'Invalid input type for container factory',
+        {
+          expectedType: 'container',
+          actualType: input.type,
+        }
+      );
       return null;
     }
 
@@ -117,7 +122,10 @@ export class ContainerFactory extends BaseGameObjectFactory {
           width: config.width,
           height: config.height || config.width,
         });
-        container.setSize(config.width, typeof config.height === 'number' ? config.height : config.width);
+        container.setSize(
+          config.width,
+          typeof config.height === 'number' ? config.height : config.width
+        );
       }
 
       // Set name for debugging

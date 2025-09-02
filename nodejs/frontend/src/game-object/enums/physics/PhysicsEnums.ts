@@ -1,6 +1,6 @@
 /**
  * Physics System Enums
- * 
+ *
  * Enums for physics body types, materials, and physics-specific functionality
  */
 

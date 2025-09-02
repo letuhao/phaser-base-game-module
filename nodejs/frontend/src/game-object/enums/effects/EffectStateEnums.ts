@@ -1,6 +1,6 @@
 /**
  * Effect State Enums
- * 
+ *
  * Enums for effect states, priorities, and effect-specific functionality
  */
 

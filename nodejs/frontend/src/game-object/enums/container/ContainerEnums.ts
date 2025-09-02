@@ -1,6 +1,6 @@
 /**
  * Container System Enums
- * 
+ *
  * Enums for container types, layouts, and container-specific functionality
  */
 

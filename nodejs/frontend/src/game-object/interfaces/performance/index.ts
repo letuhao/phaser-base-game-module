@@ -1,6 +1,6 @@
 /**
  * Performance Game Object Interfaces Index
- * 
+ *
  * Centralized export for all performance-specific game object interfaces
  */
 
@@ -54,6 +54,9 @@ export const PERFORMANCE_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CorePerformanceInterface = typeof CORE_PERFORMANCE_INTERFACES[keyof typeof CORE_PERFORMANCE_INTERFACES];
-export type NetworkPerformanceInterface = typeof NETWORK_PERFORMANCE_INTERFACES[keyof typeof NETWORK_PERFORMANCE_INTERFACES];
-export type PerformanceInterface = typeof PERFORMANCE_INTERFACES[keyof typeof PERFORMANCE_INTERFACES];
+export type CorePerformanceInterface =
+  (typeof CORE_PERFORMANCE_INTERFACES)[keyof typeof CORE_PERFORMANCE_INTERFACES];
+export type NetworkPerformanceInterface =
+  (typeof NETWORK_PERFORMANCE_INTERFACES)[keyof typeof NETWORK_PERFORMANCE_INTERFACES];
+export type PerformanceInterface =
+  (typeof PERFORMANCE_INTERFACES)[keyof typeof PERFORMANCE_INTERFACES];

@@ -18,15 +18,11 @@ export class PixelScaleValueCalculationStrategy implements IScaleValueCalculatio
     return scaleValue === ScaleValue.FACTOR && scaleUnit === ScaleUnit.FACTOR;
   }
 
-  calculate(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit,
-    _context: UnitContext
-  ): number {
+  calculate(scaleValue: ScaleValue, scaleUnit: ScaleUnit, _context: UnitContext): number {
     const logger = Logger.getInstance();
     logger.debug('PixelScaleValueCalculationStrategy', 'calculate', 'Calculating pixel scale', {
       scaleValue,
-      scaleUnit
+      scaleUnit,
     });
 
     // For pixel values, return the value directly
@@ -64,15 +60,11 @@ export class FactorScaleValueCalculationStrategy implements IScaleValueCalculati
     return scaleValue === ScaleValue.FACTOR;
   }
 
-  calculate(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit,
-    _context: UnitContext
-  ): number {
+  calculate(scaleValue: ScaleValue, scaleUnit: ScaleUnit, _context: UnitContext): number {
     const logger = Logger.getInstance();
     logger.debug('FactorScaleValueCalculationStrategy', 'calculate', 'Calculating factor scale', {
       scaleValue,
-      scaleUnit
+      scaleUnit,
     });
 
     // Factor scale calculation
@@ -109,16 +101,17 @@ export class ResponsiveScaleValueCalculationStrategy implements IScaleValueCalcu
     return scaleValue === ScaleValue.FIT;
   }
 
-  calculate(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit,
-    context: UnitContext
-  ): number {
+  calculate(scaleValue: ScaleValue, scaleUnit: ScaleUnit, context: UnitContext): number {
     const logger = Logger.getInstance();
-    logger.debug('ResponsiveScaleValueCalculationStrategy', 'calculate', 'Calculating responsive scale', {
-      scaleValue,
-      scaleUnit
-    });
+    logger.debug(
+      'ResponsiveScaleValueCalculationStrategy',
+      'calculate',
+      'Calculating responsive scale',
+      {
+        scaleValue,
+        scaleUnit,
+      }
+    );
 
     // Responsive scale calculation based on viewport or scene
     if (context.viewport) {
@@ -172,15 +165,11 @@ export class RandomScaleValueCalculationStrategy implements IScaleValueCalculati
     return scaleValue === ScaleValue.RANDOM;
   }
 
-  calculate(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit,
-    _context: UnitContext
-  ): number {
+  calculate(scaleValue: ScaleValue, scaleUnit: ScaleUnit, _context: UnitContext): number {
     const logger = Logger.getInstance();
     logger.debug('RandomScaleValueCalculationStrategy', 'calculate', 'Calculating random scale', {
       scaleValue,
-      scaleUnit
+      scaleUnit,
     });
 
     // Random scale calculation within bounds
@@ -215,22 +204,18 @@ export class ContentScaleValueCalculationStrategy implements IScaleValueCalculat
     return scaleValue === ScaleValue.CONTENT_SCALE;
   }
 
-  calculate(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit,
-    context: UnitContext
-  ): number {
+  calculate(scaleValue: ScaleValue, scaleUnit: ScaleUnit, context: UnitContext): number {
     const logger = Logger.getInstance();
     logger.debug('ContentScaleValueCalculationStrategy', 'calculate', 'Calculating content scale', {
       scaleValue,
-      scaleUnit
+      scaleUnit,
     });
 
     // Content-based scale calculation
     if (context.content) {
       const contentWidth = context.content.width;
       const contentHeight = context.content.height;
-      
+
       // Calculate scale based on content dimensions
       if (context.parent) {
         const scaleX = context.parent.width / contentWidth;

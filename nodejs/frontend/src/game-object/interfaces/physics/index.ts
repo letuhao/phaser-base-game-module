@@ -1,6 +1,6 @@
 /**
  * Physics Game Object Interfaces Index
- * 
+ *
  * Centralized export for all physics-specific game object interfaces
  */
 
@@ -54,6 +54,8 @@ export const PHYSICS_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CorePhysicsInterface = typeof CORE_PHYSICS_INTERFACES[keyof typeof CORE_PHYSICS_INTERFACES];
-export type SpecificPhysicsInterface = typeof SPECIFIC_PHYSICS_INTERFACES[keyof typeof SPECIFIC_PHYSICS_INTERFACES];
-export type PhysicsInterface = typeof PHYSICS_INTERFACES[keyof typeof PHYSICS_INTERFACES];
+export type CorePhysicsInterface =
+  (typeof CORE_PHYSICS_INTERFACES)[keyof typeof CORE_PHYSICS_INTERFACES];
+export type SpecificPhysicsInterface =
+  (typeof SPECIFIC_PHYSICS_INTERFACES)[keyof typeof SPECIFIC_PHYSICS_INTERFACES];
+export type PhysicsInterface = (typeof PHYSICS_INTERFACES)[keyof typeof PHYSICS_INTERFACES];

@@ -1,12 +1,12 @@
 import type { UnitContext } from '../interfaces/IUnit';
 import type { IValidationInput } from '../interfaces/IValidationInput';
 import { BaseUnitValidator } from './IUnitValidator';
-import { 
-  isValueValidationInput, 
-  isSizeValidationInput, 
-  isPositionValidationInput, 
+import {
+  isValueValidationInput,
+  isSizeValidationInput,
+  isPositionValidationInput,
   isScaleValidationInput,
-  isLegacyValidationInput 
+  isLegacyValidationInput,
 } from '../interfaces/IValidationInput';
 import { DEFAULT_FALLBACK_VALUES } from '../constants';
 
@@ -46,39 +46,53 @@ export class RangeValidator extends BaseUnitValidator {
     if (input === null || input === undefined) {
       return false;
     }
-    
+
     // Handle numeric inputs directly
     if (typeof input === 'number') {
       return true;
     }
-    
+
     // Handle validation inputs with value properties
-    if (isValueValidationInput(input) || isSizeValidationInput(input) || 
-        isPositionValidationInput(input) || isScaleValidationInput(input)) {
+    if (
+      isValueValidationInput(input) ||
+      isSizeValidationInput(input) ||
+      isPositionValidationInput(input) ||
+      isScaleValidationInput(input)
+    ) {
       return true;
     }
-    
+
     // Handle scale-like inputs (with unit and value but no minScale)
     if (typeof input === 'object' && input !== null && 'unit' in input && 'value' in input) {
       return true;
     }
-    
+
     // Handle legacy inputs that might have a value property
     if (isLegacyValidationInput(input)) {
       const legacyInput = input.input;
-      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
+      if (
+        legacyInput &&
+        typeof legacyInput === 'object' &&
+        legacyInput !== null &&
+        'value' in legacyInput
+      ) {
         return typeof (legacyInput as { value: unknown }).value === 'number';
       }
     }
-    
+
     // Handle objects with 'input' property (partial legacy inputs)
     if (typeof input === 'object' && input !== null && 'input' in input) {
       const legacyInput = (input as { input: unknown }).input;
-      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
+      if (
+        legacyInput &&
+        typeof legacyInput === 'object' &&
+        legacyInput !== null &&
+        'value' in legacyInput
+      ) {
         return typeof (legacyInput as { value: unknown }).value === 'number';
       }
     }
-    
+
     return false;
   }
 
@@ -113,7 +127,7 @@ export class RangeValidator extends BaseUnitValidator {
     if (input === null || input === undefined) {
       return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     }
-    
+
     // Handle numeric inputs directly
     if (typeof input === 'number') {
       return input;
@@ -129,7 +143,9 @@ export class RangeValidator extends BaseUnitValidator {
     }
 
     if (isPositionValidationInput(input)) {
-      return typeof input.value === 'number' ? input.value : DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
+      return typeof input.value === 'number'
+        ? input.value
+        : DEFAULT_FALLBACK_VALUES.POSITION.DEFAULT;
     }
 
     if (isScaleValidationInput(input)) {
@@ -145,7 +161,12 @@ export class RangeValidator extends BaseUnitValidator {
     // Handle legacy inputs
     if (isLegacyValidationInput(input)) {
       const legacyInput = input.input;
-      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
+      if (
+        legacyInput &&
+        typeof legacyInput === 'object' &&
+        legacyInput !== null &&
+        'value' in legacyInput
+      ) {
         const value = (legacyInput as { value: unknown }).value;
         return typeof value === 'number' ? value : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
       }
@@ -154,7 +175,12 @@ export class RangeValidator extends BaseUnitValidator {
     // Handle objects with 'input' property (partial legacy inputs)
     if (typeof input === 'object' && input !== null && 'input' in input) {
       const legacyInput = (input as { input: unknown }).input;
-      if (legacyInput && typeof legacyInput === 'object' && legacyInput !== null && 'value' in legacyInput) {
+      if (
+        legacyInput &&
+        typeof legacyInput === 'object' &&
+        legacyInput !== null &&
+        'value' in legacyInput
+      ) {
         const value = (legacyInput as { value: unknown }).value;
         return typeof value === 'number' ? value : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
       }

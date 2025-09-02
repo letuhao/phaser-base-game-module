@@ -4,7 +4,7 @@ import {
   FillSizeValueCalculationStrategy,
   AutoSizeValueCalculationStrategy,
   ParentWidthSizeValueCalculationStrategy,
-  ViewportWidthSizeValueCalculationStrategy
+  ViewportWidthSizeValueCalculationStrategy,
 } from '../strategies/value';
 import type { ISizeValueCalculationStrategy } from '../strategies/value/ISizeValueCalculationStrategy';
 import { SizeValue } from '../enums/SizeValue';
@@ -21,7 +21,7 @@ describe('Strategy Pattern Implementation', () => {
       parent: { width: 800, height: 600, x: 0, y: 0 },
       scene: { width: 1920, height: 1080 },
       viewport: { width: 1366, height: 768 },
-      content: { width: 200, height: 150 }
+      content: { width: 200, height: 150 },
     };
   });
 
@@ -38,7 +38,7 @@ describe('Strategy Pattern Implementation', () => {
     it('should not register duplicate strategies', () => {
       const strategy1 = new PixelSizeValueCalculationStrategy();
       const strategy2 = new PixelSizeValueCalculationStrategy();
-      
+
       registry.registerStrategy(strategy1);
       registry.registerStrategy(strategy2);
 
@@ -164,12 +164,22 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should calculate pixel values correctly', () => {
-      const result = strategy.calculate(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBe(100);
     });
 
     it('should return default fallback for non-numeric values', () => {
-      const result = strategy.calculate(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBeDefined();
     });
 
@@ -196,27 +206,49 @@ describe('Strategy Pattern Implementation', () => {
 
     it('should handle fill values', () => {
       expect(strategy.canHandle(SizeValue.FILL, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(true);
-      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(false);
+      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(
+        false
+      );
     });
 
     it('should calculate fill values based on scene dimensions', () => {
-      const result = strategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBe(1920); // scene.width (matching original behavior)
     });
 
     it('should calculate fill values based on scene dimensions when parent not available', () => {
       const contextWithoutParent = { ...mockContext, parent: undefined };
-      const result = strategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, contextWithoutParent);
+      const result = strategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.WIDTH,
+        contextWithoutParent
+      );
       expect(result).toBe(1920); // scene.width
     });
 
     it('should calculate height dimension correctly', () => {
-      const result = strategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.HEIGHT, mockContext);
+      const result = strategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.HEIGHT,
+        mockContext
+      );
       expect(result).toBe(1080); // scene.height (matching original behavior)
     });
 
     it('should calculate both dimensions correctly', () => {
-      const result = strategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.BOTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.BOTH,
+        mockContext
+      );
       expect(result).toBe(1080); // Math.min(scene.width, scene.height) (matching original behavior)
     });
 
@@ -230,7 +262,9 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should have description', () => {
-      expect(strategy.getDescription()).toBe('Handles fill-based size calculations using parent or scene dimensions');
+      expect(strategy.getDescription()).toBe(
+        'Handles fill-based size calculations using parent or scene dimensions'
+      );
     });
   });
 
@@ -247,17 +281,32 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should calculate auto values based on content dimensions', () => {
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.AUTO,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBe(200); // content.width
     });
 
     it('should calculate height dimension correctly', () => {
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.HEIGHT, mockContext);
+      const result = strategy.calculate(
+        SizeValue.AUTO,
+        SizeUnit.PIXEL,
+        Dimension.HEIGHT,
+        mockContext
+      );
       expect(result).toBe(150); // content.height
     });
 
     it('should calculate both dimensions correctly', () => {
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.BOTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.AUTO,
+        SizeUnit.PIXEL,
+        Dimension.BOTH,
+        mockContext
+      );
       expect(result).toBe(200); // Math.max(content.width, content.height)
     });
 
@@ -271,7 +320,9 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should have description', () => {
-      expect(strategy.getDescription()).toBe('Handles auto-based size calculations using content dimensions');
+      expect(strategy.getDescription()).toBe(
+        'Handles auto-based size calculations using content dimensions'
+      );
     });
   });
 
@@ -284,11 +335,18 @@ describe('Strategy Pattern Implementation', () => {
 
     it('should handle parent width values', () => {
       expect(strategy.canHandle(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(true);
-      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(false);
+      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH)).toBe(
+        false
+      );
     });
 
     it('should calculate parent width values correctly', () => {
-      const result = strategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBe(800); // parent.width
     });
 
@@ -314,12 +372,21 @@ describe('Strategy Pattern Implementation', () => {
     });
 
     it('should handle viewport width values', () => {
-      expect(strategy.canHandle(SizeValue.FILL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH)).toBe(true);
-      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH)).toBe(false);
+      expect(strategy.canHandle(SizeValue.FILL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH)).toBe(
+        true
+      );
+      expect(strategy.canHandle(SizeValue.PIXEL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH)).toBe(
+        false
+      );
     });
 
     it('should calculate viewport width values correctly', () => {
-      const result = strategy.calculate(SizeValue.FILL, SizeUnit.VIEWPORT_WIDTH, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.VIEWPORT_WIDTH,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBe(1366); // viewport.width
     });
 
@@ -346,11 +413,20 @@ describe('Strategy Pattern Implementation', () => {
         readonly sizeUnit = SizeUnit.PIXEL;
         readonly dimension = Dimension.WIDTH;
 
-        canHandle(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+        canHandle(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+        ): boolean {
           return _sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL;
         }
 
-        calculate(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH, _context: any): number {
+        calculate(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH,
+          _context: any
+        ): number {
           return 999; // Custom calculation
         }
 
@@ -370,7 +446,11 @@ describe('Strategy Pattern Implementation', () => {
       const customStrategy = new CustomSizeValueCalculationStrategy();
       registry.registerStrategy(customStrategy);
 
-      const bestStrategy = registry.getBestStrategy(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH);
+      const bestStrategy = registry.getBestStrategy(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH
+      );
       expect(bestStrategy?.strategyId).toBe('custom-size-calculation');
     });
 
@@ -386,7 +466,7 @@ describe('Strategy Pattern Implementation', () => {
     it('should demonstrate Interface Segregation Principle compliance', () => {
       // Each strategy implements only the methods it needs
       const strategy = new PixelSizeValueCalculationStrategy();
-      
+
       expect(typeof strategy.calculate).toBe('function');
       expect(typeof strategy.canHandle).toBe('function');
       expect(typeof strategy.getPriority).toBe('function');

@@ -1,6 +1,6 @@
 /**
  * Scene Factory Interface
- * 
+ *
  * Defines factory functionality for creating scenes.
  * Handles scene creation with different strategies and configurations.
  */
@@ -69,55 +69,55 @@ export interface SceneCreationResult {
  */
 export interface ISceneFactory {
   readonly factoryId: string;
-  
+
   /** Factory configuration */
   factoryConfig: SceneFactoryConfig;
-  
+
   /** Factory statistics */
   factoryStatistics: SceneFactoryStatistics;
-  
+
   /** Factory metadata */
   factoryMetadata: Record<string, any>;
-  
+
   /** Set factory configuration */
   setFactoryConfig(config: SceneFactoryConfig): this;
-  
+
   /** Set factory metadata */
   setFactoryMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get factory configuration */
   getFactoryConfig(): SceneFactoryConfig;
-  
+
   /** Get factory statistics */
   getFactoryStatistics(): SceneFactoryStatistics;
-  
+
   /** Get factory metadata */
   getFactoryMetadata(): Record<string, any>;
-  
+
   /** Create scene */
   createScene(context: SceneCreationContext): Promise<SceneCreationResult>;
-  
+
   /** Destroy scene */
   destroyScene(scene: any): Promise<boolean>; // Phaser.Scene
-  
+
   /** Configure scene */
   configureScene(scene: any, config: ISceneConfig): Promise<boolean>; // Phaser.Scene
-  
+
   /** Validate scene */
   validateScene(scene: any): Promise<boolean>; // Phaser.Scene
-  
+
   /** Optimize scene */
   optimizeScene(scene: any): Promise<this>; // Phaser.Scene
-  
+
   /** Get scenes by type */
   getScenesByType(type: string): any[]; // Phaser.Scene[]
-  
+
   /** Get creation context by ID */
   getCreationContext(contextId: string): SceneCreationContext | null;
-  
+
   /** Clear factory */
   clearFactory(): Promise<this>;
-  
+
   /** Update factory */
   updateFactory(deltaTime: number): void;
 }

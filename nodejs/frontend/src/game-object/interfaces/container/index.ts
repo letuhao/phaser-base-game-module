@@ -1,6 +1,6 @@
 /**
  * Container Game Object Interfaces Index
- * 
+ *
  * Centralized export for all container-specific game object interfaces
  */
 

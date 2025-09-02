@@ -1,6 +1,6 @@
 /**
  * Scene Builder Context Interface
- * 
+ *
  * Defines builder context abstraction for scene building operations.
  */
 
@@ -17,7 +17,7 @@ export enum BuilderContextOperation {
   APPLY_LAYOUT = 'apply_layout',
   APPLY_THEME = 'apply_theme',
   CONVERT_UNIT = 'convert_unit',
-  VALIDATE_CONFIG = 'validate_config'
+  VALIDATE_CONFIG = 'validate_config',
 }
 
 /**
@@ -38,82 +38,70 @@ export interface BuilderContextConfig {
 export interface ISceneBuilderContext extends ISceneContext {
   /** Builder context configuration */
   builderContextConfig: BuilderContextConfig;
-  
+
   /** Game object factory */
   gameObjectFactory: IGameObjectFactory;
-  
+
   /** Layout manager */
   layoutManager: ILayoutManager;
-  
+
   /** Unit converter */
   unitConverter: IUnitConverter;
-  
+
   /** Theme manager */
   themeManager: IThemeManager;
-  
+
   /** Responsive manager */
   responsiveManager: IResponsiveManager;
-  
+
   /** Set builder context configuration */
   setBuilderContextConfig(config: BuilderContextConfig): this;
-  
+
   /** Set game object factory */
   setGameObjectFactory(factory: IGameObjectFactory): this;
-  
+
   /** Set layout manager */
   setLayoutManager(manager: ILayoutManager): this;
-  
+
   /** Set unit converter */
   setUnitConverter(converter: IUnitConverter): this;
-  
+
   /** Set theme manager */
   setThemeManager(manager: IThemeManager): this;
-  
+
   /** Set responsive manager */
   setResponsiveManager(manager: IResponsiveManager): this;
-  
+
   /** Get builder context configuration */
   getBuilderContextConfig(): BuilderContextConfig;
-  
+
   /** Get game object factory */
   getGameObjectFactory(): IGameObjectFactory;
-  
+
   /** Get layout manager */
   getLayoutManager(): ILayoutManager;
-  
+
   /** Get unit converter */
   getUnitConverter(): IUnitConverter;
-  
+
   /** Get theme manager */
   getThemeManager(): IThemeManager;
-  
+
   /** Get responsive manager */
   getResponsiveManager(): IResponsiveManager;
-  
+
   /** Create game object */
-  createGameObject(
-    gameObjectType: string,
-    config: any
-  ): Promise<IGameObject | null>;
-  
+  createGameObject(gameObjectType: string, config: any): Promise<IGameObject | null>;
+
   /** Apply layout */
-  applyLayout(
-    gameObject: IGameObject,
-    layout: IStyle
-  ): Promise<boolean>;
-  
+  applyLayout(gameObject: IGameObject, layout: IStyle): Promise<boolean>;
+
   /** Apply theme */
-  applyTheme(
-    gameObject: IGameObject,
-    themeClass: string
-  ): Promise<boolean>;
-  
+  applyTheme(gameObject: IGameObject, themeClass: string): Promise<boolean>;
+
   /** Convert unit value */
-  convertUnitValue(
-    unitValue: IUnit,
-    context: any
-  ): number;
-  
+  convertUnitValue(unitValue: IUnit, context: any): number;
+
   /** Validate configuration */
   validateConfiguration(config: any): boolean;
 }

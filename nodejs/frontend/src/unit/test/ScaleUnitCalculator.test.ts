@@ -13,13 +13,7 @@ describe('ScaleUnitCalculator', () => {
 
   describe('Constructor', () => {
     it('should create a scale unit calculator with correct properties', () => {
-      calculator = new ScaleUnitCalculator(
-        'test-scale',
-        'Test Scale',
-        ScaleUnit.FACTOR,
-        1.5,
-        true
-      );
+      calculator = new ScaleUnitCalculator('test-scale', 'Test Scale', ScaleUnit.FACTOR, 1.5, true);
 
       expect(calculator.id).toBe('test-scale');
       expect(calculator.name).toBe('Test Scale');
@@ -258,13 +252,7 @@ describe('ScaleUnitCalculator', () => {
 
   describe('Aspect Ratio Handling', () => {
     it('should maintain aspect ratio when enabled', () => {
-      calculator = new ScaleUnitCalculator(
-        'test-scale',
-        'Test Scale',
-        ScaleUnit.FACTOR,
-        1.5,
-        true
-      );
+      calculator = new ScaleUnitCalculator('test-scale', 'Test Scale', ScaleUnit.FACTOR, 1.5, true);
 
       const result = calculator.calculate(mockContext);
       expect(result).toBe(1.5);

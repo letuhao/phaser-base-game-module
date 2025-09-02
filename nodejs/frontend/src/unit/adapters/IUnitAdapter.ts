@@ -107,7 +107,10 @@ export interface IUnitAdapterFactory {
   createAdapter(legacyUnit: ILegacyUnit): IUnitAdapter | undefined;
 
   /** Register a new adapter type */
-  registerAdapter(adapterType: string, adapterClass: new (...args: unknown[]) => IUnitAdapter): void;
+  registerAdapter(
+    adapterType: string,
+    adapterClass: new (...args: unknown[]) => IUnitAdapter
+  ): void;
 
   /** Get all registered adapter types */
   getRegisteredAdapterTypes(): string[];

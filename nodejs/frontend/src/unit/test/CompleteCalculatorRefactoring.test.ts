@@ -9,21 +9,21 @@ import {
   FillSizeValueCalculationStrategy,
   AutoSizeValueCalculationStrategy,
   ParentWidthSizeValueCalculationStrategy,
-  ViewportWidthSizeValueCalculationStrategy
+  ViewportWidthSizeValueCalculationStrategy,
 } from '../strategies/value';
 import {
   PixelPositionValueCalculationStrategy,
   CenterPositionValueCalculationStrategy,
   ContentLeftPositionValueCalculationStrategy,
   ParentCenterXPositionValueCalculationStrategy,
-  SceneCenterXPositionValueCalculationStrategy
+  SceneCenterXPositionValueCalculationStrategy,
 } from '../strategies/value';
 import {
   PixelScaleValueCalculationStrategy,
   FactorScaleValueCalculationStrategy,
   ResponsiveScaleValueCalculationStrategy,
   RandomScaleValueCalculationStrategy,
-  ContentScaleValueCalculationStrategy
+  ContentScaleValueCalculationStrategy,
 } from '../strategies/value';
 import { SizeValue } from '../enums/SizeValue';
 import { SizeUnit } from '../enums/SizeUnit';
@@ -44,7 +44,7 @@ describe('Complete Calculator Refactoring', () => {
     sizeStrategyRegistry = new SizeValueCalculationStrategyRegistry();
     positionStrategyRegistry = new PositionValueCalculationStrategyRegistry();
     scaleStrategyRegistry = new ScaleValueCalculationStrategyRegistry();
-    
+
     // Register all size strategies
     sizeStrategyRegistry.registerStrategy(new PixelSizeValueCalculationStrategy());
     sizeStrategyRegistry.registerStrategy(new FillSizeValueCalculationStrategy());
@@ -70,7 +70,7 @@ describe('Complete Calculator Refactoring', () => {
       parent: { width: 800, height: 600, x: 0, y: 0 },
       scene: { width: 1920, height: 1080 },
       viewport: { width: 1366, height: 768 },
-      content: { width: 200, height: 150 }
+      content: { width: 200, height: 150 },
     };
   });
 
@@ -362,15 +362,15 @@ describe('Complete Calculator Refactoring', () => {
       }
 
       const startTime = performance.now();
-      
+
       // Perform calculations
       for (let i = 0; i < iterations; i++) {
         calculators.forEach(calc => calc.calculate(mockContext));
       }
-      
+
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       // Should complete within reasonable time
       expect(duration).toBeLessThan(30000); // 30 seconds
     });
@@ -511,11 +511,20 @@ describe('Complete Calculator Refactoring', () => {
         readonly sizeUnit = SizeUnit.PIXEL;
         readonly dimension = Dimension.WIDTH;
 
-        canHandle(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+        canHandle(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+        ): boolean {
           return _sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL;
         }
 
-        calculate(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH, _context: any): number {
+        calculate(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH,
+          _context: any
+        ): number {
           return 999; // Custom calculation
         }
 

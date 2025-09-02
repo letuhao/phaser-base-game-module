@@ -16,9 +16,16 @@ export class PixelSizeValueCalculationStrategy implements ISizeValueCalculationS
   readonly sizeUnit = SizeUnit.PIXEL;
   readonly dimension = Dimension.WIDTH;
 
-  canHandle(sizeValue: SizeValue | number, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+  canHandle(
+    sizeValue: SizeValue | number,
+    _sizeUnit: SizeUnit,
+    _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+  ): boolean {
     // Handle both numeric values and SizeValue.PIXEL enum
-    return (typeof sizeValue === 'number') || (sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL);
+    return (
+      typeof sizeValue === 'number' ||
+      (sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL)
+    );
   }
 
   calculate(
@@ -31,7 +38,7 @@ export class PixelSizeValueCalculationStrategy implements ISizeValueCalculationS
     logger.debug('PixelSizeValueCalculationStrategy', 'calculate', 'Calculating pixel size', {
       sizeValue,
       sizeUnit: _sizeUnit,
-      dimension: _dimension
+      dimension: _dimension,
     });
 
     // For pixel values, return the value directly
@@ -66,15 +73,21 @@ export class FillSizeValueCalculationStrategy implements ISizeValueCalculationSt
   readonly sizeUnit = SizeUnit.PARENT_WIDTH;
   readonly dimension = Dimension.WIDTH;
 
-  canHandle(sizeValue: SizeValue, sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+  canHandle(
+    sizeValue: SizeValue,
+    sizeUnit: SizeUnit,
+    _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+  ): boolean {
     // Only handle FILL when it's not a specific unit that has its own strategy
-    return sizeValue === SizeValue.FILL && 
-           sizeUnit !== SizeUnit.PARENT_WIDTH && 
-           sizeUnit !== SizeUnit.PARENT_HEIGHT &&
-           sizeUnit !== SizeUnit.VIEWPORT_WIDTH && 
-           sizeUnit !== SizeUnit.VIEWPORT_HEIGHT &&
-           sizeUnit !== SizeUnit.SCENE_WIDTH && 
-           sizeUnit !== SizeUnit.SCENE_HEIGHT;
+    return (
+      sizeValue === SizeValue.FILL &&
+      sizeUnit !== SizeUnit.PARENT_WIDTH &&
+      sizeUnit !== SizeUnit.PARENT_HEIGHT &&
+      sizeUnit !== SizeUnit.VIEWPORT_WIDTH &&
+      sizeUnit !== SizeUnit.VIEWPORT_HEIGHT &&
+      sizeUnit !== SizeUnit.SCENE_WIDTH &&
+      sizeUnit !== SizeUnit.SCENE_HEIGHT
+    );
   }
 
   calculate(
@@ -87,7 +100,7 @@ export class FillSizeValueCalculationStrategy implements ISizeValueCalculationSt
     logger.debug('FillSizeValueCalculationStrategy', 'calculate', 'Calculating fill size', {
       sizeValue,
       sizeUnit,
-      dimension
+      dimension,
     });
 
     // For FILL values, always use scene dimensions first (matching original behavior)
@@ -147,7 +160,11 @@ export class AutoSizeValueCalculationStrategy implements ISizeValueCalculationSt
   readonly sizeUnit = SizeUnit.PIXEL; // AUTO behavior with pixel measurement
   readonly dimension = Dimension.WIDTH;
 
-  canHandle(sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+  canHandle(
+    sizeValue: SizeValue,
+    _sizeUnit: SizeUnit,
+    _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+  ): boolean {
     return sizeValue === SizeValue.AUTO;
   }
 
@@ -161,7 +178,7 @@ export class AutoSizeValueCalculationStrategy implements ISizeValueCalculationSt
     logger.debug('AutoSizeValueCalculationStrategy', 'calculate', 'Calculating auto size', {
       sizeValue,
       sizeUnit,
-      dimension
+      dimension,
     });
 
     // Auto size calculation based on content
@@ -202,7 +219,11 @@ export class ParentWidthSizeValueCalculationStrategy implements ISizeValueCalcul
   readonly sizeUnit = SizeUnit.PARENT_WIDTH; // measured relative to parent width
   readonly dimension = Dimension.WIDTH;
 
-  canHandle(sizeValue: SizeValue, sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+  canHandle(
+    sizeValue: SizeValue,
+    sizeUnit: SizeUnit,
+    _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+  ): boolean {
     return sizeValue === SizeValue.FILL && sizeUnit === SizeUnit.PARENT_WIDTH;
   }
 
@@ -213,11 +234,16 @@ export class ParentWidthSizeValueCalculationStrategy implements ISizeValueCalcul
     context: UnitContext
   ): number {
     const logger = Logger.getInstance();
-    logger.debug('ParentWidthSizeValueCalculationStrategy', 'calculate', 'Calculating parent width size', {
-      sizeValue,
-      sizeUnit,
-      dimension
-    });
+    logger.debug(
+      'ParentWidthSizeValueCalculationStrategy',
+      'calculate',
+      'Calculating parent width size',
+      {
+        sizeValue,
+        sizeUnit,
+        dimension,
+      }
+    );
 
     if (context.parent) {
       return context.parent.width;
@@ -249,7 +275,11 @@ export class ViewportWidthSizeValueCalculationStrategy implements ISizeValueCalc
   readonly sizeUnit = SizeUnit.VIEWPORT_WIDTH; // measured relative to viewport width
   readonly dimension = Dimension.WIDTH;
 
-  canHandle(sizeValue: SizeValue, sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+  canHandle(
+    sizeValue: SizeValue,
+    sizeUnit: SizeUnit,
+    _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+  ): boolean {
     return sizeValue === SizeValue.FILL && sizeUnit === SizeUnit.VIEWPORT_WIDTH;
   }
 
@@ -260,11 +290,16 @@ export class ViewportWidthSizeValueCalculationStrategy implements ISizeValueCalc
     context: UnitContext
   ): number {
     const logger = Logger.getInstance();
-    logger.debug('ViewportWidthSizeValueCalculationStrategy', 'calculate', 'Calculating viewport width size', {
-      sizeValue,
-      sizeUnit,
-      dimension
-    });
+    logger.debug(
+      'ViewportWidthSizeValueCalculationStrategy',
+      'calculate',
+      'Calculating viewport width size',
+      {
+        sizeValue,
+        sizeUnit,
+        dimension,
+      }
+    );
 
     if (context.viewport) {
       return context.viewport.width;

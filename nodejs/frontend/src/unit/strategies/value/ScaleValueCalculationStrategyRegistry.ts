@@ -8,7 +8,9 @@ import { Logger } from '../../../core/Logger';
  * Registry for scale value calculation strategies
  * Manages registration, retrieval, and selection of strategies
  */
-export class ScaleValueCalculationStrategyRegistry implements IScaleValueCalculationStrategyRegistry {
+export class ScaleValueCalculationStrategyRegistry
+  implements IScaleValueCalculationStrategyRegistry
+{
   private readonly strategies = new Map<string, IScaleValueCalculationStrategy>();
   private readonly logger = Logger.getInstance();
 
@@ -16,16 +18,26 @@ export class ScaleValueCalculationStrategyRegistry implements IScaleValueCalcula
    * Register a scale value calculation strategy
    */
   registerStrategy(strategy: IScaleValueCalculationStrategy): void {
-    this.logger.debug('ScaleValueCalculationStrategyRegistry', 'registerStrategy', 'Registering strategy', {
-      strategyId: strategy.strategyId,
-      scaleValue: strategy.scaleValue,
-      scaleUnit: strategy.scaleUnit
-    });
+    this.logger.debug(
+      'ScaleValueCalculationStrategyRegistry',
+      'registerStrategy',
+      'Registering strategy',
+      {
+        strategyId: strategy.strategyId,
+        scaleValue: strategy.scaleValue,
+        scaleUnit: strategy.scaleUnit,
+      }
+    );
 
     if (this.strategies.has(strategy.strategyId)) {
-      this.logger.warn('ScaleValueCalculationStrategyRegistry', 'registerStrategy', 'Strategy already registered', {
-        strategyId: strategy.strategyId
-      });
+      this.logger.warn(
+        'ScaleValueCalculationStrategyRegistry',
+        'registerStrategy',
+        'Strategy already registered',
+        {
+          strategyId: strategy.strategyId,
+        }
+      );
       return;
     }
 
@@ -36,9 +48,14 @@ export class ScaleValueCalculationStrategyRegistry implements IScaleValueCalcula
    * Unregister a scale value calculation strategy
    */
   unregisterStrategy(strategyId: string): boolean {
-    this.logger.debug('ScaleValueCalculationStrategyRegistry', 'unregisterStrategy', 'Unregistering strategy', {
-      strategyId
-    });
+    this.logger.debug(
+      'ScaleValueCalculationStrategyRegistry',
+      'unregisterStrategy',
+      'Unregistering strategy',
+      {
+        strategyId,
+      }
+    );
 
     return this.strategies.delete(strategyId);
   }
@@ -53,10 +70,7 @@ export class ScaleValueCalculationStrategyRegistry implements IScaleValueCalcula
   /**
    * Get all strategies that can handle the given parameters
    */
-  getStrategiesFor(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit
-  ): IScaleValueCalculationStrategy[] {
+  getStrategiesFor(scaleValue: ScaleValue, scaleUnit: ScaleUnit): IScaleValueCalculationStrategy[] {
     const compatibleStrategies: IScaleValueCalculationStrategy[] = [];
 
     for (const strategy of this.strategies.values()) {
@@ -68,12 +82,17 @@ export class ScaleValueCalculationStrategyRegistry implements IScaleValueCalcula
     // Sort by priority (lower number = higher priority)
     compatibleStrategies.sort((a, b) => a.getPriority() - b.getPriority());
 
-    this.logger.debug('ScaleValueCalculationStrategyRegistry', 'getStrategiesFor', 'Found compatible strategies', {
-      scaleValue,
-      scaleUnit,
-      count: compatibleStrategies.length,
-      strategies: compatibleStrategies.map(s => s.strategyId)
-    });
+    this.logger.debug(
+      'ScaleValueCalculationStrategyRegistry',
+      'getStrategiesFor',
+      'Found compatible strategies',
+      {
+        scaleValue,
+        scaleUnit,
+        count: compatibleStrategies.length,
+        strategies: compatibleStrategies.map(s => s.strategyId),
+      }
+    );
 
     return compatibleStrategies;
   }
@@ -128,7 +147,11 @@ export class ScaleValueCalculationStrategyRegistry implements IScaleValueCalcula
    * Clear all registered strategies
    */
   clearStrategies(): void {
-    this.logger.debug('ScaleValueCalculationStrategyRegistry', 'clearStrategies', 'Clearing all strategies');
+    this.logger.debug(
+      'ScaleValueCalculationStrategyRegistry',
+      'clearStrategies',
+      'Clearing all strategies'
+    );
     this.strategies.clear();
   }
 
@@ -144,15 +167,17 @@ export class ScaleValueCalculationStrategyRegistry implements IScaleValueCalcula
     const stats = {
       totalStrategies: strategies.length,
       strategiesByScaleValue: {} as Record<string, number>,
-      strategiesByScaleUnit: {} as Record<string, number>
+      strategiesByScaleUnit: {} as Record<string, number>,
     };
 
     for (const strategy of strategies) {
       const scaleValueKey = strategy.scaleValue;
       const scaleUnitKey = strategy.scaleUnit;
 
-      stats.strategiesByScaleValue[scaleValueKey] = (stats.strategiesByScaleValue[scaleValueKey] || 0) + 1;
-      stats.strategiesByScaleUnit[scaleUnitKey] = (stats.strategiesByScaleUnit[scaleUnitKey] || 0) + 1;
+      stats.strategiesByScaleValue[scaleValueKey] =
+        (stats.strategiesByScaleValue[scaleValueKey] || 0) + 1;
+      stats.strategiesByScaleUnit[scaleUnitKey] =
+        (stats.strategiesByScaleUnit[scaleUnitKey] || 0) + 1;
     }
 
     return stats;

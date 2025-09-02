@@ -107,13 +107,13 @@ export class PerformanceComparisonSystem {
 
     for (const scenario of scenarios) {
       console.log(`Running scenario: ${scenario.name}`);
-      
+
       const originalMetrics = await this.runOriginalSystem(scenario);
       const refactoredMetrics = await this.runRefactoredSystem(scenario);
-      
+
       const improvement = this.calculateImprovement(originalMetrics, refactoredMetrics);
       const statisticalSignificance = this.calculateStatisticalSignificance(
-        originalMetrics, 
+        originalMetrics,
         refactoredMetrics
       );
 
@@ -121,7 +121,7 @@ export class PerformanceComparisonSystem {
         original: originalMetrics,
         refactored: refactoredMetrics,
         improvement,
-        statisticalSignificance
+        statisticalSignificance,
       });
     }
 
@@ -168,7 +168,7 @@ export class PerformanceComparisonSystem {
       executionTime: endTime - testStartTime,
       memoryUsage: endMemory - testStartMemory,
       errorRate: errors / totalCalculations,
-      throughput: totalCalculations / ((endTime - testStartTime) / 1000)
+      throughput: totalCalculations / ((endTime - testStartTime) / 1000),
     };
   }
 
@@ -212,7 +212,7 @@ export class PerformanceComparisonSystem {
       executionTime: endTime - testStartTime,
       memoryUsage: endMemory - testStartMemory,
       errorRate: errors / totalCalculations,
-      throughput: totalCalculations / ((endTime - testStartTime) / 1000)
+      throughput: totalCalculations / ((endTime - testStartTime) / 1000),
     };
   }
 
@@ -258,10 +258,11 @@ export class PerformanceComparisonSystem {
     refactored: PerformanceMetrics
   ): ComparisonResult['improvement'] {
     return {
-      executionTime: ((original.executionTime - refactored.executionTime) / original.executionTime) * 100,
+      executionTime:
+        ((original.executionTime - refactored.executionTime) / original.executionTime) * 100,
       memoryUsage: ((original.memoryUsage - refactored.memoryUsage) / original.memoryUsage) * 100,
       errorRate: ((original.errorRate - refactored.errorRate) / original.errorRate) * 100,
-      throughput: ((refactored.throughput - original.throughput) / original.throughput) * 100
+      throughput: ((refactored.throughput - original.throughput) / original.throughput) * 100,
     };
   }
 
@@ -275,19 +276,19 @@ export class PerformanceComparisonSystem {
     // Simplified t-test calculation
     const n1 = 1; // sample size for original
     const n2 = 1; // sample size for refactored
-    
+
     const mean1 = original.executionTime;
     const mean2 = refactored.executionTime;
-    
+
     const variance1 = 0; // would need multiple samples for real variance
     const variance2 = 0;
-    
+
     const pooledVariance = ((n1 - 1) * variance1 + (n2 - 1) * variance2) / (n1 + n2 - 2);
-    const standardError = Math.sqrt(pooledVariance * (1/n1 + 1/n2));
-    
+    const standardError = Math.sqrt(pooledVariance * (1 / n1 + 1 / n2));
+
     // t-statistic calculation (unused but kept for future statistical analysis)
     (mean1 - mean2) / standardError;
-    
+
     // Simplified p-value calculation (would need proper t-distribution table)
     const pValue = 0.05; // placeholder
     const confidenceLevel = 0.95;
@@ -296,7 +297,7 @@ export class PerformanceComparisonSystem {
     return {
       isSignificant,
       confidenceLevel,
-      pValue
+      pValue,
     };
   }
 
@@ -315,27 +316,24 @@ export class PerformanceComparisonSystem {
    */
   generateReport(results: ComparisonResult[]): string {
     let report = '# Performance Comparison Report\n\n';
-    
+
     report += '## Summary\n\n';
-    
-    const avgExecutionTimeImprovement = results.reduce(
-      (sum, result) => sum + result.improvement.executionTime, 0
-    ) / results.length;
-    
-    const avgMemoryImprovement = results.reduce(
-      (sum, result) => sum + result.improvement.memoryUsage, 0
-    ) / results.length;
-    
-    const avgThroughputImprovement = results.reduce(
-      (sum, result) => sum + result.improvement.throughput, 0
-    ) / results.length;
-    
+
+    const avgExecutionTimeImprovement =
+      results.reduce((sum, result) => sum + result.improvement.executionTime, 0) / results.length;
+
+    const avgMemoryImprovement =
+      results.reduce((sum, result) => sum + result.improvement.memoryUsage, 0) / results.length;
+
+    const avgThroughputImprovement =
+      results.reduce((sum, result) => sum + result.improvement.throughput, 0) / results.length;
+
     report += `- **Average Execution Time Improvement**: ${avgExecutionTimeImprovement.toFixed(2)}%\n`;
     report += `- **Average Memory Usage Improvement**: ${avgMemoryImprovement.toFixed(2)}%\n`;
     report += `- **Average Throughput Improvement**: ${avgThroughputImprovement.toFixed(2)}%\n\n`;
-    
+
     report += '## Detailed Results\n\n';
-    
+
     results.forEach((result, index) => {
       report += `### Test ${index + 1}\n\n`;
       report += `**Original System**:\n`;
@@ -343,20 +341,20 @@ export class PerformanceComparisonSystem {
       report += `- Memory Usage: ${result.original.memoryUsage.toFixed(2)} bytes\n`;
       report += `- Error Rate: ${(result.original.errorRate * 100).toFixed(2)}%\n`;
       report += `- Throughput: ${result.original.throughput.toFixed(2)} ops/sec\n\n`;
-      
+
       report += `**Refactored System**:\n`;
       report += `- Execution Time: ${result.refactored.executionTime.toFixed(2)}ms\n`;
       report += `- Memory Usage: ${result.refactored.memoryUsage.toFixed(2)} bytes\n`;
       report += `- Error Rate: ${(result.refactored.errorRate * 100).toFixed(2)}%\n`;
       report += `- Throughput: ${result.refactored.throughput.toFixed(2)} ops/sec\n\n`;
-      
+
       report += `**Improvements**:\n`;
       report += `- Execution Time: ${result.improvement.executionTime.toFixed(2)}% ${result.improvement.executionTime > 0 ? '✅' : '❌'}\n`;
       report += `- Memory Usage: ${result.improvement.memoryUsage.toFixed(2)}% ${result.improvement.memoryUsage > 0 ? '✅' : '❌'}\n`;
       report += `- Throughput: ${result.improvement.throughput.toFixed(2)}% ${result.improvement.throughput > 0 ? '✅' : '❌'}\n`;
       report += `- Statistical Significance: ${result.statisticalSignificance.isSignificant ? '✅' : '❌'}\n\n`;
     });
-    
+
     return report;
   }
 }

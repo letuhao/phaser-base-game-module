@@ -26,12 +26,12 @@ export class LoggerPerformanceOptimizer {
     this.config = { ...DEFAULT_LOGGER_CONFIG, ...config };
     // Create a minimal logger interface for ErrorTracker
     const loggerInterface = {
-      debug: (objectName: string, methodName: string, message: string, data?: any) => 
+      debug: (objectName: string, methodName: string, message: string, data?: any) =>
         this.debug(objectName, methodName, message, data),
-      error: (objectName: string, methodName: string, message: string, data?: any) => 
+      error: (objectName: string, methodName: string, message: string, data?: any) =>
         this.error(objectName, methodName, message, data),
     } as Logger;
-    
+
     this.errorTracker = new ErrorTracker(loggerInterface);
     this.serverClient = new LogServerClient(this.config.server);
 
@@ -61,7 +61,8 @@ export class LoggerPerformanceOptimizer {
       try {
         this.queueProcessor = new Worker(
           URL.createObjectURL(
-            new Blob([`
+            new Blob([
+              `
               self.onmessage = function(e) {
                 const { entry, priority } = e.data;
                 
@@ -74,11 +75,12 @@ export class LoggerPerformanceOptimizer {
                 
                 self.postMessage({ type: 'processed', entry: processedEntry });
               };
-            `])
+            `,
+            ])
           )
         );
 
-        this.queueProcessor.onmessage = (e) => {
+        this.queueProcessor.onmessage = e => {
           if (e.data.type === 'processed') {
             this.handleProcessedLog(e.data.entry);
           }
@@ -148,10 +150,17 @@ export class LoggerPerformanceOptimizer {
           // Only warn if memory usage is critical
           const memoryUsagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
           if (memoryUsagePercent > this.config.performance.memoryThreshold) {
-            this.queueLog('Performance', 'MemoryWarning', `High memory usage: ${memoryUsagePercent.toFixed(1)}%`, {
-              memoryUsage: memoryUsagePercent,
-              threshold: this.config.performance.memoryThreshold,
-            }, LogLevel.WARN, 2); // High priority
+            this.queueLog(
+              'Performance',
+              'MemoryWarning',
+              `High memory usage: ${memoryUsagePercent.toFixed(1)}%`,
+              {
+                memoryUsage: memoryUsagePercent,
+                threshold: this.config.performance.memoryThreshold,
+              },
+              LogLevel.WARN,
+              2
+            ); // High priority
           }
         }
       }, 5000); // Check every 5 seconds instead of continuous monitoring
@@ -189,7 +198,7 @@ export class LoggerPerformanceOptimizer {
     if (!this.shouldLog(objectName, level)) return;
 
     const entry = this.createMinimalLogEntry(objectName, level, message, data, methodName);
-    
+
     // Add to queue with priority
     this.logQueue.push({
       entry,
@@ -228,9 +237,10 @@ export class LoggerPerformanceOptimizer {
       data: this.sanitizeDataMinimal(data),
       methodName,
       // Only include stack trace for errors in development
-      stackTrace: level === LogLevel.ERROR && process.env.NODE_ENV === 'development' 
-        ? this.getStackTraceMinimal() 
-        : undefined,
+      stackTrace:
+        level === LogLevel.ERROR && process.env.NODE_ENV === 'development'
+          ? this.getStackTraceMinimal()
+          : undefined,
       // Only include performance data for high-priority logs
       performance: level >= LogLevel.WARN ? this.getCurrentPerformanceMetricsMinimal() : undefined,
     };
@@ -249,18 +259,16 @@ export class LoggerPerformanceOptimizer {
       if (typeof data === 'object') {
         const sanitized: any = {};
         const keys = Object.keys(data).slice(0, 5); // Limit to 5 keys
-        
+
         for (const key of keys) {
           if (this.isSafeProperty(key, data[key])) {
-            sanitized[key] = typeof data[key] === 'object' 
-              ? '[Object]' 
-              : data[key];
+            sanitized[key] = typeof data[key] === 'object' ? '[Object]' : data[key];
           }
         }
-        
+
         return sanitized;
       }
-      
+
       return data;
     } catch (error) {
       return { error: 'Data sanitization failed' };
@@ -271,9 +279,7 @@ export class LoggerPerformanceOptimizer {
    * Check if property is safe (simplified)
    */
   private isSafeProperty(key: string, value: any): boolean {
-    return typeof value !== 'function' && 
-           typeof value !== 'symbol' && 
-           !this.isSensitiveField(key);
+    return typeof value !== 'function' && typeof value !== 'symbol' && !this.isSensitiveField(key);
   }
 
   /**
@@ -301,12 +307,12 @@ export class LoggerPerformanceOptimizer {
    */
   private getCurrentPerformanceMetricsMinimal(): any {
     const metrics: any = {};
-    
+
     // Only include essential metrics
     if (this.memoryUsage > 0) {
       metrics.memory = this.memoryUsage;
     }
-    
+
     return metrics;
   }
 
@@ -384,7 +390,7 @@ export class LoggerPerformanceOptimizer {
    */
   private outputToConsoleMinimal(entry: LogEntry): void {
     const message = `[${entry.level}] [${entry.objectName}] ${entry.message}`;
-    
+
     switch (entry.level) {
       case 'ERROR':
         console.error(message, entry.data);
@@ -434,10 +440,10 @@ export class LoggerPerformanceOptimizer {
    */
   private shouldLog(objectName: string, level: LogLevel): boolean {
     if (level > this.config.globalLevel) return false;
-    
+
     const objectConfig = this.config.objects?.find(obj => obj.name === objectName);
     if (objectConfig && !objectConfig.enabled) return false;
-    
+
     const objectLevel = objectConfig?.level || LogLevel.DEBUG;
     return level >= objectLevel;
   }
@@ -468,7 +474,12 @@ export class LoggerPerformanceOptimizer {
   /**
    * Performance monitoring methods
    */
-  public logPerformance(metricName: string, value: number, unit: string = '', metadata?: any): void {
+  public logPerformance(
+    metricName: string,
+    value: number,
+    unit: string = '',
+    metadata?: any
+  ): void {
     if (this.config.performance.enabled) {
       this.performanceMetrics.set(metricName, {
         value: { value, unit, metadata },
@@ -521,13 +532,33 @@ export class LoggerPerformanceOptimizer {
 
 // Export convenience functions
 export const loggerOptimized = LoggerPerformanceOptimizer.getInstance();
-export const logErrorOptimized = (objectName: string, methodName: string, message: string, data?: any) =>
-  loggerOptimized.error(objectName, methodName, message, data);
-export const logWarnOptimized = (objectName: string, methodName: string, message: string, data?: any) =>
-  loggerOptimized.warn(objectName, methodName, message, data);
-export const logInfoOptimized = (objectName: string, methodName: string, message: string, data?: any) =>
-  loggerOptimized.info(objectName, methodName, message, data);
-export const logDebugOptimized = (objectName: string, methodName: string, message: string, data?: any) =>
-  loggerOptimized.debug(objectName, methodName, message, data);
-export const logTraceOptimized = (objectName: string, methodName: string, message: string, data?: any) =>
-  loggerOptimized.trace(objectName, methodName, message, data);
+export const logErrorOptimized = (
+  objectName: string,
+  methodName: string,
+  message: string,
+  data?: any
+) => loggerOptimized.error(objectName, methodName, message, data);
+export const logWarnOptimized = (
+  objectName: string,
+  methodName: string,
+  message: string,
+  data?: any
+) => loggerOptimized.warn(objectName, methodName, message, data);
+export const logInfoOptimized = (
+  objectName: string,
+  methodName: string,
+  message: string,
+  data?: any
+) => loggerOptimized.info(objectName, methodName, message, data);
+export const logDebugOptimized = (
+  objectName: string,
+  methodName: string,
+  message: string,
+  data?: any
+) => loggerOptimized.debug(objectName, methodName, message, data);
+export const logTraceOptimized = (
+  objectName: string,
+  methodName: string,
+  message: string,
+  data?: any
+) => loggerOptimized.trace(objectName, methodName, message, data);

@@ -60,24 +60,26 @@ export class RefactoredScaleUnitCalculator implements IScaleUnit {
     }
 
     // Use Strategy Pattern to find and execute the appropriate strategy
-    const strategy = this.strategyRegistry.getBestStrategy(
-      this.baseValue,
-      this.scaleUnit
-    );
+    const strategy = this.strategyRegistry.getBestStrategy(this.baseValue, this.scaleUnit);
 
     if (strategy) {
       this.logger.debug('RefactoredScaleUnitCalculator', 'calculateScale', 'Using strategy', {
         strategyId: strategy.strategyId,
         scaleValue: this.baseValue,
-        scaleUnit: this.scaleUnit
+        scaleUnit: this.scaleUnit,
       });
 
       // Validate context before calculation
       if (!strategy.validateContext(context)) {
-        this.logger.warn('RefactoredScaleUnitCalculator', 'calculateScale', 'Context validation failed', {
-          strategyId: strategy.strategyId,
-          scaleValue: this.baseValue
-        });
+        this.logger.warn(
+          'RefactoredScaleUnitCalculator',
+          'calculateScale',
+          'Context validation failed',
+          {
+            strategyId: strategy.strategyId,
+            scaleValue: this.baseValue,
+          }
+        );
         return this.applyConstraints(DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT);
       }
 
@@ -88,7 +90,7 @@ export class RefactoredScaleUnitCalculator implements IScaleUnit {
     // Fallback to default if no strategy found
     this.logger.warn('RefactoredScaleUnitCalculator', 'calculateScale', 'No strategy found', {
       scaleValue: this.baseValue,
-      scaleUnit: this.scaleUnit
+      scaleUnit: this.scaleUnit,
     });
 
     return this.applyConstraints(DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT);
@@ -173,10 +175,7 @@ export class RefactoredScaleUnitCalculator implements IScaleUnit {
       return true; // Numeric values are always valid
     }
 
-    const strategy = this.strategyRegistry.getBestStrategy(
-      this.baseValue,
-      this.scaleUnit
-    );
+    const strategy = this.strategyRegistry.getBestStrategy(this.baseValue, this.scaleUnit);
 
     if (strategy) {
       return strategy.validateContext(context);
@@ -263,7 +262,7 @@ export class RefactoredScaleUnitCalculator implements IScaleUnit {
     return {
       min: this.minScale,
       max: this.maxScale,
-      hasConstraints: this.hasConstraints()
+      hasConstraints: this.hasConstraints(),
     };
   }
 
@@ -295,7 +294,7 @@ export class RefactoredScaleUnitCalculator implements IScaleUnit {
       maintainAspectRatio: this.maintainAspectRatio,
       uniformScaling: this.uniformScaling,
       hasConstraints: this.hasConstraints(),
-      isResponsive: this.isResponsive()
+      isResponsive: this.isResponsive(),
     };
   }
 

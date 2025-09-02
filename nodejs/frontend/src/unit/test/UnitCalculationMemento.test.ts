@@ -16,7 +16,7 @@ describe('UnitCalculationMemento', () => {
     mockPerformanceMetrics = {
       totalTime: 50,
       stepTimes: { validation: 10, calculation: 30, rounding: 10 },
-      memoryUsage: 1024
+      memoryUsage: 1024,
     };
   });
 
@@ -207,7 +207,7 @@ describe('UnitCalculationMemento', () => {
         strategyName: 'SizeUnitStrategy',
         validatorsUsed: ['RangeValidator', 'TypeValidator'],
         success: true,
-        errorMessage: undefined
+        errorMessage: undefined,
       });
     });
 
@@ -401,7 +401,7 @@ describe('UnitCalculationMemento', () => {
         success: true,
         totalTime: 50,
         templateName: 'SizeCalculationTemplate',
-        strategyName: 'SizeUnitStrategy'
+        strategyName: 'SizeUnitStrategy',
       });
     });
 

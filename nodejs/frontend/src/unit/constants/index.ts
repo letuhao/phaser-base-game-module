@@ -19,5 +19,5 @@ export {
   CALCULATION_CONSTANTS,
   ERROR_MESSAGES,
   TypeGuards,
-  Utils
+  Utils,
 } from './UnitSystemConstants';

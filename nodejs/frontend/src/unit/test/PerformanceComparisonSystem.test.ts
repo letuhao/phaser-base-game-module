@@ -1,4 +1,7 @@
-import { PerformanceComparisonSystem, TestScenario } from '../testing/performance/PerformanceComparisonSystem';
+import {
+  PerformanceComparisonSystem,
+  TestScenario,
+} from '../testing/performance/PerformanceComparisonSystem';
 import { UnitContext } from '../interfaces/IUnit';
 import { ISizeUnitConfig, IPositionUnitConfig, IScaleUnitConfig } from '../interfaces/IUnitConfig';
 import { SizeValue } from '../enums/SizeValue';
@@ -30,7 +33,7 @@ describe('PerformanceComparisonSystem', () => {
             scene: { width: 1920, height: 1080 },
             parent: { width: 800, height: 600, x: 0, y: 0 },
             viewport: { width: 1920, height: 1080 },
-            content: { width: 100, height: 100 }
+            content: { width: 100, height: 100 },
           },
           configs: [
             {
@@ -38,9 +41,9 @@ describe('PerformanceComparisonSystem', () => {
               name: 'Test Size 1',
               sizeUnit: SizeUnit.PIXEL,
               dimension: Dimension.WIDTH,
-              baseValue: SizeValue.PIXEL
-            } as ISizeUnitConfig
-          ]
+              baseValue: SizeValue.PIXEL,
+            } as ISizeUnitConfig,
+          ],
         },
         {
           id: 'basic-position-test',
@@ -52,7 +55,7 @@ describe('PerformanceComparisonSystem', () => {
             scene: { width: 1920, height: 1080 },
             parent: { width: 800, height: 600, x: 0, y: 0 },
             viewport: { width: 1920, height: 1080 },
-            content: { width: 100, height: 100 }
+            content: { width: 100, height: 100 },
           },
           configs: [
             {
@@ -60,9 +63,9 @@ describe('PerformanceComparisonSystem', () => {
               name: 'Test Position 1',
               positionUnit: PositionUnit.PIXEL,
               axis: Dimension.X,
-              baseValue: PositionValue.PIXEL
-            } as IPositionUnitConfig
-          ]
+              baseValue: PositionValue.PIXEL,
+            } as IPositionUnitConfig,
+          ],
         },
         {
           id: 'basic-scale-test',
@@ -74,16 +77,16 @@ describe('PerformanceComparisonSystem', () => {
             scene: { width: 1920, height: 1080 },
             parent: { width: 800, height: 600, x: 0, y: 0 },
             viewport: { width: 1920, height: 1080 },
-            content: { width: 100, height: 100 }
+            content: { width: 100, height: 100 },
           },
           configs: [
             {
               id: 'scale-1',
               name: 'Test Scale 1',
               scaleUnit: ScaleUnit.FACTOR,
-              baseValue: ScaleValue.FACTOR
-            } as IScaleUnitConfig
-          ]
+              baseValue: ScaleValue.FACTOR,
+            } as IScaleUnitConfig,
+          ],
         },
         {
           id: 'complex-mixed-test',
@@ -95,7 +98,7 @@ describe('PerformanceComparisonSystem', () => {
             scene: { width: 1920, height: 1080 },
             parent: { width: 800, height: 600, x: 0, y: 0 },
             viewport: { width: 1920, height: 1080 },
-            content: { width: 100, height: 100 }
+            content: { width: 100, height: 100 },
           },
           configs: [
             {
@@ -103,23 +106,23 @@ describe('PerformanceComparisonSystem', () => {
               name: 'Test Size 2',
               sizeUnit: SizeUnit.PARENT_WIDTH,
               dimension: Dimension.BOTH,
-              baseValue: SizeValue.FILL
+              baseValue: SizeValue.FILL,
             } as ISizeUnitConfig,
             {
               id: 'position-2',
               name: 'Test Position 2',
               positionUnit: PositionUnit.PIXEL,
               axis: Dimension.XY,
-              baseValue: PositionValue.CENTER
+              baseValue: PositionValue.CENTER,
             } as IPositionUnitConfig,
             {
               id: 'scale-2',
               name: 'Test Scale 2',
               scaleUnit: ScaleUnit.FACTOR,
-              baseValue: ScaleValue.FIT
-            } as IScaleUnitConfig
-          ]
-        }
+              baseValue: ScaleValue.FIT,
+            } as IScaleUnitConfig,
+          ],
+        },
       ];
 
       // Run performance comparison
@@ -161,7 +164,9 @@ describe('PerformanceComparisonSystem', () => {
         console.log(`Scenario ${index + 1} Results:`);
         console.log(`  Original Execution Time: ${result.original.executionTime.toFixed(2)}ms`);
         console.log(`  Refactored Execution Time: ${result.refactored.executionTime.toFixed(2)}ms`);
-        console.log(`  Execution Time Improvement: ${result.improvement.executionTime.toFixed(2)}%`);
+        console.log(
+          `  Execution Time Improvement: ${result.improvement.executionTime.toFixed(2)}%`
+        );
         console.log(`  Throughput Improvement: ${result.improvement.throughput.toFixed(2)}%`);
       });
     });
@@ -178,7 +183,7 @@ describe('PerformanceComparisonSystem', () => {
           scene: { width: 1920, height: 1080 },
           parent: { width: 800, height: 600, x: 0, y: 0 },
           viewport: { width: 1920, height: 1080 },
-          content: { width: 100, height: 100 }
+          content: { width: 100, height: 100 },
         },
         configs: [
           {
@@ -186,9 +191,9 @@ describe('PerformanceComparisonSystem', () => {
             name: 'Size Report Test',
             sizeUnit: SizeUnit.PIXEL,
             dimension: Dimension.WIDTH,
-            baseValue: SizeValue.PIXEL
-          } as ISizeUnitConfig
-        ]
+            baseValue: SizeValue.PIXEL,
+          } as ISizeUnitConfig,
+        ],
       };
 
       // Run comparison
@@ -219,7 +224,7 @@ describe('PerformanceComparisonSystem', () => {
         scene: { width: 1920, height: 1080 },
         parent: { width: 800, height: 600, x: 0, y: 0 },
         viewport: { width: 1920, height: 1080 },
-        content: { width: 100, height: 100 }
+        content: { width: 100, height: 100 },
       };
 
       const baseConfig: ISizeUnitConfig = {
@@ -227,7 +232,7 @@ describe('PerformanceComparisonSystem', () => {
         name: 'Iteration Test',
         sizeUnit: SizeUnit.PIXEL,
         dimension: Dimension.WIDTH,
-        baseValue: SizeValue.PIXEL
+        baseValue: SizeValue.PIXEL,
       };
 
       // Test with different iteration counts
@@ -241,7 +246,7 @@ describe('PerformanceComparisonSystem', () => {
           iterations,
           warmupIterations: Math.max(1, Math.floor(iterations / 10)),
           context: baseContext,
-          configs: [baseConfig]
+          configs: [baseConfig],
         };
 
         const results = await performanceSystem.runComparison([scenario]);
@@ -273,7 +278,7 @@ describe('PerformanceComparisonSystem', () => {
           scene: { width: 0, height: 0 }, // Invalid dimensions
           parent: { width: -1, height: -1, x: 0, y: 0 }, // Invalid dimensions
           viewport: { width: 0, height: 0 }, // Invalid dimensions
-          content: { width: 0, height: 0 } // Invalid dimensions
+          content: { width: 0, height: 0 }, // Invalid dimensions
         },
         configs: [
           {
@@ -281,9 +286,9 @@ describe('PerformanceComparisonSystem', () => {
             name: 'Error Size Test',
             sizeUnit: SizeUnit.PIXEL,
             dimension: Dimension.WIDTH,
-            baseValue: SizeValue.PIXEL
-          } as ISizeUnitConfig
-        ]
+            baseValue: SizeValue.PIXEL,
+          } as ISizeUnitConfig,
+        ],
       };
 
       // Run comparison - should not throw errors
@@ -312,7 +317,7 @@ describe('PerformanceComparisonSystem', () => {
           scene: { width: 1920, height: 1080 },
           parent: { width: 800, height: 600, x: 0, y: 0 },
           viewport: { width: 1920, height: 1080 },
-          content: { width: 100, height: 100 }
+          content: { width: 100, height: 100 },
         },
         configs: [
           {
@@ -320,9 +325,9 @@ describe('PerformanceComparisonSystem', () => {
             name: 'Statistical Size Test',
             sizeUnit: SizeUnit.PIXEL,
             dimension: Dimension.WIDTH,
-            baseValue: SizeValue.PIXEL
-          } as ISizeUnitConfig
-        ]
+            baseValue: SizeValue.PIXEL,
+          } as ISizeUnitConfig,
+        ],
       };
 
       const results = await performanceSystem.runComparison([scenario]);
@@ -340,7 +345,9 @@ describe('PerformanceComparisonSystem', () => {
 
       console.log(`Statistical Analysis Results:`);
       console.log(`  Is Significant: ${result.statisticalSignificance.isSignificant}`);
-      console.log(`  Confidence Level: ${(result.statisticalSignificance.confidenceLevel * 100).toFixed(2)}%`);
+      console.log(
+        `  Confidence Level: ${(result.statisticalSignificance.confidenceLevel * 100).toFixed(2)}%`
+      );
       console.log(`  P-Value: ${result.statisticalSignificance.pValue.toFixed(4)}`);
     });
   });

@@ -1,6 +1,6 @@
 /**
  * Access Control Enums
- * 
+ *
  * Enums for access types, permissions, and access control functionality
  */
 

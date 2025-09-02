@@ -1,6 +1,6 @@
 /**
  * Core Object Enums
- * 
+ *
  * Enums for core game objects and their specific functionality
  */
 

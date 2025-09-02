@@ -27,35 +27,35 @@ global.performance = {
   clearMeasures: jest.fn(),
   clearResourceTimings: jest.fn(),
   setResourceTimingBufferSize: jest.fn(),
-  toJSON: jest.fn(() => ({}))
+  toJSON: jest.fn(() => ({})),
 } as any;
 
 // Test utilities
 export const createMockContext = () => ({
-  parent: { 
-    width: MOCK_CONTEXT_DEFAULTS.PARENT.WIDTH, 
-    height: MOCK_CONTEXT_DEFAULTS.PARENT.HEIGHT, 
-    x: MOCK_CONTEXT_DEFAULTS.PARENT.X, 
-    y: MOCK_CONTEXT_DEFAULTS.PARENT.Y 
+  parent: {
+    width: MOCK_CONTEXT_DEFAULTS.PARENT.WIDTH,
+    height: MOCK_CONTEXT_DEFAULTS.PARENT.HEIGHT,
+    x: MOCK_CONTEXT_DEFAULTS.PARENT.X,
+    y: MOCK_CONTEXT_DEFAULTS.PARENT.Y,
   },
-  scene: { 
-    width: MOCK_CONTEXT_DEFAULTS.SCENE.WIDTH, 
-    height: MOCK_CONTEXT_DEFAULTS.SCENE.HEIGHT 
+  scene: {
+    width: MOCK_CONTEXT_DEFAULTS.SCENE.WIDTH,
+    height: MOCK_CONTEXT_DEFAULTS.SCENE.HEIGHT,
   },
-  viewport: { 
-    width: MOCK_CONTEXT_DEFAULTS.VIEWPORT.WIDTH, 
-    height: MOCK_CONTEXT_DEFAULTS.VIEWPORT.HEIGHT 
+  viewport: {
+    width: MOCK_CONTEXT_DEFAULTS.VIEWPORT.WIDTH,
+    height: MOCK_CONTEXT_DEFAULTS.VIEWPORT.HEIGHT,
   },
-  breakpoint: { 
-    name: MOCK_CONTEXT_DEFAULTS.BREAKPOINT.NAME, 
-    width: MOCK_CONTEXT_DEFAULTS.BREAKPOINT.WIDTH, 
-    height: MOCK_CONTEXT_DEFAULTS.BREAKPOINT.HEIGHT 
+  breakpoint: {
+    name: MOCK_CONTEXT_DEFAULTS.BREAKPOINT.NAME,
+    width: MOCK_CONTEXT_DEFAULTS.BREAKPOINT.WIDTH,
+    height: MOCK_CONTEXT_DEFAULTS.BREAKPOINT.HEIGHT,
   },
-  content: { 
-    width: MOCK_CONTEXT_DEFAULTS.CONTENT.WIDTH, 
-    height: MOCK_CONTEXT_DEFAULTS.CONTENT.HEIGHT 
+  content: {
+    width: MOCK_CONTEXT_DEFAULTS.CONTENT.WIDTH,
+    height: MOCK_CONTEXT_DEFAULTS.CONTENT.HEIGHT,
   },
-  dimension: 'width' as const
+  dimension: 'width' as const,
 });
 
 export const createMockUnit = (id: string, name: string, type: string) => ({
@@ -66,7 +66,7 @@ export const createMockUnit = (id: string, name: string, type: string) => ({
   calculate: jest.fn(() => DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT),
   validate: jest.fn(() => true),
   reset: jest.fn(),
-  destroy: jest.fn()
+  destroy: jest.fn(),
 });
 
 // Global test timeout

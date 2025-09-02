@@ -2,7 +2,7 @@
  * Layout System Enums
  * Type-safe enums for the layout system, providing better IntelliSense and compile-time checking
  * Based on the best patterns from the existing codebase
- * 
+ *
  * IMPORTANT: This file integrates with the existing Unit System
  * We import and re-export the Unit System enums for compatibility
  */
@@ -48,12 +48,12 @@ export {
  * Inspired by CSS media query breakpoints
  */
 export enum BreakpointName {
-  XS = 'xs',      // Extra small devices (phones)
-  SM = 'sm',      // Small devices (landscape phones)
-  MD = 'md',      // Medium devices (tablets)
-  LG = 'lg',      // Large devices (desktops)
-  XL = 'xl',      // Extra large devices (large desktops)
-  XXL = 'xxl',    // Extra extra large devices
+  XS = 'xs', // Extra small devices (phones)
+  SM = 'sm', // Small devices (landscape phones)
+  MD = 'md', // Medium devices (tablets)
+  LG = 'lg', // Large devices (desktops)
+  XL = 'xl', // Extra large devices (large desktops)
+  XXL = 'xxl', // Extra extra large devices
 }
 
 /**
@@ -75,18 +75,10 @@ export enum BreakpointCondition {
 // ============================================================================
 
 // Import breakpoint enums from BreakpointEnums.ts to avoid duplication
-import {
-  BreakpointOperator,
-  DeviceOrientation,
-  DeviceType
-} from './BreakpointEnums';
+import { BreakpointOperator, DeviceOrientation, DeviceType } from './BreakpointEnums';
 
 // Re-export for external use
-export {
-  BreakpointOperator,
-  DeviceOrientation,
-  DeviceType
-};
+export { BreakpointOperator, DeviceOrientation, DeviceType };
 
 /**
  * Breakpoint priority levels
@@ -141,7 +133,7 @@ export enum LayoutType {
 /**
  * Alignment options for positioning elements
  * Inspired by CSS align properties
- * 
+ *
  * NOTE: These alignments work with the Unit System's PositionUnit
  */
 export enum Alignment {
@@ -173,7 +165,7 @@ export enum Alignment {
 /**
  * Position types for element positioning
  * Inspired by CSS position property
- * 
+ *
  * NOTE: These are compatible with PositionUnit enum values
  */
 export enum PositionType {
@@ -217,11 +209,11 @@ export enum ZIndexLayer {
  * Inspired by Tailwind CSS spacing scale
  */
 export enum SpacingScale {
-  XS = 4,   // 0.25rem
-  SM = 8,   // 0.5rem
-  MD = 16,  // 1rem
-  LG = 24,  // 1.5rem
-  XL = 32,  // 2rem
+  XS = 4, // 0.25rem
+  SM = 8, // 0.5rem
+  MD = 16, // 1rem
+  LG = 24, // 1.5rem
+  XL = 32, // 2rem
   XXL = 48, // 3rem
   XXXL = 64, // 4rem
 }
@@ -380,9 +372,9 @@ export enum FontStyle {
  * Inspired by CSS transition-duration
  */
 export enum AnimationDuration {
-  FAST = 150,   // ms
+  FAST = 150, // ms
   NORMAL = 300, // ms
-  SLOW = 500,   // ms
+  SLOW = 500, // ms
   SLOWER = 1000, // ms
 }
 
@@ -1036,8 +1028,6 @@ export enum BackgroundClip {
   CONTENT_BOX = 'content-box',
 }
 
-
-
 /**
  * Text transform types
  */
@@ -1217,8 +1207,6 @@ export enum ShadowFilter {
   BOX_SHADOW = 'box-shadow',
 }
 
-
-
 // ============================================================================
 // EXPORT ALL ENUMS
 // ============================================================================
@@ -1237,7 +1225,7 @@ export const LAYOUT_SYSTEM_ENUMS = {
     SCALE_VALUE: ScaleValue,
     TEMPLATE_INPUT_TYPE: TemplateInputType,
   },
-  
+
   // Breakpoint enums
   BREAKPOINT: {
     NAME: BreakpointName,
@@ -1249,7 +1237,7 @@ export const LAYOUT_SYSTEM_ENUMS = {
     STATUS: BreakpointStatus,
     EVENT_TYPE: BreakpointEventType,
   },
-  
+
   // Layout-specific enums
   LAYOUT: {
     TYPE: LayoutType,

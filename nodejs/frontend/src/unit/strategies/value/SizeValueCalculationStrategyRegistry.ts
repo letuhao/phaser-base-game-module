@@ -12,32 +12,45 @@ import { Logger } from '../../../core/Logger';
  */
 export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculationStrategyRegistry {
   private readonly strategies = new Map<string, ISizeValueCalculationStrategy>();
-  
+
   // High-performance lookup tables for O(1) access
   private readonly strategyCache = new Map<string, ISizeValueCalculationStrategy>();
-  private readonly cacheKeyGenerator = (sizeValue: SizeValue | number, sizeUnit: SizeUnit, dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): string => 
-    `${sizeValue}:${sizeUnit}:${dimension}`;
-  
+  private readonly cacheKeyGenerator = (
+    sizeValue: SizeValue | number,
+    sizeUnit: SizeUnit,
+    dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+  ): string => `${sizeValue}:${sizeUnit}:${dimension}`;
+
   // Cache invalidation tracking
   private cacheVersion = 0;
   private lastCacheVersion = -1;
-  
+
   private readonly logger = Logger.getInstance();
 
   /**
    * Register a size value calculation strategy
    */
   registerStrategy(strategy: ISizeValueCalculationStrategy): void {
-    this.logger.debug('SizeValueCalculationStrategyRegistry', 'registerStrategy', 'Registering strategy', {
-      strategyId: strategy.strategyId,
-      sizeValue: strategy.sizeValue,
-      sizeUnit: strategy.sizeUnit
-    });
+    this.logger.debug(
+      'SizeValueCalculationStrategyRegistry',
+      'registerStrategy',
+      'Registering strategy',
+      {
+        strategyId: strategy.strategyId,
+        sizeValue: strategy.sizeValue,
+        sizeUnit: strategy.sizeUnit,
+      }
+    );
 
     if (this.strategies.has(strategy.strategyId)) {
-      this.logger.warn('SizeValueCalculationStrategyRegistry', 'registerStrategy', 'Strategy already registered', {
-        strategyId: strategy.strategyId
-      });
+      this.logger.warn(
+        'SizeValueCalculationStrategyRegistry',
+        'registerStrategy',
+        'Strategy already registered',
+        {
+          strategyId: strategy.strategyId,
+        }
+      );
       return;
     }
 
@@ -49,9 +62,14 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
    * Unregister a size value calculation strategy
    */
   unregisterStrategy(strategyId: string): boolean {
-    this.logger.debug('SizeValueCalculationStrategyRegistry', 'unregisterStrategy', 'Unregistering strategy', {
-      strategyId
-    });
+    this.logger.debug(
+      'SizeValueCalculationStrategyRegistry',
+      'unregisterStrategy',
+      'Unregistering strategy',
+      {
+        strategyId,
+      }
+    );
 
     const result = this.strategies.delete(strategyId);
     if (result) {
@@ -79,7 +97,7 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
     // Check cache first
     const cacheKey = this.cacheKeyGenerator(sizeValue, sizeUnit, dimension);
     const cachedStrategy = this.strategyCache.get(cacheKey);
-    
+
     if (cachedStrategy && this.lastCacheVersion === this.cacheVersion) {
       return [cachedStrategy]; // Return cached result immediately
     }
@@ -104,11 +122,16 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
 
     // Only log on cache miss to reduce overhead
     if (compatibleStrategies.length === 0) {
-      this.logger.debug('SizeValueCalculationStrategyRegistry', 'getStrategiesFor', 'No compatible strategies found', {
-        sizeValue,
-        sizeUnit,
-        dimension
-      });
+      this.logger.debug(
+        'SizeValueCalculationStrategyRegistry',
+        'getStrategiesFor',
+        'No compatible strategies found',
+        {
+          sizeValue,
+          sizeUnit,
+          dimension,
+        }
+      );
     }
 
     return compatibleStrategies;
@@ -126,7 +149,7 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
     // Use cached result for maximum performance
     const cacheKey = this.cacheKeyGenerator(sizeValue, sizeUnit, dimension);
     const cachedStrategy = this.strategyCache.get(cacheKey);
-    
+
     if (cachedStrategy && this.lastCacheVersion === this.cacheVersion) {
       return cachedStrategy; // O(1) cached access
     }
@@ -169,7 +192,9 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
   /**
    * Get strategies by dimension
    */
-  getStrategiesByDimension(dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): ISizeValueCalculationStrategy[] {
+  getStrategiesByDimension(
+    dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+  ): ISizeValueCalculationStrategy[] {
     return this.getAllStrategies().filter(strategy => strategy.dimension === dimension);
   }
 
@@ -191,7 +216,11 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
    * Clear all registered strategies
    */
   clearStrategies(): void {
-    this.logger.debug('SizeValueCalculationStrategyRegistry', 'clearStrategies', 'Clearing all strategies');
+    this.logger.debug(
+      'SizeValueCalculationStrategyRegistry',
+      'clearStrategies',
+      'Clearing all strategies'
+    );
     this.strategies.clear();
     this.invalidateCache();
   }
@@ -219,8 +248,8 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
       cacheStats: {
         cacheSize: this.strategyCache.size,
         cacheVersion: this.cacheVersion,
-        cacheHitRate: this.calculateCacheHitRate()
-      }
+        cacheHitRate: this.calculateCacheHitRate(),
+      },
     };
 
     for (const strategy of strategies) {
@@ -228,9 +257,11 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
       const sizeUnitKey = String(strategy.sizeUnit);
       const dimensionKey = String(strategy.dimension);
 
-      stats.strategiesBySizeValue[sizeValueKey] = (stats.strategiesBySizeValue[sizeValueKey] || 0) + 1;
+      stats.strategiesBySizeValue[sizeValueKey] =
+        (stats.strategiesBySizeValue[sizeValueKey] || 0) + 1;
       stats.strategiesBySizeUnit[sizeUnitKey] = (stats.strategiesBySizeUnit[sizeUnitKey] || 0) + 1;
-      stats.strategiesByDimension[dimensionKey] = (stats.strategiesByDimension[dimensionKey] || 0) + 1;
+      stats.strategiesByDimension[dimensionKey] =
+        (stats.strategiesByDimension[dimensionKey] || 0) + 1;
     }
 
     return stats;
@@ -249,12 +280,31 @@ export class SizeValueCalculationStrategyRegistry implements ISizeValueCalculati
    * Performance optimization: Pre-warm cache for common combinations
    */
   preWarmCache(): void {
-    this.logger.debug('SizeValueCalculationStrategyRegistry', 'preWarmCache', 'Pre-warming strategy cache');
-    
+    this.logger.debug(
+      'SizeValueCalculationStrategyRegistry',
+      'preWarmCache',
+      'Pre-warming strategy cache'
+    );
+
     // Pre-warm cache for common size value and unit combinations
-    const commonSizeValues = [SizeValue.PIXEL, SizeValue.FILL, SizeValue.AUTO, SizeValue.CONTENT, SizeValue.INTRINSIC];
-    const commonSizeUnits = [SizeUnit.PIXEL, SizeUnit.PARENT_WIDTH, SizeUnit.VIEWPORT_WIDTH, SizeUnit.SCENE_WIDTH];
-    const dimensions: Array<Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH> = [Dimension.WIDTH, Dimension.HEIGHT, Dimension.BOTH];
+    const commonSizeValues = [
+      SizeValue.PIXEL,
+      SizeValue.FILL,
+      SizeValue.AUTO,
+      SizeValue.CONTENT,
+      SizeValue.INTRINSIC,
+    ];
+    const commonSizeUnits = [
+      SizeUnit.PIXEL,
+      SizeUnit.PARENT_WIDTH,
+      SizeUnit.VIEWPORT_WIDTH,
+      SizeUnit.SCENE_WIDTH,
+    ];
+    const dimensions: Array<Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH> = [
+      Dimension.WIDTH,
+      Dimension.HEIGHT,
+      Dimension.BOTH,
+    ];
 
     for (const sizeValue of commonSizeValues) {
       for (const sizeUnit of commonSizeUnits) {

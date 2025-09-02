@@ -59,7 +59,10 @@ export class BatchCalculationCommand extends BaseUnitCommand {
     // Calculate aggregate result (average of all results)
     const aggregateResult =
       this.executionResults.length > 0
-        ? this.executionResults.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / this.executionResults.length
+        ? this.executionResults.reduce(
+            (sum, val) => sum + val,
+            DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT
+          ) / this.executionResults.length
         : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     // Set the result using the protected method
@@ -78,7 +81,10 @@ export class BatchCalculationCommand extends BaseUnitCommand {
     // Calculate aggregate result from previous results
     const aggregateResult =
       this.previousResults.length > 0
-        ? this.previousResults.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / this.previousResults.length
+        ? this.previousResults.reduce(
+            (sum, val) => sum + val,
+            DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT
+          ) / this.previousResults.length
         : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     // Set the result using the protected method
@@ -166,7 +172,9 @@ export class BatchCalculationCommand extends BaseUnitCommand {
     minResult: number;
     maxResult: number;
   } {
-    const validResults = this.executionResults.filter(r => r !== DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
+    const validResults = this.executionResults.filter(
+      r => r !== DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT
+    );
     const failedCount = this.executionResults.length - validResults.length;
 
     return {
@@ -175,10 +183,13 @@ export class BatchCalculationCommand extends BaseUnitCommand {
       failedCommands: failedCount,
       averageResult:
         validResults.length > 0
-          ? validResults.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / validResults.length
+          ? validResults.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) /
+            validResults.length
           : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
-      minResult: validResults.length > 0 ? Math.min(...validResults) : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
-      maxResult: validResults.length > 0 ? Math.max(...validResults) : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
+      minResult:
+        validResults.length > 0 ? Math.min(...validResults) : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
+      maxResult:
+        validResults.length > 0 ? Math.max(...validResults) : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
     };
   }
 }

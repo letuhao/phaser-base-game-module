@@ -1,6 +1,6 @@
 /**
  * Scene Element Factory Interface
- * 
+ *
  * Defines factory functionality for creating scene elements.
  * Handles element creation with different strategies and configurations.
  */
@@ -69,55 +69,55 @@ export interface SceneElementCreationResult {
  */
 export interface ISceneElementFactory {
   readonly factoryId: string;
-  
+
   /** Factory configuration */
   factoryConfig: SceneElementFactoryConfig;
-  
+
   /** Factory statistics */
   factoryStatistics: SceneElementFactoryStatistics;
-  
+
   /** Factory metadata */
   factoryMetadata: Record<string, any>;
-  
+
   /** Set factory configuration */
   setFactoryConfig(config: SceneElementFactoryConfig): this;
-  
+
   /** Set factory metadata */
   setFactoryMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get factory configuration */
   getFactoryConfig(): SceneElementFactoryConfig;
-  
+
   /** Get factory statistics */
   getFactoryStatistics(): SceneElementFactoryStatistics;
-  
+
   /** Get factory metadata */
   getFactoryMetadata(): Record<string, any>;
-  
+
   /** Create scene element */
   createElement(context: SceneElementCreationContext): Promise<SceneElementCreationResult>;
-  
+
   /** Destroy scene element */
   destroyElement(element: ISceneElement): Promise<boolean>;
-  
+
   /** Configure scene element */
   configureElement(element: ISceneElement, config: SceneElementConfig): Promise<boolean>;
-  
+
   /** Validate scene element */
   validateElement(element: ISceneElement): Promise<boolean>;
-  
+
   /** Optimize scene element */
   optimizeElement(element: ISceneElement): Promise<this>;
-  
+
   /** Get elements by type */
   getElementsByType(type: SceneElementType): ISceneElement[];
-  
+
   /** Get creation context by ID */
   getCreationContext(contextId: string): SceneElementCreationContext | null;
-  
+
   /** Clear factory */
   clearFactory(): Promise<this>;
-  
+
   /** Update factory */
   updateFactory(deltaTime: number): void;
 }

@@ -218,8 +218,14 @@ export class UnitCalculationMemento extends UnitMemento {
     if (this.performanceMetrics.totalTime === 0) return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
 
     // Base score on time and memory usage
-    const timeScore = Math.max(0, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT - this.performanceMetrics.totalTime * 10);
-    const memoryScore = Math.max(0, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT - this.performanceMetrics.memoryUsage / 1000);
+    const timeScore = Math.max(
+      0,
+      DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT - this.performanceMetrics.totalTime * 10
+    );
+    const memoryScore = Math.max(
+      0,
+      DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT - this.performanceMetrics.memoryUsage / 1000
+    );
 
     return Math.round((timeScore + memoryScore) / 2);
   }

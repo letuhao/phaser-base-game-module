@@ -53,7 +53,7 @@ export class FeatureFlagSystem {
       return {
         enabled: false,
         flagId,
-        reason: 'Flag not found'
+        reason: 'Flag not found',
       };
     }
 
@@ -64,17 +64,19 @@ export class FeatureFlagSystem {
       return {
         enabled: false,
         flagId,
-        reason: 'Flag globally disabled'
+        reason: 'Flag globally disabled',
       };
     }
 
     // Check environment targeting
-    if (flag.targetEnvironments.length > 0 && 
-        !flag.targetEnvironments.includes(fullContext.environment)) {
+    if (
+      flag.targetEnvironments.length > 0 &&
+      !flag.targetEnvironments.includes(fullContext.environment)
+    ) {
       return {
         enabled: false,
         flagId,
-        reason: `Environment ${fullContext.environment} not targeted`
+        reason: `Environment ${fullContext.environment} not targeted`,
       };
     }
 
@@ -83,7 +85,7 @@ export class FeatureFlagSystem {
       return {
         enabled: false,
         flagId,
-        reason: 'Flag not yet active'
+        reason: 'Flag not yet active',
       };
     }
 
@@ -91,7 +93,7 @@ export class FeatureFlagSystem {
       return {
         enabled: false,
         flagId,
-        reason: 'Flag expired'
+        reason: 'Flag expired',
       };
     }
 
@@ -102,21 +104,25 @@ export class FeatureFlagSystem {
           enabled: true,
           flagId,
           reason: 'User explicitly targeted',
-          metadata: flag.metadata
+          metadata: flag.metadata,
         };
       }
     }
 
     // Check rollout percentage
     if (flag.rolloutPercentage < FEATURE_FLAG_CONSTANTS.ROLLOUT.MAX_PERCENTAGE) {
-      const hash = this.hashString(fullContext.userId || fullContext.sessionId || fullContext.ipAddress || 'default');
-      const percentage = (hash % FEATURE_FLAG_CONSTANTS.ROLLOUT.HASH_MODULO) + FEATURE_FLAG_CONSTANTS.ROLLOUT.HASH_OFFSET;
-      
+      const hash = this.hashString(
+        fullContext.userId || fullContext.sessionId || fullContext.ipAddress || 'default'
+      );
+      const percentage =
+        (hash % FEATURE_FLAG_CONSTANTS.ROLLOUT.HASH_MODULO) +
+        FEATURE_FLAG_CONSTANTS.ROLLOUT.HASH_OFFSET;
+
       if (percentage > flag.rolloutPercentage) {
         return {
           enabled: false,
           flagId,
-          reason: `Rollout percentage not met (${percentage} > ${flag.rolloutPercentage})`
+          reason: `Rollout percentage not met (${percentage} > ${flag.rolloutPercentage})`,
         };
       }
     }
@@ -125,7 +131,7 @@ export class FeatureFlagSystem {
       enabled: true,
       flagId,
       reason: 'Flag enabled',
-      metadata: flag.metadata
+      metadata: flag.metadata,
     };
   }
 
@@ -171,7 +177,7 @@ export class FeatureFlagSystem {
       totalChecks: 0,
       enabledChecks: 0,
       disabledChecks: 0,
-      enableRate: 0
+      enableRate: 0,
     };
   }
 
@@ -205,9 +211,9 @@ export class FeatureFlagSystem {
           'Strategy Pattern implementation',
           'Performance caching',
           'Composition support',
-          'Better error handling'
-        ]
-      }
+          'Better error handling',
+        ],
+      },
     };
   }
 
@@ -231,8 +237,8 @@ export class FeatureFlagSystem {
       metadata: {
         testType: 'performance',
         variant: 'B',
-        metrics: ['execution_time', 'memory_usage', 'throughput']
-      }
+        metrics: ['execution_time', 'memory_usage', 'throughput'],
+      },
     };
   }
 }

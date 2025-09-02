@@ -1,6 +1,6 @@
 /**
  * Scene Context Interface
- * 
+ *
  * Defines context abstraction for scene system operations.
  */
 
@@ -14,7 +14,7 @@ export enum SceneContextType {
   RUNTIME = 'runtime',
   EDITING = 'editing',
   TESTING = 'testing',
-  DEBUGGING = 'debugging'
+  DEBUGGING = 'debugging',
 }
 
 /**
@@ -26,7 +26,7 @@ export enum SceneContextState {
   PAUSED = 'paused',
   SUSPENDED = 'suspended',
   DESTROYING = 'destroying',
-  DESTROYED = 'destroyed'
+  DESTROYED = 'destroyed',
 }
 
 /**
@@ -47,43 +47,43 @@ export interface SceneContextConfig {
 export interface ISceneContext {
   readonly contextId: string;
   readonly contextType: SceneContextType;
-  
+
   /** Context state */
   contextState: SceneContextState;
-  
+
   /** Context configuration */
   contextConfig: SceneContextConfig;
-  
+
   /** Context metadata */
   contextMetadata: Record<string, any>;
-  
+
   /** Set context state */
   setContextState(state: SceneContextState): this;
-  
+
   /** Set context configuration */
   setContextConfig(config: SceneContextConfig): this;
-  
+
   /** Set context metadata */
   setContextMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get context state */
   getContextState(): SceneContextState;
-  
+
   /** Get context configuration */
   getContextConfig(): SceneContextConfig;
-  
+
   /** Get context metadata */
   getContextMetadata(): Record<string, any>;
-  
+
   /** Initialize context */
   initializeContext(): Promise<this>;
-  
+
   /** Destroy context */
   destroyContext(): Promise<this>;
-  
+
   /** Check if context is active */
   isContextActive(): boolean;
-  
+
   /** Update context */
   updateContext(deltaTime: number): void;
 }

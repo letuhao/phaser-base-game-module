@@ -16,7 +16,11 @@ export class PixelPositionValueCalculationStrategy implements IPositionValueCalc
   readonly positionUnit = PositionUnit.PIXEL;
   readonly axisUnit = AxisUnit.X;
 
-  canHandle(positionValue: PositionValue, positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
+  canHandle(
+    positionValue: PositionValue,
+    positionUnit: PositionUnit,
+    _axisUnit: AxisUnit
+  ): boolean {
     return positionValue === PositionValue.PIXEL && positionUnit === PositionUnit.PIXEL;
   }
 
@@ -27,11 +31,16 @@ export class PixelPositionValueCalculationStrategy implements IPositionValueCalc
     _context: UnitContext
   ): number {
     const logger = Logger.getInstance();
-    logger.debug('PixelPositionValueCalculationStrategy', 'calculate', 'Calculating pixel position', {
-      positionValue,
-      positionUnit,
-      axisUnit: _axisUnit
-    });
+    logger.debug(
+      'PixelPositionValueCalculationStrategy',
+      'calculate',
+      'Calculating pixel position',
+      {
+        positionValue,
+        positionUnit,
+        axisUnit: _axisUnit,
+      }
+    );
 
     // For pixel values, return the value directly
     if (typeof positionValue === 'number') {
@@ -65,7 +74,11 @@ export class CenterPositionValueCalculationStrategy implements IPositionValueCal
   readonly positionUnit = PositionUnit.PIXEL; // CENTER behavior with pixel measurement
   readonly axisUnit = AxisUnit.X;
 
-  canHandle(positionValue: PositionValue, _positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
+  canHandle(
+    positionValue: PositionValue,
+    _positionUnit: PositionUnit,
+    _axisUnit: AxisUnit
+  ): boolean {
     return positionValue === PositionValue.CENTER;
   }
 
@@ -76,11 +89,16 @@ export class CenterPositionValueCalculationStrategy implements IPositionValueCal
     context: UnitContext
   ): number {
     const logger = Logger.getInstance();
-    logger.debug('CenterPositionValueCalculationStrategy', 'calculate', 'Calculating center position', {
-      positionValue,
-      positionUnit,
-      axisUnit
-    });
+    logger.debug(
+      'CenterPositionValueCalculationStrategy',
+      'calculate',
+      'Calculating center position',
+      {
+        positionValue,
+        positionUnit,
+        axisUnit,
+      }
+    );
 
     // Calculate center position based on scene first (matching original logic)
     if (context.scene) {
@@ -120,13 +138,19 @@ export class CenterPositionValueCalculationStrategy implements IPositionValueCal
  * Content Left Position Value Calculation Strategy
  * Handles content-left-based position calculations
  */
-export class ContentLeftPositionValueCalculationStrategy implements IPositionValueCalculationStrategy {
+export class ContentLeftPositionValueCalculationStrategy
+  implements IPositionValueCalculationStrategy
+{
   readonly strategyId = 'content-left-position-calculation';
   readonly positionValue = PositionValue.CONTENT_LEFT;
   readonly positionUnit = PositionUnit.PIXEL; // CONTENT_LEFT behavior with pixel measurement
   readonly axisUnit = AxisUnit.X;
 
-  canHandle(positionValue: PositionValue, _positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
+  canHandle(
+    positionValue: PositionValue,
+    _positionUnit: PositionUnit,
+    _axisUnit: AxisUnit
+  ): boolean {
     return positionValue === PositionValue.CONTENT_LEFT;
   }
 
@@ -137,11 +161,16 @@ export class ContentLeftPositionValueCalculationStrategy implements IPositionVal
     context: UnitContext
   ): number {
     const logger = Logger.getInstance();
-    logger.debug('ContentLeftPositionValueCalculationStrategy', 'calculate', 'Calculating content left position', {
-      positionValue,
-      positionUnit,
-      axisUnit
-    });
+    logger.debug(
+      'ContentLeftPositionValueCalculationStrategy',
+      'calculate',
+      'Calculating content left position',
+      {
+        positionValue,
+        positionUnit,
+        axisUnit,
+      }
+    );
 
     // Content left position calculation based on content or default
     if (context.content) {
@@ -173,13 +202,19 @@ export class ContentLeftPositionValueCalculationStrategy implements IPositionVal
  * Parent Center X Position Value Calculation Strategy
  * Handles parent-center-x-based position calculations
  */
-export class ParentCenterXPositionValueCalculationStrategy implements IPositionValueCalculationStrategy {
+export class ParentCenterXPositionValueCalculationStrategy
+  implements IPositionValueCalculationStrategy
+{
   readonly strategyId = 'parent-center-x-position-calculation';
   readonly positionValue = PositionValue.CENTER; // CENTER behavior
   readonly positionUnit = PositionUnit.PARENT_CENTER_X; // measured relative to parent center X
   readonly axisUnit = AxisUnit.X;
 
-  canHandle(positionValue: PositionValue, positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
+  canHandle(
+    positionValue: PositionValue,
+    positionUnit: PositionUnit,
+    _axisUnit: AxisUnit
+  ): boolean {
     return positionValue === PositionValue.CENTER && positionUnit === PositionUnit.PARENT_CENTER_X;
   }
 
@@ -190,11 +225,16 @@ export class ParentCenterXPositionValueCalculationStrategy implements IPositionV
     context: UnitContext
   ): number {
     const logger = Logger.getInstance();
-    logger.debug('ParentCenterXPositionValueCalculationStrategy', 'calculate', 'Calculating parent center X position', {
-      positionValue,
-      positionUnit,
-      axisUnit
-    });
+    logger.debug(
+      'ParentCenterXPositionValueCalculationStrategy',
+      'calculate',
+      'Calculating parent center X position',
+      {
+        positionValue,
+        positionUnit,
+        axisUnit,
+      }
+    );
 
     if (context.parent) {
       if (axisUnit === AxisUnit.X) {
@@ -224,13 +264,19 @@ export class ParentCenterXPositionValueCalculationStrategy implements IPositionV
  * Scene Center X Position Value Calculation Strategy
  * Handles scene-center-x-based position calculations
  */
-export class SceneCenterXPositionValueCalculationStrategy implements IPositionValueCalculationStrategy {
+export class SceneCenterXPositionValueCalculationStrategy
+  implements IPositionValueCalculationStrategy
+{
   readonly strategyId = 'scene-center-x-position-calculation';
   readonly positionValue = PositionValue.CENTER; // CENTER behavior
   readonly positionUnit = PositionUnit.SCENE_CENTER_X; // measured relative to scene center X
   readonly axisUnit = AxisUnit.X;
 
-  canHandle(positionValue: PositionValue, positionUnit: PositionUnit, _axisUnit: AxisUnit): boolean {
+  canHandle(
+    positionValue: PositionValue,
+    positionUnit: PositionUnit,
+    _axisUnit: AxisUnit
+  ): boolean {
     return positionValue === PositionValue.CENTER && positionUnit === PositionUnit.SCENE_CENTER_X;
   }
 
@@ -241,11 +287,16 @@ export class SceneCenterXPositionValueCalculationStrategy implements IPositionVa
     context: UnitContext
   ): number {
     const logger = Logger.getInstance();
-    logger.debug('SceneCenterXPositionValueCalculationStrategy', 'calculate', 'Calculating scene center X position', {
-      positionValue,
-      positionUnit,
-      axisUnit
-    });
+    logger.debug(
+      'SceneCenterXPositionValueCalculationStrategy',
+      'calculate',
+      'Calculating scene center X position',
+      {
+        positionValue,
+        positionUnit,
+        axisUnit,
+      }
+    );
 
     if (context.scene) {
       if (axisUnit === AxisUnit.X) {

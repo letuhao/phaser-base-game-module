@@ -11,18 +11,18 @@ export interface IObserverManager {
   // Observer registration
   addObserver(observer: IUnitObserver): void;
   removeObserver(observer: IUnitObserver): boolean;
-  
+
   // Observer notification
   notifyObservers(eventType: string, data: Record<string, string | number | boolean>): void;
   notifyUnitCreated(unitId: string, unitType: string): void;
   notifyUnitDestroyed(unitId: string): void;
   notifyUnitValueChanged(unitId: string, oldValue: number, newValue: number): void;
-  
+
   // Observer management
   getAllObservers(): IUnitObserver[];
   getObserverCount(): number;
   clearObservers(): void;
-  
+
   // Observer validation
   hasObserver(observer: IUnitObserver): boolean;
   validateObserver(observer: IUnitObserver): boolean;
@@ -41,7 +41,7 @@ export class ObserverManager implements IObserverManager {
    */
   public addObserver(observer: IUnitObserver): void {
     this.logger.debug('ObserverManager', 'addObserver', 'Adding observer', {
-      observerType: observer.constructor.name
+      observerType: observer.constructor.name,
     });
 
     try {
@@ -49,7 +49,7 @@ export class ObserverManager implements IObserverManager {
         this.observers.add(observer);
         this.logger.info('ObserverManager', 'addObserver', 'Observer added successfully', {
           observerType: observer.constructor.name,
-          totalObservers: this.observers.size
+          totalObservers: this.observers.size,
         });
       } else {
         throw new Error('Invalid observer provided');
@@ -57,7 +57,7 @@ export class ObserverManager implements IObserverManager {
     } catch (error) {
       this.logger.error('ObserverManager', 'addObserver', 'Failed to add observer', {
         observerType: observer.constructor.name,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -68,18 +68,18 @@ export class ObserverManager implements IObserverManager {
    */
   public removeObserver(observer: IUnitObserver): boolean {
     const removed = this.observers.delete(observer);
-    
+
     if (removed) {
       this.logger.info('ObserverManager', 'removeObserver', 'Observer removed successfully', {
         observerType: observer.constructor.name,
-        remainingObservers: this.observers.size
+        remainingObservers: this.observers.size,
       });
     } else {
       this.logger.debug('ObserverManager', 'removeObserver', 'Observer not found for removal', {
-        observerType: observer.constructor.name
+        observerType: observer.constructor.name,
       });
     }
-    
+
     return removed;
   }
 
@@ -90,7 +90,7 @@ export class ObserverManager implements IObserverManager {
     this.logger.debug('ObserverManager', 'notifyObservers', 'Notifying observers', {
       eventType,
       observerCount: this.observers.size,
-      dataKeys: Object.keys(data)
+      dataKeys: Object.keys(data),
     });
 
     let successCount = 0;
@@ -113,13 +113,19 @@ export class ObserverManager implements IObserverManager {
             }
             break;
           case 'value_changed':
-            if (typeof data.unitId === 'string' && typeof data.oldValue === 'number' && typeof data.newValue === 'number') {
+            if (
+              typeof data.unitId === 'string' &&
+              typeof data.oldValue === 'number' &&
+              typeof data.newValue === 'number'
+            ) {
               observer.onUnitValueChanged(data.unitId, data.oldValue, data.newValue);
               successCount++;
             }
             break;
           default:
-            this.logger.warn('ObserverManager', 'notifyObservers', 'Unknown event type', { eventType });
+            this.logger.warn('ObserverManager', 'notifyObservers', 'Unknown event type', {
+              eventType,
+            });
             break;
         }
       } catch (error) {
@@ -127,7 +133,7 @@ export class ObserverManager implements IObserverManager {
         this.logger.error('ObserverManager', 'notifyObservers', 'Error notifying observer', {
           observerType: observer.constructor.name,
           eventType,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     });
@@ -136,7 +142,7 @@ export class ObserverManager implements IObserverManager {
       eventType,
       totalObservers: this.observers.size,
       successCount,
-      errorCount
+      errorCount,
     });
   }
 
@@ -216,7 +222,7 @@ export class ObserverManager implements IObserverManager {
     }
 
     this.logger.debug('ObserverManager', 'validateObserver', 'Observer validation passed', {
-      observerType: observer.constructor.name
+      observerType: observer.constructor.name,
     });
     return true;
   }

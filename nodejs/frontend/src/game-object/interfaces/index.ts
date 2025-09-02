@@ -1,8 +1,8 @@
 /**
  * Game Object Interfaces Index
- * 
+ *
  * Centralized export for all game object interfaces
- * 
+ *
  * This file exports both the core composed interface and all the focused interfaces
  * that follow the Interface Segregation Principle.
  */
@@ -222,7 +222,11 @@ export const GAMEOBJECT_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreGameObjectInterface = typeof CORE_GAMEOBJECT_INTERFACES[keyof typeof CORE_GAMEOBJECT_INTERFACES];
-export type ManagerGameObjectInterface = typeof MANAGER_GAMEOBJECT_INTERFACES[keyof typeof MANAGER_GAMEOBJECT_INTERFACES];
-export type TypeSpecificGameObjectInterface = typeof TYPESPECIFIC_GAMEOBJECT_INTERFACES[keyof typeof TYPESPECIFIC_GAMEOBJECT_INTERFACES];
-export type GameObjectInterface = typeof GAMEOBJECT_INTERFACES[keyof typeof GAMEOBJECT_INTERFACES];
+export type CoreGameObjectInterface =
+  (typeof CORE_GAMEOBJECT_INTERFACES)[keyof typeof CORE_GAMEOBJECT_INTERFACES];
+export type ManagerGameObjectInterface =
+  (typeof MANAGER_GAMEOBJECT_INTERFACES)[keyof typeof MANAGER_GAMEOBJECT_INTERFACES];
+export type TypeSpecificGameObjectInterface =
+  (typeof TYPESPECIFIC_GAMEOBJECT_INTERFACES)[keyof typeof TYPESPECIFIC_GAMEOBJECT_INTERFACES];
+export type GameObjectInterface =
+  (typeof GAMEOBJECT_INTERFACES)[keyof typeof GAMEOBJECT_INTERFACES];

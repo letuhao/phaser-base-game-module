@@ -1,6 +1,6 @@
 /**
  * Lighting System Enums
- * 
+ *
  * Enums for lighting types, blend modes, and lighting-specific functionality
  */
 

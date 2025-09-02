@@ -1,6 +1,6 @@
 /**
  * Advanced UI Game Object Interfaces Index
- * 
+ *
  * Centralized export for all advanced UI-specific game object interfaces
  */
 
@@ -46,4 +46,5 @@ export const ADVANCED_UI_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type AdvancedUIInterface = typeof ADVANCED_UI_INTERFACES[keyof typeof ADVANCED_UI_INTERFACES];
+export type AdvancedUIInterface =
+  (typeof ADVANCED_UI_INTERFACES)[keyof typeof ADVANCED_UI_INTERFACES];

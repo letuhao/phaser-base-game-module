@@ -1,6 +1,6 @@
 /**
  * Effect System Enums
- * 
+ *
  * Enums for effect types, quality levels, and effect-specific functionality
  */
 
@@ -42,5 +42,3 @@ export enum ParticleType {
   LINE = 'line',
   CUSTOM = 'custom',
 }
-
-

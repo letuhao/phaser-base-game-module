@@ -1,6 +1,6 @@
 /**
  * Audio System Enums
- * 
+ *
  * Enums for audio, sound, and music systems
  */
 

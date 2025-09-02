@@ -7,7 +7,9 @@ import { SizeUnit } from '../enums/SizeUnit';
 // Mock template for testing
 class MockSizeCalculationTemplate {
   constructor() {}
-  get name() { return 'MockSizeCalculationTemplate'; }
+  get name() {
+    return 'MockSizeCalculationTemplate';
+  }
 }
 
 describe('UnitMementoManager', () => {
@@ -25,7 +27,7 @@ describe('UnitMementoManager', () => {
     mockPerformanceMetrics = {
       totalTime: 50,
       stepTimes: { validation: 10, calculation: 30, rounding: 10 },
-      memoryUsage: 1024
+      memoryUsage: 1024,
     };
   });
 
@@ -92,7 +94,7 @@ describe('UnitMementoManager', () => {
       const mementos = manager.getCalculationMementos(mockTemplate as any, mockContext);
       expect(mementos).toHaveLength(1);
       expect(mementos[0]).toBeInstanceOf(UnitCalculationMemento);
-      
+
       const memento = mementos[0] as UnitCalculationMemento;
       expect(memento.wasSuccessful()).toBe(true);
       expect(memento.getCalculationResult()).toBe(150);
@@ -112,7 +114,7 @@ describe('UnitMementoManager', () => {
 
       const mementos = manager.getCalculationMementos(mockTemplate as any, mockContext);
       expect(mementos).toHaveLength(1);
-      
+
       const memento = mementos[0] as UnitCalculationMemento;
       expect(memento.wasSuccessful()).toBe(false);
       expect(memento.getErrorMessage()).toBe('Calculation failed');
@@ -211,10 +213,14 @@ describe('UnitMementoManager', () => {
         getMetadata: () => ({ unitType: 'test', stateSize: 0, checksum: 'test', description: '' }),
         validate: () => true,
         getSize: () => 0,
-        getDescription: () => ''
+        getDescription: () => '',
       };
 
-      const result = manager.restoreToCalculation(mockTemplate as any, mockContext, mockMemento as any);
+      const result = manager.restoreToCalculation(
+        mockTemplate as any,
+        mockContext,
+        mockMemento as any
+      );
       expect(result).toBe(false);
     });
   });
@@ -247,8 +253,12 @@ describe('UnitMementoManager', () => {
       // Get the latest memento and restore to it (this populates undo stack with 2 mementos)
       const latestMemento = manager.getLatestCalculationMemento(mockTemplate as any, mockContext);
       expect(latestMemento).toBeDefined();
-      
-      const restoreResult = manager.restoreToCalculation(mockTemplate as any, mockContext, latestMemento!);
+
+      const restoreResult = manager.restoreToCalculation(
+        mockTemplate as any,
+        mockContext,
+        latestMemento!
+      );
       expect(restoreResult).toBe(true);
 
       // Now undo should be available (2 mementos in undo stack)
@@ -386,7 +396,7 @@ describe('UnitMementoManager', () => {
       const latestMemento = manager.getLatestCalculationMemento(mockTemplate as any, mockContext);
       expect(latestMemento).toBeDefined();
       expect(latestMemento).toBeInstanceOf(UnitCalculationMemento);
-      
+
       const memento = latestMemento as UnitCalculationMemento;
       expect(memento.getCalculationResult()).toBe(200);
     });
@@ -569,7 +579,7 @@ describe('UnitMementoManager', () => {
       const context2 = {
         ...createMockContext(),
         parent: { width: 1000, height: 800, x: 50, y: 50 }, // Different parent dimensions
-        scene: { width: 1400, height: 900 } // Different scene dimensions
+        scene: { width: 1400, height: 900 }, // Different scene dimensions
       };
 
       // Save mementos for different templates/contexts

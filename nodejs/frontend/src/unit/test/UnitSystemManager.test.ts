@@ -6,7 +6,11 @@ import { PositionUnit } from '../enums/PositionUnit';
 import { PositionValue } from '../enums/PositionValue';
 import { ScaleUnit } from '../enums/ScaleUnit';
 import { ScaleValue } from '../enums/ScaleValue';
-import { createSizeUnitConfig, createPositionUnitConfig, createScaleUnitConfig } from '../interfaces/IUnitConfig';
+import {
+  createSizeUnitConfig,
+  createPositionUnitConfig,
+  createScaleUnitConfig,
+} from '../interfaces/IUnitConfig';
 
 /**
  * Basic Unit Test for UnitSystemManager
@@ -27,19 +31,14 @@ describe('UnitSystemManager', () => {
 
   describe('Unit Creation', () => {
     it('should create a size unit successfully', () => {
-      const config = createSizeUnitConfig(
-        'test-size-unit',
-        'Test Size Unit',
-        SizeValue.FILL,
-        {
-          sizeUnit: SizeUnit.PARENT_WIDTH,
-          dimension: Dimension.WIDTH,
-          maintainAspectRatio: true
-        }
-      );
+      const config = createSizeUnitConfig('test-size-unit', 'Test Size Unit', SizeValue.FILL, {
+        sizeUnit: SizeUnit.PARENT_WIDTH,
+        dimension: Dimension.WIDTH,
+        maintainAspectRatio: true,
+      });
 
       const unit = manager.createUnit('size', config);
-      
+
       expect(unit).toBeDefined();
       expect(unit.id).toBe('test-size-unit');
       expect(unit.name).toBe('Test Size Unit');
@@ -53,12 +52,12 @@ describe('UnitSystemManager', () => {
         PositionValue.CENTER,
         {
           positionUnit: PositionUnit.PIXEL,
-          axis: Dimension.X
+          axis: Dimension.X,
         }
       );
 
       const unit = manager.createUnit('position', config);
-      
+
       expect(unit).toBeDefined();
       expect(unit.id).toBe('test-position-unit');
       expect(unit.name).toBe('Test Position Unit');
@@ -71,12 +70,12 @@ describe('UnitSystemManager', () => {
         ScaleValue.FACTOR,
         {
           scaleUnit: ScaleUnit.FACTOR,
-          maintainAspectRatio: false
+          maintainAspectRatio: false,
         }
       );
 
       const unit = manager.createUnit('scale', config);
-      
+
       expect(unit).toBeDefined();
       expect(unit.id).toBe('test-scale-unit');
       expect(unit.name).toBe('Test Scale Unit');
@@ -85,15 +84,11 @@ describe('UnitSystemManager', () => {
 
   describe('Unit Management', () => {
     it('should retrieve created units', () => {
-      const config = createSizeUnitConfig(
-        'test-unit',
-        'Test Unit',
-        SizeValue.PIXEL
-      );
+      const config = createSizeUnitConfig('test-unit', 'Test Unit', SizeValue.PIXEL);
 
       const unit = manager.createUnit('size', config);
       const retrievedUnit = manager.getUnit('test-unit');
-      
+
       expect(retrievedUnit).toBe(unit);
     });
 
@@ -115,7 +110,7 @@ describe('UnitSystemManager', () => {
       manager.createUnit('size', config);
 
       expect(manager.getUnit('test-unit')).toBeDefined();
-      
+
       const removed = manager.removeUnit('test-unit');
       expect(removed).toBe(true);
       expect(manager.getUnit('test-unit')).toBeUndefined();
@@ -125,7 +120,7 @@ describe('UnitSystemManager', () => {
   describe('System Status', () => {
     it('should return correct system status', () => {
       const status = manager.getSystemStatus();
-      
+
       expect(status.isInitialized).toBe(true);
       expect(status.totalUnits).toBe(0);
       expect(status.activeStrategies).toBe(0);
@@ -136,9 +131,9 @@ describe('UnitSystemManager', () => {
     it('should return performance metrics', () => {
       // Reset performance manager to get clean metrics
       manager.getPerformanceManager().clearPerformanceData();
-      
+
       const metrics = manager.getPerformanceMetrics();
-      
+
       expect(metrics.totalCalculations).toBe(0);
       expect(metrics.averageCalculationTime).toBe(0);
       expect(metrics.memoryUsage).toBeGreaterThanOrEqual(0);
@@ -150,7 +145,7 @@ describe('UnitSystemManager', () => {
     it('should update configuration', () => {
       const config = { memoryLimit: 1024, maxUnits: 100 };
       manager.updateConfiguration(config);
-      
+
       const currentConfig = manager.getConfiguration();
       expect(currentConfig.memoryLimit).toBe(1024);
       expect(currentConfig.maxUnits).toBe(100);
@@ -161,7 +156,7 @@ describe('UnitSystemManager', () => {
       manager.updateConfiguration({ memoryLimit: 2048 });
       const currentConfig = manager.getConfiguration();
       expect(currentConfig.memoryLimit).toBe(2048);
-      
+
       // Then reset
       manager.resetToDefaults();
       const resetConfig = manager.getConfiguration();

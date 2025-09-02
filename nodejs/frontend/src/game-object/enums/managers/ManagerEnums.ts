@@ -1,6 +1,6 @@
 /**
  * Manager System Enums
- * 
+ *
  * Enums for manager operations and manager-specific functionality
  */
 

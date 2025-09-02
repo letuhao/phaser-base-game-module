@@ -74,7 +74,9 @@ export class MixedUnitStrategy implements IUnitStrategy {
 
     // Default: calculate average of all values
     const results = input.map(item => this.calculateSingleValue(item, _context));
-    return results.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / results.length;
+    return (
+      results.reduce((sum, val) => sum + val, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / results.length
+    );
   }
 
   /**
@@ -102,8 +104,8 @@ export class MixedUnitStrategy implements IUnitStrategy {
   private calculateMixedObject(input: unknown, _context: UnitContext): number {
     // Check if input is an object with the expected properties
     if (
-      typeof input === 'object' && 
-      input !== null && 
+      typeof input === 'object' &&
+      input !== null &&
       ('unitType' in input || 'dimension' in input || 'value' in input)
     ) {
       const obj = input as {
@@ -187,7 +189,11 @@ export class MixedUnitStrategy implements IUnitStrategy {
   /**
    * Calculate dimension-specific value
    */
-  private calculateDimensionValue(dimension: string, value: unknown, _context: UnitContext): number {
+  private calculateDimensionValue(
+    dimension: string,
+    value: unknown,
+    _context: UnitContext
+  ): number {
     const dim = this.mapDimension(dimension);
     if (dim) {
       _context.dimension = dim;
@@ -296,17 +302,20 @@ export class MixedUnitStrategy implements IUnitStrategy {
   }
 
   private calculatePercentage(value: number, _context: UnitContext): number {
-    const parentSize = _context.parent?.width || _context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const parentSize =
+      _context.parent?.width || _context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     return (value / 100) * parentSize;
   }
 
   private calculateViewportWidth(value: number, _context: UnitContext): number {
-    const viewportWidth = _context.viewport?.width || _context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const viewportWidth =
+      _context.viewport?.width || _context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     return (value / 100) * viewportWidth;
   }
 
   private calculateViewportHeight(value: number, context: UnitContext): number {
-    const viewportHeight = context.viewport?.height || context.scene?.height || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const viewportHeight =
+      context.viewport?.height || context.scene?.height || DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
     return (value / 100) * viewportHeight;
   }
 
@@ -326,9 +335,18 @@ export class MixedUnitStrategy implements IUnitStrategy {
     // Replace unit references with calculated values
     return expression
       .replace(/\bwidth\b/g, String(context.parent?.width || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT))
-      .replace(/\bheight\b/g, String(context.parent?.height || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT))
-      .replace(/\bscene\.width\b/g, String(context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE))
-      .replace(/\bscene\.height\b/g, String(context.scene?.height || DEFAULT_FALLBACK_VALUES.SIZE.SCENE));
+      .replace(
+        /\bheight\b/g,
+        String(context.parent?.height || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT)
+      )
+      .replace(
+        /\bscene\.width\b/g,
+        String(context.scene?.width || DEFAULT_FALLBACK_VALUES.SIZE.SCENE)
+      )
+      .replace(
+        /\bscene\.height\b/g,
+        String(context.scene?.height || DEFAULT_FALLBACK_VALUES.SIZE.SCENE)
+      );
   }
 
   private isSimpleValue(input: unknown): boolean {
@@ -337,18 +355,12 @@ export class MixedUnitStrategy implements IUnitStrategy {
 
   private isResponsiveObject(input: unknown): boolean {
     return (
-      typeof input === 'object' && 
-      input !== null && 
-      ('default' in input || 'breakpoints' in input)
+      typeof input === 'object' && input !== null && ('default' in input || 'breakpoints' in input)
     );
   }
 
   private isThemeObject(input: unknown): boolean {
-    return (
-      typeof input === 'object' && 
-      input !== null && 
-      ('theme' in input || 'classes' in input)
-    );
+    return typeof input === 'object' && input !== null && ('theme' in input || 'classes' in input);
   }
 
   private containsMixedExpressions(input: string): boolean {
@@ -359,9 +371,9 @@ export class MixedUnitStrategy implements IUnitStrategy {
     if (typeof input === 'number') return input;
     if (typeof input === 'string') return parseFloat(input) || DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     if (
-      typeof input === 'object' && 
-      input !== null && 
-      'value' in input && 
+      typeof input === 'object' &&
+      input !== null &&
+      'value' in input &&
       typeof (input as { value: unknown }).value === 'number'
     ) {
       return (input as { value: number }).value;

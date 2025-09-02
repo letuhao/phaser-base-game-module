@@ -59,7 +59,12 @@ export class Logger {
   /**
    * Log performance metric (backward compatible)
    */
-  public logPerformance(metricName: string, value: number, unit: string = '', metadata?: any): void {
+  public logPerformance(
+    metricName: string,
+    value: number,
+    unit: string = '',
+    metadata?: any
+  ): void {
     Logger.instance.logPerformance(metricName, value, unit, metadata);
   }
 
@@ -127,7 +132,10 @@ export const logTrace = (objectName: string, methodName: string, message: string
   logger.trace(objectName, methodName, message, data);
 export const log = (objectName: string, methodName: string, message: string, data?: any) =>
   logger.log(objectName, methodName, message, data);
-export const logPerformance = (metricName: string, value: number, unit: string = '', metadata?: any) =>
-  logger.logPerformance(metricName, value, unit, metadata);
-export const logGameEvent = (eventName: string, data?: any) =>
-  logger.logGameEvent(eventName, data);
+export const logPerformance = (
+  metricName: string,
+  value: number,
+  unit: string = '',
+  metadata?: any
+) => logger.logPerformance(metricName, value, unit, metadata);
+export const logGameEvent = (eventName: string, data?: any) => logger.logGameEvent(eventName, data);

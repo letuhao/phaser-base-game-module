@@ -1,6 +1,6 @@
 /**
  * UI Game Object Interfaces Index
- * 
+ *
  * Centralized export for all UI-specific game object interfaces
  */
 
@@ -51,6 +51,7 @@ export const UI_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreUIInterface = typeof CORE_UI_INTERFACES[keyof typeof CORE_UI_INTERFACES];
-export type ContainerUIInterface = typeof CONTAINER_UI_INTERFACES[keyof typeof CONTAINER_UI_INTERFACES];
-export type UIInterface = typeof UI_INTERFACES[keyof typeof UI_INTERFACES];
+export type CoreUIInterface = (typeof CORE_UI_INTERFACES)[keyof typeof CORE_UI_INTERFACES];
+export type ContainerUIInterface =
+  (typeof CONTAINER_UI_INTERFACES)[keyof typeof CONTAINER_UI_INTERFACES];
+export type UIInterface = (typeof UI_INTERFACES)[keyof typeof UI_INTERFACES];

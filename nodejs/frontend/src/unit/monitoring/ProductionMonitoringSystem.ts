@@ -122,7 +122,7 @@ export class ProductionMonitoringSystem {
       metricName,
       value,
       unit,
-      tags
+      tags,
     };
 
     this.metrics.push(metric);
@@ -149,19 +149,19 @@ export class ProductionMonitoringSystem {
     this.recordMetric('calculation.execution_time', executionTime, 'ms', {
       operation,
       unitType: this.getUnitType(config),
-      context: 'calculation'
+      context: 'calculation',
     });
 
     this.recordMetric('calculation.memory_usage', memoryUsage, 'bytes', {
       operation,
       unitType: this.getUnitType(config),
-      context: 'calculation'
+      context: 'calculation',
     });
 
     this.recordMetric('calculation.throughput', 1000 / executionTime, 'ops/sec', {
       operation,
       unitType: this.getUnitType(config),
-      context: 'calculation'
+      context: 'calculation',
     });
   }
 
@@ -176,17 +176,17 @@ export class ProductionMonitoringSystem {
   ): void {
     this.recordMetric('cache.hit_rate', hitRate, 'percentage', {
       cacheId,
-      context: 'cache'
+      context: 'cache',
     });
 
     this.recordMetric('cache.eviction_rate', evictionRate, 'percentage', {
       cacheId,
-      context: 'cache'
+      context: 'cache',
     });
 
     this.recordMetric('cache.memory_usage', memoryUsage, 'bytes', {
       cacheId,
-      context: 'cache'
+      context: 'cache',
     });
   }
 
@@ -201,32 +201,28 @@ export class ProductionMonitoringSystem {
   ): void {
     this.recordMetric('strategy.execution_time', executionTime, 'ms', {
       strategyId,
-      context: 'strategy'
+      context: 'strategy',
     });
 
     this.recordMetric('strategy.success_rate', successRate, 'percentage', {
       strategyId,
-      context: 'strategy'
+      context: 'strategy',
     });
 
     this.recordMetric('strategy.composition_count', compositionCount, 'count', {
       strategyId,
-      context: 'strategy'
+      context: 'strategy',
     });
   }
 
   /**
    * Record error
    */
-  recordError(
-    error: Error,
-    component: string,
-    context: Record<string, any> = {}
-  ): void {
+  recordError(error: Error, component: string, context: Record<string, any> = {}): void {
     this.recordMetric('errors.count', 1, 'count', {
       component,
       errorType: error.constructor.name,
-      context: 'error'
+      context: 'error',
     });
 
     if (this.config.alertingEnabled) {
@@ -238,8 +234,8 @@ export class ProductionMonitoringSystem {
         metadata: {
           errorType: error.constructor.name,
           stack: error.stack,
-          context
-        }
+          context,
+        },
       });
     }
   }
@@ -277,7 +273,7 @@ export class ProductionMonitoringSystem {
           title: `Unhealthy component: ${check.component}`,
           message: check.message,
           component: check.component,
-          metadata: check.details
+          metadata: check.details,
         });
       }
     });
@@ -316,8 +312,8 @@ export class ProductionMonitoringSystem {
       timestamp: new Date(),
       details: {
         memoryUsage,
-        cpuUsage
-      }
+        cpuUsage,
+      },
     };
   }
 
@@ -332,7 +328,7 @@ export class ProductionMonitoringSystem {
       component: 'calculators',
       status: 'healthy',
       message: 'All calculators are operational',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Check strategy health
@@ -340,7 +336,7 @@ export class ProductionMonitoringSystem {
       component: 'strategies',
       status: 'healthy',
       message: 'All strategies are operational',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Check cache health
@@ -348,7 +344,7 @@ export class ProductionMonitoringSystem {
       component: 'cache',
       status: 'healthy',
       message: 'Cache is operational',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return checks;
@@ -370,9 +366,10 @@ export class ProductionMonitoringSystem {
       .filter(m => m.metricName === 'errors.count')
       .map(m => m.value);
 
-    const avgExecutionTime = executionTimes.length > 0 
-      ? executionTimes.reduce((a, b) => a + b, 0) / executionTimes.length 
-      : 0;
+    const avgExecutionTime =
+      executionTimes.length > 0
+        ? executionTimes.reduce((a, b) => a + b, 0) / executionTimes.length
+        : 0;
 
     const totalErrors = errorCounts.reduce((a, b) => a + b, 0);
 
@@ -403,8 +400,8 @@ export class ProductionMonitoringSystem {
       details: {
         avgExecutionTime,
         totalErrors,
-        metricsCount: recentMetrics.length
-      }
+        metricsCount: recentMetrics.length,
+      },
     };
   }
 
@@ -416,8 +413,10 @@ export class ProductionMonitoringSystem {
       return;
     }
 
-    if (metric.metricName === 'calculation.execution_time' && 
-        metric.value > this.config.performanceThresholds.maxExecutionTime) {
+    if (
+      metric.metricName === 'calculation.execution_time' &&
+      metric.value > this.config.performanceThresholds.maxExecutionTime
+    ) {
       this.createAlert({
         severity: 'warning',
         title: 'High execution time detected',
@@ -425,8 +424,8 @@ export class ProductionMonitoringSystem {
         component: 'performance',
         metadata: {
           metric,
-          threshold: this.config.performanceThresholds.maxExecutionTime
-        }
+          threshold: this.config.performanceThresholds.maxExecutionTime,
+        },
       });
     }
 
@@ -437,7 +436,7 @@ export class ProductionMonitoringSystem {
         title: 'Error count threshold exceeded',
         message: `Error count: ${metric.value}`,
         component: 'error',
-        metadata: { metric }
+        metadata: { metric },
       });
     }
   }
@@ -450,7 +449,7 @@ export class ProductionMonitoringSystem {
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date(),
       acknowledged: false,
-      ...alertData
+      ...alertData,
     };
 
     this.alerts.push(alert);
@@ -471,11 +470,11 @@ export class ProductionMonitoringSystem {
     const cpuUsage = this.getCPUUsage();
 
     this.recordMetric('system.memory_usage', memoryUsage, 'percentage', {
-      context: 'system'
+      context: 'system',
     });
 
     this.recordMetric('system.cpu_usage', cpuUsage, 'percentage', {
-      context: 'system'
+      context: 'system',
     });
   }
 
@@ -521,13 +520,13 @@ export class ProductionMonitoringSystem {
   } {
     const unacknowledgedAlerts = this.alerts.filter(a => !a.acknowledged);
     const latestHealthCheck = this.healthChecks[this.healthChecks.length - 1];
-    
+
     return {
       metricsCount: this.metrics.length,
       healthChecksCount: this.healthChecks.length,
       alertsCount: this.alerts.length,
       unacknowledgedAlertsCount: unacknowledgedAlerts.length,
-      systemStatus: latestHealthCheck?.status || 'healthy'
+      systemStatus: latestHealthCheck?.status || 'healthy',
     };
   }
 
@@ -576,7 +575,7 @@ export class ProductionMonitoringSystem {
       metrics: [...this.metrics],
       healthChecks: [...this.healthChecks],
       alerts: [...this.alerts],
-      statistics: this.getStatistics()
+      statistics: this.getStatistics(),
     };
   }
 }

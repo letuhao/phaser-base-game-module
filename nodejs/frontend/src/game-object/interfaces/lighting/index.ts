@@ -1,6 +1,6 @@
 /**
  * Lighting Game Object Interfaces Index
- * 
+ *
  * Centralized export for all lighting-specific game object interfaces
  */
 
@@ -56,6 +56,8 @@ export const LIGHTING_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreLightingInterface = typeof CORE_LIGHTING_INTERFACES[keyof typeof CORE_LIGHTING_INTERFACES];
-export type SpecificLightingInterface = typeof SPECIFIC_LIGHTING_INTERFACES[keyof typeof SPECIFIC_LIGHTING_INTERFACES];
-export type LightingInterface = typeof LIGHTING_INTERFACES[keyof typeof LIGHTING_INTERFACES];
+export type CoreLightingInterface =
+  (typeof CORE_LIGHTING_INTERFACES)[keyof typeof CORE_LIGHTING_INTERFACES];
+export type SpecificLightingInterface =
+  (typeof SPECIFIC_LIGHTING_INTERFACES)[keyof typeof SPECIFIC_LIGHTING_INTERFACES];
+export type LightingInterface = (typeof LIGHTING_INTERFACES)[keyof typeof LIGHTING_INTERFACES];

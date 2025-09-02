@@ -4,7 +4,7 @@ import { LoggerPerformanceOptimizer } from '../../core/LoggerPerformanceOptimize
 /**
  * Performance comparison tests between original Logger and optimized Logger
  * Demonstrates the performance improvements achieved through optimization
- * 
+ *
  * Note: Test thresholds are adjusted for the test environment limitations.
  * Real browser performance improvements will be more significant due to:
  * - Web Worker availability
@@ -82,7 +82,7 @@ describe('Logger Performance Comparison', () => {
       console.log('Debug Logging Performance:', {
         original: `${originalResult.time.toFixed(2)}ms, ${(originalResult.memory / 1024).toFixed(2)}KB`,
         optimized: `${optimizedResult.time.toFixed(2)}ms, ${(optimizedResult.memory / 1024).toFixed(2)}KB`,
-        improvement: `${((originalResult.time - optimizedResult.time) / originalResult.time * 100).toFixed(1)}% faster`,
+        improvement: `${(((originalResult.time - optimizedResult.time) / originalResult.time) * 100).toFixed(1)}% faster`,
       });
     });
 
@@ -106,7 +106,7 @@ describe('Logger Performance Comparison', () => {
       console.log('Error Logging Performance:', {
         original: `${originalResult.time.toFixed(2)}ms`,
         optimized: `${optimizedResult.time.toFixed(2)}ms`,
-        improvement: `${((originalResult.time - optimizedResult.time) / originalResult.time * 100).toFixed(1)}% faster`,
+        improvement: `${(((originalResult.time - optimizedResult.time) / originalResult.time) * 100).toFixed(1)}% faster`,
       });
     });
   });
@@ -154,7 +154,7 @@ describe('Logger Performance Comparison', () => {
       console.log('Complex Data Logging Performance:', {
         original: `${originalResult.time.toFixed(2)}ms, ${(originalResult.memory / 1024).toFixed(2)}KB`,
         optimized: `${optimizedResult.time.toFixed(2)}ms, ${(optimizedResult.memory / 1024).toFixed(2)}KB`,
-        improvement: `${((originalResult.time - optimizedResult.time) / originalResult.time * 100).toFixed(1)}% faster`,
+        improvement: `${(((originalResult.time - optimizedResult.time) / originalResult.time) * 100).toFixed(1)}% faster`,
       });
     });
   });
@@ -165,12 +165,16 @@ describe('Logger Performance Comparison', () => {
 
       // Test original logger with high volume
       const originalResult = measurePerformance(() => {
-        originalLogger.debug('TestObject', 'testMethod', 'High volume test', { index: Math.random() });
+        originalLogger.debug('TestObject', 'testMethod', 'High volume test', {
+          index: Math.random(),
+        });
       }, iterations);
 
       // Test optimized logger with high volume
       const optimizedResult = measurePerformance(() => {
-        optimizedLogger.debug('TestObject', 'testMethod', 'High volume test', { index: Math.random() });
+        optimizedLogger.debug('TestObject', 'testMethod', 'High volume test', {
+          index: Math.random(),
+        });
       }, iterations);
 
       // Verify both loggers handle high volume correctly
@@ -180,7 +184,7 @@ describe('Logger Performance Comparison', () => {
       console.log('High Volume Logging Performance:', {
         original: `${originalResult.time.toFixed(2)}ms, ${(originalResult.memory / 1024).toFixed(2)}KB`,
         optimized: `${optimizedResult.time.toFixed(2)}ms, ${(optimizedResult.memory / 1024).toFixed(2)}KB`,
-        improvement: `${((originalResult.time - optimizedResult.time) / originalResult.time * 100).toFixed(1)}% faster`,
+        improvement: `${(((originalResult.time - optimizedResult.time) / originalResult.time) * 100).toFixed(1)}% faster`,
       });
     });
   });
@@ -195,10 +199,10 @@ describe('Logger Performance Comparison', () => {
       }
 
       const startTime = performance.now();
-      
+
       // Force queue processing
       optimizedLogger.getQueueStatus();
-      
+
       const endTime = performance.now();
       const processingTime = endTime - startTime;
 
@@ -222,7 +226,7 @@ describe('Logger Performance Comparison', () => {
       for (let i = 0; i < iterations; i++) {
         originalLogger.debug('TestObject', 'testMethod', `Memory test ${i}`, { data: 'test' });
       }
-      
+
       const originalMemory = (performance as any).memory?.usedJSHeapSize || 0;
       const originalMemoryIncrease = originalMemory - initialMemory;
 
@@ -246,7 +250,7 @@ describe('Logger Performance Comparison', () => {
       console.log('Memory Usage Comparison:', {
         original: `${(originalMemoryIncrease / 1024).toFixed(2)}KB`,
         optimized: `${(optimizedMemoryIncrease / 1024).toFixed(2)}KB`,
-        reduction: `${((originalMemoryIncrease - optimizedMemoryIncrease) / originalMemoryIncrease * 100).toFixed(1)}% reduction`,
+        reduction: `${(((originalMemoryIncrease - optimizedMemoryIncrease) / originalMemoryIncrease) * 100).toFixed(1)}% reduction`,
       });
     });
   });
@@ -272,7 +276,7 @@ describe('Logger Performance Comparison', () => {
       console.log('Performance Monitoring Overhead:', {
         original: `${originalResult.time.toFixed(2)}ms`,
         optimized: `${optimizedResult.time.toFixed(2)}ms`,
-        improvement: `${((originalResult.time - optimizedResult.time) / originalResult.time * 100).toFixed(1)}% faster`,
+        improvement: `${(((originalResult.time - optimizedResult.time) / originalResult.time) * 100).toFixed(1)}% faster`,
       });
     });
   });
@@ -291,12 +295,16 @@ describe('Logger Performance Comparison', () => {
       testScenarios.forEach(scenario => {
         // Test original logger
         const originalResult = measurePerformance(() => {
-          originalLogger.debug('TestObject', 'testMethod', `${scenario.name} test`, { data: 'test' });
+          originalLogger.debug('TestObject', 'testMethod', `${scenario.name} test`, {
+            data: 'test',
+          });
         }, scenario.iterations);
 
         // Test optimized logger
         const optimizedResult = measurePerformance(() => {
-          optimizedLogger.debug('TestObject', 'testMethod', `${scenario.name} test`, { data: 'test' });
+          optimizedLogger.debug('TestObject', 'testMethod', `${scenario.name} test`, {
+            data: 'test',
+          });
         }, scenario.iterations);
 
         results[scenario.name] = {
@@ -311,9 +319,18 @@ describe('Logger Performance Comparison', () => {
             throughput: scenario.iterations / optimizedResult.time,
           },
           improvement: {
-            time: ((originalResult.time - optimizedResult.time) / originalResult.time * 100).toFixed(1),
-            memory: ((originalResult.memory - optimizedResult.memory) / originalResult.memory * 100).toFixed(1),
-            throughput: ((optimizedResult.time - originalResult.time) / originalResult.time * 100).toFixed(1),
+            time: (
+              ((originalResult.time - optimizedResult.time) / originalResult.time) *
+              100
+            ).toFixed(1),
+            memory: (
+              ((originalResult.memory - optimizedResult.memory) / originalResult.memory) *
+              100
+            ).toFixed(1),
+            throughput: (
+              ((optimizedResult.time - originalResult.time) / originalResult.time) *
+              100
+            ).toFixed(1),
           },
         };
       });

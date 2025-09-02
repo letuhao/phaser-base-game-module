@@ -1,6 +1,6 @@
 /**
  * Design Pattern Enums
- * 
+ *
  * Enums for design patterns and their specific functionality
  */
 

@@ -1,6 +1,6 @@
 /**
  * Asset Migration Interface
- * 
+ *
  * Defines migration functionality from the old AssetLoaderConfigLoader to the new Asset System.
  */
 
@@ -58,28 +58,25 @@ export interface MigrationResult {
  */
 export interface IAssetMigration {
   readonly migrationId: string;
-  
+
   /** Migration metadata */
   migrationMetadata: Record<string, any>;
-  
+
   /** Set migration metadata */
   setMigrationMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get migration metadata */
   getMigrationMetadata(): Record<string, any>;
-  
+
   /** Migrate legacy asset configuration */
   migrateLegacyAssetConfig(
     legacyConfig: LegacyAssetLoaderConfig,
     sceneId: string
   ): Promise<ISceneAssetConfig>;
-  
+
   /** Migrate legacy asset */
-  migrateLegacyAsset(
-    legacyAsset: LegacyAssetConfig,
-    basePath: string
-  ): Promise<IAsset>;
-  
+  migrateLegacyAsset(legacyAsset: LegacyAssetConfig, basePath: string): Promise<IAsset>;
+
   /** Migrate legacy assets to bundle */
   migrateLegacyAssetsToBundle(
     legacyAssets: LegacyAssetConfig[],
@@ -87,16 +84,16 @@ export interface IAssetMigration {
     bundleType: BundleType,
     basePath: string
   ): Promise<IAssetBundle>;
-  
+
   /** Convert legacy asset type */
   convertLegacyAssetType(legacyType: string): AssetType;
-  
+
   /** Convert legacy priority */
   convertLegacyPriority(legacyPriority: string): AssetPriority;
-  
+
   /** Validate migration result */
   validateMigrationResult(result: MigrationResult): boolean;
-  
+
   /** Get migration statistics */
   getMigrationStatistics(): {
     totalMigrations: number;
@@ -105,10 +102,10 @@ export interface IAssetMigration {
     totalAssetsMigrated: number;
     totalBundlesMigrated: number;
   };
-  
+
   /** Clear migration history */
   clearMigrationHistory(): this;
-  
+
   /** Update migration */
   updateMigration(deltaTime: number): void;
 }

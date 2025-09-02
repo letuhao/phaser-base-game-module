@@ -24,40 +24,40 @@ export class SizeUnitStrategy implements IUnitStrategy {
     if (input === null || input === undefined) {
       return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT; // Default fallback
     }
-    
+
     // First, try to handle direct inputs that bypass conversion
     if (typeof input === 'number') {
       return input;
     }
-    
+
     if (typeof input === 'string') {
       return this.calculateStringSize(input, context);
     }
-    
+
     // Handle direct strategy input properties
     if ('sizeArray' in input && input.sizeArray) {
       return this.calculateSizeArray(input.sizeArray, context);
     }
-    
+
     if ('sizeObject' in input && input.sizeObject) {
       return this.calculateSizeObject(input.sizeObject, context);
     }
-    
+
     if ('sizeString' in input && input.sizeString) {
       return this.calculateStringSize(input.sizeString, context);
     }
-    
+
     if ('randomValue' in input && input.randomValue) {
       return input.randomValue.getRandomValue();
     }
-    
+
     if ('parentSize' in input && input.parentSize) {
       return this.calculateParentSize(input as ISizeStrategyInput, context);
     }
-    
+
     // Convert legacy input to strategy input format
     const strategyInput = convertToStrategyInput(input);
-    
+
     // Handle size strategy input specifically
     if ('value' in strategyInput && strategyInput.value !== undefined) {
       // Handle direct numbers
@@ -93,12 +93,12 @@ export class SizeUnitStrategy implements IUnitStrategy {
     if (input === null || input === undefined) {
       return false;
     }
-    
+
     // Check direct inputs first
     if (typeof input === 'number' || typeof input === 'string') {
       return true;
     }
-    
+
     // Check direct strategy input properties
     if (
       ('sizeArray' in input && input.sizeArray !== undefined) ||
@@ -109,10 +109,10 @@ export class SizeUnitStrategy implements IUnitStrategy {
     ) {
       return true;
     }
-    
+
     // Convert legacy input to strategy input format
     const strategyInput = convertToStrategyInput(input);
-    
+
     return (
       ('value' in strategyInput && strategyInput.value !== undefined) ||
       ('randomValue' in strategyInput && strategyInput.randomValue !== undefined) ||
@@ -136,7 +136,9 @@ export class SizeUnitStrategy implements IUnitStrategy {
   private calculateStringSize(input: string, context: UnitContext): number {
     switch (input) {
       case 'fill':
-        return context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+        return (
+          context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
+        );
       case 'auto':
         return context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
       default:
@@ -193,14 +195,12 @@ export class SizeUnitStrategy implements IUnitStrategy {
     return Object.values(SizeUnit).includes(input as SizeUnit);
   }
 
-
-
   /**
    * Calculate size from array input
    */
   private calculateSizeArray(input: unknown[], context: UnitContext): number {
     if (input.length === 0) return 0;
-    
+
     // Handle pattern: ['size', 'parent-width', 0.5]
     if (input.length === 3 && input[0] === 'size') {
       const unitType = input[1];
@@ -210,7 +210,7 @@ export class SizeUnitStrategy implements IUnitStrategy {
         return baseSize * multiplier;
       }
     }
-    
+
     // Handle pattern: ['parent-width', 0.5]
     if (input.length === 2 && typeof input[1] === 'number') {
       const unitType = input[0];
@@ -218,13 +218,13 @@ export class SizeUnitStrategy implements IUnitStrategy {
       const baseSize = this.calculate(unitType as IStrategyInput, context);
       return baseSize * multiplier;
     }
-    
+
     // Handle numeric arrays directly
     if (input.every(item => typeof item === 'number')) {
       const sum = input.reduce((acc, val) => acc + (val as number), 0);
       return sum / input.length;
     }
-    
+
     // Default: calculate average of all values (convert each item properly)
     const results = input.map(item => {
       if (typeof item === 'number') {
@@ -245,9 +245,9 @@ export class SizeUnitStrategy implements IUnitStrategy {
   private calculateSizeObject(input: unknown, context: UnitContext): number {
     // Handle configuration objects
     if (
-      typeof input === 'object' && 
-      input !== null && 
-      'sizeUnit' in input && 
+      typeof input === 'object' &&
+      input !== null &&
+      'sizeUnit' in input &&
       'baseValue' in input
     ) {
       const config = input as {
@@ -258,37 +258,32 @@ export class SizeUnitStrategy implements IUnitStrategy {
         dimension?: unknown;
         maintainAspectRatio?: unknown;
       };
-      
+
       if (config.sizeUnit && config.baseValue) {
         const calculator = this.factory.createSizeUnit(
           (config.id as string) || 'dynamic',
           (config.name as string) || 'dynamic-size',
           config.sizeUnit as SizeUnit,
-          (config.dimension as Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH) || Dimension.WIDTH,
+          (config.dimension as Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH) ||
+            Dimension.WIDTH,
           config.baseValue as number,
           (config.maintainAspectRatio as boolean) || false
         );
         return calculator.calculate(context);
       }
     }
-    
+
     // Handle CSS-like objects
-    if (
-      typeof input === 'object' && 
-      input !== null && 
-      'value' in input
-    ) {
+    if (typeof input === 'object' && input !== null && 'value' in input) {
       const cssInput = input as { value: unknown };
       if (cssInput.value !== undefined) {
         return this.calculate(cssInput.value as IStrategyInput, context);
       }
     }
-    
+
     // Default fallback
     return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
   }
-
-
 
   /**
    * Get size strategy information
@@ -310,8 +305,8 @@ export class SizeUnitStrategy implements IUnitStrategy {
         'array expressions',
         'configuration objects',
         'CSS-like strings',
-        'parent-relative sizing'
-      ]
+        'parent-relative sizing',
+      ],
     };
   }
 }

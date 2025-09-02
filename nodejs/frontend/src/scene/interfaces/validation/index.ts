@@ -1,6 +1,6 @@
 /**
  * Scene Validation Interfaces Index
- * 
+ *
  * Centralized export for all scene validation interfaces
  */
 
@@ -15,4 +15,5 @@ export const SCENE_VALIDATION_INTERFACES = {
   ISceneValidator: 'ISceneValidator',
 } as const;
 
-export type SceneValidationInterface = typeof SCENE_VALIDATION_INTERFACES[keyof typeof SCENE_VALIDATION_INTERFACES];
+export type SceneValidationInterface =
+  (typeof SCENE_VALIDATION_INTERFACES)[keyof typeof SCENE_VALIDATION_INTERFACES];

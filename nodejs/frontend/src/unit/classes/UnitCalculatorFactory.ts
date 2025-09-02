@@ -15,7 +15,11 @@ import { PositionValue } from '../enums/PositionValue';
 import { ScaleValue } from '../enums/ScaleValue';
 import { UnitType } from '../enums/UnitType';
 import type { IUnitConfig } from '../interfaces/IUnitConfig';
-import { isSizeUnitConfig, isPositionUnitConfig, isScaleUnitConfig } from '../interfaces/IUnitConfig';
+import {
+  isSizeUnitConfig,
+  isPositionUnitConfig,
+  isScaleUnitConfig,
+} from '../interfaces/IUnitConfig';
 
 /**
  * UnitCalculatorFactory class

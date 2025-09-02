@@ -1,6 +1,6 @@
 /**
  * Shape Game Object Interfaces Index
- * 
+ *
  * Centralized export for all shape-specific game object interfaces
  */
 

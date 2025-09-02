@@ -1,6 +1,6 @@
 /**
  * State Management Enums
- * 
+ *
  * Enums for state machine and state management functionality
  */
 
@@ -39,29 +39,29 @@ export enum CommonState {
   IDLE = 'idle',
   ACTIVE = 'active',
   INACTIVE = 'inactive',
-  
+
   // Movement States
   MOVING = 'moving',
   STOPPED = 'stopped',
   JUMPING = 'jumping',
   FALLING = 'falling',
-  
+
   // Interaction States
   HOVERED = 'hovered',
   PRESSED = 'pressed',
   DRAGGING = 'dragging',
   DROPPED = 'dropped',
-  
+
   // Animation States
   PLAYING = 'playing',
   PAUSED = 'paused',
-  
+
   // UI States
   OPENING = 'opening',
   OPEN = 'open',
   CLOSING = 'closing',
   CLOSED = 'closed',
-  
+
   // Game States
   SPAWNING = 'spawning',
   ALIVE = 'alive',
@@ -77,7 +77,7 @@ export enum AnimationState {
   PLAYING = 'playing',
   PAUSED = 'paused',
   COMPLETED = 'completed',
-  LOOPING = 'looping'
+  LOOPING = 'looping',
 }
 
 /**

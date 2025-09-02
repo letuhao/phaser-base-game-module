@@ -20,9 +20,8 @@ export class ButtonFactory extends BaseGameObjectFactory {
     // Extract config and scene from input
     const config = (input as any).config || {};
     const scene = input.scene;
-    
+
     try {
-      
       // Create a container for the button
       const button = scene.add.container(config.x || 0, config.y || 0);
 

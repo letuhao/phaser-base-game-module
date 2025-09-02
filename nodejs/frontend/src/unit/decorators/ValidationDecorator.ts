@@ -24,11 +24,7 @@ export class ValidationDecorator extends BaseUnitDecorator {
 
   private validationCount: number = 0;
 
-  constructor(
-    id: string,
-    name: string,
-    wrappedUnit: IUnit
-  ) {
+  constructor(id: string, name: string, wrappedUnit: IUnit) {
     super(id, name, UnitType.SIZE, wrappedUnit);
     this.setupDefaultValidationRules();
   }
@@ -41,13 +37,13 @@ export class ValidationDecorator extends BaseUnitDecorator {
   protected performCalculation(context: UnitContext): number {
     // Increment validation count
     this.validationCount++;
-    
+
     // Perform the actual calculation
     const result = this.wrappedUnit.calculate(context);
-    
+
     // Validate the result
     this.validateResult(result, context);
-    
+
     return result;
   }
 
@@ -84,7 +80,7 @@ export class ValidationDecorator extends BaseUnitDecorator {
       type: 'ValidationDecorator',
       priority: this.getPriority(),
       description: 'Validates unit calculation results and context',
-      version: '1.0.0'
+      version: '1.0.0',
     };
   }
 
@@ -143,15 +139,16 @@ export class ValidationDecorator extends BaseUnitDecorator {
     const totalValidations = this.validationCount;
     const errors = this.validationErrors.length;
     const errorRate = totalValidations > 0 ? errors / totalValidations : 0;
-    const lastError = this.validationErrors.length > 0 
-      ? this.validationErrors[this.validationErrors.length - 1].timestamp 
-      : undefined;
+    const lastError =
+      this.validationErrors.length > 0
+        ? this.validationErrors[this.validationErrors.length - 1].timestamp
+        : undefined;
 
     return {
       totalValidations,
       errors,
       errorRate,
-      lastError
+      lastError,
     };
   }
 
@@ -176,8 +173,9 @@ export class ValidationDecorator extends BaseUnitDecorator {
     // Rule 3: Result should be within reasonable bounds
     this.addValidationRule(
       'reasonable-bounds',
-      (result: number) => result >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MIN && 
-                         result <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MAX,
+      (result: number) =>
+        result >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MIN &&
+        result <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MAX,
       `Calculation result should be within reasonable bounds (${VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MIN}-${VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MAX})`
     );
 
@@ -185,9 +183,7 @@ export class ValidationDecorator extends BaseUnitDecorator {
     this.addValidationRule(
       'valid-context',
       (_result: number, context: UnitContext) => {
-        return context !== null && 
-               context !== undefined && 
-               typeof context === 'object';
+        return context !== null && context !== undefined && typeof context === 'object';
       },
       'Calculation context must be a valid object'
     );
@@ -205,13 +201,19 @@ export class ValidationDecorator extends BaseUnitDecorator {
 
     // Check for required context properties
     if (!context.parent && !context.scene) {
-      this.addValidationError('context-validation', 'Context must have either parent or scene information');
+      this.addValidationError(
+        'context-validation',
+        'Context must have either parent or scene information'
+      );
     }
 
     // Validate parent context if present
     if (context.parent) {
       if (typeof context.parent.width !== 'number' || typeof context.parent.height !== 'number') {
-        this.addValidationError('context-validation', 'Parent context must have valid size dimensions');
+        this.addValidationError(
+          'context-validation',
+          'Parent context must have valid size dimensions'
+        );
       }
     }
 
@@ -235,7 +237,7 @@ export class ValidationDecorator extends BaseUnitDecorator {
         }
       } catch (error) {
         this.addValidationError(
-          rule.name, 
+          rule.name,
           `Validation rule '${rule.name}' threw an error: ${error instanceof Error ? error.message : String(error)}`,
           context
         );
@@ -256,10 +258,10 @@ export class ValidationDecorator extends BaseUnitDecorator {
       );
       return;
     }
-    
+
     // Check if result is within expected range for the unit type
     const unitType = this.wrappedUnit.unitType;
-    
+
     switch (unitType) {
       case UnitType.SIZE:
         this.validateSizeResult(result, context);
@@ -286,9 +288,9 @@ export class ValidationDecorator extends BaseUnitDecorator {
       );
       return;
     }
-    
+
     const maxSize = context.parent?.width || context.scene?.width || 1000;
-    
+
     if (result > maxSize * 2) {
       this.addValidationError(
         'size-bounds',
@@ -311,9 +313,9 @@ export class ValidationDecorator extends BaseUnitDecorator {
       );
       return;
     }
-    
+
     const maxPosition = context.parent?.width || context.scene?.width || 1000;
-    
+
     if (result < -maxPosition || result > maxPosition * 2) {
       this.addValidationError(
         'position-bounds',
@@ -327,8 +329,10 @@ export class ValidationDecorator extends BaseUnitDecorator {
    * Validate scale calculation result
    */
   private validateScaleResult(result: number, context: UnitContext): void {
-    if (result < VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MIN || 
-        result > VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MAX) {
+    if (
+      result < VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MIN ||
+      result > VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MAX
+    ) {
       this.addValidationError(
         'scale-bounds',
         `Scale result (${result}) should be between ${VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MIN} and ${VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MAX}`,
@@ -345,7 +349,7 @@ export class ValidationDecorator extends BaseUnitDecorator {
       rule,
       message,
       timestamp: new Date(),
-      context: context || {} as UnitContext
+      context: context || ({} as UnitContext),
     });
   }
 }

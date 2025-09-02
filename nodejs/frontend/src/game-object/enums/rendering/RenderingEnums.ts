@@ -1,6 +1,6 @@
 /**
  * Rendering and Visual Enums
- * 
+ *
  * Enums for rendering, graphics, and visual effects
  */
 

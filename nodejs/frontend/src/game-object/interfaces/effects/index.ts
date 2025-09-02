@@ -1,6 +1,6 @@
 /**
  * Effects Game Object Interfaces Index
- * 
+ *
  * Centralized export for all effects-specific game object interfaces
  */
 
@@ -52,6 +52,8 @@ export const EFFECTS_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreEffectsInterface = typeof CORE_EFFECTS_INTERFACES[keyof typeof CORE_EFFECTS_INTERFACES];
-export type SpecificEffectsInterface = typeof SPECIFIC_EFFECTS_INTERFACES[keyof typeof SPECIFIC_EFFECTS_INTERFACES];
-export type EffectsInterface = typeof EFFECTS_INTERFACES[keyof typeof EFFECTS_INTERFACES];
+export type CoreEffectsInterface =
+  (typeof CORE_EFFECTS_INTERFACES)[keyof typeof CORE_EFFECTS_INTERFACES];
+export type SpecificEffectsInterface =
+  (typeof SPECIFIC_EFFECTS_INTERFACES)[keyof typeof SPECIFIC_EFFECTS_INTERFACES];
+export type EffectsInterface = (typeof EFFECTS_INTERFACES)[keyof typeof EFFECTS_INTERFACES];

@@ -1,6 +1,6 @@
 /**
  * Scene Building Strategy Interface
- * 
+ *
  * Defines strategy functionality for scene building approaches.
  * Handles different building strategies and execution contexts.
  */
@@ -16,7 +16,7 @@ export enum SceneBuildingStrategyOperation {
   BUILD_SCENE = 'build_scene',
   BUILD_ELEMENT = 'build_element',
   VALIDATE_BUILD = 'validate_build',
-  OPTIMIZE_BUILD = 'optimize_build'
+  OPTIMIZE_BUILD = 'optimize_build',
 }
 
 /**
@@ -74,49 +74,49 @@ export interface SceneBuildingResult {
 export interface ISceneBuildingStrategy {
   readonly strategyId: string;
   readonly strategyType: string;
-  
+
   /** Strategy configuration */
   strategyConfig: SceneBuildingStrategyConfig;
-  
+
   /** Strategy statistics */
   strategyStatistics: SceneBuildingStrategyStatistics;
-  
+
   /** Strategy metadata */
   strategyMetadata: Record<string, any>;
-  
+
   /** Set strategy configuration */
   setStrategyConfig(config: SceneBuildingStrategyConfig): this;
-  
+
   /** Set strategy metadata */
   setStrategyMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get strategy configuration */
   getStrategyConfig(): SceneBuildingStrategyConfig;
-  
+
   /** Get strategy statistics */
   getStrategyStatistics(): SceneBuildingStrategyStatistics;
-  
+
   /** Get strategy metadata */
   getStrategyMetadata(): Record<string, any>;
-  
+
   /** Build scene */
   buildScene(context: SceneBuildingContext): Promise<SceneBuildingResult>;
-  
+
   /** Build element */
   buildElement(elementConfig: any, parent?: ISceneElement): Promise<ISceneElement | null>;
-  
+
   /** Validate build */
   validateBuild(context: SceneBuildingContext): Promise<boolean>;
-  
+
   /** Optimize build */
   optimizeBuild(context: SceneBuildingContext): Promise<this>;
-  
+
   /** Get strategy type */
   getStrategyType(): string;
-  
+
   /** Check if strategy supports context */
   supportsContext(context: SceneBuildingContext): boolean;
-  
+
   /** Update strategy */
   updateStrategy(deltaTime: number): void;
 }

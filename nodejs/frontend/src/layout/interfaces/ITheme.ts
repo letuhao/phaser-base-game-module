@@ -5,11 +5,7 @@
  * Fully compatible with the Unit System
  */
 
-import { 
-  ThemeType,
-  ThemeVariant,
-  BreakpointName
-} from '../enums/LayoutEnums';
+import { ThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
 import { SizeUnit, PositionUnit, ScaleUnit } from '../../unit';
 
 // ============================================================================
@@ -23,40 +19,40 @@ import { SizeUnit, PositionUnit, ScaleUnit } from '../../unit';
 export interface ITheme {
   /** Unique identifier for the theme */
   id: string;
-  
+
   /** Human-readable name for the theme */
   name: string;
-  
+
   /** Display name for UI purposes */
   displayName: string;
-  
+
   /** Description of what this theme represents */
   description?: string;
-  
+
   /** Theme type (light, dark, auto, custom) */
   type: ThemeType;
-  
+
   /** Theme variant (default, primary, secondary, etc.) */
   variant: ThemeVariant;
-  
+
   /** Whether this theme is currently active */
   isActive: boolean;
-  
+
   /** Whether this theme supports dark mode */
   supportsDarkMode: boolean;
-  
+
   /** Opposite theme for mode switching */
   oppositeTheme?: string;
-  
+
   /** Version of this theme */
   version?: string;
-  
+
   /** Author of this theme */
   author?: string;
-  
+
   /** Tags for categorization */
   tags?: string[];
-  
+
   /** Core theme properties */
   colors: IThemeColors;
   typography: IThemeTypography;
@@ -65,16 +61,16 @@ export interface ITheme {
   shadows: IThemeShadows;
   animation: IThemeAnimation;
   breakpoints: IThemeBreakpoints;
-  
+
   /** Theme class definitions for reusable styling */
   themeClasses?: Record<string, IThemeClass>;
-  
+
   /** Custom properties specific to this theme */
   custom?: Record<string, unknown>;
-  
+
   /** Metadata for the theme */
   metadata?: IThemeMetadata;
-  
+
   /** Required theme methods */
   getColor(path: string): string;
   getSpacing(size: keyof IThemeSpacing['scale']): number;
@@ -99,25 +95,25 @@ export interface ITheme {
 export interface IThemeColors {
   /** Primary color palette */
   primary: IColorPalette;
-  
+
   /** Secondary color palette */
   secondary: IColorPalette;
-  
+
   /** Background colors */
   background: IBackgroundColors;
-  
+
   /** Text colors */
   text: ITextColors;
-  
+
   /** Status colors (success, warning, error, info) */
   status: IStatusColors;
-  
+
   /** UI element colors */
   ui: IUIColors;
-  
+
   /** Semantic color mappings */
   semantic: ISemanticColors;
-  
+
   /** Custom color definitions */
   custom?: Record<string, string>;
 }
@@ -129,16 +125,16 @@ export interface IThemeColors {
 export interface IColorPalette {
   /** Main color */
   main: string;
-  
+
   /** Light variant */
   light: string;
-  
+
   /** Dark variant */
   dark: string;
-  
+
   /** Contrast color for text */
   contrast: string;
-  
+
   /** Additional variants */
   variants?: Record<string, string>;
 }
@@ -149,16 +145,16 @@ export interface IColorPalette {
 export interface IBackgroundColors {
   /** Primary background */
   primary: string;
-  
+
   /** Secondary background */
   secondary: string;
-  
+
   /** Tertiary background */
   tertiary: string;
-  
+
   /** Overlay background */
   overlay: string;
-  
+
   /** Additional background variants */
   variants?: Record<string, string>;
 }
@@ -169,16 +165,16 @@ export interface IBackgroundColors {
 export interface ITextColors {
   /** Primary text color */
   primary: string;
-  
+
   /** Secondary text color */
   secondary: string;
-  
+
   /** Disabled text color */
   disabled: string;
-  
+
   /** Inverse text color */
   inverse: string;
-  
+
   /** Additional text variants */
   variants?: Record<string, string>;
 }
@@ -189,16 +185,16 @@ export interface ITextColors {
 export interface IStatusColors {
   /** Success color */
   success: string;
-  
+
   /** Warning color */
   warning: string;
-  
+
   /** Error color */
   error: string;
-  
+
   /** Info color */
   info: string;
-  
+
   /** Additional status variants */
   variants?: Record<string, string>;
 }
@@ -209,16 +205,16 @@ export interface IStatusColors {
 export interface IUIColors {
   /** Border color */
   border: string;
-  
+
   /** Shadow color */
   shadow: string;
-  
+
   /** Highlight color */
   highlight: string;
-  
+
   /** Disabled color */
   disabled: string;
-  
+
   /** Additional UI variants */
   variants?: Record<string, string>;
 }
@@ -230,13 +226,13 @@ export interface IUIColors {
 export interface ISemanticColors {
   /** Brand colors */
   brand?: Record<string, string>;
-  
+
   /** Functional colors */
   functional?: Record<string, string>;
-  
+
   /** State colors */
   state?: Record<string, string>;
-  
+
   /** Custom semantic mappings */
   custom?: Record<string, string>;
 }
@@ -252,22 +248,22 @@ export interface ISemanticColors {
 export interface IThemeTypography {
   /** Font families */
   fontFamily: IFontFamilies;
-  
+
   /** Font sizes */
   fontSize: IFontSizes;
-  
+
   /** Font weights */
   fontWeight: IFontWeights;
-  
+
   /** Line heights */
   lineHeight: ILineHeights;
-  
+
   /** Letter spacing */
   letterSpacing?: ILetterSpacing;
-  
+
   /** Text alignment options */
   textAlign?: ITextAlign;
-  
+
   /** Custom typography definitions */
   custom?: Record<string, unknown>;
 }
@@ -278,16 +274,16 @@ export interface IThemeTypography {
 export interface IFontFamilies {
   /** Primary font family */
   primary: string;
-  
+
   /** Secondary font family */
   secondary: string;
-  
+
   /** Monospace font family */
   monospace: string;
-  
+
   /** Display font family */
   display?: string;
-  
+
   /** Additional font families */
   variants?: Record<string, string>;
 }
@@ -299,28 +295,28 @@ export interface IFontFamilies {
 export interface IFontSizes {
   /** Extra small */
   xs: number;
-  
+
   /** Small */
   sm: number;
-  
+
   /** Base size */
   base: number;
-  
+
   /** Large */
   lg: number;
-  
+
   /** Extra large */
   xl: number;
-  
+
   /** 2X large */
   '2xl': number;
-  
+
   /** 3X large */
   '3xl': number;
-  
+
   /** Display size */
   display?: number;
-  
+
   /** Additional size variants */
   variants?: Record<string, number>;
 }
@@ -331,22 +327,22 @@ export interface IFontSizes {
 export interface IFontWeights {
   /** Light weight */
   light: number;
-  
+
   /** Normal weight */
   normal: number;
-  
+
   /** Medium weight */
   medium: number;
-  
+
   /** Semi-bold weight */
   semibold: number;
-  
+
   /** Bold weight */
   bold: number;
-  
+
   /** Extra bold weight */
   extrabold?: number;
-  
+
   /** Additional weight variants */
   variants?: Record<string, number>;
 }
@@ -357,16 +353,16 @@ export interface IFontWeights {
 export interface ILineHeights {
   /** Tight line height */
   tight: number;
-  
+
   /** Normal line height */
   normal: number;
-  
+
   /** Relaxed line height */
   relaxed: number;
-  
+
   /** Loose line height */
   loose?: number;
-  
+
   /** Additional line height variants */
   variants?: Record<string, number>;
 }
@@ -377,13 +373,13 @@ export interface ILineHeights {
 export interface ILetterSpacing {
   /** Tight spacing */
   tight: number;
-  
+
   /** Normal spacing */
   normal: number;
-  
+
   /** Wide spacing */
   wide: number;
-  
+
   /** Additional spacing variants */
   variants?: Record<string, number>;
 }
@@ -394,16 +390,16 @@ export interface ILetterSpacing {
 export interface ITextAlign {
   /** Left alignment */
   left: string;
-  
+
   /** Center alignment */
   center: string;
-  
+
   /** Right alignment */
   right: string;
-  
+
   /** Justify alignment */
   justify: string;
-  
+
   /** Additional alignment variants */
   variants?: Record<string, string>;
 }
@@ -419,10 +415,10 @@ export interface ITextAlign {
 export interface IThemeSpacing {
   /** Base spacing unit */
   base: number;
-  
+
   /** Spacing scale */
   scale: ISpacingScale;
-  
+
   /** Custom spacing definitions */
   custom?: Record<string, number>;
 }
@@ -434,25 +430,25 @@ export interface IThemeSpacing {
 export interface ISpacingScale {
   /** Extra small spacing */
   xs: number;
-  
+
   /** Small spacing */
   sm: number;
-  
+
   /** Medium spacing */
   md: number;
-  
+
   /** Large spacing */
   lg: number;
-  
+
   /** Extra large spacing */
   xl: number;
-  
+
   /** 2X large spacing */
   '2xl': number;
-  
+
   /** 3X large spacing */
   '3xl': number;
-  
+
   /** Additional scale variants */
   variants?: Record<string, number>;
 }
@@ -468,22 +464,22 @@ export interface ISpacingScale {
 export interface IThemeBorderRadius {
   /** No border radius */
   none: number;
-  
+
   /** Small border radius */
   sm: number;
-  
+
   /** Base border radius */
   base: number;
-  
+
   /** Large border radius */
   lg: number;
-  
+
   /** Extra large border radius */
   xl: number;
-  
+
   /** Full border radius (circular) */
   full: number;
-  
+
   /** Additional radius variants */
   variants?: Record<string, number>;
 }
@@ -498,22 +494,22 @@ export interface IThemeBorderRadius {
 export interface IThemeShadows {
   /** Small shadow */
   sm: string;
-  
+
   /** Base shadow */
   base: string;
-  
+
   /** Medium shadow */
   md: string;
-  
+
   /** Large shadow */
   lg: string;
-  
+
   /** Extra large shadow */
   xl: string;
-  
+
   /** 2X large shadow */
   '2xl': string;
-  
+
   /** Additional shadow variants */
   variants?: Record<string, string>;
 }
@@ -529,13 +525,13 @@ export interface IThemeShadows {
 export interface IThemeAnimation {
   /** Animation durations */
   duration: IAnimationDuration;
-  
+
   /** Animation easing functions */
   easing: IAnimationEasing;
-  
+
   /** Animation properties */
   properties: IAnimationProperties;
-  
+
   /** Custom animation definitions */
   custom?: Record<string, unknown>;
 }
@@ -546,16 +542,16 @@ export interface IThemeAnimation {
 export interface IAnimationDuration {
   /** Fast duration */
   fast: number;
-  
+
   /** Normal duration */
   normal: number;
-  
+
   /** Slow duration */
   slow: number;
-  
+
   /** Very slow duration */
   verySlow: number;
-  
+
   /** Additional duration variants */
   variants?: Record<string, number>;
 }
@@ -566,19 +562,19 @@ export interface IAnimationDuration {
 export interface IAnimationEasing {
   /** Linear easing */
   linear: string;
-  
+
   /** Ease easing */
   ease: string;
-  
+
   /** Ease-in easing */
   easeIn: string;
-  
+
   /** Ease-out easing */
   easeOut: string;
-  
+
   /** Ease-in-out easing */
   easeInOut: string;
-  
+
   /** Additional easing variants */
   variants?: Record<string, string>;
 }
@@ -589,19 +585,19 @@ export interface IAnimationEasing {
 export interface IAnimationProperties {
   /** All properties */
   all: string;
-  
+
   /** Opacity property */
   opacity: string;
-  
+
   /** Transform property */
   transform: string;
-  
+
   /** Color property */
   color: string;
-  
+
   /** Background property */
   background: string;
-  
+
   /** Additional property variants */
   variants?: Record<string, string>;
 }
@@ -617,22 +613,22 @@ export interface IAnimationProperties {
 export interface IThemeBreakpoints {
   /** Extra small breakpoint */
   xs: number;
-  
+
   /** Small breakpoint */
   sm: number;
-  
+
   /** Medium breakpoint */
   md: number;
-  
+
   /** Large breakpoint */
   lg: number;
-  
+
   /** Extra large breakpoint */
   xl: number;
-  
+
   /** 2X large breakpoint */
   '2xl': number;
-  
+
   /** Additional breakpoint variants */
   variants?: Record<string, number>;
 }
@@ -648,22 +644,22 @@ export interface IThemeBreakpoints {
 export interface IThemeClass {
   /** Color properties */
   colors?: Partial<IThemeColors>;
-  
+
   /** Typography properties */
   typography?: Partial<IThemeTypography>;
-  
+
   /** Spacing properties */
   spacing?: Partial<IThemeSpacing>;
-  
+
   /** Border radius properties */
   borderRadius?: Partial<IThemeBorderRadius>;
-  
+
   /** Shadow properties */
   shadows?: Partial<IThemeShadows>;
-  
+
   /** Animation properties */
   animation?: Partial<IThemeAnimation>;
-  
+
   /** CSS-like properties */
   backgroundColor?: string;
   color?: string;
@@ -675,13 +671,13 @@ export interface IThemeClass {
   margin?: number;
   boxShadow?: string;
   borderRadiusValue?: number;
-  
+
   /** Unit System compatible properties */
   width?: { value: number; unit: SizeUnit };
   height?: { value: number; unit: SizeUnit };
   position?: { x: { value: number; unit: PositionUnit }; y: { value: number; unit: PositionUnit } };
   scale?: { value: number; unit: ScaleUnit };
-  
+
   /** Custom properties */
   custom?: Record<string, unknown>;
 }
@@ -697,19 +693,19 @@ export interface IThemeClass {
 export interface IThemeMetadata {
   /** When this theme was created */
   createdAt: Date;
-  
+
   /** When this theme was last modified */
   modifiedAt: Date;
-  
+
   /** Author of this theme */
   author?: string;
-  
+
   /** Version of this theme */
   version?: string;
-  
+
   /** Tags for categorization */
   tags?: string[];
-  
+
   /** Custom metadata */
   custom?: Record<string, unknown>;
 }

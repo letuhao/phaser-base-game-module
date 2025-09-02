@@ -1,6 +1,6 @@
 /**
  * Core Game Object Interfaces Index
- * 
+ *
  * Centralized export for all core game object interfaces
  */
 
@@ -42,4 +42,5 @@ export const CORE_GAMEOBJECT_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreGameObjectInterface = typeof CORE_GAMEOBJECT_INTERFACES[keyof typeof CORE_GAMEOBJECT_INTERFACES];
+export type CoreGameObjectInterface =
+  (typeof CORE_GAMEOBJECT_INTERFACES)[keyof typeof CORE_GAMEOBJECT_INTERFACES];

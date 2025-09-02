@@ -62,7 +62,7 @@ describe('LoggingObserver', () => {
           unitId: 'test-unit-1',
           oldValue: 100,
           newValue: 150,
-          change: 50
+          change: 50,
         }
       );
     });
@@ -78,7 +78,7 @@ describe('LoggingObserver', () => {
           unitId: 'test-unit-2',
           oldValue: 200,
           newValue: 150,
-          change: -50
+          change: -50,
         }
       );
     });
@@ -94,7 +94,7 @@ describe('LoggingObserver', () => {
           unitId: 'test-unit-3',
           oldValue: 100,
           newValue: 100,
-          change: 0
+          change: 0,
         }
       );
     });
@@ -110,7 +110,7 @@ describe('LoggingObserver', () => {
         '[unit_created] Unit event occurred',
         {
           unitId: 'test-unit-1',
-          unitType: 'size'
+          unitType: 'size',
         }
       );
     });
@@ -127,7 +127,7 @@ describe('LoggingObserver', () => {
         '[unit_created] Unit event occurred',
         {
           unitId: 'test-unit-2',
-          unitType: 'position'
+          unitType: 'position',
         }
       );
       expect(mockLogger.info).toHaveBeenNthCalledWith(
@@ -137,7 +137,7 @@ describe('LoggingObserver', () => {
         '[unit_created] Unit event occurred',
         {
           unitId: 'test-unit-3',
-          unitType: 'scale'
+          unitType: 'scale',
         }
       );
     });
@@ -152,7 +152,7 @@ describe('LoggingObserver', () => {
         'LoggingObserver',
         '[unit_destroyed] Unit event occurred',
         {
-          unitId: 'test-unit-1'
+          unitId: 'test-unit-1',
         }
       );
     });
@@ -170,12 +170,14 @@ describe('LoggingObserver', () => {
         '[unit_calculation_started] Unit event occurred',
         {
           unitId: 'test-unit-1',
-          startTime: expect.any(Number)
+          startTime: expect.any(Number),
         }
       );
 
       // Verify startTime is a recent timestamp
-      const loggedStartTime = (mockLogger.debug as jest.Mock).mock.calls[0][3] as { startTime: number };
+      const loggedStartTime = (mockLogger.debug as jest.Mock).mock.calls[0][3] as {
+        startTime: number;
+      };
       expect(loggedStartTime.startTime).toBeGreaterThan(startTime - 100);
       expect(loggedStartTime.startTime).toBeLessThan(startTime + 100);
     });
@@ -199,7 +201,7 @@ describe('LoggingObserver', () => {
         {
           unitId: 'test-unit-1',
           result: 150,
-          duration: '25.50ms'
+          duration: '25.50ms',
         }
       );
     });
@@ -214,7 +216,7 @@ describe('LoggingObserver', () => {
         {
           unitId: 'test-unit-2',
           result: 200,
-          duration: '0.12ms'
+          duration: '0.12ms',
         }
       );
     });
@@ -229,7 +231,7 @@ describe('LoggingObserver', () => {
         {
           unitId: 'test-unit-3',
           result: 100,
-          duration: '0.00ms'
+          duration: '0.00ms',
         }
       );
     });
@@ -248,7 +250,7 @@ describe('LoggingObserver', () => {
           unitId: 'test-unit-1',
           error: 'Calculation failed',
           stack: error.stack,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }
       );
     });
@@ -259,7 +261,9 @@ describe('LoggingObserver', () => {
       observer.onUnitCalculationFailed('test-unit-2', error);
       const afterCall = new Date();
 
-      const loggedTimestamp = (mockLogger.error as jest.Mock).mock.calls[0][3] as { timestamp: string };
+      const loggedTimestamp = (mockLogger.error as jest.Mock).mock.calls[0][3] as {
+        timestamp: string;
+      };
       const loggedDate = new Date(loggedTimestamp.timestamp);
 
       expect(loggedDate.getTime()).toBeGreaterThanOrEqual(beforeCall.getTime());
@@ -279,7 +283,7 @@ describe('LoggingObserver', () => {
           unitId: 'test-unit-3',
           error: 'No stack',
           stack: undefined,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }
       );
     });
@@ -333,7 +337,7 @@ describe('LoggingObserver', () => {
   describe('setLogLevel', () => {
     it('should change log level', () => {
       observer = new LoggingObserver('info');
-      
+
       // Initially should not log debug
       observer.onUnitCalculationStarted('test-unit-1');
       expect(mockLogger.debug).not.toHaveBeenCalled();
@@ -385,7 +389,7 @@ describe('LoggingObserver', () => {
 
       // Should not throw, should fall back to console.error
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-      
+
       expect(() => {
         observer.onUnitValueChanged('test-unit-1', 100, 150);
       }).not.toThrow();
@@ -416,10 +420,10 @@ describe('LoggingObserver', () => {
       observer = new LoggingObserver('debug'); // Set to debug to see all logs
       observer.onUnitCreated('test-unit-1', 'size');
       observer.onUnitCalculationStarted('test-unit-1');
-      
+
       const error = new Error('Calculation failed');
       observer.onUnitCalculationFailed('test-unit-1', error);
-      
+
       observer.onUnitDestroyed('test-unit-1');
 
       expect(mockLogger.info).toHaveBeenCalledTimes(2); // created, destroyed

@@ -1,6 +1,6 @@
 /**
  * Game Object System Enums
- * 
+ *
  * This file contains all enums for the new game object system.
  * These enums provide type safety and better IntelliSense support.
  */
@@ -19,26 +19,26 @@ export enum GameObjectType {
   TEXT = 'text',
   GRAPHICS = 'graphics',
   SHAPE = 'shape',
-  
+
   // Core Types (Phase 1)
   TILE_SPRITE = 'tileSprite',
   BITMAP_TEXT = 'bitmapText',
   DYNAMIC_BITMAP_TEXT = 'dynamicBitmapText',
   RENDER_TEXTURE = 'renderTexture',
-  
+
   // Physics Types (Phase 2)
   PHYSICS = 'physics',
   ARCADE_PHYSICS = 'arcadePhysics',
   MATTER_PHYSICS = 'matterPhysics',
   STATIC_BODY = 'staticBody',
   DYNAMIC_BODY = 'dynamicBody',
-  
+
   // Animation Types (Phase 3)
   ANIMATED = 'animated',
   SPRITE_ANIMATION = 'spriteAnimation',
   TWEEN_OBJECT = 'tweenObject',
   TIMELINE_OBJECT = 'timelineObject',
-  
+
   // Advanced UI Types (Phase 4)
   SLIDER = 'slider',
   CHECKBOX = 'checkbox',
@@ -48,7 +48,7 @@ export enum GameObjectType {
   PROGRESS_BAR = 'progressBar',
   TAB_CONTAINER = 'tabContainer',
   SCROLL_VIEW = 'scrollView',
-  
+
   // Lighting Types (Phase 5)
   LIGHT = 'light',
   POINT_LIGHT = 'pointLight',
@@ -56,14 +56,14 @@ export enum GameObjectType {
   SPOT_LIGHT = 'spotLight',
   MESH = 'mesh',
   BLITTER = 'blitter',
-  
+
   // Performance Types (Phase 6)
   POOLED_OBJECT = 'pooledObject',
   CACHED_OBJECT = 'cachedObject',
   OPTIMIZED_OBJECT = 'optimizedObject',
   NETWORK_OBJECT = 'networkObject',
   SYNC_OBJECT = 'syncObject',
-  
+
   // Design Pattern Types
   FACTORY = 'factory',
   BUILDER = 'builder',
@@ -72,16 +72,16 @@ export enum GameObjectType {
   COMMAND = 'command',
   SINGLETON = 'singleton',
   DECORATOR = 'decorator',
-  
+
   // Interactive Types
   BUTTON = 'button',
   ZONE = 'zone',
   INPUT_FIELD = 'input_field',
-  
+
   // Advanced Types
   PARTICLE_EMITTER = 'particle_emitter',
   VIDEO = 'video',
-  
+
   // Custom Types
   UI_PANEL = 'ui_panel',
   UI_LIST = 'ui_list',
@@ -97,19 +97,19 @@ export enum GameObjectState {
   // Creation States
   CREATING = 'creating',
   CREATED = 'created',
-  
+
   // Active States
   ACTIVE = 'active',
   INACTIVE = 'inactive',
-  
+
   // Visibility States
   VISIBLE = 'visible',
   HIDDEN = 'hidden',
-  
+
   // Interaction States
   INTERACTIVE = 'interactive',
   NON_INTERACTIVE = 'non_interactive',
-  
+
   // Destruction States
   DESTROYING = 'destroying',
   DESTROYED = 'destroyed',
@@ -125,25 +125,25 @@ export enum GameObjectProperty {
   ROTATION = 'rotation',
   SKEW = 'skew',
   ORIGIN = 'origin',
-  
+
   // Visual Properties
   VISIBILITY = 'visibility',
   ALPHA = 'alpha',
   TINT = 'tint',
   BLEND_MODE = 'blend_mode',
   MASK = 'mask',
-  
+
   // Layout Properties
   SIZE = 'size',
   BOUNDS = 'bounds',
   PADDING = 'padding',
   MARGIN = 'margin',
-  
+
   // Animation Properties
   ANIMATION = 'animation',
   ANIMATION_SPEED = 'animation_speed',
   ANIMATION_LOOP = 'animation_loop',
-  
+
   // Physics Properties
   VELOCITY = 'velocity',
   ACCELERATION = 'acceleration',
@@ -151,7 +151,7 @@ export enum GameObjectProperty {
   MASS = 'mass',
   FRICTION = 'friction',
   BOUNCE = 'bounce',
-  
+
   // Input Properties
   HIT_AREA = 'hit_area',
   DRAGGABLE = 'draggable',
@@ -170,26 +170,26 @@ export enum ComponentType {
   TRANSFORM = 'transform',
   RENDER = 'render',
   INPUT = 'input',
-  
+
   // Physics Components
   PHYSICS_BODY = 'physics_body',
   COLLIDER = 'collider',
   RIGID_BODY = 'rigid_body',
-  
+
   // Animation Components
   ANIMATOR = 'animator',
   TWEEN = 'tween',
   TIMELINE = 'timeline',
-  
+
   // UI Components
   LAYOUT = 'layout',
   THEME = 'theme',
   RESPONSIVE = 'responsive',
-  
+
   // Audio Components
   AUDIO_SOURCE = 'audio_source',
   AUDIO_LISTENER = 'audio_listener',
-  
+
   // Custom Components
   HEALTH = 'health',
   INVENTORY = 'inventory',
@@ -218,12 +218,12 @@ export enum ComponentPriority {
   PHYSICS = 1000,
   INPUT = 900,
   AI = 800,
-  
+
   // Medium priority
   ANIMATION = 500,
   TWEEN = 400,
   AUDIO = 300,
-  
+
   // Low priority (updated last)
   RENDER = 100,
   UI = 50,
@@ -262,29 +262,29 @@ export enum CommonState {
   IDLE = 'idle',
   ACTIVE = 'active',
   INACTIVE = 'inactive',
-  
+
   // Movement States
   MOVING = 'moving',
   STOPPED = 'stopped',
   JUMPING = 'jumping',
   FALLING = 'falling',
-  
+
   // Interaction States
   HOVERED = 'hovered',
   PRESSED = 'pressed',
   DRAGGING = 'dragging',
   DROPPED = 'dropped',
-  
+
   // Animation States
   PLAYING = 'playing',
   PAUSED = 'paused',
-  
+
   // UI States
   OPENING = 'opening',
   OPEN = 'open',
   CLOSING = 'closing',
   CLOSED = 'closed',
-  
+
   // Game States
   SPAWNING = 'spawning',
   ALIVE = 'alive',
@@ -338,18 +338,18 @@ export enum ThemeProperty {
   SURFACE_COLOR = 'surface_color',
   TEXT_COLOR = 'text_color',
   ACCENT_COLOR = 'accent_color',
-  
+
   // Typography
   FONT_FAMILY = 'font_family',
   FONT_SIZE = 'font_size',
   FONT_WEIGHT = 'font_weight',
   LINE_HEIGHT = 'line_height',
-  
+
   // Spacing
   SPACING_UNIT = 'spacing_unit',
   BORDER_RADIUS = 'border_radius',
   BORDER_WIDTH = 'border_width',
-  
+
   // Effects
   SHADOW = 'shadow',
   BLUR = 'blur',
@@ -359,7 +359,7 @@ export enum ThemeProperty {
 // ============================================================================
 // ANIMATION SYSTEM ENUMS - REMOVED (Use Layout System Enums Instead)
 // ============================================================================
-// AnimationType, AnimationDirection, EasingFunction are now imported from 
+// AnimationType, AnimationDirection, EasingFunction are now imported from
 // the Layout System to avoid duplication
 
 // ============================================================================
@@ -390,18 +390,18 @@ export enum InputEvent {
   POINTER_OUT = 'pointer_out',
   POINTER_ENTER = 'pointer_enter',
   POINTER_LEAVE = 'pointer_leave',
-  
+
   // Drag Events
   DRAG_START = 'drag_start',
   DRAG = 'drag',
   DRAG_END = 'drag_end',
   DROP = 'drop',
-  
+
   // Keyboard Events
   KEY_DOWN = 'key_down',
   KEY_UP = 'key_up',
   KEY_PRESS = 'key_press',
-  
+
   // Gamepad Events
   BUTTON_DOWN = 'button_down',
   BUTTON_UP = 'button_up',
@@ -541,8 +541,8 @@ export enum PerformanceThreshold {
   TARGET_FPS = 60,
   MIN_FPS = 30,
   MAX_FRAME_TIME = 16.67, // 60 FPS
-  MAX_UPDATE_TIME = 8.33,  // Half frame time
-  MAX_RENDER_TIME = 8.33,  // Half frame time
+  MAX_UPDATE_TIME = 8.33, // Half frame time
+  MAX_RENDER_TIME = 8.33, // Half frame time
 }
 
 // ============================================================================
@@ -554,52 +554,52 @@ export const GAMEOBJECT_SYSTEM_ENUMS = {
   GameObjectType,
   GameObjectState,
   GameObjectProperty,
-  
+
   // Components
   ComponentType,
   ComponentState,
   ComponentPriority,
-  
+
   // State Management
   StateMachineType,
   StateTransitionType,
   CommonState,
-  
+
   // Factory
   FactoryType,
   FactoryMode,
-  
+
   // Layout - REMOVED (Use Layout System Enums)
   // LayoutType, LayoutDirection, AlignmentType, ResponsiveBreakpoint
-  
+
   // Theme - REMOVED (Use Layout System Enums)
   // ThemeType
   ThemeProperty,
-  
+
   // Animation - REMOVED (Use Layout System Enums)
   // AnimationType, AnimationDirection, EasingFunction
-  
+
   // Input
   InputType,
   InputEvent,
-  
+
   // Physics - REMOVED (Use Layout System Enums)
   // PhysicsBodyType
   CollisionShape,
   PhysicsMaterial,
-  
+
   // Audio
   AudioType,
   AudioState,
-  
+
   // Network
   NetworkMessageType,
   NetworkState,
-  
+
   // Debug
   DebugLevel,
   DebugCategory,
-  
+
   // Performance
   PerformanceMetric,
   PerformanceThreshold,

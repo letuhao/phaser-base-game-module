@@ -17,9 +17,9 @@ export const DEFAULT_FALLBACK_VALUES = {
     CONTENT: 400,
     PARENT: 800,
     SCENE: 1200,
-    VIEWPORT: 1200
+    VIEWPORT: 1200,
   },
-  
+
   // Position-related defaults
   POSITION: {
     DEFAULT: 0,
@@ -27,9 +27,9 @@ export const DEFAULT_FALLBACK_VALUES = {
     MAX: 10000,
     CENTER_OFFSET: 0,
     RANDOM_MIN: 0,
-    RANDOM_MAX: 1000
+    RANDOM_MAX: 1000,
   },
-  
+
   // Scale-related defaults
   SCALE: {
     DEFAULT: 1.0,
@@ -37,23 +37,23 @@ export const DEFAULT_FALLBACK_VALUES = {
     MAX: 10.0,
     FACTOR: 1.0,
     RANDOM_MIN: 0.5,
-    RANDOM_MAX: 2.0
+    RANDOM_MAX: 2.0,
   },
-  
+
   // Performance and validation defaults
   PERFORMANCE: {
     DEFAULT_MEMORY_LIMIT: 0,
     MAX_CALCULATION_HISTORY: 100,
     ERROR_THRESHOLD: 0.1,
-    TIMEOUT_MS: 5000
+    TIMEOUT_MS: 5000,
   },
-  
+
   // Validation defaults
   VALIDATION: {
     MAX_ERRORS: 10,
     STRICT_MODE: true,
-    AUTO_VALIDATE: true
-  }
+    AUTO_VALIDATE: true,
+  },
 } as const;
 
 /**
@@ -66,31 +66,31 @@ export const PERFORMANCE_CONSTANTS = {
     DEFAULT_TIMEOUT_MS: 5000,
     DEFAULT_MAX_SIZE: 100,
     CLEANUP_INTERVAL_MS: 30000,
-    HASH_SEED: 5381 as number
+    HASH_SEED: 5381 as number,
   },
-  
+
   // Performance thresholds
   THRESHOLDS: {
     MAX_CALCULATION_TIME_MS: 100,
     MAX_MEMORY_USAGE_MB: 50,
     ERROR_RATE_THRESHOLD: 0.05, // 5%
-    SLOW_OPERATION_THRESHOLD_MS: 10
+    SLOW_OPERATION_THRESHOLD_MS: 10,
   },
-  
+
   // History and monitoring
   MONITORING: {
     MAX_HISTORY_SIZE: 1000,
     MAX_EXECUTION_TIMES: 100,
     PERFORMANCE_CHECK_INTERVAL_MS: 5000,
-    METRICS_RESET_INTERVAL_MS: 60000
+    METRICS_RESET_INTERVAL_MS: 60000,
   },
-  
+
   // Smoothing and averaging
   SMOOTHING: {
     ALPHA_FACTOR: 0.1,
     MOVING_AVERAGE_WINDOW: 10,
-    EXPONENTIAL_DECAY_FACTOR: 0.95
-  }
+    EXPONENTIAL_DECAY_FACTOR: 0.95,
+  },
 } as const;
 
 /**
@@ -105,22 +105,22 @@ export const VALIDATION_CONSTANTS = {
     REASONABLE_POSITION_MIN: -10000,
     REASONABLE_POSITION_MAX: 20000,
     REASONABLE_SCALE_MIN: 0,
-    REASONABLE_SCALE_MAX: 10
+    REASONABLE_SCALE_MAX: 10,
   },
-  
+
   // Validation rules
   RULES: {
     MAX_VALIDATION_RULES: 10,
     VALIDATION_TIMEOUT_MS: 1000,
-    STRICT_VALIDATION_THRESHOLD: 0.01
+    STRICT_VALIDATION_THRESHOLD: 0.01,
   },
-  
+
   // Error handling
   ERROR_HANDLING: {
     MAX_ERROR_MESSAGES: 50,
     ERROR_CLEANUP_INTERVAL_MS: 30000,
-    ERROR_RETENTION_PERIOD_MS: 300000 // 5 minutes
-  }
+    ERROR_RETENTION_PERIOD_MS: 300000, // 5 minutes
+  },
 } as const;
 
 /**
@@ -133,22 +133,22 @@ export const FEATURE_FLAG_CONSTANTS = {
     DEFAULT_PERCENTAGE: 10,
     MAX_PERCENTAGE: 100,
     HASH_MODULO: 100,
-    HASH_OFFSET: 1
+    HASH_OFFSET: 1,
   },
-  
+
   // Hash calculation
   HASH: {
     INITIAL_VALUE: 0,
     SHIFT_AMOUNT: 5,
-    BITWISE_MASK: 0xFFFFFFFF
+    BITWISE_MASK: 0xffffffff,
   },
-  
+
   // Version management
   VERSION: {
     DEFAULT_VERSION: '1.0.0',
     VERSION_SEPARATOR: '.',
-    MAX_VERSION_PARTS: 3
-  }
+    MAX_VERSION_PARTS: 3,
+  },
 } as const;
 
 /**
@@ -160,21 +160,21 @@ export const COMMAND_CONSTANTS = {
   HISTORY: {
     DEFAULT_INDEX: -1,
     MAX_HISTORY_SIZE: 100,
-    CLEANUP_THRESHOLD: 50
+    CLEANUP_THRESHOLD: 50,
   },
-  
+
   // Batch operations
   BATCH: {
     DEFAULT_BATCH_SIZE: 10,
     MAX_BATCH_SIZE: 100,
-    BATCH_TIMEOUT_MS: 5000
+    BATCH_TIMEOUT_MS: 5000,
   },
-  
+
   // Execution metrics
   METRICS: {
     MAX_EXECUTION_TIMES: 100,
-    METRICS_RESET_INTERVAL_MS: 60000
-  }
+    METRICS_RESET_INTERVAL_MS: 60000,
+  },
 } as const;
 
 /**
@@ -186,15 +186,15 @@ export const OBSERVER_CONSTANTS = {
   MANAGEMENT: {
     MAX_OBSERVERS_PER_UNIT: 10,
     OBSERVER_CLEANUP_INTERVAL_MS: 30000,
-    MAX_NOTIFICATION_QUEUE: 100
+    MAX_NOTIFICATION_QUEUE: 100,
   },
-  
+
   // Performance monitoring
   PERFORMANCE: {
     METRICS_RESET_INTERVAL_MS: 60000,
     SLOW_OPERATION_THRESHOLD_MS: 10,
-    MEMORY_USAGE_THRESHOLD_MB: 50
-  }
+    MEMORY_USAGE_THRESHOLD_MB: 50,
+  },
 } as const;
 
 /**
@@ -206,25 +206,25 @@ export const MOCK_CONTEXT_DEFAULTS = {
     WIDTH: 800,
     HEIGHT: 600,
     X: 0,
-    Y: 0
+    Y: 0,
   },
   SCENE: {
     WIDTH: 1200,
-    HEIGHT: 800
+    HEIGHT: 800,
   },
   VIEWPORT: {
     WIDTH: 1200,
-    HEIGHT: 800
+    HEIGHT: 800,
   },
   CONTENT: {
     WIDTH: 400,
-    HEIGHT: 300
+    HEIGHT: 300,
   },
   BREAKPOINT: {
     NAME: 'desktop',
     WIDTH: 1200,
-    HEIGHT: 800
-  }
+    HEIGHT: 800,
+  },
 } as const;
 
 /**
@@ -235,7 +235,7 @@ export const STRATEGY_PRIORITIES = {
   SIZE: 1,
   POSITION: 2,
   SCALE: 3,
-  MIXED: 4
+  MIXED: 4,
 } as const;
 
 /**
@@ -248,9 +248,9 @@ export const CALCULATION_CONSTANTS = {
     SQUARE: 1.0,
     GOLDEN: 1.618,
     WIDESCREEN: 16 / 9,
-    PORTRAIT: 9 / 16
+    PORTRAIT: 9 / 16,
   },
-  
+
   // Random value ranges
   RANDOM: {
     SIZE_MIN: 50,
@@ -258,16 +258,16 @@ export const CALCULATION_CONSTANTS = {
     POSITION_MIN: 0,
     POSITION_MAX: 1000,
     SCALE_MIN: 0.5,
-    SCALE_MAX: 3.0
+    SCALE_MAX: 3.0,
   },
-  
+
   // Percentage calculations
   PERCENTAGE: {
     FULL: 100,
     HALF: 50,
     QUARTER: 25,
-    THIRD: 33.33
-  }
+    THIRD: 33.33,
+  },
 } as const;
 
 /**
@@ -278,22 +278,22 @@ export const ERROR_MESSAGES = {
   SIZE: {
     INVALID_DIMENSION: 'Cannot calculate width for height-only dimension',
     INVALID_UNIT: 'Invalid size unit provided',
-    CALCULATION_FAILED: 'Size calculation failed'
+    CALCULATION_FAILED: 'Size calculation failed',
   },
   POSITION: {
     INVALID_AXIS: 'Cannot calculate X position for Y-axis only',
     INVALID_UNIT: 'Invalid position unit provided',
-    CALCULATION_FAILED: 'Position calculation failed'
+    CALCULATION_FAILED: 'Position calculation failed',
   },
   SCALE: {
     INVALID_UNIT: 'Invalid scale unit provided',
-    CALCULATION_FAILED: 'Scale calculation failed'
+    CALCULATION_FAILED: 'Scale calculation failed',
   },
   GENERAL: {
     INVALID_INPUT: 'Invalid input provided',
     MISSING_CONTEXT: 'Required context is missing',
-    UNSUPPORTED_OPERATION: 'Operation not supported'
-  }
+    UNSUPPORTED_OPERATION: 'Operation not supported',
+  },
 } as const;
 
 /**
@@ -305,44 +305,49 @@ export const TypeGuards = {
    * Check if a size value is within valid range
    */
   isValidSize: (value: number): boolean => {
-    return value >= DEFAULT_FALLBACK_VALUES.SIZE.MIN && 
-           value <= DEFAULT_FALLBACK_VALUES.SIZE.MAX;
+    return value >= DEFAULT_FALLBACK_VALUES.SIZE.MIN && value <= DEFAULT_FALLBACK_VALUES.SIZE.MAX;
   },
-  
+
   /**
    * Check if a position value is within valid range
    */
   isValidPosition: (value: number): boolean => {
-    return value >= DEFAULT_FALLBACK_VALUES.POSITION.MIN && 
-           value <= DEFAULT_FALLBACK_VALUES.POSITION.MAX;
+    return (
+      value >= DEFAULT_FALLBACK_VALUES.POSITION.MIN && value <= DEFAULT_FALLBACK_VALUES.POSITION.MAX
+    );
   },
-  
+
   /**
    * Check if a scale value is within valid range
    */
   isValidScale: (value: number): boolean => {
-    return value >= DEFAULT_FALLBACK_VALUES.SCALE.MIN && 
-           value <= DEFAULT_FALLBACK_VALUES.SCALE.MAX;
+    return value >= DEFAULT_FALLBACK_VALUES.SCALE.MIN && value <= DEFAULT_FALLBACK_VALUES.SCALE.MAX;
   },
-  
+
   /**
    * Check if a value is within reasonable bounds for validation
    */
   isWithinReasonableBounds: (value: number, type: 'size' | 'position' | 'scale'): boolean => {
     switch (type) {
       case 'size':
-        return value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MIN && 
-               value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MAX;
+        return (
+          value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MIN &&
+          value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SIZE_MAX
+        );
       case 'position':
-        return value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_POSITION_MIN && 
-               value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_POSITION_MAX;
+        return (
+          value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_POSITION_MIN &&
+          value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_POSITION_MAX
+        );
       case 'scale':
-        return value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MIN && 
-               value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MAX;
+        return (
+          value >= VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MIN &&
+          value <= VALIDATION_CONSTANTS.RANGES.REASONABLE_SCALE_MAX
+        );
       default:
         return false;
     }
-  }
+  },
 } as const;
 
 /**
@@ -356,7 +361,7 @@ export const Utils = {
   clamp: (value: number, min: number, max: number): number => {
     return Math.max(min, Math.min(max, value));
   },
-  
+
   /**
    * Get a fallback value based on type
    */
@@ -372,12 +377,12 @@ export const Utils = {
         return DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
     }
   },
-  
+
   /**
    * Get mock context defaults for testing
    */
   getMockContextDefaults: () => MOCK_CONTEXT_DEFAULTS,
-  
+
   /**
    * Generate a hash for string input
    */
@@ -385,19 +390,21 @@ export const Utils = {
     let hash = PERFORMANCE_CONSTANTS.CACHE.HASH_SEED;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & 0xFFFFFFFF; // Convert to 32-bit integer
+      hash = (hash << 5) - hash + char;
+      hash = hash & 0xffffffff; // Convert to 32-bit integer
     }
     return hash;
   },
-  
+
   /**
    * Check if performance is within acceptable thresholds
    */
   isPerformanceAcceptable: (executionTime: number, errorRate: number): boolean => {
-    return executionTime <= PERFORMANCE_CONSTANTS.THRESHOLDS.MAX_CALCULATION_TIME_MS && 
-           errorRate <= PERFORMANCE_CONSTANTS.THRESHOLDS.ERROR_RATE_THRESHOLD;
-  }
+    return (
+      executionTime <= PERFORMANCE_CONSTANTS.THRESHOLDS.MAX_CALCULATION_TIME_MS &&
+      errorRate <= PERFORMANCE_CONSTANTS.THRESHOLDS.ERROR_RATE_THRESHOLD
+    );
+  },
 } as const;
 
 /**
@@ -415,7 +422,7 @@ export const UnitSystemConstants = {
   CALCULATIONS: CALCULATION_CONSTANTS,
   ERRORS: ERROR_MESSAGES,
   TypeGuards,
-  Utils
+  Utils,
 } as const;
 
 export default UnitSystemConstants;

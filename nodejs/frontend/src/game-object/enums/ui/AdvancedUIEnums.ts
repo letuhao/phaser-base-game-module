@@ -1,6 +1,6 @@
 /**
  * Advanced UI Enums
- * 
+ *
  * Enums for advanced UI components and their specific functionality
  */
 

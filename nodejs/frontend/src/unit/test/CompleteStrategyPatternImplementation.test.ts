@@ -6,7 +6,7 @@ import {
   AutoSizeValueCalculationStrategy,
   ParentWidthSizeValueCalculationStrategy,
   ViewportWidthSizeValueCalculationStrategy,
-  
+
   // Position strategies
   PositionValueCalculationStrategyRegistry,
   PixelPositionValueCalculationStrategy,
@@ -14,19 +14,17 @@ import {
   ContentLeftPositionValueCalculationStrategy,
   ParentCenterXPositionValueCalculationStrategy,
   SceneCenterXPositionValueCalculationStrategy,
-  
+
   // Scale strategies
   ScaleValueCalculationStrategyRegistry,
   PixelScaleValueCalculationStrategy,
   FactorScaleValueCalculationStrategy,
   ResponsiveScaleValueCalculationStrategy,
   RandomScaleValueCalculationStrategy,
-  ContentScaleValueCalculationStrategy
+  ContentScaleValueCalculationStrategy,
 } from '../strategies/value';
 
-import type { 
-  ISizeValueCalculationStrategy
-} from '../strategies/value';
+import type { ISizeValueCalculationStrategy } from '../strategies/value';
 
 import { SizeValue } from '../enums/SizeValue';
 import { SizeUnit } from '../enums/SizeUnit';
@@ -47,12 +45,12 @@ describe('Complete Strategy Pattern Implementation', () => {
     sizeRegistry = new SizeValueCalculationStrategyRegistry();
     positionRegistry = new PositionValueCalculationStrategyRegistry();
     scaleRegistry = new ScaleValueCalculationStrategyRegistry();
-    
+
     mockContext = {
       parent: { width: 800, height: 600, x: 0, y: 0 },
       scene: { width: 1920, height: 1080 },
       viewport: { width: 1366, height: 768 },
-      content: { width: 200, height: 150 }
+      content: { width: 200, height: 150 },
     };
 
     // Register all strategies
@@ -86,32 +84,55 @@ describe('Complete Strategy Pattern Implementation', () => {
     });
 
     it('should find compatible size strategies', () => {
-      const strategies = sizeRegistry.getStrategiesFor(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH);
+      const strategies = sizeRegistry.getStrategiesFor(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH
+      );
       expect(strategies.length).toBeGreaterThan(0);
       expect(strategies[0].canHandle(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(true);
     });
 
     it('should return best size strategy based on priority', () => {
-      const bestStrategy = sizeRegistry.getBestStrategy(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH);
+      const bestStrategy = sizeRegistry.getBestStrategy(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH
+      );
       expect(bestStrategy).toBeDefined();
       expect(bestStrategy?.getPriority()).toBe(1);
     });
 
     it('should calculate pixel size values correctly', () => {
       const strategy = new PixelSizeValueCalculationStrategy();
-      const result = strategy.calculate(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBeDefined();
     });
 
     it('should calculate fill size values correctly', () => {
       const strategy = new FillSizeValueCalculationStrategy();
-      const result = strategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBe(1920); // scene.width (matching original behavior)
     });
 
     it('should calculate auto size values correctly', () => {
       const strategy = new AutoSizeValueCalculationStrategy();
-      const result = strategy.calculate(SizeValue.AUTO, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
+      const result = strategy.calculate(
+        SizeValue.AUTO,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH,
+        mockContext
+      );
       expect(result).toBe(200); // content.width
     });
   });
@@ -127,32 +148,57 @@ describe('Complete Strategy Pattern Implementation', () => {
     });
 
     it('should find compatible position strategies', () => {
-      const strategies = positionRegistry.getStrategiesFor(PositionValue.PIXEL, PositionUnit.PIXEL, AxisUnit.X);
+      const strategies = positionRegistry.getStrategiesFor(
+        PositionValue.PIXEL,
+        PositionUnit.PIXEL,
+        AxisUnit.X
+      );
       expect(strategies.length).toBeGreaterThan(0);
-      expect(strategies[0].canHandle(PositionValue.PIXEL, PositionUnit.PIXEL, AxisUnit.X)).toBe(true);
+      expect(strategies[0].canHandle(PositionValue.PIXEL, PositionUnit.PIXEL, AxisUnit.X)).toBe(
+        true
+      );
     });
 
     it('should return best position strategy based on priority', () => {
-      const bestStrategy = positionRegistry.getBestStrategy(PositionValue.PIXEL, PositionUnit.PIXEL, AxisUnit.X);
+      const bestStrategy = positionRegistry.getBestStrategy(
+        PositionValue.PIXEL,
+        PositionUnit.PIXEL,
+        AxisUnit.X
+      );
       expect(bestStrategy).toBeDefined();
       expect(bestStrategy?.getPriority()).toBe(1);
     });
 
     it('should calculate pixel position values correctly', () => {
       const strategy = new PixelPositionValueCalculationStrategy();
-      const result = strategy.calculate(PositionValue.PIXEL, PositionUnit.PIXEL, AxisUnit.X, mockContext);
+      const result = strategy.calculate(
+        PositionValue.PIXEL,
+        PositionUnit.PIXEL,
+        AxisUnit.X,
+        mockContext
+      );
       expect(result).toBeDefined();
     });
 
     it('should calculate center position values correctly', () => {
       const strategy = new CenterPositionValueCalculationStrategy();
-      const result = strategy.calculate(PositionValue.CENTER, PositionUnit.PIXEL, AxisUnit.X, mockContext);
+      const result = strategy.calculate(
+        PositionValue.CENTER,
+        PositionUnit.PIXEL,
+        AxisUnit.X,
+        mockContext
+      );
       expect(result).toBe(960); // scene.width / 2 (strategy uses scene first)
     });
 
     it('should calculate content left position values correctly', () => {
       const strategy = new ContentLeftPositionValueCalculationStrategy();
-      const result = strategy.calculate(PositionValue.CONTENT_LEFT, PositionUnit.PIXEL, AxisUnit.X, mockContext);
+      const result = strategy.calculate(
+        PositionValue.CONTENT_LEFT,
+        PositionUnit.PIXEL,
+        AxisUnit.X,
+        mockContext
+      );
       expect(result).toBe(0); // content left edge
     });
   });
@@ -215,11 +261,20 @@ describe('Complete Strategy Pattern Implementation', () => {
         readonly sizeUnit = SizeUnit.PIXEL;
         readonly dimension = Dimension.WIDTH;
 
-        canHandle(sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+        canHandle(
+          sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+        ): boolean {
           return sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL;
         }
 
-        calculate(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH, _context: any): number {
+        calculate(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH,
+          _context: any
+        ): number {
           return 999; // Custom calculation
         }
 
@@ -239,7 +294,11 @@ describe('Complete Strategy Pattern Implementation', () => {
       const customStrategy = new CustomSizeStrategy();
       sizeRegistry.registerStrategy(customStrategy);
 
-      const bestStrategy = sizeRegistry.getBestStrategy(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH);
+      const bestStrategy = sizeRegistry.getBestStrategy(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH
+      );
       expect(bestStrategy?.strategyId).toBe('custom-size-strategy');
     });
 
@@ -259,7 +318,7 @@ describe('Complete Strategy Pattern Implementation', () => {
       const sizeStrategy = new PixelSizeValueCalculationStrategy();
       const positionStrategy = new PixelPositionValueCalculationStrategy();
       const scaleStrategy = new PixelScaleValueCalculationStrategy();
-      
+
       expect(typeof sizeStrategy.calculate).toBe('function');
       expect(typeof positionStrategy.calculate).toBe('function');
       expect(typeof scaleStrategy.calculate).toBe('function');
@@ -267,8 +326,16 @@ describe('Complete Strategy Pattern Implementation', () => {
 
     it('should demonstrate Dependency Inversion Principle compliance', () => {
       // High-level modules depend on abstractions
-      const sizeStrategy = sizeRegistry.getBestStrategy(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH);
-      const positionStrategy = positionRegistry.getBestStrategy(PositionValue.PIXEL, PositionUnit.PIXEL, AxisUnit.X);
+      const sizeStrategy = sizeRegistry.getBestStrategy(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH
+      );
+      const positionStrategy = positionRegistry.getBestStrategy(
+        PositionValue.PIXEL,
+        PositionUnit.PIXEL,
+        AxisUnit.X
+      );
       const scaleStrategy = scaleRegistry.getBestStrategy(ScaleValue.FACTOR, ScaleUnit.FACTOR);
 
       expect(sizeStrategy).toBeDefined();
@@ -347,11 +414,20 @@ describe('Complete Strategy Pattern Implementation', () => {
           readonly sizeUnit = SizeUnit.PIXEL;
           readonly dimension = Dimension.WIDTH;
 
-          canHandle(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+          canHandle(
+            _sizeValue: SizeValue,
+            _sizeUnit: SizeUnit,
+            _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+          ): boolean {
             return _sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL;
           }
 
-          calculate(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH, _context: any): number {
+          calculate(
+            _sizeValue: SizeValue,
+            _sizeUnit: SizeUnit,
+            _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH,
+            _context: any
+          ): number {
             return i;
           }
 
@@ -372,8 +448,12 @@ describe('Complete Strategy Pattern Implementation', () => {
       }
 
       expect(sizeRegistry.getStrategyCount()).toBe(105); // 5 original + 100 test
-      
-      const strategies = sizeRegistry.getStrategiesFor(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH);
+
+      const strategies = sizeRegistry.getStrategiesFor(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH
+      );
       expect(strategies.length).toBeGreaterThan(0);
     });
   });

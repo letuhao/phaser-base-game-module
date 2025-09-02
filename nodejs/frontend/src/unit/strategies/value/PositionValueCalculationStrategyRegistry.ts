@@ -9,7 +9,9 @@ import { Logger } from '../../../core/Logger';
  * Registry for position value calculation strategies
  * Manages registration, retrieval, and selection of strategies
  */
-export class PositionValueCalculationStrategyRegistry implements IPositionValueCalculationStrategyRegistry {
+export class PositionValueCalculationStrategyRegistry
+  implements IPositionValueCalculationStrategyRegistry
+{
   private readonly strategies = new Map<string, IPositionValueCalculationStrategy>();
   private readonly logger = Logger.getInstance();
 
@@ -17,16 +19,26 @@ export class PositionValueCalculationStrategyRegistry implements IPositionValueC
    * Register a position value calculation strategy
    */
   registerStrategy(strategy: IPositionValueCalculationStrategy): void {
-    this.logger.debug('PositionValueCalculationStrategyRegistry', 'registerStrategy', 'Registering strategy', {
-      strategyId: strategy.strategyId,
-      positionValue: strategy.positionValue,
-      positionUnit: strategy.positionUnit
-    });
+    this.logger.debug(
+      'PositionValueCalculationStrategyRegistry',
+      'registerStrategy',
+      'Registering strategy',
+      {
+        strategyId: strategy.strategyId,
+        positionValue: strategy.positionValue,
+        positionUnit: strategy.positionUnit,
+      }
+    );
 
     if (this.strategies.has(strategy.strategyId)) {
-      this.logger.warn('PositionValueCalculationStrategyRegistry', 'registerStrategy', 'Strategy already registered', {
-        strategyId: strategy.strategyId
-      });
+      this.logger.warn(
+        'PositionValueCalculationStrategyRegistry',
+        'registerStrategy',
+        'Strategy already registered',
+        {
+          strategyId: strategy.strategyId,
+        }
+      );
       return;
     }
 
@@ -37,9 +49,14 @@ export class PositionValueCalculationStrategyRegistry implements IPositionValueC
    * Unregister a position value calculation strategy
    */
   unregisterStrategy(strategyId: string): boolean {
-    this.logger.debug('PositionValueCalculationStrategyRegistry', 'unregisterStrategy', 'Unregistering strategy', {
-      strategyId
-    });
+    this.logger.debug(
+      'PositionValueCalculationStrategyRegistry',
+      'unregisterStrategy',
+      'Unregistering strategy',
+      {
+        strategyId,
+      }
+    );
 
     return this.strategies.delete(strategyId);
   }
@@ -70,13 +87,18 @@ export class PositionValueCalculationStrategyRegistry implements IPositionValueC
     // Sort by priority (lower number = higher priority)
     compatibleStrategies.sort((a, b) => a.getPriority() - b.getPriority());
 
-    this.logger.debug('PositionValueCalculationStrategyRegistry', 'getStrategiesFor', 'Found compatible strategies', {
-      positionValue,
-      positionUnit,
-      axisUnit,
-      count: compatibleStrategies.length,
-      strategies: compatibleStrategies.map(s => s.strategyId)
-    });
+    this.logger.debug(
+      'PositionValueCalculationStrategyRegistry',
+      'getStrategiesFor',
+      'Found compatible strategies',
+      {
+        positionValue,
+        positionUnit,
+        axisUnit,
+        count: compatibleStrategies.length,
+        strategies: compatibleStrategies.map(s => s.strategyId),
+      }
+    );
 
     return compatibleStrategies;
   }
@@ -139,7 +161,11 @@ export class PositionValueCalculationStrategyRegistry implements IPositionValueC
    * Clear all registered strategies
    */
   clearStrategies(): void {
-    this.logger.debug('PositionValueCalculationStrategyRegistry', 'clearStrategies', 'Clearing all strategies');
+    this.logger.debug(
+      'PositionValueCalculationStrategyRegistry',
+      'clearStrategies',
+      'Clearing all strategies'
+    );
     this.strategies.clear();
   }
 
@@ -157,7 +183,7 @@ export class PositionValueCalculationStrategyRegistry implements IPositionValueC
       totalStrategies: strategies.length,
       strategiesByPositionValue: {} as Record<string, number>,
       strategiesByPositionUnit: {} as Record<string, number>,
-      strategiesByAxisUnit: {} as Record<string, number>
+      strategiesByAxisUnit: {} as Record<string, number>,
     };
 
     for (const strategy of strategies) {
@@ -165,8 +191,10 @@ export class PositionValueCalculationStrategyRegistry implements IPositionValueC
       const positionUnitKey = strategy.positionUnit;
       const axisUnitKey = strategy.axisUnit;
 
-      stats.strategiesByPositionValue[positionValueKey] = (stats.strategiesByPositionValue[positionValueKey] || 0) + 1;
-      stats.strategiesByPositionUnit[positionUnitKey] = (stats.strategiesByPositionUnit[positionUnitKey] || 0) + 1;
+      stats.strategiesByPositionValue[positionValueKey] =
+        (stats.strategiesByPositionValue[positionValueKey] || 0) + 1;
+      stats.strategiesByPositionUnit[positionUnitKey] =
+        (stats.strategiesByPositionUnit[positionUnitKey] || 0) + 1;
       stats.strategiesByAxisUnit[axisUnitKey] = (stats.strategiesByAxisUnit[axisUnitKey] || 0) + 1;
     }
 

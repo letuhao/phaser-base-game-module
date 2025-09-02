@@ -1,6 +1,6 @@
 /**
  * Animation System Enums
- * 
+ *
  * Enums for animation easing types and animation-specific functionality
  */
 

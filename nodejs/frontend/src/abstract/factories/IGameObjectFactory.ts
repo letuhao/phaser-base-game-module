@@ -54,9 +54,12 @@ export abstract class BaseGameObjectFactory implements IGameObjectFactory {
   /**
    * Common method to set basic properties on game objects
    */
-  protected setCommonProperties(gameObject: Phaser.GameObjects.GameObject, input: IFactoryInput): void {
+  protected setCommonProperties(
+    gameObject: Phaser.GameObjects.GameObject,
+    input: IFactoryInput
+  ): void {
     const config = input.config;
-    
+
     // Set position if the object supports it
     if ('x' in config && config.x !== undefined && 'setPosition' in gameObject) {
       (gameObject as any).setPosition(config.x, ('y' in config ? config.y : 0) || 0);

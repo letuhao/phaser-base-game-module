@@ -1,6 +1,6 @@
 /**
  * Scene Context Interfaces Index
- * 
+ *
  * Centralized export for all scene context interfaces
  */
 
@@ -18,4 +18,5 @@ export const SCENE_CONTEXT_INTERFACES = {
   ISceneBuilderContext: 'ISceneBuilderContext',
 } as const;
 
-export type SceneContextInterface = typeof SCENE_CONTEXT_INTERFACES[keyof typeof SCENE_CONTEXT_INTERFACES];
+export type SceneContextInterface =
+  (typeof SCENE_CONTEXT_INTERFACES)[keyof typeof SCENE_CONTEXT_INTERFACES];

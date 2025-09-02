@@ -1,6 +1,6 @@
 /**
  * Effects System Enums
- * 
+ *
  * Enums for visual effects, particles, and environmental effects
  */
 

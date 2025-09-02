@@ -1,6 +1,6 @@
 /**
  * Scene Asset Interfaces Index
- * 
+ *
  * Centralized export for all scene asset interfaces
  */
 
@@ -17,4 +17,5 @@ export const SCENE_ASSET_INTERFACES = {
   ISceneAssetLoader: 'ISceneAssetLoader',
 } as const;
 
-export type SceneAssetInterface = typeof SCENE_ASSET_INTERFACES[keyof typeof SCENE_ASSET_INTERFACES];
+export type SceneAssetInterface =
+  (typeof SCENE_ASSET_INTERFACES)[keyof typeof SCENE_ASSET_INTERFACES];

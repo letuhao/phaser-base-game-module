@@ -28,7 +28,7 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
   private maxSize?: number;
   private readonly strategyRegistry: SizeValueCalculationStrategyRegistry;
   private readonly logger = Logger.getInstance();
-  
+
   // Performance optimizations
   private cachedStrategy: any = null;
   private lastCacheVersion = -1;
@@ -51,11 +51,11 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
     this.baseValue = baseValue;
     this.maintainAspectRatio = maintainAspectRatio;
     this.strategyRegistry = strategyRegistry || new SizeValueCalculationStrategyRegistry();
-    
+
     // Pre-compute numeric value for performance
     this.isNumericValue = typeof baseValue === 'number';
-    this.numericValue = this.isNumericValue ? baseValue as number : 0;
-    
+    this.numericValue = this.isNumericValue ? (baseValue as number) : 0;
+
     // Pre-warm cache for non-numeric values to improve performance
     if (!this.isNumericValue) {
       this.preWarmStrategyCache();
@@ -68,15 +68,16 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
   private preWarmStrategyCache(): void {
     try {
       // Pre-warm the registry cache for this specific combination
-      this.strategyRegistry.getBestStrategy(
-        this.baseValue,
-        this.sizeUnit,
-        this.dimension
-      );
+      this.strategyRegistry.getBestStrategy(this.baseValue, this.sizeUnit, this.dimension);
     } catch (error) {
       // Ignore pre-warming errors - they don't affect functionality
       if (process.env.NODE_ENV === 'development') {
-        this.logger.debug('RefactoredSizeUnitCalculator', 'preWarmStrategyCache', 'Pre-warming failed', { error });
+        this.logger.debug(
+          'RefactoredSizeUnitCalculator',
+          'preWarmStrategyCache',
+          'Pre-warming failed',
+          { error }
+        );
       }
     }
   }
@@ -104,7 +105,12 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
     if (this.cachedStrategy && this.lastCacheVersion === currentCacheVersion) {
       // Use cached strategy - O(1) performance
       if (this.cachedStrategy.validateContext(context)) {
-        const result = this.cachedStrategy.calculate(this.baseValue, this.sizeUnit, this.dimension, context);
+        const result = this.cachedStrategy.calculate(
+          this.baseValue,
+          this.sizeUnit,
+          this.dimension,
+          context
+        );
         return this.applyConstraints(result);
       } else {
         // Context validation failed, fallback to default
@@ -128,10 +134,15 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
       if (!strategy.validateContext(context)) {
         // Only log validation failures in development mode
         if (process.env.NODE_ENV === 'development') {
-          this.logger.warn('RefactoredSizeUnitCalculator', 'calculateSize', 'Context validation failed', {
-            strategyId: strategy.strategyId,
-            sizeValue: this.baseValue
-          });
+          this.logger.warn(
+            'RefactoredSizeUnitCalculator',
+            'calculateSize',
+            'Context validation failed',
+            {
+              strategyId: strategy.strategyId,
+              sizeValue: this.baseValue,
+            }
+          );
         }
         return this.applyConstraints(DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
       }
@@ -146,7 +157,7 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
       this.logger.warn('RefactoredSizeUnitCalculator', 'calculateSize', 'No strategy found', {
         sizeValue: this.baseValue,
         sizeUnit: this.sizeUnit,
-        dimension: this.dimension
+        dimension: this.dimension,
       });
     }
 
@@ -235,10 +246,7 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
     if (this.sizeUnit === SizeUnit.SCENE_WIDTH || this.sizeUnit === SizeUnit.SCENE_HEIGHT) {
       return !!context.scene;
     }
-    if (
-      this.sizeUnit === SizeUnit.VIEWPORT_WIDTH ||
-      this.sizeUnit === SizeUnit.VIEWPORT_HEIGHT
-    ) {
+    if (this.sizeUnit === SizeUnit.VIEWPORT_WIDTH || this.sizeUnit === SizeUnit.VIEWPORT_HEIGHT) {
       return !!context.viewport;
     }
     // Check if the baseValue requires specific context
@@ -278,12 +286,12 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
    */
   getAspectRatio(): number | undefined {
     if (!this.maintainAspectRatio) return undefined;
-    
+
     // If we have both width and height constraints, calculate aspect ratio
     if (this.minSize !== undefined && this.maxSize !== undefined) {
       return this.maxSize / this.minSize;
     }
-    
+
     return undefined;
   }
 
@@ -301,7 +309,7 @@ export class RefactoredSizeUnitCalculator implements ISizeUnit {
     return {
       min: this.minSize,
       max: this.maxSize,
-      hasConstraints: this.hasConstraints()
+      hasConstraints: this.hasConstraints(),
     };
   }
 

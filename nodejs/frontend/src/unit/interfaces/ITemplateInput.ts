@@ -17,13 +17,13 @@ import { DEFAULT_FALLBACK_VALUES } from '../constants';
 export interface IBaseTemplateInput {
   /** Unique identifier for the input */
   id?: string;
-  
+
   /** Type of the input */
   type: TemplateInputType;
-  
+
   /** Whether the input is valid */
   isValid?: boolean;
-  
+
   /** Custom metadata for the input */
   metadata?: Record<string, string | number | boolean>;
 }
@@ -33,25 +33,25 @@ export interface IBaseTemplateInput {
  */
 export interface ISizeTemplateInput extends IBaseTemplateInput {
   type: TemplateInputType.SIZE;
-  
+
   /** Size unit type */
   unit: SizeUnit;
-  
+
   /** Size value */
   value: number | SizeValue;
-  
+
   /** Dimension to apply the size to */
   dimension?: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH;
-  
+
   /** Whether to maintain aspect ratio */
   maintainAspectRatio?: boolean;
-  
+
   /** Minimum size constraint */
   minSize?: number;
-  
+
   /** Maximum size constraint */
   maxSize?: number;
-  
+
   /** Base size value */
   baseValue?: number;
 }
@@ -61,22 +61,22 @@ export interface ISizeTemplateInput extends IBaseTemplateInput {
  */
 export interface IPositionTemplateInput extends IBaseTemplateInput {
   type: TemplateInputType.POSITION;
-  
+
   /** Position unit type */
   unit: PositionUnit;
-  
+
   /** Position value */
   value: number | PositionValue;
-  
+
   /** Axis to apply the position to */
   axis?: Dimension.X | Dimension.Y | Dimension.XY;
-  
+
   /** Offset from calculated position */
   offset?: number;
-  
+
   /** Whether to respect parent bounds */
   respectBounds?: boolean;
-  
+
   /** Base position value */
   baseValue?: number;
 }
@@ -86,22 +86,22 @@ export interface IPositionTemplateInput extends IBaseTemplateInput {
  */
 export interface IScaleTemplateInput extends IBaseTemplateInput {
   type: TemplateInputType.SCALE;
-  
+
   /** Scale unit type */
   unit: ScaleUnit;
-  
+
   /** Scale value */
   value: number | ScaleValue;
-  
+
   /** Whether to maintain aspect ratio */
   maintainAspectRatio?: boolean;
-  
+
   /** Minimum scale constraint */
   minScale?: number;
-  
+
   /** Maximum scale constraint */
   maxScale?: number;
-  
+
   /** Base scale value */
   baseValue?: number;
 }
@@ -111,16 +111,16 @@ export interface IScaleTemplateInput extends IBaseTemplateInput {
  */
 export interface IMixedTemplateInput extends IBaseTemplateInput {
   type: TemplateInputType.MIXED;
-  
+
   /** Size input */
   size?: ISizeTemplateInput;
-  
+
   /** Position input */
   position?: IPositionTemplateInput;
-  
+
   /** Scale input */
   scale?: IScaleTemplateInput;
-  
+
   /** Whether to maintain aspect ratio across all dimensions */
   maintainAspectRatio?: boolean;
 }
@@ -129,7 +129,11 @@ export interface IMixedTemplateInput extends IBaseTemplateInput {
  * Union type for all template inputs
  * Used in template methods to accept any valid input type
  */
-export type ITemplateInput = ISizeTemplateInput | IPositionTemplateInput | IScaleTemplateInput | IMixedTemplateInput;
+export type ITemplateInput =
+  | ISizeTemplateInput
+  | IPositionTemplateInput
+  | IScaleTemplateInput
+  | IMixedTemplateInput;
 
 /**
  * Type guard to check if input is for size calculations
@@ -164,12 +168,9 @@ export function isMixedTemplateInput(input: ITemplateInput): input is IMixedTemp
  */
 export function isValidTemplateInput(input: unknown): input is ITemplateInput {
   if (!input || typeof input !== 'object') return false;
-  
+
   const templateInput = input as ITemplateInput;
-  return (
-    'type' in templateInput &&
-    Object.values(TemplateInputType).includes(templateInput.type)
-  );
+  return 'type' in templateInput && Object.values(TemplateInputType).includes(templateInput.type);
 }
 
 /**
@@ -191,7 +192,7 @@ export function createSizeTemplateInput(
     baseValue: options?.baseValue,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -213,7 +214,7 @@ export function createPositionTemplateInput(
     baseValue: options?.baseValue,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -235,7 +236,7 @@ export function createScaleTemplateInput(
     baseValue: options?.baseValue,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -253,7 +254,7 @@ export function createMixedTemplateInput(
     maintainAspectRatio: options?.maintainAspectRatio || false,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -265,7 +266,7 @@ export function convertLegacyInput(input: IUnit | UnitValue | number | string): 
   if (typeof input === 'number') {
     return createSizeTemplateInput(SizeUnit.PIXEL, input);
   }
-  
+
   if (typeof input === 'string') {
     // Try to parse as a unit value
     if (Object.values(SizeValue).includes(input as SizeValue)) {
@@ -277,17 +278,17 @@ export function convertLegacyInput(input: IUnit | UnitValue | number | string): 
     if (Object.values(ScaleValue).includes(input as ScaleValue)) {
       return createScaleTemplateInput(ScaleUnit.FACTOR, input as ScaleValue);
     }
-    
+
     // Default to size input
     return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
   }
-  
+
   // If it's an IUnit, extract its properties
   if (input && typeof input === 'object' && 'calculate' in input) {
     // It's an IUnit, use a default value since we can't extract size directly
     return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
   }
-  
+
   // Default fallback
   return createSizeTemplateInput(SizeUnit.PIXEL, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
 }

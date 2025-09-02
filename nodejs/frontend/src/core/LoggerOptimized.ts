@@ -11,19 +11,19 @@ import { LogServerClient } from './LogServerClient';
 export class LoggerOptimized {
   private static instance: LoggerOptimized;
   private config: LoggerConfig;
-  
+
   // Performance-optimized properties
   private logQueue: Array<{ entry: LogEntry; priority: number; timestamp: number }> = [];
   private isProcessingQueue: boolean = false;
   private queueProcessor: Worker | null = null;
   private batchProcessor: NodeJS.Timeout | null = null;
-  
+
   // Legacy properties for backward compatibility
   private logBuffer: Array<LogEntry> = [];
   private performanceMetrics: Map<string, PerformanceMetric> = new Map();
   private errorTracker: ErrorTracker;
   private serverClient: LogServerClient;
-  
+
   // Performance monitoring properties
   private memoryUsage: number = 0;
   private lastMemoryCheck: number = 0;
@@ -31,15 +31,15 @@ export class LoggerOptimized {
 
   private constructor(config?: Partial<LoggerConfig>) {
     this.config = { ...DEFAULT_LOGGER_CONFIG, ...config };
-    
+
     // Create a minimal logger interface for ErrorTracker
     const loggerInterface = {
-      debug: (objectName: string, methodName: string, message: string, data?: any) => 
+      debug: (objectName: string, methodName: string, message: string, data?: any) =>
         this.debug(objectName, methodName, message, data),
-      error: (objectName: string, methodName: string, message: string, data?: any) => 
+      error: (objectName: string, methodName: string, message: string, data?: any) =>
         this.error(objectName, methodName, message, data),
     } as any; // Use any to bypass type checking for ErrorTracker compatibility
-    
+
     this.errorTracker = new ErrorTracker(loggerInterface);
     this.serverClient = new LogServerClient(this.config.server);
 
@@ -72,7 +72,8 @@ export class LoggerOptimized {
       try {
         this.queueProcessor = new Worker(
           URL.createObjectURL(
-            new Blob([`
+            new Blob([
+              `
               self.onmessage = function(e) {
                 const { entry, priority } = e.data;
                 
@@ -85,11 +86,12 @@ export class LoggerOptimized {
                 
                 self.postMessage({ type: 'processed', entry: processedEntry });
               };
-            `])
+            `,
+            ])
           )
         );
 
-        this.queueProcessor.onmessage = (e) => {
+        this.queueProcessor.onmessage = e => {
           if (e.data.type === 'processed') {
             this.handleProcessedLog(e.data.entry);
           }
@@ -161,10 +163,17 @@ export class LoggerOptimized {
           // Only warn if memory usage is critical
           const memoryUsagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
           if (memoryUsagePercent > this.config.performance.memoryThreshold) {
-            this.queueLog('Performance', 'MemoryWarning', `High memory usage: ${memoryUsagePercent.toFixed(1)}%`, {
-              memoryUsage: memoryUsagePercent,
-              threshold: this.config.performance.memoryThreshold,
-            }, LogLevel.WARN, 2); // High priority
+            this.queueLog(
+              'Performance',
+              'MemoryWarning',
+              `High memory usage: ${memoryUsagePercent.toFixed(1)}%`,
+              {
+                memoryUsage: memoryUsagePercent,
+                threshold: this.config.performance.memoryThreshold,
+              },
+              LogLevel.WARN,
+              2
+            ); // High priority
           }
         }
       }, 5000); // Check every 5 seconds instead of continuous monitoring
@@ -213,7 +222,7 @@ export class LoggerOptimized {
     if (!this.shouldLog(objectName, level)) return;
 
     const entry = this.createMinimalLogEntry(objectName, level, message, data, methodName);
-    
+
     // Add to queue with priority
     this.logQueue.push({
       entry,
@@ -255,9 +264,10 @@ export class LoggerOptimized {
       data: this.sanitizeDataMinimal(data),
       methodName,
       // Only include stack trace for errors in development
-      stackTrace: level === LogLevel.ERROR && process.env.NODE_ENV === 'development' 
-        ? this.getStackTraceMinimal() 
-        : undefined,
+      stackTrace:
+        level === LogLevel.ERROR && process.env.NODE_ENV === 'development'
+          ? this.getStackTraceMinimal()
+          : undefined,
       // Only include performance data for high-priority logs
       performance: level >= LogLevel.WARN ? this.getCurrentPerformanceMetricsMinimal() : undefined,
     };
@@ -276,18 +286,16 @@ export class LoggerOptimized {
       if (typeof data === 'object') {
         const sanitized: any = {};
         const keys = Object.keys(data).slice(0, 5); // Limit to 5 keys
-        
+
         for (const key of keys) {
           if (this.isSafeProperty(key, data[key])) {
-            sanitized[key] = typeof data[key] === 'object' 
-              ? '[Object]' 
-              : data[key];
+            sanitized[key] = typeof data[key] === 'object' ? '[Object]' : data[key];
           }
         }
-        
+
         return sanitized;
       }
-      
+
       return data;
     } catch (error) {
       return { error: 'Data sanitization failed' };
@@ -298,9 +306,7 @@ export class LoggerOptimized {
    * Check if property is safe (simplified)
    */
   private isSafeProperty(key: string, value: any): boolean {
-    return typeof value !== 'function' && 
-           typeof value !== 'symbol' && 
-           !this.isSensitiveField(key);
+    return typeof value !== 'function' && typeof value !== 'symbol' && !this.isSensitiveField(key);
   }
 
   /**
@@ -328,12 +334,12 @@ export class LoggerOptimized {
    */
   private getCurrentPerformanceMetricsMinimal(): any {
     const metrics: any = {};
-    
+
     // Only include essential metrics
     if (this.memoryUsage > 0) {
       metrics.memory = this.memoryUsage;
     }
-    
+
     return metrics;
   }
 
@@ -411,7 +417,7 @@ export class LoggerOptimized {
    */
   private outputToConsoleMinimal(entry: LogEntry): void {
     const message = `[${entry.level}] [${entry.objectName}] ${entry.message}`;
-    
+
     switch (entry.level) {
       case 'ERROR':
         console.error(message, entry.data);
@@ -464,7 +470,7 @@ export class LoggerOptimized {
       const logsToSend = [...this.logBuffer];
       this.logBuffer = [];
 
-      this.serverClient.sendLogs(logsToSend).catch((error) => {
+      this.serverClient.sendLogs(logsToSend).catch(error => {
         this.warn('Logger', 'flushLogBuffer', 'Failed to send logs to server', { error });
       });
     }
@@ -475,10 +481,10 @@ export class LoggerOptimized {
    */
   private shouldLog(objectName: string, level: LogLevel): boolean {
     if (level > this.config.globalLevel) return false;
-    
+
     const objectConfig = this.config.objects?.find(obj => obj.name === objectName);
     if (objectConfig && !objectConfig.enabled) return false;
-    
+
     const objectLevel = objectConfig?.level || LogLevel.DEBUG;
     return level >= objectLevel;
   }
@@ -523,7 +529,12 @@ export class LoggerOptimized {
   /**
    * Log performance metric (backward compatible)
    */
-  public logPerformance(metricName: string, value: number, unit: string = '', metadata?: any): void {
+  public logPerformance(
+    metricName: string,
+    value: number,
+    unit: string = '',
+    metadata?: any
+  ): void {
     if (this.config.performance.enabled) {
       this.performanceMetrics.set(metricName, {
         value: { value, unit, metadata },
@@ -611,7 +622,10 @@ export const logTrace = (objectName: string, methodName: string, message: string
   logger.trace(objectName, methodName, message, data);
 export const log = (objectName: string, methodName: string, message: string, data?: any) =>
   logger.log(objectName, methodName, message, data);
-export const logPerformance = (metricName: string, value: number, unit: string = '', metadata?: any) =>
-  logger.logPerformance(metricName, value, unit, metadata);
-export const logGameEvent = (eventName: string, data?: any) =>
-  logger.logGameEvent(eventName, data);
+export const logPerformance = (
+  metricName: string,
+  value: number,
+  unit: string = '',
+  metadata?: any
+) => logger.logPerformance(metricName, value, unit, metadata);
+export const logGameEvent = (eventName: string, data?: any) => logger.logGameEvent(eventName, data);

@@ -1,6 +1,6 @@
 /**
  * Asset System Enums
- * 
+ *
  * Centralized enum definitions for the asset system.
  * Provides type-safe constants for asset operations, states, and configurations.
  */
@@ -17,7 +17,7 @@ export enum LoaderType {
   FETCH = 'fetch',
   XHR = 'xhr',
   WEBSOCKET = 'websocket',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -29,7 +29,7 @@ export enum LoaderState {
   PAUSED = 'paused',
   COMPLETED = 'completed',
   ERROR = 'error',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 /**
@@ -40,7 +40,7 @@ export enum LoadingStrategy {
   PARALLEL = 'parallel',
   PRIORITY_BASED = 'priority_based',
   LAZY = 'lazy',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -53,7 +53,7 @@ export enum LoadingStrategyType {
   LAZY = 'lazy',
   BATCH = 'batch',
   STREAMING = 'streaming',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 // ============================================================================
@@ -70,7 +70,7 @@ export enum ManagerOperation {
   UNCACHE = 'uncache',
   VALIDATE = 'validate',
   OPTIMIZE = 'optimize',
-  CLEANUP = 'cleanup'
+  CLEANUP = 'cleanup',
 }
 
 // ============================================================================
@@ -86,7 +86,7 @@ export enum FactoryOperation {
   CONFIGURE = 'configure',
   VALIDATE = 'validate',
   REGISTER = 'register',
-  UNREGISTER = 'unregister'
+  UNREGISTER = 'unregister',
 }
 
 /**
@@ -98,7 +98,7 @@ export enum LoaderFactoryOperation {
   CONFIGURE = 'configure',
   VALIDATE = 'validate',
   REGISTER = 'register',
-  UNREGISTER = 'unregister'
+  UNREGISTER = 'unregister',
 }
 
 // ============================================================================
@@ -115,7 +115,7 @@ export enum ValidationStrategyType {
   BATCH = 'batch',
   INCREMENTAL = 'incremental',
   PARALLEL = 'parallel',
-  CACHED = 'cached'
+  CACHED = 'cached',
 }
 
 // ============================================================================
@@ -129,5 +129,5 @@ export enum SceneAssetPhase {
   ASSETS = 'assets',
   BUNDLES = 'bundles',
   VALIDATION = 'validation',
-  COMPLETE = 'complete'
+  COMPLETE = 'complete',
 }

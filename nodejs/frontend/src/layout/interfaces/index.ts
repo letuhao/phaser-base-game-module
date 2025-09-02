@@ -1,6 +1,6 @@
 /**
  * Layout System Interfaces - Main Export
- * 
+ *
  * This module exports all interfaces for the layout system.
  * Based on the best patterns from the existing codebase.
  */
@@ -36,7 +36,7 @@ export type {
   IStatusColors,
   IUIColors,
   ISemanticColors,
-  
+
   // Typography interfaces
   IThemeTypography,
   IFontFamilies,
@@ -45,25 +45,25 @@ export type {
   ILineHeights,
   ILetterSpacing,
   ITextAlign,
-  
+
   // Spacing and layout interfaces
   IThemeSpacing,
   ISpacingScale,
   IThemeBorderRadius,
   IThemeShadows,
-  
+
   // Animation interfaces
   IThemeAnimation,
   IAnimationDuration,
   IAnimationEasing,
   IAnimationProperties,
-  
+
   // Breakpoint interfaces
   IThemeBreakpoints,
-  
+
   // Theme class interfaces
   IThemeClass,
-  
+
   // Metadata interfaces
   IThemeMetadata,
 } from './ITheme';
@@ -87,7 +87,7 @@ export type {
   IFilterStyle,
   IInteractiveStyle,
   IResponsiveStyle,
-  
+
   // Style metadata and composition
   IStyleMetadata,
   IStyleComposition,
@@ -112,14 +112,14 @@ export type {
   IResponsiveLayout,
   IUnitLayout,
   ILayoutMetadata,
-  
+
   // Layout context interfaces
   ILayoutContext,
-  
+
   // Layout result interfaces
   ICalculatedLayout,
   IUnitConversion,
-  
+
   // Layout validation interfaces
   ILayoutValidationResult,
 } from './ILayout';
@@ -135,15 +135,15 @@ export type {
   IUnitLayoutStrategy,
   IAlignmentLayoutStrategy,
   IScaleLayoutStrategy,
-  
+
   // Strategy capabilities interfaces
   IStrategyCapabilities,
   IStrategyPerformanceMetrics,
-  
+
   // Strategy registry interfaces
   IStrategyRegistry,
   IStrategyRegistryStatistics,
-  
+
   // Strategy factory interfaces
   IStrategyFactory,
 } from './ILayoutStrategy';
@@ -157,7 +157,7 @@ export type {
   ILayoutManager,
   ILayoutManagerConfig,
   ILayoutManagerStatistics,
-  
+
   // Layout cache interfaces
   ILayoutCache,
   ILayoutCacheStatistics,
@@ -178,7 +178,7 @@ export type {
   ICommandValidationSuggestion,
   ILayoutCommandMetadata,
   ILayoutChange,
-  
+
   // Specific command interfaces
   ICreateLayoutCommand,
   IUpdateLayoutCommand,
@@ -186,12 +186,12 @@ export type {
   IMoveLayoutCommand,
   IResizeLayoutCommand,
   IBatchCommand,
-  
+
   // Command manager interfaces
   ILayoutCommandManager,
   ICommandListener,
   ICommandManagerStatistics,
-  
+
   // Command factory interfaces
   ILayoutCommandFactory,
 } from './ILayoutCommand';
@@ -210,7 +210,7 @@ export type {
   ILayoutStateMetadata,
   ILayoutStatePerformance,
   ILayoutStateValidationRule,
-  
+
   // Specific state interfaces
   IIdleLayoutState,
   ICalculatingLayoutState,
@@ -218,14 +218,14 @@ export type {
   IErrorLayoutState,
   IValidatingLayoutState,
   ITransitioningLayoutState,
-  
+
   // State manager interfaces
   ILayoutStateManager,
   ILayoutStateTransition,
   ILayoutStateTransitionResult,
   IStateListener,
   IStateManagerStatistics,
-  
+
   // State factory interfaces
   ILayoutStateFactory,
 } from './ILayoutState';
@@ -243,7 +243,7 @@ export type {
   ILayoutChainHandlerMetadata,
   ILayoutChainHandlerCapabilities,
   ILayoutChainHandlerPerformance,
-  
+
   // Specific handler interfaces
   IValidationChainHandler,
   IUnitConversionChainHandler,
@@ -253,12 +253,12 @@ export type {
   IOptimizationChainHandler,
   ICachingChainHandler,
   ILayoutChainValidationRule,
-  
+
   // Chain manager interfaces
   ILayoutChainManager,
   IChainListener,
   IChainManagerStatistics,
-  
+
   // Chain factory interfaces
   ILayoutChainFactory,
 } from './ILayoutChain';
@@ -321,7 +321,7 @@ export type {
   ILayoutEventManager,
   ILayoutValidator,
   ILayoutPerformanceMonitor,
-  
+
   // Style interfaces
   IPositionStyle,
   ISizeStyle,
@@ -333,12 +333,12 @@ export type {
   ITextStyle,
   IAnimationStyle,
   ITransformStyle,
-  
+
   // Game UI interfaces
   IGameUIStyle,
   IMenuStyle,
   IButtonStyle,
-  
+
   // Specialized interfaces
   ISizeConstraints,
   IBorderSides,
@@ -372,7 +372,7 @@ export type {
   IValidationWarning,
   IValidationSuggestion,
   IPerformanceMetrics,
-  
+
   // Value interfaces
   BlendMode,
   PositionValue,

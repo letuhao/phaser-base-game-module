@@ -1,6 +1,6 @@
 /**
  * Shape System Enums
- * 
+ *
  * Enums for shape types, curve types, and shape-specific functionality
  */
 

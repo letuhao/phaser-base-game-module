@@ -51,10 +51,16 @@ export class ScaleUnitCalculator implements IScaleUnit {
     let baseScale: number;
     switch (this.scaleUnit) {
       case ScaleUnit.FACTOR:
-        baseScale = typeof this.baseValue === 'number' ? this.baseValue : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
+        baseScale =
+          typeof this.baseValue === 'number'
+            ? this.baseValue
+            : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
         break;
       case ScaleUnit.PERCENTAGE:
-        baseScale = typeof this.baseValue === 'number' ? this.baseValue / 100 : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
+        baseScale =
+          typeof this.baseValue === 'number'
+            ? this.baseValue / 100
+            : DEFAULT_FALLBACK_VALUES.SCALE.DEFAULT;
         break;
       case ScaleUnit.PARENT_SCALE:
         baseScale = 1.0; // Default scale factor
@@ -96,7 +102,10 @@ export class ScaleUnitCalculator implements IScaleUnit {
    */
   private applyScaleValue(baseScale: number, context: UnitContext): number {
     // If baseValue is a ScaleValue enum, use it for behavior
-    if (typeof this.baseValue === 'string' && Object.values(ScaleValue).includes(this.baseValue as ScaleValue)) {
+    if (
+      typeof this.baseValue === 'string' &&
+      Object.values(ScaleValue).includes(this.baseValue as ScaleValue)
+    ) {
       switch (this.baseValue as ScaleValue) {
         case ScaleValue.FIT:
           return this.applyConstraints(this.calculateFitScale(context));
@@ -122,7 +131,7 @@ export class ScaleUnitCalculator implements IScaleUnit {
           return this.applyConstraints(baseScale);
       }
     }
-    
+
     // If baseValue is a number, just return the base scale (direct value)
     return this.applyConstraints(baseScale);
   }
@@ -265,8 +274,10 @@ export class ScaleUnitCalculator implements IScaleUnit {
   private calculateFitScale(context: UnitContext): number {
     const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    const availableWidth = context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    const availableHeight = context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const availableWidth =
+      context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const availableHeight =
+      context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
 
     const scaleX = availableWidth / contentWidth;
     const scaleY = availableHeight / contentHeight;
@@ -280,8 +291,10 @@ export class ScaleUnitCalculator implements IScaleUnit {
   private calculateStretchScale(context: UnitContext): number {
     const contentWidth = context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     const contentHeight = context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
-    const availableWidth = context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
-    const availableHeight = context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const availableWidth =
+      context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+    const availableHeight =
+      context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
 
     const scaleX = availableWidth / contentWidth;
     const scaleY = availableHeight / contentHeight;
@@ -433,7 +446,7 @@ export class ScaleUnitCalculator implements IScaleUnit {
     return {
       min: this.minScale,
       max: this.maxScale,
-      hasConstraints: this.hasConstraints()
+      hasConstraints: this.hasConstraints(),
     };
   }
 
@@ -465,7 +478,7 @@ export class ScaleUnitCalculator implements IScaleUnit {
       maintainAspectRatio: this.maintainAspectRatio,
       uniformScaling: this.uniformScaling,
       hasConstraints: this.hasConstraints(),
-      isResponsive: this.isResponsive()
+      isResponsive: this.isResponsive(),
     };
   }
 

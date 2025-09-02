@@ -1,6 +1,6 @@
 /**
  * Scene System Enums
- * 
+ *
  * Centralized enum definitions for the scene system.
  * Provides type-safe constants for scene operations, states, and configurations.
  */
@@ -18,7 +18,7 @@ export enum SceneType {
   MENU_SCENE = 'menu_scene',
   LOADING_SCENE = 'loading_scene',
   TRANSITION_SCENE = 'transition_scene',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -33,7 +33,7 @@ export enum SceneState {
   TRANSITIONING = 'transitioning',
   DESTROYING = 'destroying',
   DESTROYED = 'destroyed',
-  ERROR = 'error'
+  ERROR = 'error',
 }
 
 // ============================================================================
@@ -49,7 +49,7 @@ export enum SceneElementType {
   LAYOUT_CONTAINER = 'layout_container',
   RESPONSIVE_CONTAINER = 'responsive_container',
   THEMED_CONTAINER = 'themed_container',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -63,7 +63,7 @@ export enum SceneElementState {
   INACTIVE = 'inactive',
   DESTROYING = 'destroying',
   DESTROYED = 'destroyed',
-  ERROR = 'error'
+  ERROR = 'error',
 }
 
 // ============================================================================
@@ -89,7 +89,7 @@ export enum SceneEventType {
   BUILDER_ERROR = 'builder_error',
   VALIDATION_STARTED = 'validation_started',
   VALIDATION_COMPLETED = 'validation_completed',
-  VALIDATION_ERROR = 'validation_error'
+  VALIDATION_ERROR = 'validation_error',
 }
 
 /**
@@ -99,7 +99,7 @@ export enum SceneEventPriority {
   LOW = 0,
   NORMAL = 1,
   HIGH = 2,
-  CRITICAL = 3
+  CRITICAL = 3,
 }
 
 // ============================================================================
@@ -114,7 +114,7 @@ export enum SceneBuilderType {
   PROGRAMMATIC = 'programmatic',
   HYBRID = 'hybrid',
   TEMPLATE_BASED = 'template_based',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -126,7 +126,7 @@ export enum SceneBuilderState {
   VALIDATING = 'validating',
   COMPLETED = 'completed',
   ERROR = 'error',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 // ============================================================================
@@ -142,7 +142,7 @@ export enum SceneTransitionType {
   ZOOM = 'zoom',
   ROTATE = 'rotate',
   CUSTOM = 'custom',
-  NONE = 'none'
+  NONE = 'none',
 }
 
 /**
@@ -154,7 +154,7 @@ export enum SceneTransitionState {
   TRANSITIONING = 'transitioning',
   COMPLETED = 'completed',
   ERROR = 'error',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 // ============================================================================
@@ -172,7 +172,7 @@ export enum ElementManagerOperation {
   DEACTIVATE = 'deactivate',
   MOVE = 'move',
   RESIZE = 'resize',
-  REPARENT = 'reparent'
+  REPARENT = 'reparent',
 }
 
 /**
@@ -183,7 +183,7 @@ export enum SceneFactoryOperation {
   DESTROY_SCENE = 'destroy_scene',
   CONFIGURE_SCENE = 'configure_scene',
   VALIDATE_SCENE = 'validate_scene',
-  OPTIMIZE_SCENE = 'optimize_scene'
+  OPTIMIZE_SCENE = 'optimize_scene',
 }
 
 /**
@@ -193,7 +193,7 @@ export enum SceneValidationStrategyOperation {
   VALIDATE_SCENE = 'validate_scene',
   VALIDATE_ELEMENT = 'validate_element',
   VALIDATE_CONFIG = 'validate_config',
-  VALIDATE_BUILDER = 'validate_builder'
+  VALIDATE_BUILDER = 'validate_builder',
 }
 
 /**
@@ -204,7 +204,7 @@ export enum ScenePerformanceMonitorOperation {
   MONITOR_ELEMENT = 'monitor_element',
   MONITOR_BUILDER = 'monitor_builder',
   OPTIMIZE_PERFORMANCE = 'optimize_performance',
-  GENERATE_REPORT = 'generate_report'
+  GENERATE_REPORT = 'generate_report',
 }
 
 /**
@@ -215,7 +215,7 @@ export enum SceneElementFactoryOperation {
   DESTROY_ELEMENT = 'destroy_element',
   CONFIGURE_ELEMENT = 'configure_element',
   VALIDATE_ELEMENT = 'validate_element',
-  OPTIMIZE_ELEMENT = 'optimize_element'
+  OPTIMIZE_ELEMENT = 'optimize_element',
 }
 
 /**
@@ -229,7 +229,7 @@ export enum ConfigManagerOperation {
   MERGE = 'merge',
   EXPORT = 'export',
   IMPORT = 'import',
-  DELETE = 'delete'
+  DELETE = 'delete',
 }
 
 /**
@@ -241,7 +241,7 @@ export enum ErrorHandlingStrategy {
   RETRY = 'retry',
   FALLBACK = 'fallback',
   THROW = 'throw',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -254,7 +254,7 @@ export enum BuilderManagerOperation {
   CANCEL = 'cancel',
   RESET = 'reset',
   CLEAR = 'clear',
-  OPTIMIZE = 'optimize'
+  OPTIMIZE = 'optimize',
 }
 
 // ============================================================================
@@ -268,7 +268,7 @@ export enum ValidationTargetType {
   SCENE = 'scene',
   ELEMENT = 'element',
   CONFIG = 'config',
-  BUILDER = 'builder'
+  BUILDER = 'builder',
 }
 
 /**
@@ -276,7 +276,7 @@ export enum ValidationTargetType {
  */
 export enum GradientType {
   LINEAR = 'linear',
-  RADIAL = 'radial'
+  RADIAL = 'radial',
 }
 
 /**
@@ -287,7 +287,7 @@ export enum AssetType {
   AUDIO = 'audio',
   VIDEO = 'video',
   JSON = 'json',
-  ATLAS = 'atlas'
+  ATLAS = 'atlas',
 }
 
 /**
@@ -297,7 +297,7 @@ export enum TransitionType {
   FADE = 'fade',
   SLIDE = 'slide',
   ZOOM = 'zoom',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -306,7 +306,7 @@ export enum TransitionType {
 export enum TransitionDirection {
   IN = 'in',
   OUT = 'out',
-  BOTH = 'both'
+  BOTH = 'both',
 }
 
 /**
@@ -315,7 +315,7 @@ export enum TransitionDirection {
 export enum ExportFormat {
   JSON = 'json',
   YAML = 'yaml',
-  XML = 'xml'
+  XML = 'xml',
 }
 
 /**
@@ -325,5 +325,5 @@ export enum SceneLogLevel {
   DEBUG = 'debug',
   INFO = 'info',
   WARN = 'warn',
-  ERROR = 'error'
+  ERROR = 'error',
 }

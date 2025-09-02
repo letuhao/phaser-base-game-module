@@ -15,10 +15,10 @@ import { ScaleValue } from '../enums/ScaleValue';
 export interface IBaseValidationInput {
   /** Unique identifier for the input */
   id?: string;
-  
+
   /** Whether the input is valid */
   isValid?: boolean;
-  
+
   /** Custom metadata for the input */
   metadata?: Record<string, string | number | boolean>;
 }
@@ -30,13 +30,13 @@ export interface IBaseValidationInput {
 export interface IUnitValidationInput extends IBaseValidationInput {
   /** The unit object to validate */
   unit: IUnit;
-  
+
   /** Unit type for validation */
   unitType: UnitType;
-  
+
   /** Dimension to apply validation to */
   dimension?: Dimension;
-  
+
   /** Whether to validate recursively */
   validateRecursively?: boolean;
 }
@@ -48,13 +48,13 @@ export interface IUnitValidationInput extends IBaseValidationInput {
 export interface IValueValidationInput extends IBaseValidationInput {
   /** The numeric value to validate */
   value: number;
-  
+
   /** Unit type context for validation */
   unitType?: UnitType;
-  
+
   /** Dimension context for validation */
   dimension?: Dimension;
-  
+
   /** Whether the value is required */
   required?: boolean;
 }
@@ -66,19 +66,19 @@ export interface IValueValidationInput extends IBaseValidationInput {
 export interface ISizeValidationInput extends IBaseValidationInput {
   /** Size unit type */
   unit: SizeUnit;
-  
+
   /** Size value */
   value: number | SizeValue;
-  
+
   /** Dimension to apply the size to */
   dimension?: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH;
-  
+
   /** Whether to maintain aspect ratio */
   maintainAspectRatio?: boolean;
-  
+
   /** Minimum size constraint */
   minSize?: number;
-  
+
   /** Maximum size constraint */
   maxSize?: number;
 }
@@ -90,16 +90,16 @@ export interface ISizeValidationInput extends IBaseValidationInput {
 export interface IPositionValidationInput extends IBaseValidationInput {
   /** Position unit type */
   unit: PositionUnit;
-  
+
   /** Position value */
   value: number | PositionValue;
-  
+
   /** Axis to apply the position to */
   axis?: Dimension.X | Dimension.Y | Dimension.XY;
-  
+
   /** Offset from calculated position */
   offset?: number;
-  
+
   /** Whether to respect parent bounds */
   respectBounds?: boolean;
 }
@@ -111,16 +111,16 @@ export interface IPositionValidationInput extends IBaseValidationInput {
 export interface IScaleValidationInput extends IBaseValidationInput {
   /** Scale unit type */
   unit: ScaleUnit;
-  
+
   /** Scale value */
   value: number | ScaleValue;
-  
+
   /** Whether to maintain aspect ratio */
   maintainAspectRatio?: boolean;
-  
+
   /** Minimum scale constraint */
   minScale?: number;
-  
+
   /** Maximum scale constraint */
   maxScale?: number;
 }
@@ -132,13 +132,13 @@ export interface IScaleValidationInput extends IBaseValidationInput {
 export interface IMixedValidationInput extends IBaseValidationInput {
   /** Size validation input */
   size?: ISizeValidationInput;
-  
+
   /** Position validation input */
   position?: IPositionValidationInput;
-  
+
   /** Scale validation input */
   scale?: IScaleValidationInput;
-  
+
   /** Whether to validate all components */
   validateAll?: boolean;
 }
@@ -150,10 +150,10 @@ export interface IMixedValidationInput extends IBaseValidationInput {
 export interface ILegacyValidationInput extends IBaseValidationInput {
   /** The legacy input object */
   input: unknown;
-  
+
   /** Expected input type for validation */
   expectedType: 'unit' | 'value' | 'size' | 'position' | 'scale' | 'mixed';
-  
+
   /** Whether to perform strict type checking */
   strictTypeChecking?: boolean;
 }
@@ -162,13 +162,13 @@ export interface ILegacyValidationInput extends IBaseValidationInput {
  * Union type for all validation inputs
  * Used in validation methods to accept any valid input type
  */
-export type IValidationInput = 
-  | IUnitValidationInput 
-  | IValueValidationInput 
-  | ISizeValidationInput 
-  | IPositionValidationInput 
-  | IScaleValidationInput 
-  | IMixedValidationInput 
+export type IValidationInput =
+  | IUnitValidationInput
+  | IValueValidationInput
+  | ISizeValidationInput
+  | IPositionValidationInput
+  | IScaleValidationInput
+  | IMixedValidationInput
   | ILegacyValidationInput;
 
 /**
@@ -195,7 +195,9 @@ export function isSizeValidationInput(input: IValidationInput): input is ISizeVa
 /**
  * Type guard to check if input is for position validation
  */
-export function isPositionValidationInput(input: IValidationInput): input is IPositionValidationInput {
+export function isPositionValidationInput(
+  input: IValidationInput
+): input is IPositionValidationInput {
   return 'unit' in input && 'value' in input && 'axis' in input;
 }
 
@@ -225,7 +227,7 @@ export function isLegacyValidationInput(input: IValidationInput): input is ILega
  */
 export function isValidValidationInput(input: unknown): input is IValidationInput {
   if (!input || typeof input !== 'object') return false;
-  
+
   const validationInput = input as IValidationInput;
   return (
     'id' in validationInput ||
@@ -252,7 +254,7 @@ export function createUnitValidationInput(
     validateRecursively: options?.validateRecursively || false,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -270,7 +272,7 @@ export function createValueValidationInput(
     required: options?.required ?? true,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -291,7 +293,7 @@ export function createSizeValidationInput(
     maxSize: options?.maxSize,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -311,7 +313,7 @@ export function createPositionValidationInput(
     respectBounds: options?.respectBounds ?? true,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -331,7 +333,7 @@ export function createScaleValidationInput(
     maxScale: options?.maxScale,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -348,7 +350,7 @@ export function createMixedValidationInput(
     validateAll: options?.validateAll || false,
     id: undefined, // id is omitted from options, so set to undefined
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -366,7 +368,7 @@ export function createLegacyValidationInput(
     strictTypeChecking: options?.strictTypeChecking || false,
     id: options?.id,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -378,19 +380,19 @@ export function convertToValidationInput(input: unknown): IValidationInput {
   if (typeof input === 'number') {
     return createValueValidationInput(input);
   }
-  
+
   if (input && typeof input === 'object') {
     // Check if it's an IUnit
     if ('calculate' in input && 'unitType' in input) {
       const unit = input as IUnit;
       return createUnitValidationInput(unit, unit.unitType);
     }
-    
+
     // Check if it has a value property
     if ('value' in input && typeof (input as { value: unknown }).value === 'number') {
       return createValueValidationInput((input as { value: number }).value);
     }
-    
+
     // Check if it has unit and value properties
     if ('unit' in input && 'value' in input) {
       const unitValue = input as {
@@ -401,18 +403,30 @@ export function convertToValidationInput(input: unknown): IValidationInput {
       if (unitValue.unit && unitValue.value) {
         // Try to determine the type based on unit
         if (Object.values(SizeUnit).includes(unitValue.unit as SizeUnit)) {
-          return createSizeValidationInput(unitValue.unit as SizeUnit, unitValue.value as number | SizeValue, undefined);
+          return createSizeValidationInput(
+            unitValue.unit as SizeUnit,
+            unitValue.value as number | SizeValue,
+            undefined
+          );
         }
         if (Object.values(PositionUnit).includes(unitValue.unit as PositionUnit)) {
-          return createPositionValidationInput(unitValue.unit as PositionUnit, unitValue.value as number | PositionValue, undefined);
+          return createPositionValidationInput(
+            unitValue.unit as PositionUnit,
+            unitValue.value as number | PositionValue,
+            undefined
+          );
         }
         if (Object.values(ScaleUnit).includes(unitValue.unit as ScaleUnit)) {
-          return createScaleValidationInput(unitValue.unit as ScaleUnit, unitValue.value as number | ScaleValue, undefined);
+          return createScaleValidationInput(
+            unitValue.unit as ScaleUnit,
+            unitValue.value as number | ScaleValue,
+            undefined
+          );
         }
       }
     }
   }
-  
+
   // Default to legacy validation input
   return createLegacyValidationInput(input, 'mixed');
 }

@@ -11,18 +11,18 @@ export interface IStrategyManager {
   // Strategy registration
   registerStrategy(strategy: IUnitStrategy): void;
   unregisterStrategy(unitType: string): boolean;
-  
+
   // Strategy selection
   getStrategy(input: IStrategyInput): IUnitStrategy | undefined;
   getStrategiesByType(type: string): IUnitStrategy[];
   getBestStrategy(input: IStrategyInput): IUnitStrategy | undefined;
-  
+
   // Strategy management
   getAllStrategies(): IUnitStrategy[];
   getStrategyCount(): number;
   getStrategyCountByType(type: string): number;
   clearStrategies(): void;
-  
+
   // Strategy validation
   hasStrategy(unitType: string): boolean;
   validateStrategy(strategy: IUnitStrategy): boolean;
@@ -42,22 +42,27 @@ export class StrategyManager implements IStrategyManager {
   public registerStrategy(strategy: IUnitStrategy): void {
     this.logger.debug('StrategyManager', 'registerStrategy', 'Registering strategy', {
       unitType: strategy.unitType,
-      priority: strategy.getPriority()
+      priority: strategy.getPriority(),
     });
 
     try {
       if (this.validateStrategy(strategy)) {
         this.strategies.set(strategy.unitType, strategy);
-        this.logger.info('StrategyManager', 'registerStrategy', 'Strategy registered successfully', {
-          unitType: strategy.unitType
-        });
+        this.logger.info(
+          'StrategyManager',
+          'registerStrategy',
+          'Strategy registered successfully',
+          {
+            unitType: strategy.unitType,
+          }
+        );
       } else {
         throw new Error(`Invalid strategy for unit type: ${strategy.unitType}`);
       }
     } catch (error) {
       this.logger.error('StrategyManager', 'registerStrategy', 'Failed to register strategy', {
         unitType: strategy.unitType,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -70,13 +75,23 @@ export class StrategyManager implements IStrategyManager {
     const strategy = this.strategies.get(unitType);
     if (strategy) {
       this.strategies.delete(unitType);
-      this.logger.info('StrategyManager', 'unregisterStrategy', 'Strategy unregistered successfully', {
-        unitType
-      });
+      this.logger.info(
+        'StrategyManager',
+        'unregisterStrategy',
+        'Strategy unregistered successfully',
+        {
+          unitType,
+        }
+      );
       return true;
     }
-    
-    this.logger.debug('StrategyManager', 'unregisterStrategy', 'Strategy not found for unregistration', { unitType });
+
+    this.logger.debug(
+      'StrategyManager',
+      'unregisterStrategy',
+      'Strategy not found for unregistration',
+      { unitType }
+    );
     return false;
   }
 
@@ -88,14 +103,14 @@ export class StrategyManager implements IStrategyManager {
       if (strategy.canHandle(input)) {
         this.logger.debug('StrategyManager', 'getStrategy', 'Found matching strategy', {
           unitType: strategy.unitType,
-          priority: strategy.getPriority()
+          priority: strategy.getPriority(),
         });
         return strategy;
       }
     }
-    
+
     this.logger.debug('StrategyManager', 'getStrategy', 'No matching strategy found', {
-      inputType: typeof input
+      inputType: typeof input,
     });
     return undefined;
   }
@@ -113,11 +128,11 @@ export class StrategyManager implements IStrategyManager {
       this.logger.debug('StrategyManager', 'getBestStrategy', 'Found best strategy', {
         unitType: bestStrategy.unitType,
         priority: bestStrategy.getPriority(),
-        totalMatches: matchingStrategies.length
+        totalMatches: matchingStrategies.length,
       });
       return bestStrategy;
     }
-    
+
     this.logger.debug('StrategyManager', 'getBestStrategy', 'No matching strategies found');
     return undefined;
   }
@@ -177,7 +192,7 @@ export class StrategyManager implements IStrategyManager {
 
     if (!strategy.unitType || typeof strategy.unitType !== 'string') {
       this.logger.warn('StrategyManager', 'validateStrategy', 'Invalid unit type', {
-        unitType: strategy.unitType
+        unitType: strategy.unitType,
       });
       return false;
     }
@@ -198,7 +213,7 @@ export class StrategyManager implements IStrategyManager {
     }
 
     this.logger.debug('StrategyManager', 'validateStrategy', 'Strategy validation passed', {
-      unitType: strategy.unitType
+      unitType: strategy.unitType,
     });
     return true;
   }

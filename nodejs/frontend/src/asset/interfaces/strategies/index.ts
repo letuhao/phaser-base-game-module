@@ -1,6 +1,6 @@
 /**
  * Asset Strategy Interfaces Index
- * 
+ *
  * Centralized export for all asset strategy interfaces
  */
 
@@ -21,4 +21,5 @@ export const ASSET_STRATEGY_INTERFACES = {
   IValidationStrategy: 'IValidationStrategy',
 } as const;
 
-export type AssetStrategyInterface = typeof ASSET_STRATEGY_INTERFACES[keyof typeof ASSET_STRATEGY_INTERFACES];
+export type AssetStrategyInterface =
+  (typeof ASSET_STRATEGY_INTERFACES)[keyof typeof ASSET_STRATEGY_INTERFACES];

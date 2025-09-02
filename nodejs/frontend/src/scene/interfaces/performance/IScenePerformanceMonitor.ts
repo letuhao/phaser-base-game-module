@@ -1,6 +1,6 @@
 /**
  * Scene Performance Monitor Interface
- * 
+ *
  * Defines performance monitoring functionality for scene management.
  * Handles performance metrics, monitoring, and optimization.
  */
@@ -81,61 +81,61 @@ export interface ScenePerformanceReport {
  */
 export interface IScenePerformanceMonitor {
   readonly monitorId: string;
-  
+
   /** Monitor configuration */
   monitorConfig: ScenePerformanceMonitorConfig;
-  
+
   /** Performance statistics */
   performanceStatistics: ScenePerformanceStatistics;
-  
+
   /** Performance metrics history */
   performanceHistory: Map<string, ScenePerformanceMetrics[]>;
-  
+
   /** Monitor metadata */
   monitorMetadata: Record<string, any>;
-  
+
   /** Set monitor configuration */
   setMonitorConfig(config: ScenePerformanceMonitorConfig): this;
-  
+
   /** Set monitor metadata */
   setMonitorMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get monitor configuration */
   getMonitorConfig(): ScenePerformanceMonitorConfig;
-  
+
   /** Get performance statistics */
   getPerformanceStatistics(): ScenePerformanceStatistics;
-  
+
   /** Get performance history */
   getPerformanceHistory(): Map<string, ScenePerformanceMetrics[]>;
-  
+
   /** Get monitor metadata */
   getMonitorMetadata(): Record<string, any>;
-  
+
   /** Monitor scene */
   monitorScene(scene: any, metrics: ScenePerformanceMetrics): Promise<this>; // Phaser.Scene
-  
+
   /** Monitor element */
   monitorElement(element: ISceneElement, metrics: Partial<ScenePerformanceMetrics>): Promise<this>;
-  
+
   /** Monitor builder */
   monitorBuilder(builder: ISceneBuilder, metrics: Partial<ScenePerformanceMetrics>): Promise<this>;
-  
+
   /** Get performance metrics for scene */
   getPerformanceMetrics(sceneId: string): ScenePerformanceMetrics | null;
-  
+
   /** Get performance history for scene */
   getPerformanceHistoryForScene(sceneId: string): ScenePerformanceMetrics[];
-  
+
   /** Generate performance report */
   generatePerformanceReport(sceneIds?: string[]): Promise<ScenePerformanceReport>;
-  
+
   /** Optimize performance */
   optimizePerformance(sceneId: string): Promise<this>;
-  
+
   /** Clear performance history */
   clearPerformanceHistory(sceneId?: string): Promise<this>;
-  
+
   /** Update monitor */
   updateMonitor(deltaTime: number): void;
 }

@@ -1,6 +1,6 @@
 /**
  * Scene Validation Strategy Interface
- * 
+ *
  * Defines strategy functionality for scene validation approaches.
  * Handles different validation strategies and execution contexts.
  */
@@ -67,49 +67,58 @@ export interface SceneValidationResult {
 export interface ISceneValidationStrategy {
   readonly strategyId: string;
   readonly strategyType: string;
-  
+
   /** Strategy configuration */
   strategyConfig: SceneValidationStrategyConfig;
-  
+
   /** Strategy statistics */
   strategyStatistics: SceneValidationStrategyStatistics;
-  
+
   /** Strategy metadata */
   strategyMetadata: Record<string, any>;
-  
+
   /** Set strategy configuration */
   setStrategyConfig(config: SceneValidationStrategyConfig): this;
-  
+
   /** Set strategy metadata */
   setStrategyMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get strategy configuration */
   getStrategyConfig(): SceneValidationStrategyConfig;
-  
+
   /** Get strategy statistics */
   getStrategyStatistics(): SceneValidationStrategyStatistics;
-  
+
   /** Get strategy metadata */
   getStrategyMetadata(): Record<string, any>;
-  
+
   /** Validate scene */
   validateScene(scene: any, context: SceneValidationContext): Promise<SceneValidationResult>; // Phaser.Scene
-  
+
   /** Validate element */
-  validateElement(element: ISceneElement, context: SceneValidationContext): Promise<SceneValidationResult>;
-  
+  validateElement(
+    element: ISceneElement,
+    context: SceneValidationContext
+  ): Promise<SceneValidationResult>;
+
   /** Validate config */
-  validateConfig(config: ISceneConfig, context: SceneValidationContext): Promise<SceneValidationResult>;
-  
+  validateConfig(
+    config: ISceneConfig,
+    context: SceneValidationContext
+  ): Promise<SceneValidationResult>;
+
   /** Validate builder */
-  validateBuilder(builder: ISceneBuilder, context: SceneValidationContext): Promise<SceneValidationResult>;
-  
+  validateBuilder(
+    builder: ISceneBuilder,
+    context: SceneValidationContext
+  ): Promise<SceneValidationResult>;
+
   /** Get strategy type */
   getStrategyType(): string;
-  
+
   /** Check if strategy supports context */
   supportsContext(context: SceneValidationContext): boolean;
-  
+
   /** Update strategy */
   updateStrategy(deltaTime: number): void;
 }

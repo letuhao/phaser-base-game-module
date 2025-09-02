@@ -14,19 +14,12 @@ export interface IScaleValueCalculationStrategy {
   /**
    * Check if this strategy can handle the given parameters
    */
-  canHandle(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit
-  ): boolean;
+  canHandle(scaleValue: ScaleValue, scaleUnit: ScaleUnit): boolean;
 
   /**
    * Calculate the scale value
    */
-  calculate(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit,
-    context: UnitContext
-  ): number;
+  calculate(scaleValue: ScaleValue, scaleUnit: ScaleUnit, context: UnitContext): number;
 
   /**
    * Get the priority of this strategy (lower number = higher priority)
@@ -66,10 +59,7 @@ export interface IScaleValueCalculationStrategyRegistry {
   /**
    * Get all strategies that can handle the given parameters
    */
-  getStrategiesFor(
-    scaleValue: ScaleValue,
-    scaleUnit: ScaleUnit
-  ): IScaleValueCalculationStrategy[];
+  getStrategiesFor(scaleValue: ScaleValue, scaleUnit: ScaleUnit): IScaleValueCalculationStrategy[];
 
   /**
    * Get the best strategy for the given parameters

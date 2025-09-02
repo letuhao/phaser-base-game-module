@@ -1,6 +1,6 @@
 /**
  * Audio Format Enums
- * 
+ *
  * Enums for audio formats, channels, quality, and audio-specific functionality
  */
 

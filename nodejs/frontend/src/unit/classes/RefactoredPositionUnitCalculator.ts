@@ -72,19 +72,29 @@ export class RefactoredPositionUnitCalculator implements IPositionUnit {
         strategyId: strategy.strategyId,
         positionValue: this.baseValue,
         positionUnit: this.positionUnit,
-        axisUnit: this.getAxisUnit()
+        axisUnit: this.getAxisUnit(),
       });
 
       // Validate context before calculation
       if (!strategy.validateContext(context)) {
-        this.logger.warn('RefactoredPositionUnitCalculator', 'calculatePosition', 'Context validation failed', {
-          strategyId: strategy.strategyId,
-          positionValue: this.baseValue
-        });
+        this.logger.warn(
+          'RefactoredPositionUnitCalculator',
+          'calculatePosition',
+          'Context validation failed',
+          {
+            strategyId: strategy.strategyId,
+            positionValue: this.baseValue,
+          }
+        );
         return this.offset; // Default fallback
       }
 
-      const result = strategy.calculate(this.baseValue, this.positionUnit, this.getAxisUnit(), context);
+      const result = strategy.calculate(
+        this.baseValue,
+        this.positionUnit,
+        this.getAxisUnit(),
+        context
+      );
       return result + this.offset;
     }
 
@@ -92,7 +102,7 @@ export class RefactoredPositionUnitCalculator implements IPositionUnit {
     this.logger.warn('RefactoredPositionUnitCalculator', 'calculatePosition', 'No strategy found', {
       positionValue: this.baseValue,
       positionUnit: this.positionUnit,
-      axisUnit: this.getAxisUnit()
+      axisUnit: this.getAxisUnit(),
     });
 
     return this.offset; // Default fallback
@@ -274,7 +284,7 @@ export class RefactoredPositionUnitCalculator implements IPositionUnit {
       axis: this.axis,
       alignment: this.alignment,
       offset: this.offset,
-      isResponsive: this.isResponsive()
+      isResponsive: this.isResponsive(),
     };
   }
 
@@ -283,11 +293,13 @@ export class RefactoredPositionUnitCalculator implements IPositionUnit {
    */
   isWithinBounds(position: number, context: UnitContext): boolean {
     if (this.axis === Dimension.X) {
-      const maxX = context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+      const maxX =
+        context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
       return position >= 0 && position <= maxX;
     }
     if (this.axis === Dimension.Y) {
-      const maxY = context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+      const maxY =
+        context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
       return position >= 0 && position <= maxY;
     }
     return true;
@@ -300,13 +312,14 @@ export class RefactoredPositionUnitCalculator implements IPositionUnit {
     if (this.axis === Dimension.X) {
       return {
         min: 0,
-        max: context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
+        max: context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE,
       };
     }
     if (this.axis === Dimension.Y) {
       return {
         min: 0,
-        max: context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
+        max:
+          context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE,
       };
     }
     return { min: 0, max: 0 };

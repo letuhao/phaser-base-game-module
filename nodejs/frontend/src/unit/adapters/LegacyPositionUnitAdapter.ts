@@ -9,11 +9,7 @@ import { UnitType } from '../enums/UnitType';
  * Adapter for legacy position units to modern unit system
  */
 export class LegacyPositionUnitAdapter extends BaseUnitAdapter<ILegacyUnit> {
-  constructor(
-    id: string,
-    name: string,
-    adaptedUnit: ILegacyUnit
-  ) {
+  constructor(id: string, name: string, adaptedUnit: ILegacyUnit) {
     super(id, name, UnitType.POSITION, adaptedUnit);
   }
 
@@ -41,8 +37,12 @@ export class LegacyPositionUnitAdapter extends BaseUnitAdapter<ILegacyUnit> {
 
   isResponsive(): boolean {
     const unit = this.extractLegacyUnit();
-    return unit === PositionUnit.PARENT_LEFT || unit === PositionUnit.PARENT_TOP || 
-           unit === PositionUnit.VIEWPORT_LEFT || unit === PositionUnit.VIEWPORT_TOP;
+    return (
+      unit === PositionUnit.PARENT_LEFT ||
+      unit === PositionUnit.PARENT_TOP ||
+      unit === PositionUnit.VIEWPORT_LEFT ||
+      unit === PositionUnit.VIEWPORT_TOP
+    );
   }
 
   canAdapt(unit: ILegacyUnit): boolean {
@@ -67,8 +67,8 @@ export class LegacyPositionUnitAdapter extends BaseUnitAdapter<ILegacyUnit> {
       metadata: {
         ...this.adaptedUnit.metadata,
         legacyType: 'position',
-        convertedAt: new Date().toISOString()
-      }
+        convertedAt: new Date().toISOString(),
+      },
     };
   }
 

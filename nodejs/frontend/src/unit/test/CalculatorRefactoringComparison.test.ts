@@ -6,7 +6,7 @@ import {
   FillSizeValueCalculationStrategy,
   AutoSizeValueCalculationStrategy,
   ParentWidthSizeValueCalculationStrategy,
-  ViewportWidthSizeValueCalculationStrategy
+  ViewportWidthSizeValueCalculationStrategy,
 } from '../strategies/value';
 import { SizeValue } from '../enums/SizeValue';
 import { SizeUnit } from '../enums/SizeUnit';
@@ -20,7 +20,7 @@ describe('Calculator Refactoring Comparison', () => {
 
   beforeEach(() => {
     strategyRegistry = new SizeValueCalculationStrategyRegistry();
-    
+
     // Register all strategies
     strategyRegistry.registerStrategy(new PixelSizeValueCalculationStrategy());
     strategyRegistry.registerStrategy(new FillSizeValueCalculationStrategy());
@@ -32,14 +32,17 @@ describe('Calculator Refactoring Comparison', () => {
     strategyRegistry.preWarmCache();
 
     // Debug: Check what strategies are registered
-    console.log('Registered strategies:', strategyRegistry.getAllStrategies().map(s => s.strategyId));
+    console.log(
+      'Registered strategies:',
+      strategyRegistry.getAllStrategies().map(s => s.strategyId)
+    );
     console.log('Strategy count:', strategyRegistry.getStrategyCount());
 
     mockContext = {
       parent: { width: 800, height: 600, x: 0, y: 0 },
       scene: { width: 1920, height: 1080 },
       viewport: { width: 1366, height: 768 },
-      content: { width: 200, height: 150 }
+      content: { width: 200, height: 150 },
     };
   });
 
@@ -226,11 +229,20 @@ describe('Calculator Refactoring Comparison', () => {
         readonly sizeUnit = SizeUnit.PIXEL;
         readonly dimension = Dimension.WIDTH;
 
-        canHandle(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+        canHandle(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+        ): boolean {
           return _sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL;
         }
 
-        calculate(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH, _context: any): number {
+        calculate(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH,
+          _context: any
+        ): number {
           return 999; // Custom calculation
         }
 
@@ -275,8 +287,18 @@ describe('Calculator Refactoring Comparison', () => {
       expect(fillStrategy.canHandle(SizeValue.FILL, SizeUnit.PIXEL, Dimension.WIDTH)).toBe(true);
 
       // Test strategy calculations independently
-      const pixelResult = pixelStrategy.calculate(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH, mockContext);
-      const fillResult = fillStrategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext);
+      const pixelResult = pixelStrategy.calculate(
+        SizeValue.PIXEL,
+        SizeUnit.PIXEL,
+        Dimension.WIDTH,
+        mockContext
+      );
+      const fillResult = fillStrategy.calculate(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.WIDTH,
+        mockContext
+      );
 
       expect(pixelResult).toBeDefined();
       expect(fillResult).toBe(1920); // scene.width (matching original behavior)
@@ -339,7 +361,11 @@ describe('Calculator Refactoring Comparison', () => {
       expect(strategyRegistry.getStatistics).toBeDefined();
 
       // Strategies focus on specific calculations
-      const strategy = strategyRegistry.getBestStrategy(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH);
+      const strategy = strategyRegistry.getBestStrategy(
+        SizeValue.FILL,
+        SizeUnit.PARENT_WIDTH,
+        Dimension.WIDTH
+      );
       expect(strategy?.calculate).toBeDefined();
       expect(strategy?.validateContext).toBeDefined();
     });
@@ -391,8 +417,12 @@ describe('Calculator Refactoring Comparison', () => {
       const pixelStrategy = new PixelSizeValueCalculationStrategy();
       const fillStrategy = new FillSizeValueCalculationStrategy();
 
-      expect(pixelStrategy.calculate(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH, mockContext)).toBeDefined();
-      expect(fillStrategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext)).toBe(1920);
+      expect(
+        pixelStrategy.calculate(SizeValue.PIXEL, SizeUnit.PIXEL, Dimension.WIDTH, mockContext)
+      ).toBeDefined();
+      expect(
+        fillStrategy.calculate(SizeValue.FILL, SizeUnit.PARENT_WIDTH, Dimension.WIDTH, mockContext)
+      ).toBe(1920);
 
       // Test registry independently
       expect(strategyRegistry.getStrategyCount()).toBe(5);

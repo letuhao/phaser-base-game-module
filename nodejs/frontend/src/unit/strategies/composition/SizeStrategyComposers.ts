@@ -46,12 +46,17 @@ export class WeightedAverageSizeComposer implements IStrategyComposer<SizeValue,
         if (strategy.canHandle && strategy.canHandle(value, unit, Dimension.WIDTH)) {
           // Validate context before calculation
           if (strategy.validateContext && !strategy.validateContext(context)) {
-            this.logger.warn('WeightedAverageSizeComposer', 'compose', 'Context validation failed', {
-              strategyId: strategy.strategyId
-            });
+            this.logger.warn(
+              'WeightedAverageSizeComposer',
+              'compose',
+              'Context validation failed',
+              {
+                strategyId: strategy.strategyId,
+              }
+            );
             continue; // Skip this strategy
           }
-          
+
           const result = strategy.calculate(value, unit, Dimension.WIDTH, context);
           weightedSum += result * weight;
           totalWeight += weight;
@@ -65,12 +70,12 @@ export class WeightedAverageSizeComposer implements IStrategyComposer<SizeValue,
 
       const result = weightedSum / totalWeight;
       this.recordExecution(performance.now() - startTime, true);
-      
+
       this.logger.debug('WeightedAverageSizeComposer', 'compose', 'Composition completed', {
         value,
         unit,
         result,
-        strategiesUsed: strategies.length
+        strategiesUsed: strategies.length,
       });
 
       return result;
@@ -90,13 +95,13 @@ export class WeightedAverageSizeComposer implements IStrategyComposer<SizeValue,
       {
         rule: 'weighted-average',
         description: 'Calculate weighted average of all applicable strategies',
-        weight: 1.0
+        weight: 1.0,
       },
       {
         rule: 'fallback',
         description: 'Use fallback value if no strategies are applicable',
-        weight: 0.1
-      }
+        weight: 0.1,
+      },
     ];
   }
 
@@ -106,15 +111,16 @@ export class WeightedAverageSizeComposer implements IStrategyComposer<SizeValue,
     successRate: number;
     lastExecutionTime: number;
   } {
-    const averageTime = this.executionTimes.length > 0 
-      ? this.executionTimes.reduce((a, b) => a + b, 0) / this.executionTimes.length 
-      : 0;
+    const averageTime =
+      this.executionTimes.length > 0
+        ? this.executionTimes.reduce((a, b) => a + b, 0) / this.executionTimes.length
+        : 0;
 
     return {
       averageExecutionTime: averageTime,
       totalExecutions: this.totalExecutions,
       successRate: this.totalExecutions > 0 ? this.successfulExecutions / this.totalExecutions : 0,
-      lastExecutionTime: this.executionTimes[this.executionTimes.length - 1] || 0
+      lastExecutionTime: this.executionTimes[this.executionTimes.length - 1] || 0,
     };
   }
 
@@ -164,7 +170,9 @@ export class PriorityBasedSizeComposer implements IStrategyComposer<SizeValue, S
 
       // Sort strategies by priority (lower number = higher priority)
       const sortedStrategies = strategies
-        .filter(({ strategy }) => strategy.canHandle && strategy.canHandle(value, unit, Dimension.WIDTH))
+        .filter(
+          ({ strategy }) => strategy.canHandle && strategy.canHandle(value, unit, Dimension.WIDTH)
+        )
         .sort((a, b) => (a.strategy.getPriority?.() || 0) - (b.strategy.getPriority?.() || 0));
 
       if (sortedStrategies.length === 0) {
@@ -175,16 +183,21 @@ export class PriorityBasedSizeComposer implements IStrategyComposer<SizeValue, S
       // Use the highest priority strategy
       const { strategy } = sortedStrategies[0];
       const result = strategy.calculate(value, unit, Dimension.WIDTH, context);
-      
+
       this.recordExecution(performance.now() - startTime, true);
-      
-      this.logger.debug('PriorityBasedSizeComposer', 'compose', 'Priority-based composition completed', {
-        value,
-        unit,
-        result,
-        strategyUsed: strategy.strategyId,
-        priority: strategy.getPriority?.() || 0
-      });
+
+      this.logger.debug(
+        'PriorityBasedSizeComposer',
+        'compose',
+        'Priority-based composition completed',
+        {
+          value,
+          unit,
+          result,
+          strategyUsed: strategy.strategyId,
+          priority: strategy.getPriority?.() || 0,
+        }
+      );
 
       return result;
     } catch (error) {
@@ -203,13 +216,13 @@ export class PriorityBasedSizeComposer implements IStrategyComposer<SizeValue, S
       {
         rule: 'priority-selection',
         description: 'Select strategy with highest priority (lowest number)',
-        weight: 1.0
+        weight: 1.0,
       },
       {
         rule: 'fallback',
         description: 'Use fallback if no strategies are applicable',
-        weight: 0.1
-      }
+        weight: 0.1,
+      },
     ];
   }
 
@@ -219,15 +232,16 @@ export class PriorityBasedSizeComposer implements IStrategyComposer<SizeValue, S
     successRate: number;
     lastExecutionTime: number;
   } {
-    const averageTime = this.executionTimes.length > 0 
-      ? this.executionTimes.reduce((a, b) => a + b, 0) / this.executionTimes.length 
-      : 0;
+    const averageTime =
+      this.executionTimes.length > 0
+        ? this.executionTimes.reduce((a, b) => a + b, 0) / this.executionTimes.length
+        : 0;
 
     return {
       averageExecutionTime: averageTime,
       totalExecutions: this.totalExecutions,
       successRate: this.totalExecutions > 0 ? this.successfulExecutions / this.totalExecutions : 0,
-      lastExecutionTime: this.executionTimes[this.executionTimes.length - 1] || 0
+      lastExecutionTime: this.executionTimes[this.executionTimes.length - 1] || 0,
     };
   }
 
@@ -255,7 +269,10 @@ export class AdaptiveSizeComposer implements IStrategyComposer<SizeValue, SizeUn
   private executionTimes: number[] = [];
   private totalExecutions = 0;
   private successfulExecutions = 0;
-  private strategyPerformance: Map<string, { successCount: number; totalCount: number; avgTime: number }> = new Map();
+  private strategyPerformance: Map<
+    string,
+    { successCount: number; totalCount: number; avgTime: number }
+  > = new Map();
   private readonly logger = Logger.getInstance();
 
   canCompose(_value: SizeValue, _unit: SizeUnit): boolean {
@@ -278,10 +295,12 @@ export class AdaptiveSizeComposer implements IStrategyComposer<SizeValue, SizeUn
 
       // Calculate adaptive weights based on performance history
       const adaptiveStrategies = strategies
-        .filter(({ strategy }) => strategy.canHandle && strategy.canHandle(value, unit, Dimension.WIDTH))
+        .filter(
+          ({ strategy }) => strategy.canHandle && strategy.canHandle(value, unit, Dimension.WIDTH)
+        )
         .map(({ strategy, weight }) => ({
           strategy,
-          adaptiveWeight: this.calculateAdaptiveWeight(strategy, weight)
+          adaptiveWeight: this.calculateAdaptiveWeight(strategy, weight),
         }));
 
       if (adaptiveStrategies.length === 0) {
@@ -300,17 +319,20 @@ export class AdaptiveSizeComposer implements IStrategyComposer<SizeValue, SizeUn
       }
 
       const result = totalWeight > 0 ? weightedSum / totalWeight : 0;
-      
+
       // Update performance metrics
       this.updateStrategyPerformance(adaptiveStrategies, performance.now() - startTime, true);
       this.recordExecution(performance.now() - startTime, true);
-      
+
       this.logger.debug('AdaptiveSizeComposer', 'compose', 'Adaptive composition completed', {
         value,
         unit,
         result,
         strategiesUsed: adaptiveStrategies.length,
-        adaptiveWeights: adaptiveStrategies.map(s => ({ id: s.strategy.strategyId, weight: s.adaptiveWeight }))
+        adaptiveWeights: adaptiveStrategies.map(s => ({
+          id: s.strategy.strategyId,
+          weight: s.adaptiveWeight,
+        })),
       });
 
       return result;
@@ -330,18 +352,18 @@ export class AdaptiveSizeComposer implements IStrategyComposer<SizeValue, SizeUn
       {
         rule: 'adaptive-weighting',
         description: 'Adjust strategy weights based on historical performance',
-        weight: 1.0
+        weight: 1.0,
       },
       {
         rule: 'performance-learning',
         description: 'Learn from successful strategy executions',
-        weight: 0.8
+        weight: 0.8,
       },
       {
         rule: 'fallback',
         description: 'Use fallback if no strategies are applicable',
-        weight: 0.1
-      }
+        weight: 0.1,
+      },
     ];
   }
 
@@ -351,15 +373,16 @@ export class AdaptiveSizeComposer implements IStrategyComposer<SizeValue, SizeUn
     successRate: number;
     lastExecutionTime: number;
   } {
-    const averageTime = this.executionTimes.length > 0 
-      ? this.executionTimes.reduce((a, b) => a + b, 0) / this.executionTimes.length 
-      : 0;
+    const averageTime =
+      this.executionTimes.length > 0
+        ? this.executionTimes.reduce((a, b) => a + b, 0) / this.executionTimes.length
+        : 0;
 
     return {
       averageExecutionTime: averageTime,
       totalExecutions: this.totalExecutions,
       successRate: this.totalExecutions > 0 ? this.successfulExecutions / this.totalExecutions : 0,
-      lastExecutionTime: this.executionTimes[this.executionTimes.length - 1] || 0
+      lastExecutionTime: this.executionTimes[this.executionTimes.length - 1] || 0,
     };
   }
 
@@ -367,8 +390,9 @@ export class AdaptiveSizeComposer implements IStrategyComposer<SizeValue, SizeUn
     const performance = this.strategyPerformance.get(strategy.strategyId);
     if (!performance) return baseWeight;
 
-    const successRate = performance.totalCount > 0 ? performance.successCount / performance.totalCount : 0;
-    const timeFactor = Math.max(0.1, 1 - (performance.avgTime / 1000)); // Normalize time factor
+    const successRate =
+      performance.totalCount > 0 ? performance.successCount / performance.totalCount : 0;
+    const timeFactor = Math.max(0.1, 1 - performance.avgTime / 1000); // Normalize time factor
 
     return baseWeight * (0.5 + 0.5 * successRate) * timeFactor;
   }
@@ -382,12 +406,14 @@ export class AdaptiveSizeComposer implements IStrategyComposer<SizeValue, SizeUn
       const performance = this.strategyPerformance.get(strategy.strategyId) || {
         successCount: 0,
         totalCount: 0,
-        avgTime: 0
+        avgTime: 0,
       };
 
       performance.totalCount++;
       if (success) performance.successCount++;
-      performance.avgTime = (performance.avgTime * (performance.totalCount - 1) + executionTime) / performance.totalCount;
+      performance.avgTime =
+        (performance.avgTime * (performance.totalCount - 1) + executionTime) /
+        performance.totalCount;
 
       this.strategyPerformance.set(strategy.strategyId, performance);
     }

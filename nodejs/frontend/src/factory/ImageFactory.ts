@@ -20,9 +20,8 @@ export class ImageFactory extends BaseGameObjectFactory {
     // Extract config and scene from input
     const config = (input as any).config || {};
     const scene = input.scene;
-    
+
     try {
-      
       // Check if the texture key exists
       if (!config.textureKey || !scene.textures.exists(config.textureKey)) {
         this.logger.warn(

@@ -23,7 +23,7 @@ export class ShapeFactory extends BaseGameObjectFactory {
     // Extract config and scene from input
     const config = (input as any).config || {};
     const scene = input.scene;
-    
+
     this.logger.debug('ShapeFactory', 'createGameObject', 'Creating shape game object', {
       objectId: config.id,
       objectType: config.type,

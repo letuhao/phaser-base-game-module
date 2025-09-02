@@ -78,7 +78,12 @@ export class TypeValidator extends BaseUnitValidator {
    */
   private validateUnitType(input: IValidationInput, _context: UnitContext): boolean {
     // Only check unitType if input is an object
-    if (typeof input === 'object' && input !== null && 'unitType' in input && typeof input.unitType === 'string') {
+    if (
+      typeof input === 'object' &&
+      input !== null &&
+      'unitType' in input &&
+      typeof input.unitType === 'string'
+    ) {
       const inputType = input.unitType as UnitType;
 
       if (!this.allowedTypes.includes(inputType)) {
@@ -137,35 +142,35 @@ export class TypeValidator extends BaseUnitValidator {
     if (typeof input === 'number' || typeof input === 'string') {
       return true;
     }
-    
+
     // Reject null and undefined in strict mode
     if (input === null || input === undefined) {
       return false;
     }
-    
+
     // Handle validation input objects
     if (typeof input === 'object' && input !== null) {
       // Check for value property - must be numeric
       if ('value' in input) {
         return typeof input.value === 'number';
       }
-      
+
       // Check for getValue method
       if ('getValue' in input && typeof input.getValue === 'function') {
         return true;
       }
-      
+
       // Check for unitType property
       if ('unitType' in input && typeof input.unitType === 'string') {
         return true;
       }
-      
+
       // Check for dimension property
       if ('dimension' in input && input.dimension) {
         return true;
       }
     }
-    
+
     return false;
   }
 

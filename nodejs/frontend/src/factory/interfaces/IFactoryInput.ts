@@ -21,7 +21,7 @@ export enum FactoryInputType {
   SHAPE = 'shape',
 
   /** Mixed creation input */
-  MIXED = 'mixed'
+  MIXED = 'mixed',
 }
 
 /**
@@ -49,39 +49,39 @@ export interface IBaseFactoryInput {
  */
 export interface IContainerFactoryInput extends IBaseFactoryInput {
   readonly type: FactoryInputType.CONTAINER;
-  
+
   /** Container configuration */
   readonly config: {
     /** Container ID */
     id: string;
-    
+
     /** Container name */
     name?: string;
-    
+
     /** X position */
     x?: number;
-    
+
     /** Y position */
     y?: number;
-    
+
     /** Width */
     width?: number | 'fill';
-    
+
     /** Height */
     height?: number | 'fill';
-    
+
     /** Alpha value */
     alpha?: number;
-    
+
     /** Visibility */
     visible?: boolean;
-    
+
     /** Interactive flag */
     interactive?: boolean;
-    
+
     /** Background color */
     backgroundColor?: number;
-    
+
     /** Children game objects */
     children?: Array<{
       type: string;
@@ -95,42 +95,42 @@ export interface IContainerFactoryInput extends IBaseFactoryInput {
  */
 export interface IImageFactoryInput extends IBaseFactoryInput {
   readonly type: FactoryInputType.IMAGE;
-  
+
   /** Image configuration */
   readonly config: {
     /** Image ID */
     id: string;
-    
+
     /** Image name */
     name?: string;
-    
+
     /** Texture key */
     textureKey: string;
-    
+
     /** Frame key */
     frameKey?: string | number;
-    
+
     /** X position */
     x?: number;
-    
+
     /** Y position */
     y?: number;
-    
+
     /** Width */
     width?: number | 'fill';
-    
+
     /** Height */
     height?: number | 'fill';
-    
+
     /** Alpha value */
     alpha?: number;
-    
+
     /** Visibility */
     visible?: boolean;
-    
+
     /** Origin X (0-1) */
     originX?: number;
-    
+
     /** Origin Y (0-1) */
     originY?: number;
   };
@@ -141,42 +141,42 @@ export interface IImageFactoryInput extends IBaseFactoryInput {
  */
 export interface ITextFactoryInput extends IBaseFactoryInput {
   readonly type: FactoryInputType.TEXT;
-  
+
   /** Text configuration */
   readonly config: {
     /** Text ID */
     id: string;
-    
+
     /** Text name */
     name?: string;
-    
+
     /** Text content */
     text: string;
-    
+
     /** X position */
     x?: number;
-    
+
     /** Y position */
     y?: number;
-    
+
     /** Font family */
     fontFamily?: string;
-    
+
     /** Font size */
     fontSize?: string | number;
-    
+
     /** Font color */
     color?: string;
-    
+
     /** Alpha value */
     alpha?: number;
-    
+
     /** Visibility */
     visible?: boolean;
-    
+
     /** Origin X (0-1) */
     originX?: number;
-    
+
     /** Origin Y (0-1) */
     originY?: number;
   };
@@ -187,42 +187,42 @@ export interface ITextFactoryInput extends IBaseFactoryInput {
  */
 export interface IButtonFactoryInput extends IBaseFactoryInput {
   readonly type: FactoryInputType.BUTTON;
-  
+
   /** Button configuration */
   readonly config: {
     /** Button ID */
     id: string;
-    
+
     /** Button name */
     name?: string;
-    
+
     /** Button text */
     text?: string;
-    
+
     /** Button texture */
     textureKey?: string;
-    
+
     /** X position */
     x?: number;
-    
+
     /** Y position */
     y?: number;
-    
+
     /** Width */
     width?: number | 'fill';
-    
+
     /** Height */
     height?: number | 'fill';
-    
+
     /** Alpha value */
     alpha?: number;
-    
+
     /** Visibility */
     visible?: boolean;
-    
+
     /** Click handler */
     onClick?: () => void;
-    
+
     /** Hover handler */
     onHover?: () => void;
   };
@@ -233,51 +233,51 @@ export interface IButtonFactoryInput extends IBaseFactoryInput {
  */
 export interface IShapeFactoryInput extends IBaseFactoryInput {
   readonly type: FactoryInputType.SHAPE;
-  
+
   /** Shape configuration */
   readonly config: {
     /** Shape ID */
     id: string;
-    
+
     /** Shape name */
     name?: string;
-    
+
     /** Shape type */
     shapeType: 'rectangle' | 'circle' | 'ellipse' | 'triangle' | 'polygon';
-    
+
     /** X position */
     x?: number;
-    
+
     /** Y position */
     y?: number;
-    
+
     /** Width */
     width?: number | 'fill';
-    
+
     /** Height */
     height?: number | 'fill';
-    
+
     /** Fill color */
     fillColor?: number;
-    
+
     /** Fill alpha */
     fillAlpha?: number;
-    
+
     /** Stroke color */
     strokeColor?: number;
-    
+
     /** Stroke alpha */
     strokeAlpha?: number;
-    
+
     /** Stroke width */
     strokeWidth?: number;
-    
+
     /** Alpha value */
     alpha?: number;
-    
+
     /** Visibility */
     visible?: boolean;
-    
+
     /** Shape-specific properties */
     shapeProperties?: Record<string, unknown>;
   };
@@ -288,30 +288,30 @@ export interface IShapeFactoryInput extends IBaseFactoryInput {
  */
 export interface IMixedFactoryInput extends IBaseFactoryInput {
   readonly type: FactoryInputType.MIXED;
-  
+
   /** Mixed configuration */
   readonly config: {
     /** Mixed ID */
     id: string;
-    
+
     /** Mixed name */
     name?: string;
-    
+
     /** Mixed type */
     mixedType: string;
-    
+
     /** Mixed properties */
     properties: Record<string, unknown>;
-    
+
     /** X position */
     x?: number;
-    
+
     /** Y position */
     y?: number;
-    
+
     /** Alpha value */
     alpha?: number;
-    
+
     /** Visibility */
     visible?: boolean;
   };
@@ -320,7 +320,7 @@ export interface IMixedFactoryInput extends IBaseFactoryInput {
 /**
  * Union type for all factory inputs
  */
-export type IFactoryInput = 
+export type IFactoryInput =
   | IContainerFactoryInput
   | IImageFactoryInput
   | ITextFactoryInput
@@ -334,7 +334,7 @@ export type IFactoryInput =
 export interface ILegacyFactoryInput {
   /** Legacy input */
   readonly input: unknown;
-  
+
   /** Legacy type */
   readonly legacyType: string;
 }
@@ -345,10 +345,10 @@ export interface ILegacyFactoryInput {
 export interface IFactoryInputValidationResult {
   /** Is input valid */
   readonly isValid: boolean;
-  
+
   /** Validation errors */
   readonly errors: string[];
-  
+
   /** Validated factory input */
   readonly validatedInput?: IFactoryInput;
 }
@@ -457,7 +457,7 @@ export const createContainerFactoryInput = (
   scene,
   parent,
   metadata,
-  config: { id, ...config }
+  config: { id, ...config },
 });
 
 export const createImageFactoryInput = (
@@ -472,7 +472,7 @@ export const createImageFactoryInput = (
   scene,
   parent,
   metadata,
-  config: { id, ...config }
+  config: { id, ...config },
 });
 
 export const createTextFactoryInput = (
@@ -487,7 +487,7 @@ export const createTextFactoryInput = (
   scene,
   parent,
   metadata,
-  config: { id, ...config }
+  config: { id, ...config },
 });
 
 export const createButtonFactoryInput = (
@@ -502,7 +502,7 @@ export const createButtonFactoryInput = (
   scene,
   parent,
   metadata,
-  config: { id, ...config }
+  config: { id, ...config },
 });
 
 export const createShapeFactoryInput = (
@@ -517,7 +517,7 @@ export const createShapeFactoryInput = (
   scene,
   parent,
   metadata,
-  config: { id, ...config }
+  config: { id, ...config },
 });
 
 export const createMixedFactoryInput = (
@@ -532,7 +532,7 @@ export const createMixedFactoryInput = (
   scene,
   parent,
   metadata,
-  config: { id, ...config }
+  config: { id, ...config },
 });
 
 /**
@@ -545,50 +545,50 @@ export const convertToFactoryInput = (input: unknown): IFactoryInput => {
     const legacyInput = input.input;
     if (typeof legacyInput === 'object' && legacyInput !== null) {
       const legacyObj = legacyInput as Record<string, unknown>;
-      
+
       // Try to determine type from legacy input
       if ('type' in legacyObj && typeof legacyObj.type === 'string') {
         const type = legacyObj.type as string;
-        
+
         if (type === 'container') {
           return createContainerFactoryInput(
-            legacyObj.id as string || 'legacy-container',
+            (legacyObj.id as string) || 'legacy-container',
             legacyObj.scene as Phaser.Scene,
             legacyObj as any,
             legacyObj.parent as Phaser.GameObjects.Container
           );
         }
-        
+
         if (type === 'image') {
           return createImageFactoryInput(
-            legacyObj.id as string || 'legacy-image',
+            (legacyObj.id as string) || 'legacy-image',
             legacyObj.scene as Phaser.Scene,
             legacyObj as any,
             legacyObj.parent as Phaser.GameObjects.Container
           );
         }
-        
+
         if (type === 'text') {
           return createTextFactoryInput(
-            legacyObj.id as string || 'legacy-text',
+            (legacyObj.id as string) || 'legacy-text',
             legacyObj.scene as Phaser.Scene,
             legacyObj as any,
             legacyObj.parent as Phaser.GameObjects.Container
           );
         }
-        
+
         if (type === 'button') {
           return createButtonFactoryInput(
-            legacyObj.id as string || 'legacy-button',
+            (legacyObj.id as string) || 'legacy-button',
             legacyObj.scene as Phaser.Scene,
             legacyObj as any,
             legacyObj.parent as Phaser.GameObjects.Container
           );
         }
-        
+
         if (type === 'shape') {
           return createShapeFactoryInput(
-            legacyObj.id as string || 'legacy-shape',
+            (legacyObj.id as string) || 'legacy-shape',
             legacyObj.scene as Phaser.Scene,
             legacyObj as any,
             legacyObj.parent as Phaser.GameObjects.Container
@@ -596,18 +596,18 @@ export const convertToFactoryInput = (input: unknown): IFactoryInput => {
         }
       }
     }
-    
+
     // Default to mixed factory input for unknown legacy types
     return createMixedFactoryInput(
       'legacy-mixed',
       {} as Phaser.Scene, // Will be set by caller
       {
         mixedType: input.legacyType,
-        properties: input.input as Record<string, unknown>
+        properties: input.input as Record<string, unknown>,
       }
     );
   }
-  
+
   // Handle IUnit (if it has a calculate method)
   if (typeof input === 'object' && input !== null && 'calculate' in input) {
     // Convert IUnit to mixed factory input
@@ -616,18 +616,18 @@ export const convertToFactoryInput = (input: unknown): IFactoryInput => {
       {} as Phaser.Scene, // Will be set by caller
       {
         mixedType: 'unit',
-        properties: input as Record<string, unknown>
+        properties: input as Record<string, unknown>,
       }
     );
   }
-  
+
   // Handle unknown input - default to mixed factory input
   return createMixedFactoryInput(
     'unknown-mixed',
     {} as Phaser.Scene, // Will be set by caller
     {
       mixedType: 'unknown',
-      properties: input as Record<string, unknown>
+      properties: input as Record<string, unknown>,
     }
   );
 };

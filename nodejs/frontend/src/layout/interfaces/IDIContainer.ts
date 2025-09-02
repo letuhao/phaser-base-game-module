@@ -109,22 +109,22 @@ export interface IEnhancedDIContainer extends IDIContainer {
 export interface IDependencyMetadata<T> {
   /** Dependency token */
   readonly token: string;
-  
+
   /** Implementation type */
   readonly type: 'singleton' | 'factory' | 'instance';
-  
+
   /** Implementation or factory */
   readonly implementation: T | (() => T);
-  
+
   /** Dependency dependencies */
   readonly dependencies?: string[];
-  
+
   /** Lifecycle hooks */
   readonly lifecycle?: IDependencyLifecycle;
-  
+
   /** Validation rules */
   readonly validation?: IDependencyValidation;
-  
+
   /** Metadata tags */
   readonly tags?: string[];
 }
@@ -135,10 +135,10 @@ export interface IDependencyMetadata<T> {
 export interface IDependencyLifecycle {
   /** Called after dependency is created */
   onCreated?: (dependency: any) => void;
-  
+
   /** Called before dependency is destroyed */
   onDestroy?: (dependency: any) => void;
-  
+
   /** Called when dependency is resolved */
   onResolved?: (dependency: any) => void;
 }
@@ -149,10 +149,10 @@ export interface IDependencyLifecycle {
 export interface IDependencyValidation {
   /** Required interface */
   readonly requiredInterface?: string;
-  
+
   /** Custom validation function */
   readonly validator?: (dependency: any) => boolean;
-  
+
   /** Validation error message */
   readonly errorMessage?: string;
 }
@@ -167,13 +167,13 @@ export interface IDependencyValidation {
 export interface IResolutionContext {
   /** Requesting component */
   readonly requester?: string;
-  
+
   /** Resolution depth */
   readonly depth: number;
-  
+
   /** Resolution path */
   readonly path: string[];
-  
+
   /** Resolution options */
   readonly options?: IResolutionOptions;
 }
@@ -184,13 +184,13 @@ export interface IResolutionContext {
 export interface IResolutionOptions {
   /** Allow circular dependencies */
   readonly allowCircular?: boolean;
-  
+
   /** Maximum resolution depth */
   readonly maxDepth?: number;
-  
+
   /** Lazy resolution */
   readonly lazy?: boolean;
-  
+
   /** Validation level */
   readonly validation?: 'none' | 'basic' | 'strict';
 }
@@ -205,16 +205,16 @@ export interface IResolutionOptions {
 export interface IDependencyValidationResult {
   /** Is the dependency graph valid */
   readonly isValid: boolean;
-  
+
   /** Validation errors */
   readonly errors: IDependencyValidationError[];
-  
+
   /** Validation warnings */
   readonly warnings: IDependencyValidationWarning[];
-  
+
   /** Circular dependency detection */
   readonly circularDependencies: string[][];
-  
+
   /** Missing dependencies */
   readonly missingDependencies: string[];
 }
@@ -225,13 +225,13 @@ export interface IDependencyValidationResult {
 export interface IDependencyValidationError {
   /** Error type */
   readonly type: 'circular' | 'missing' | 'invalid' | 'interface';
-  
+
   /** Error message */
   readonly message: string;
-  
+
   /** Affected tokens */
   readonly tokens: string[];
-  
+
   /** Error context */
   readonly context?: any;
 }
@@ -242,13 +242,13 @@ export interface IDependencyValidationError {
 export interface IDependencyValidationWarning {
   /** Warning type */
   readonly type: 'deprecated' | 'performance' | 'best_practice';
-  
+
   /** Warning message */
   readonly message: string;
-  
+
   /** Affected tokens */
   readonly tokens: string[];
-  
+
   /** Suggestion for improvement */
   readonly suggestion?: string;
 }
@@ -263,7 +263,7 @@ export interface IDependencyValidationWarning {
 export interface IDependencyFactory<T> {
   /** Factory function */
   readonly create: (context: IFactoryContext) => T;
-  
+
   /** Factory metadata */
   readonly metadata?: IFactoryMetadata;
 }
@@ -274,10 +274,10 @@ export interface IDependencyFactory<T> {
 export interface IFactoryContext {
   /** DI container instance */
   readonly container: IDIContainer;
-  
+
   /** Requesting component */
   readonly requester?: string;
-  
+
   /** Factory parameters */
   readonly parameters?: Record<string, any>;
 }
@@ -288,13 +288,13 @@ export interface IFactoryContext {
 export interface IFactoryMetadata {
   /** Factory name */
   readonly name?: string;
-  
+
   /** Factory description */
   readonly description?: string;
-  
+
   /** Factory version */
   readonly version?: string;
-  
+
   /** Factory tags */
   readonly tags?: string[];
 }
@@ -309,22 +309,22 @@ export interface IFactoryMetadata {
 export interface IDependencyScope {
   /** Scope name */
   readonly name: string;
-  
+
   /** Parent scope */
   readonly parent?: IDependencyScope;
-  
+
   /** Child scopes */
   readonly children: IDependencyScope[];
-  
+
   /** Scope dependencies */
   readonly dependencies: Map<string, any>;
-  
+
   /** Create child scope */
   createChild(name: string): IDependencyScope;
-  
+
   /** Resolve dependency in scope */
   resolve<T>(token: string): T;
-  
+
   /** Dispose scope and dependencies */
   dispose(): void;
 }
@@ -335,16 +335,16 @@ export interface IDependencyScope {
 export interface IScopedDIContainer extends IDIContainer {
   /** Current scope */
   readonly currentScope: IDependencyScope;
-  
+
   /** Create new scope */
   createScope(name: string): IDependencyScope;
-  
+
   /** Switch to scope */
   switchScope(scope: IDependencyScope): void;
-  
+
   /** Get scope by name */
   getScope(name: string): IDependencyScope | undefined;
-  
+
   /** Dispose scope */
   disposeScope(name: string): void;
 }

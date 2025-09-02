@@ -1,6 +1,6 @@
 /**
  * Game Object System Index
- * 
+ *
  * Main entry point for the new game object system
  */
 

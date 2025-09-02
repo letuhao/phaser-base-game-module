@@ -1,6 +1,6 @@
 /**
  * Scene Validator Interface
- * 
+ *
  * Defines validation functionality for scene system components.
  */
 
@@ -15,7 +15,7 @@ export enum ValidationResultType {
   SUCCESS = 'success',
   WARNING = 'warning',
   ERROR = 'error',
-  CRITICAL = 'critical'
+  CRITICAL = 'critical',
 }
 
 /**
@@ -27,7 +27,7 @@ export enum ValidationRuleType {
   RANGE_CHECK = 'range_check',
   FORMAT_CHECK = 'format_check',
   REFERENCE_CHECK = 'reference_check',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -87,80 +87,73 @@ export interface ValidationStatistics {
  */
 export interface ISceneValidator {
   readonly validatorId: string;
-  
+
   /** Validation configuration */
   validationConfig: ValidationConfig;
-  
+
   /** Validation rules */
   validationRules: Map<string, ValidationRule>;
-  
+
   /** Validation statistics */
   validationStatistics: ValidationStatistics;
-  
+
   /** Validator metadata */
   validatorMetadata: Record<string, any>;
-  
+
   /** Set validation configuration */
   setValidationConfig(config: ValidationConfig): this;
-  
+
   /** Set validator metadata */
   setValidatorMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get validation configuration */
   getValidationConfig(): ValidationConfig;
-  
+
   /** Get validation rules */
   getValidationRules(): Map<string, ValidationRule>;
-  
+
   /** Get validation statistics */
   getValidationStatistics(): ValidationStatistics;
-  
+
   /** Get validator metadata */
   getValidatorMetadata(): Record<string, any>;
-  
+
   /** Add validation rule */
   addValidationRule(rule: ValidationRule): this;
-  
+
   /** Remove validation rule */
   removeValidationRule(ruleId: string): this;
-  
+
   /** Get validation rule */
   getValidationRule(ruleId: string): ValidationRule | undefined;
-  
+
   /** Validate scene configuration */
   validateSceneConfig(config: SceneConfig): ValidationResult[];
-  
+
   /** Validate scene element configuration */
   validateSceneElementConfig(config: SceneElementConfig): ValidationResult[];
-  
+
   /** Validate scene element */
   validateSceneElement(element: ISceneElement): ValidationResult[];
-  
+
   /** Validate field */
-  validateField(
-    field: string, 
-    value: any, 
-    rules: ValidationRule[]
-  ): ValidationResult[];
-  
+  validateField(field: string, value: any, rules: ValidationRule[]): ValidationResult[];
+
   /** Validate with custom rules */
-  validateWithRules(
-    data: any, 
-    rules: ValidationRule[]
-  ): ValidationResult[];
-  
+  validateWithRules(data: any, rules: ValidationRule[]): ValidationResult[];
+
   /** Check if validation passed */
   isValidationPassed(results: ValidationResult[]): boolean;
-  
+
   /** Get validation errors */
   getValidationErrors(results: ValidationResult[]): ValidationResult[];
-  
+
   /** Get validation warnings */
   getValidationWarnings(results: ValidationResult[]): ValidationResult[];
-  
+
   /** Clear validation statistics */
   clearValidationStatistics(): this;
-  
+
   /** Update validator */
   updateValidator(deltaTime: number): void;
 }

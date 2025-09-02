@@ -1,6 +1,6 @@
 /**
  * Validation Strategy Interface
- * 
+ *
  * Defines validation strategy abstraction for different asset validation approaches.
  */
 
@@ -66,61 +66,64 @@ export interface ValidationRule {
 export interface IValidationStrategy {
   readonly strategyId: string;
   readonly strategyType: ValidationStrategyType;
-  
+
   /** Strategy configuration */
   strategyConfig: ValidationStrategyConfig;
-  
+
   /** Validation rules */
   validationRules: Map<string, ValidationRule>;
-  
+
   /** Strategy metadata */
   strategyMetadata: Record<string, any>;
-  
+
   /** Set strategy configuration */
   setStrategyConfig(config: ValidationStrategyConfig): this;
-  
+
   /** Set strategy metadata */
   setStrategyMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get strategy configuration */
   getStrategyConfig(): ValidationStrategyConfig;
-  
+
   /** Get validation rules */
   getValidationRules(): Map<string, ValidationRule>;
-  
+
   /** Get strategy metadata */
   getStrategyMetadata(): Record<string, any>;
-  
+
   /** Validate asset using strategy */
   validateAsset(asset: IAsset): Promise<ValidationResult>;
-  
+
   /** Validate multiple assets */
   validateAssets(assets: IAsset[]): Promise<ValidationStrategyResult>;
-  
+
   /** Validate asset bundle */
   validateBundle(bundle: IAssetBundle): Promise<ValidationStrategyResult>;
-  
+
   /** Validate assets by type */
-  validateAssetsByType(assets: IAsset[], validationType: ValidationType): Promise<ValidationStrategyResult>;
-  
+  validateAssetsByType(
+    assets: IAsset[],
+    validationType: ValidationType
+  ): Promise<ValidationStrategyResult>;
+
   /** Add validation rule */
   addValidationRule(rule: ValidationRule): this;
-  
+
   /** Remove validation rule */
   removeValidationRule(ruleId: string): this;
-  
+
   /** Enable validation rule */
   enableValidationRule(ruleId: string): this;
-  
+
   /** Disable validation rule */
   disableValidationRule(ruleId: string): this;
-  
+
   /** Get validation rule */
   getValidationRule(ruleId: string): ValidationRule | null;
-  
+
   /** Check if validation rule exists */
   hasValidationRule(ruleId: string): boolean;
-  
+
   /** Get validation statistics */
   getValidationStatistics(): {
     totalValidations: number;
@@ -131,10 +134,10 @@ export interface IValidationStrategy {
     averageValidationTime: number;
     successRate: number;
   };
-  
+
   /** Clear validation rules */
   clearValidationRules(): this;
-  
+
   /** Update strategy */
   updateStrategy(deltaTime: number): void;
 }

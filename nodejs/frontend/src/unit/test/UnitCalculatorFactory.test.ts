@@ -77,7 +77,7 @@ describe('UnitCalculatorFactory', () => {
         baseValue: 100,
         maintainAspectRatio: true,
         minSize: 50,
-        maxSize: 200
+        maxSize: 200,
       });
 
       expect(calculator).toBeInstanceOf(SizeUnitCalculator);
@@ -108,7 +108,7 @@ describe('UnitCalculatorFactory', () => {
         name: 'Config Position',
         positionUnit: PositionUnit.PIXEL,
         axis: Dimension.X,
-        baseValue: 100
+        baseValue: 100,
       });
 
       expect(calculator).toBeInstanceOf(PositionUnitCalculator);
@@ -138,7 +138,7 @@ describe('UnitCalculatorFactory', () => {
         name: 'Config Scale',
         scaleUnit: ScaleUnit.FACTOR,
         baseValue: 1.5,
-        maintainAspectRatio: true
+        maintainAspectRatio: true,
       });
 
       expect(calculator).toBeInstanceOf(ScaleUnitCalculator);
@@ -155,7 +155,7 @@ describe('UnitCalculatorFactory', () => {
         sizeUnit: SizeUnit.PIXEL,
         dimension: Dimension.WIDTH,
         baseValue: 100,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       });
 
       expect(calculator).toBeInstanceOf(SizeUnitCalculator);
@@ -169,7 +169,7 @@ describe('UnitCalculatorFactory', () => {
         name: 'Test Position',
         positionUnit: PositionUnit.PIXEL,
         axis: Dimension.X,
-        baseValue: 100
+        baseValue: 100,
       });
 
       expect(calculator).toBeInstanceOf(PositionUnitCalculator);
@@ -183,7 +183,7 @@ describe('UnitCalculatorFactory', () => {
         name: 'Test Scale',
         scaleUnit: ScaleUnit.FACTOR,
         baseValue: 1.5,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       });
 
       expect(calculator).toBeInstanceOf(ScaleUnitCalculator);
@@ -196,7 +196,7 @@ describe('UnitCalculatorFactory', () => {
         factory.createUnit('invalid' as UnitType, 'test', 'Test', {
           id: 'test',
           name: 'Test',
-          baseValue: 100
+          baseValue: 100,
         });
       }).toThrow('Unknown unit type: invalid');
     });
@@ -238,9 +238,9 @@ describe('UnitCalculatorFactory', () => {
 
     it('should remove calculator', () => {
       factory.createSizeUnit('remove-test', 'Remove Test', SizeUnit.PIXEL, Dimension.WIDTH, 100);
-      
+
       expect(factory.getCalculator('remove-test')).toBeDefined();
-      
+
       factory.removeCalculator('remove-test');
       expect(factory.getCalculator('remove-test')).toBeUndefined();
     });
@@ -262,7 +262,7 @@ describe('UnitCalculatorFactory', () => {
         viewport: { width: 1200, height: 900 },
         content: { width: 400, height: 300 },
         breakpoint: { name: 'desktop', width: 1200, height: 900 },
-        dimension: 'width' as const
+        dimension: 'width' as const,
       };
 
       const result = calculator.calculate(mockContext);
@@ -285,7 +285,7 @@ describe('UnitCalculatorFactory', () => {
         viewport: { width: 1200, height: 900 },
         content: { width: 400, height: 300 },
         breakpoint: { name: 'desktop', width: 1200, height: 900 },
-        dimension: 'width' as const
+        dimension: 'width' as const,
       };
 
       const result = calculator.calculate(mockContext);
@@ -306,7 +306,7 @@ describe('UnitCalculatorFactory', () => {
         viewport: { width: 1200, height: 900 },
         content: { width: 400, height: 300 },
         breakpoint: { name: 'desktop', width: 1200, height: 900 },
-        dimension: 'width' as const
+        dimension: 'width' as const,
       };
 
       const result = calculator.calculate(mockContext);
@@ -321,13 +321,15 @@ describe('UnitCalculatorFactory', () => {
       const startTime = Date.now();
 
       for (let i = 0; i < 100; i++) {
-        calculators.push(factory.createSizeUnit(
-          `calculator-${i}`,
-          `Calculator ${i}`,
-          SizeUnit.PIXEL,
-          Dimension.WIDTH,
-          100
-        ));
+        calculators.push(
+          factory.createSizeUnit(
+            `calculator-${i}`,
+            `Calculator ${i}`,
+            SizeUnit.PIXEL,
+            Dimension.WIDTH,
+            100
+          )
+        );
       }
 
       const endTime = Date.now();
@@ -339,8 +341,20 @@ describe('UnitCalculatorFactory', () => {
     });
 
     it('should create different types of calculators efficiently', () => {
-      const sizeCalculator = factory.createSizeUnit('size', 'Size', SizeUnit.PIXEL, Dimension.WIDTH, 100);
-      const positionCalculator = factory.createPositionUnit('position', 'Position', PositionUnit.PIXEL, Dimension.X, 100);
+      const sizeCalculator = factory.createSizeUnit(
+        'size',
+        'Size',
+        SizeUnit.PIXEL,
+        Dimension.WIDTH,
+        100
+      );
+      const positionCalculator = factory.createPositionUnit(
+        'position',
+        'Position',
+        PositionUnit.PIXEL,
+        Dimension.X,
+        100
+      );
       const scaleCalculator = factory.createScaleUnit('scale', 'Scale', ScaleUnit.FACTOR, 1.5);
 
       expect(sizeCalculator).toBeInstanceOf(SizeUnitCalculator);

@@ -1,6 +1,6 @@
 /**
  * Asset Bundle Interface
- * 
+ *
  * Defines asset bundle functionality for grouping related assets.
  */
 
@@ -16,7 +16,7 @@ export enum BundleType {
   AUDIO = 'audio',
   TEXTURE = 'texture',
   FONT = 'font',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -27,7 +27,7 @@ export enum BundleState {
   LOADING = 'loading',
   LOADED = 'loaded',
   FAILED = 'failed',
-  DISPOSED = 'disposed'
+  DISPOSED = 'disposed',
 }
 
 /**
@@ -60,79 +60,79 @@ export interface BundleProgress {
 export interface IAssetBundle {
   readonly bundleId: string;
   readonly bundleType: BundleType;
-  
+
   /** Bundle state */
   bundleState: BundleState;
-  
+
   /** Bundle configuration */
   bundleConfig: BundleConfig;
-  
+
   /** Bundle assets */
   bundleAssets: Map<string, IAsset>;
-  
+
   /** Bundle progress */
   bundleProgress: BundleProgress;
-  
+
   /** Bundle metadata */
   bundleMetadata: Record<string, any>;
-  
+
   /** Set bundle state */
   setBundleState(state: BundleState): this;
-  
+
   /** Set bundle configuration */
   setBundleConfig(config: BundleConfig): this;
-  
+
   /** Set bundle metadata */
   setBundleMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get bundle state */
   getBundleState(): BundleState;
-  
+
   /** Get bundle configuration */
   getBundleConfig(): BundleConfig;
-  
+
   /** Get bundle assets */
   getBundleAssets(): Map<string, IAsset>;
-  
+
   /** Get bundle progress */
   getBundleProgress(): BundleProgress;
-  
+
   /** Get bundle metadata */
   getBundleMetadata(): Record<string, any>;
-  
+
   /** Add asset to bundle */
   addAsset(asset: IAsset): this;
-  
+
   /** Remove asset from bundle */
   removeAsset(assetKey: string): this;
-  
+
   /** Get asset by key */
   getAsset(assetKey: string): IAsset | null;
-  
+
   /** Get assets by type */
   getAssetsByType(assetType: AssetType): IAsset[];
-  
+
   /** Load bundle */
   loadBundle(): Promise<this>;
-  
+
   /** Unload bundle */
   unloadBundle(): Promise<this>;
-  
+
   /** Check if bundle is loaded */
   isBundleLoaded(): boolean;
-  
+
   /** Check if bundle is loading */
   isBundleLoading(): boolean;
-  
+
   /** Get bundle size */
   getBundleSize(): number;
-  
+
   /** Get bundle asset count */
   getBundleAssetCount(): number;
-  
+
   /** Clone bundle */
   cloneBundle(): IAssetBundle;
-  
+
   /** Dispose bundle */
   disposeBundle(): void;
 }

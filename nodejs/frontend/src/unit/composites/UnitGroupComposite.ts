@@ -92,7 +92,7 @@ export class UnitGroupComposite extends BaseUnitComposite {
     // Calculate sample results for statistics
     const sampleContext: UnitContext = {
       parent: { width: 800, height: 600, x: 0, y: 0 },
-      scene: { width: 1200, height: 800 }
+      scene: { width: 1200, height: 800 },
     };
 
     const results: number[] = [];
@@ -105,7 +105,8 @@ export class UnitGroupComposite extends BaseUnitComposite {
       }
     }
 
-    const averageResult = results.length > 0 ? results.reduce((a, b) => a + b, 0) / results.length : 0;
+    const averageResult =
+      results.length > 0 ? results.reduce((a, b) => a + b, 0) / results.length : 0;
     const minResult = results.length > 0 ? Math.min(...results) : 0;
     const maxResult = results.length > 0 ? Math.max(...results) : 0;
 
@@ -115,7 +116,7 @@ export class UnitGroupComposite extends BaseUnitComposite {
       responsiveChildren: responsiveChildren.length,
       averageResult,
       minResult,
-      maxResult
+      maxResult,
     };
   }
 
@@ -126,23 +127,23 @@ export class UnitGroupComposite extends BaseUnitComposite {
     switch (this.calculationStrategy) {
       case 'sum':
         return results.reduce((sum, result) => sum + result, 0);
-      
+
       case 'average':
         return results.reduce((sum, result) => sum + result, 0) / results.length;
-      
+
       case 'min':
         return Math.min(...results);
-      
+
       case 'max':
         return Math.max(...results);
-      
+
       case 'custom':
         if (this.customCalculator) {
           return this.customCalculator(results);
         }
         // Fallback to sum if no custom calculator is set
         return results.reduce((sum, result) => sum + result, 0);
-      
+
       default:
         return results.reduce((sum, result) => sum + result, 0);
     }
@@ -153,7 +154,7 @@ export class UnitGroupComposite extends BaseUnitComposite {
    */
   addChild(unit: IUnit): void {
     super.addChild(unit);
-    
+
     // Set this composite as the parent of the child
     if (unit && typeof (unit as any).setParent === 'function') {
       (unit as any).setParent(this);
@@ -165,11 +166,11 @@ export class UnitGroupComposite extends BaseUnitComposite {
    */
   removeChild(unit: IUnit): boolean {
     const removed = super.removeChild(unit);
-    
+
     if (removed && unit && typeof (unit as any).setParent === 'function') {
       (unit as any).setParent(undefined);
     }
-    
+
     return removed;
   }
 
@@ -238,7 +239,7 @@ export class UnitGroupComposite extends BaseUnitComposite {
       totalUnits: this.getChildCount(),
       unitTypes,
       responsiveUnits,
-      activeUnits
+      activeUnits,
     };
   }
 }

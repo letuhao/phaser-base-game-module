@@ -61,7 +61,7 @@ describe('PerformanceObserver', () => {
           oldValue: 100,
           newValue: 250,
           changeMagnitude: 150,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }
       );
     });
@@ -83,7 +83,7 @@ describe('PerformanceObserver', () => {
           oldValue: 200,
           newValue: 50,
           changeMagnitude: 150,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }
       );
     });
@@ -99,7 +99,7 @@ describe('PerformanceObserver', () => {
         totalTime: 0,
         averageTime: 0,
         minTime: Infinity,
-        maxTime: 0
+        maxTime: 0,
       });
     });
 
@@ -191,7 +191,7 @@ describe('PerformanceObserver', () => {
         {
           duration: 150,
           threshold: 100,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }
       );
     });
@@ -236,7 +236,7 @@ describe('PerformanceObserver', () => {
         {
           error: 'Calculation failed',
           stack: error.stack,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }
       );
     });
@@ -253,7 +253,7 @@ describe('PerformanceObserver', () => {
         {
           error: 'No stack',
           stack: undefined,
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }
       );
     });
@@ -271,7 +271,7 @@ describe('PerformanceObserver', () => {
         maxCalculationTime: 0,
         calculationTimes: [],
         errors: 0,
-        unitTypeStats: {}
+        unitTypeStats: {},
       });
     });
 
@@ -300,15 +300,15 @@ describe('PerformanceObserver', () => {
           totalTime: 0,
           averageTime: 0,
           minTime: Infinity,
-          maxTime: 0
+          maxTime: 0,
         },
         position: {
           count: 1,
           totalTime: 0,
           averageTime: 0,
           minTime: Infinity,
-          maxTime: 0
-        }
+          maxTime: 0,
+        },
       });
     });
   });
@@ -328,7 +328,7 @@ describe('PerformanceObserver', () => {
         totalTime: 0,
         averageTime: 0,
         minTime: Infinity,
-        maxTime: 0
+        maxTime: 0,
       });
     });
   });
@@ -353,7 +353,7 @@ describe('PerformanceObserver', () => {
         maxCalculationTime: 0,
         calculationTimes: [],
         errors: 0,
-        unitTypeStats: {}
+        unitTypeStats: {},
       });
     });
   });
@@ -443,15 +443,15 @@ describe('PerformanceObserver', () => {
     it('should track complete unit lifecycle performance', () => {
       // Create unit
       observer.onUnitCreated('test-unit-1', 'size');
-      
+
       // Value changes
       observer.onUnitValueChanged('test-unit-1', 100, 150);
       observer.onUnitValueChanged('test-unit-1', 150, 200);
-      
+
       // Calculations
       observer.onUnitCalculationStarted('test-unit-1');
       observer.onUnitCalculationCompleted('test-unit-1', 150, 25);
-      
+
       // Destroy unit
       observer.onUnitDestroyed('test-unit-1');
 
@@ -469,7 +469,7 @@ describe('PerformanceObserver', () => {
       // Successful calculations
       observer.onUnitCalculationCompleted('test-unit-1', 150, 25);
       observer.onUnitCalculationCompleted('test-unit-2', 200, 50);
-      
+
       // Failed calculations
       observer.onUnitCalculationFailed('test-unit-3', new Error('Calculation failed'));
       observer.onUnitCalculationFailed('test-unit-4', new Error('Another failure'));

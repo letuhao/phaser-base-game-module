@@ -11,34 +11,34 @@ import { UnitType } from '../../enums/UnitType';
 export interface IStrategyInput {
   /** Unique identifier for the strategy input */
   readonly id: string;
-  
+
   /** Human-readable name for the strategy input */
   readonly name: string;
-  
+
   /** Unit type this strategy input is for */
   readonly unitType: UnitType;
-  
+
   /** Whether the strategy input is valid */
   readonly isValid: boolean;
-  
+
   /** Get the size strategy input (if applicable) */
   getSizeInput(): ISizeStrategyInput | undefined;
-  
+
   /** Get the position strategy input (if applicable) */
   getPositionInput(): IPositionStrategyInput | undefined;
-  
+
   /** Get the scale strategy input (if applicable) */
   getScaleInput(): IScaleStrategyInput | undefined;
-  
+
   /** Validate the strategy input */
   validate(): boolean;
-  
+
   /** Clone the strategy input */
   clone(): IStrategyInput;
-  
+
   /** Get the calculated value */
   getValue(): number;
-  
+
   /** Get the input type */
   getType(): string;
 }
@@ -56,7 +56,7 @@ export interface IStrategyInputFactory {
     unit: string;
     dimension: string;
   }): IStrategyInput;
-  
+
   /** Create a position strategy input */
   createPositionInput(config: {
     id: string;
@@ -65,7 +65,7 @@ export interface IStrategyInputFactory {
     unit: string;
     axis: string;
   }): IStrategyInput;
-  
+
   /** Create a scale strategy input */
   createScaleInput(config: {
     id: string;
@@ -73,7 +73,7 @@ export interface IStrategyInputFactory {
     value: number | string;
     unit: string;
   }): IStrategyInput;
-  
+
   /** Create a strategy input from a generic config */
   createFromConfig(config: {
     id: string;
@@ -93,13 +93,13 @@ export interface IStrategyInputFactory {
 export interface IStrategyInputValidator {
   /** Validate a strategy input */
   validate(input: IStrategyInput): boolean;
-  
+
   /** Get validation errors */
   getErrors(): string[];
-  
+
   /** Clear validation errors */
   clearErrors(): void;
-  
+
   /** Check if the input is valid for the given unit type */
   isValidForUnitType(input: IStrategyInput, unitType: UnitType): boolean;
 }

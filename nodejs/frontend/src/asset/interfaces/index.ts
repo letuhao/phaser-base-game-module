@@ -1,6 +1,6 @@
 /**
  * Asset System Interfaces Index
- * 
+ *
  * Centralized export for all asset system interfaces
  */
 
@@ -24,16 +24,16 @@ export * from './strategies';
 
 export { AssetType, AssetState, AssetPriority } from './IAsset';
 export { BundleType, BundleState } from './IAssetBundle';
-export { 
-  LoaderType, 
-  LoaderState, 
-  LoadingStrategy, 
+export {
+  LoaderType,
+  LoaderState,
+  LoadingStrategy,
   LoadingStrategyType,
   ManagerOperation,
   FactoryOperation,
   LoaderFactoryOperation,
   ValidationStrategyType,
-  SceneAssetPhase
+  SceneAssetPhase,
 } from '../enums';
 
 // ============================================================================
@@ -110,9 +110,13 @@ export const ASSET_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreAssetInterface = typeof CORE_ASSET_INTERFACES[keyof typeof CORE_ASSET_INTERFACES];
-export type AssetManagerInterface = typeof ASSET_MANAGER_INTERFACES[keyof typeof ASSET_MANAGER_INTERFACES];
-export type AssetFactoryInterface = typeof ASSET_FACTORY_INTERFACES[keyof typeof ASSET_FACTORY_INTERFACES];
-export type AssetStrategyInterface = typeof ASSET_STRATEGY_INTERFACES[keyof typeof ASSET_STRATEGY_INTERFACES];
-export type SceneAssetInterface = typeof SCENE_ASSET_INTERFACES[keyof typeof SCENE_ASSET_INTERFACES];
-export type AssetInterface = typeof ASSET_INTERFACES[keyof typeof ASSET_INTERFACES];
+export type CoreAssetInterface = (typeof CORE_ASSET_INTERFACES)[keyof typeof CORE_ASSET_INTERFACES];
+export type AssetManagerInterface =
+  (typeof ASSET_MANAGER_INTERFACES)[keyof typeof ASSET_MANAGER_INTERFACES];
+export type AssetFactoryInterface =
+  (typeof ASSET_FACTORY_INTERFACES)[keyof typeof ASSET_FACTORY_INTERFACES];
+export type AssetStrategyInterface =
+  (typeof ASSET_STRATEGY_INTERFACES)[keyof typeof ASSET_STRATEGY_INTERFACES];
+export type SceneAssetInterface =
+  (typeof SCENE_ASSET_INTERFACES)[keyof typeof SCENE_ASSET_INTERFACES];
+export type AssetInterface = (typeof ASSET_INTERFACES)[keyof typeof ASSET_INTERFACES];

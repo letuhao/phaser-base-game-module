@@ -1,6 +1,6 @@
 /**
  * Animation Game Object Interfaces Index
- * 
+ *
  * Centralized export for all animation-specific game object interfaces
  */
 
@@ -52,6 +52,8 @@ export const ANIMATION_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreAnimationInterface = typeof CORE_ANIMATION_INTERFACES[keyof typeof CORE_ANIMATION_INTERFACES];
-export type SpecificAnimationInterface = typeof SPECIFIC_ANIMATION_INTERFACES[keyof typeof SPECIFIC_ANIMATION_INTERFACES];
-export type AnimationInterface = typeof ANIMATION_INTERFACES[keyof typeof ANIMATION_INTERFACES];
+export type CoreAnimationInterface =
+  (typeof CORE_ANIMATION_INTERFACES)[keyof typeof CORE_ANIMATION_INTERFACES];
+export type SpecificAnimationInterface =
+  (typeof SPECIFIC_ANIMATION_INTERFACES)[keyof typeof SPECIFIC_ANIMATION_INTERFACES];
+export type AnimationInterface = (typeof ANIMATION_INTERFACES)[keyof typeof ANIMATION_INTERFACES];

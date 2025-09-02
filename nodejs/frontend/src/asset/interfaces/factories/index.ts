@@ -1,6 +1,6 @@
 /**
  * Asset Factory Interfaces Index
- * 
+ *
  * Centralized export for all asset factory interfaces
  */
 
@@ -21,4 +21,5 @@ export const ASSET_FACTORY_INTERFACES = {
   IAssetLoaderFactory: 'IAssetLoaderFactory',
 } as const;
 
-export type AssetFactoryInterface = typeof ASSET_FACTORY_INTERFACES[keyof typeof ASSET_FACTORY_INTERFACES];
+export type AssetFactoryInterface =
+  (typeof ASSET_FACTORY_INTERFACES)[keyof typeof ASSET_FACTORY_INTERFACES];

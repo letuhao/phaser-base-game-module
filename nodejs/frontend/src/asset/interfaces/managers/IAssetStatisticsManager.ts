@@ -1,6 +1,6 @@
 /**
  * Asset Statistics Manager Interface
- * 
+ *
  * Defines statistics collection and analysis functionality for assets.
  */
 
@@ -18,7 +18,7 @@ export enum StatisticsType {
   MEMORY = 'memory',
   LOADING = 'loading',
   CACHING = 'caching',
-  POOLING = 'pooling'
+  POOLING = 'pooling',
 }
 
 /**
@@ -105,70 +105,75 @@ export interface StatisticsSnapshot {
  */
 export interface IAssetStatisticsManager {
   readonly statisticsManagerId: string;
-  
+
   /** Statistics configuration */
   statisticsConfig: StatisticsConfig;
-  
+
   /** Current statistics */
   currentStatistics: StatisticsSnapshot;
-  
+
   /** Statistics history */
   statisticsHistory: StatisticsSnapshot[];
-  
+
   /** Statistics metadata */
   statisticsMetadata: Record<string, any>;
-  
+
   /** Set statistics configuration */
   setStatisticsConfig(config: StatisticsConfig): this;
-  
+
   /** Set statistics metadata */
   setStatisticsMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get statistics configuration */
   getStatisticsConfig(): StatisticsConfig;
-  
+
   /** Get current statistics */
   getCurrentStatistics(): StatisticsSnapshot;
-  
+
   /** Get statistics history */
   getStatisticsHistory(): StatisticsSnapshot[];
-  
+
   /** Get statistics metadata */
   getStatisticsMetadata(): Record<string, any>;
-  
+
   /** Record asset operation */
   recordAssetOperation(asset: IAsset, operation: string, duration: number, success: boolean): void;
-  
+
   /** Record bundle operation */
-  recordBundleOperation(bundle: IAssetBundle, operation: string, duration: number, success: boolean): void;
-  
+  recordBundleOperation(
+    bundle: IAssetBundle,
+    operation: string,
+    duration: number,
+    success: boolean
+  ): void;
+
   /** Record performance metric */
   recordPerformanceMetric(metric: string, value: number, timestamp?: number): void;
-  
+
   /** Record memory usage */
   recordMemoryUsage(usage: number, timestamp?: number): void;
-  
+
   /** Record cache operation */
   recordCacheOperation(operation: string, hit: boolean, duration: number): void;
-  
+
   /** Record pool operation */
   recordPoolOperation(operation: string, hit: boolean, duration: number): void;
-  
+
   /** Get asset statistics */
   getAssetStatistics(): AssetStatistics;
-  
+
   /** Get bundle statistics */
   getBundleStatistics(): BundleStatistics;
-  
+
   /** Get performance statistics */
   getPerformanceStatistics(): PerformanceStatistics;
-  
+
   /** Get statistics by type */
   getStatisticsByType(type: StatisticsType): any;
-  
+
   /** Get statistics for time range */
   getStatisticsForTimeRange(startTime: number, endTime: number): StatisticsSnapshot[];
-  
+
   /** Get statistics summary */
   getStatisticsSummary(): {
     totalAssets: number;
@@ -177,19 +182,19 @@ export interface IAssetStatisticsManager {
     successRate: number;
     averagePerformance: number;
   };
-  
+
   /** Clear statistics */
   clearStatistics(): this;
-  
+
   /** Clear statistics history */
   clearStatisticsHistory(): this;
-  
+
   /** Export statistics */
   exportStatistics(): string;
-  
+
   /** Import statistics */
   importStatistics(data: string): this;
-  
+
   /** Update statistics manager */
   updateStatisticsManager(deltaTime: number): void;
 }

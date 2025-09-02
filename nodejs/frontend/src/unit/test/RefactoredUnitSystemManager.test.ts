@@ -29,7 +29,7 @@ describe('RefactoredUnitSystemManager', () => {
     mockContext = {
       parent: { width: 800, height: 600, x: 0, y: 0 },
       scene: { width: 1200, height: 800 },
-      viewport: { width: 1200, height: 800 }
+      viewport: { width: 1200, height: 800 },
     };
   });
 
@@ -42,7 +42,7 @@ describe('RefactoredUnitSystemManager', () => {
   describe('Initialization and Shutdown', () => {
     it('should initialize successfully', () => {
       unitSystemManager.initialize();
-      
+
       const status = unitSystemManager.getSystemStatus();
       expect(status.isInitialized).toBe(true);
       expect(status.totalUnits).toBe(0);
@@ -54,14 +54,14 @@ describe('RefactoredUnitSystemManager', () => {
     it('should shutdown successfully', () => {
       unitSystemManager.initialize();
       unitSystemManager.shutdown();
-      
+
       const status = unitSystemManager.getSystemStatus();
       expect(status.isInitialized).toBe(false);
     });
 
     it('should reset to default configuration', () => {
       unitSystemManager.initialize();
-      
+
       const config = unitSystemManager.getConfiguration();
       expect(config.performanceThreshold).toBe(100);
       expect(config.memoryLimit).toBe(1000);
@@ -125,15 +125,15 @@ describe('RefactoredUnitSystemManager', () => {
         sizeUnit: SizeUnit.PIXEL,
         dimension: Dimension.WIDTH,
         baseValue: 100,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       };
 
       const unit = unitSystemManager.createUnit('size', config);
-      
+
       expect(unit).toBeInstanceOf(SizeUnitCalculator);
       expect(unit.id).toBe('test-size-unit');
       expect(unit.unitType).toBe(UnitType.SIZE);
-      
+
       const status = unitSystemManager.getSystemStatus();
       expect(status.totalUnits).toBe(1);
     });
@@ -145,12 +145,12 @@ describe('RefactoredUnitSystemManager', () => {
         sizeUnit: SizeUnit.PIXEL,
         dimension: Dimension.WIDTH,
         baseValue: 100,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       };
 
       unitSystemManager.createUnit('size', config);
       const retrievedUnit = unitSystemManager.getUnit('test-unit');
-      
+
       expect(retrievedUnit).toBeDefined();
       expect(retrievedUnit?.id).toBe('test-unit');
     });
@@ -162,12 +162,12 @@ describe('RefactoredUnitSystemManager', () => {
         sizeUnit: SizeUnit.PIXEL,
         dimension: Dimension.WIDTH,
         baseValue: 100,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       };
 
       unitSystemManager.createUnit('size', config);
       expect(unitSystemManager.getSystemStatus().totalUnits).toBe(1);
-      
+
       const removed = unitSystemManager.removeUnit('test-unit');
       expect(removed).toBe(true);
       expect(unitSystemManager.getSystemStatus().totalUnits).toBe(0);
@@ -184,11 +184,11 @@ describe('RefactoredUnitSystemManager', () => {
         unitType: 'test-strategy',
         calculate: jest.fn().mockReturnValue(100),
         canHandle: jest.fn().mockReturnValue(true),
-        getPriority: jest.fn().mockReturnValue(1)
+        getPriority: jest.fn().mockReturnValue(1),
       };
 
       unitSystemManager.registerStrategy(mockStrategy);
-      
+
       const strategyManager = unitSystemManager.getStrategyManager();
       expect(strategyManager.getStrategyCount()).toBe(1);
       expect(strategyManager.hasStrategy('test-strategy')).toBe(true);
@@ -209,14 +209,14 @@ describe('RefactoredUnitSystemManager', () => {
         getDescription: jest.fn().mockReturnValue('Test command'),
         getTimestamp: jest.fn().mockReturnValue(new Date()),
         getResult: jest.fn().mockReturnValue(100),
-        getPreviousResult: jest.fn().mockReturnValue(undefined)
+        getPreviousResult: jest.fn().mockReturnValue(undefined),
       };
 
       const result = unitSystemManager.executeCommand(mockCommand, mockContext);
-      
+
       expect(result).toBe(100);
       expect(mockCommand.execute).toHaveBeenCalledWith(mockContext);
-      
+
       const commandManager = unitSystemManager.getCommandManager();
       expect(commandManager.getCommandHistorySize()).toBe(1);
     });
@@ -230,15 +230,15 @@ describe('RefactoredUnitSystemManager', () => {
         getDescription: jest.fn().mockReturnValue('Test command'),
         getTimestamp: jest.fn().mockReturnValue(new Date()),
         getResult: jest.fn().mockReturnValue(100),
-        getPreviousResult: jest.fn().mockReturnValue(undefined)
+        getPreviousResult: jest.fn().mockReturnValue(undefined),
       };
 
       unitSystemManager.executeCommand(mockCommand, mockContext);
-      
+
       const commandManager = unitSystemManager.getCommandManager();
       expect(commandManager.canUndo()).toBe(true);
       expect(commandManager.canRedo()).toBe(false);
-      
+
       const undone = commandManager.undoLastCommand();
       expect(undone).toBe(true);
       expect(mockCommand.undo).toHaveBeenCalled();
@@ -257,11 +257,11 @@ describe('RefactoredUnitSystemManager', () => {
         onUnitValueChanged: jest.fn(),
         onUnitCalculationStarted: jest.fn(),
         onUnitCalculationCompleted: jest.fn(),
-        onUnitCalculationFailed: jest.fn()
+        onUnitCalculationFailed: jest.fn(),
       };
 
       unitSystemManager.addObserver(mockObserver);
-      
+
       const observerManager = unitSystemManager.getObserverManager();
       expect(observerManager.getObserverCount()).toBe(1);
       expect(observerManager.hasObserver(mockObserver)).toBe(true);
@@ -274,22 +274,22 @@ describe('RefactoredUnitSystemManager', () => {
         onUnitValueChanged: jest.fn(),
         onUnitCalculationStarted: jest.fn(),
         onUnitCalculationCompleted: jest.fn(),
-        onUnitCalculationFailed: jest.fn()
+        onUnitCalculationFailed: jest.fn(),
       };
 
       unitSystemManager.addObserver(mockObserver);
-      
+
       const config: IUnitConfig = {
         id: 'test-unit',
         name: 'Test Unit',
         sizeUnit: SizeUnit.PIXEL,
         dimension: Dimension.WIDTH,
         baseValue: 100,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       };
 
       unitSystemManager.createUnit('size', config);
-      
+
       expect(mockObserver.onUnitCreated).toHaveBeenCalledWith('test-unit', UnitType.SIZE);
     });
   });
@@ -306,11 +306,11 @@ describe('RefactoredUnitSystemManager', () => {
         validate: jest.fn().mockReturnValue(true),
         getName: jest.fn().mockReturnValue('test-validator'),
         getErrorMessage: jest.fn().mockReturnValue(undefined),
-        canHandle: jest.fn().mockReturnValue(true)
+        canHandle: jest.fn().mockReturnValue(true),
       };
 
       unitSystemManager.addValidator(mockValidator);
-      
+
       const validationManager = unitSystemManager.getValidationManager();
       expect(validationManager.getValidatorCount()).toBe(1);
     });
@@ -323,13 +323,13 @@ describe('RefactoredUnitSystemManager', () => {
 
     it('should track performance metrics', () => {
       const performanceManager = unitSystemManager.getPerformanceManager();
-      
+
       // Clear existing data to start fresh
       performanceManager.clearPerformanceData();
-      
+
       performanceManager.startMeasurement('test-operation');
       performanceManager.endMeasurement('test-operation');
-      
+
       const metrics = performanceManager.getPerformanceMetrics();
       expect(metrics.totalOperations).toBe(1);
       expect(metrics.averageExecutionTime).toBeGreaterThan(0);
@@ -337,7 +337,7 @@ describe('RefactoredUnitSystemManager', () => {
 
     it('should provide system performance metrics', () => {
       const metrics = unitSystemManager.getPerformanceMetrics();
-      
+
       expect(metrics).toHaveProperty('totalCalculations');
       expect(metrics).toHaveProperty('averageCalculationTime');
       expect(metrics).toHaveProperty('memoryUsage');
@@ -354,12 +354,12 @@ describe('RefactoredUnitSystemManager', () => {
       const newConfig = {
         performanceThreshold: 200,
         memoryLimit: 2000,
-        maxValidationErrors: 20
+        maxValidationErrors: 20,
       };
 
       unitSystemManager.updateConfiguration(newConfig);
       const config = unitSystemManager.getConfiguration();
-      
+
       expect(config.performanceThreshold).toBe(200);
       expect(config.memoryLimit).toBe(2000);
       expect(config.maxValidationErrors).toBe(20);
@@ -368,7 +368,7 @@ describe('RefactoredUnitSystemManager', () => {
     it('should reset to default configuration', () => {
       unitSystemManager.updateConfiguration({ performanceThreshold: 999 });
       unitSystemManager.resetToDefaults();
-      
+
       const config = unitSystemManager.getConfiguration();
       expect(config.performanceThreshold).toBe(100);
     });
@@ -386,7 +386,7 @@ describe('RefactoredUnitSystemManager', () => {
         sizeUnit: SizeUnit.PIXEL,
         dimension: Dimension.WIDTH,
         baseValue: 100,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
       };
 
       expect(() => {
@@ -405,11 +405,11 @@ describe('RefactoredUnitSystemManager', () => {
         getDescription: jest.fn().mockReturnValue('Failing command'),
         getTimestamp: jest.fn().mockReturnValue(new Date()),
         getResult: jest.fn().mockReturnValue(undefined),
-        getPreviousResult: jest.fn().mockReturnValue(undefined)
+        getPreviousResult: jest.fn().mockReturnValue(undefined),
       };
 
       const result = unitSystemManager.executeCommand(failingCommand, mockContext);
-      
+
       // Should return fallback value on error
       expect(result).toBe(100); // DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT
     });

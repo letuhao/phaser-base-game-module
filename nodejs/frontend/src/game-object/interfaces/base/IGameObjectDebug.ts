@@ -1,6 +1,6 @@
 /**
  * Game Object Debug Interface
- * 
+ *
  * Defines debug-related methods for game objects.
  * This interface focuses solely on debugging and utility concerns.
  */
@@ -16,7 +16,7 @@ export interface IGameObjectDebugInfo {
   gameObjectName: string;
   gameObjectType: GameObjectType;
   gameObjectState: GameObjectState;
-  
+
   /** Transform information */
   gameObjectTransform: {
     x: number;
@@ -28,20 +28,20 @@ export interface IGameObjectDebugInfo {
     width: number;
     height: number;
   };
-  
+
   /** Component information */
   gameObjectComponents: {
     count: number;
     types: ComponentType[];
   };
-  
+
   /** Hierarchy information */
   gameObjectHierarchy: {
     parent: string | null;
     children: number;
     depth: number;
   };
-  
+
   /** Performance information */
   gameObjectPerformance: {
     updateTime: number;
@@ -57,10 +57,10 @@ export interface IGameObjectDebug {
   // ============================================================================
   // DEBUG METHODS
   // ============================================================================
-  
+
   /** Clone this game object */
   cloneGameObject(): IGameObjectDebug;
-  
+
   /** Get debug information */
   getGameObjectDebugInfo(): IGameObjectDebugInfo;
 }

@@ -1,6 +1,6 @@
 /**
  * Game Object Manager Interfaces Index
- * 
+ *
  * Centralized export for all game object manager interfaces
  */
 
@@ -28,4 +28,5 @@ export const GAMEOBJECT_MANAGER_INTERFACES = {
   ISingletonManager: 'ISingletonManager',
 } as const;
 
-export type GameObjectManagerInterface = typeof GAMEOBJECT_MANAGER_INTERFACES[keyof typeof GAMEOBJECT_MANAGER_INTERFACES];
+export type GameObjectManagerInterface =
+  (typeof GAMEOBJECT_MANAGER_INTERFACES)[keyof typeof GAMEOBJECT_MANAGER_INTERFACES];

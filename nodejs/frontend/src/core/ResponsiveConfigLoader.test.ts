@@ -25,10 +25,10 @@ describe('ResponsiveConfigLoader', () => {
           {
             id: 'test',
             breakpointCondition: { minWidth: 0, maxWidth: undefined },
-            layoutProperties: { width: 'auto', height: 100 }
-          }
+            layoutProperties: { width: 'auto', height: 100 },
+          },
         ],
-        responsiveSettings: {}
+        responsiveSettings: {},
       };
 
       loader.registerConfig('test', testConfig);
@@ -45,8 +45,8 @@ describe('ResponsiveConfigLoader', () => {
         responsiveSettings: {
           mobile: [],
           tablet: [],
-          desktop: []
-        }
+          desktop: [],
+        },
       };
 
       const breakpoints = ResponsiveConfigLoader.getBreakpointKeys(testConfig);
@@ -60,20 +60,32 @@ describe('ResponsiveConfigLoader', () => {
         default: [],
         responsiveSettings: {
           mobile: [
-            { id: 'test', breakpointCondition: { minWidth: 0, maxWidth: 767 }, layoutProperties: {} }
+            {
+              id: 'test',
+              breakpointCondition: { minWidth: 0, maxWidth: 767 },
+              layoutProperties: {},
+            },
           ],
           tablet: [
-            { id: 'test', breakpointCondition: { minWidth: 768, maxWidth: 1023 }, layoutProperties: {} }
+            {
+              id: 'test',
+              breakpointCondition: { minWidth: 768, maxWidth: 1023 },
+              layoutProperties: {},
+            },
           ],
           desktop: [
-            { id: 'test', breakpointCondition: { minWidth: 1024, maxWidth: undefined }, layoutProperties: {} }
-          ]
+            {
+              id: 'test',
+              breakpointCondition: { minWidth: 1024, maxWidth: undefined },
+              layoutProperties: {},
+            },
+          ],
         },
         breakpointMetadata: {
           mobile: { name: 'Mobile', minWidth: 0, maxWidth: 767 },
           tablet: { name: 'Tablet', minWidth: 768, maxWidth: 1023 },
-          desktop: { name: 'Desktop', minWidth: 1024, maxWidth: undefined }
-        }
+          desktop: { name: 'Desktop', minWidth: 1024, maxWidth: undefined },
+        },
       };
 
       expect(ResponsiveConfigLoader.getCurrentBreakpointKey(testConfig, 400)).toBe('mobile');
@@ -86,10 +98,18 @@ describe('ResponsiveConfigLoader', () => {
     it('should get object IDs from config', () => {
       const testConfig: ResponsiveConfig = {
         default: [
-          { id: 'header', breakpointCondition: { minWidth: 0, maxWidth: undefined }, layoutProperties: {} },
-          { id: 'content', breakpointCondition: { minWidth: 0, maxWidth: undefined }, layoutProperties: {} }
+          {
+            id: 'header',
+            breakpointCondition: { minWidth: 0, maxWidth: undefined },
+            layoutProperties: {},
+          },
+          {
+            id: 'content',
+            breakpointCondition: { minWidth: 0, maxWidth: undefined },
+            layoutProperties: {},
+          },
         ],
-        responsiveSettings: {}
+        responsiveSettings: {},
       };
 
       const objectIds = ResponsiveConfigLoader.getObjectIds(testConfig);
@@ -103,18 +123,18 @@ describe('ResponsiveConfigLoader', () => {
           {
             id: 'header',
             breakpointCondition: { minWidth: 0, maxWidth: undefined },
-            layoutProperties: { height: 60 }
-          }
+            layoutProperties: { height: 60 },
+          },
         ],
         responsiveSettings: {
           mobile: [
             {
               id: 'header',
               breakpointCondition: { minWidth: 0, maxWidth: 767 },
-              layoutProperties: { height: 50 }
-            }
-          ]
-        }
+              layoutProperties: { height: 50 },
+            },
+          ],
+        },
       };
 
       const layout = ResponsiveConfigLoader.getObjectLayout(testConfig, 'header', 400);
@@ -132,10 +152,10 @@ describe('ResponsiveConfigLoader', () => {
           {
             id: 'test',
             breakpointCondition: { minWidth: 0, maxWidth: undefined },
-            layoutProperties: { width: 'auto' }
-          }
+            layoutProperties: { width: 'auto' },
+          },
         ],
-        responsiveSettings: {}
+        responsiveSettings: {},
       };
 
       const validation = ResponsiveConfigLoader.validateConfig(validConfig);
@@ -147,9 +167,13 @@ describe('ResponsiveConfigLoader', () => {
         default: [],
         responsiveSettings: {
           mobile: [
-            { id: 'test', breakpointCondition: { minWidth: 0, maxWidth: 767 }, layoutProperties: {} }
-          ]
-        }
+            {
+              id: 'test',
+              breakpointCondition: { minWidth: 0, maxWidth: 767 },
+              layoutProperties: {},
+            },
+          ],
+        },
       } as ResponsiveConfig;
 
       // Remove required properties to make it invalid

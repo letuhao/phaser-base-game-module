@@ -4,10 +4,10 @@ import type { IUnitConfig } from '../interfaces/IUnitConfig';
 import { Logger } from '../../core/Logger';
 import { UnitType } from '../enums/UnitType';
 import { UnitCalculatorFactory } from '../classes/UnitCalculatorFactory';
-import { 
-  isSizeUnitConfig, 
-  isPositionUnitConfig, 
-  isScaleUnitConfig 
+import {
+  isSizeUnitConfig,
+  isPositionUnitConfig,
+  isScaleUnitConfig,
 } from '../interfaces/IUnitConfig';
 
 /**
@@ -21,12 +21,12 @@ export interface IUnitRegistryManager {
   getUnit(unitId: string): IUnit | undefined;
   getAllUnits(): IUnit[];
   removeUnit(unitId: string): boolean;
-  
+
   // Unit lifecycle
   activateUnit(unitId: string): boolean;
   deactivateUnit(unitId: string): boolean;
   getActiveUnits(): IUnit[];
-  
+
   // Unit statistics
   getUnitCount(): number;
   getUnitCountByType(unitType: UnitType): number;
@@ -49,7 +49,7 @@ export class UnitRegistryManager implements IUnitRegistryManager {
     this.logger.debug('UnitRegistryManager', 'createUnit', 'Creating unit', {
       unitType,
       unitId: config.id,
-      unitName: config.name
+      unitName: config.name,
     });
 
     try {
@@ -58,7 +58,7 @@ export class UnitRegistryManager implements IUnitRegistryManager {
         this.units.set(unit.id, unit);
         this.logger.info('UnitRegistryManager', 'createUnit', 'Unit created successfully', {
           unitId: unit.id,
-          unitType: unit.unitType
+          unitType: unit.unitType,
         });
         return unit;
       }
@@ -67,7 +67,7 @@ export class UnitRegistryManager implements IUnitRegistryManager {
       this.logger.error('UnitRegistryManager', 'createUnit', 'Failed to create unit', {
         unitType,
         unitId: config.id,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -100,12 +100,14 @@ export class UnitRegistryManager implements IUnitRegistryManager {
       this.units.delete(unitId);
       this.logger.info('UnitRegistryManager', 'removeUnit', 'Unit removed successfully', {
         unitId,
-        unitType: unit.unitType
+        unitType: unit.unitType,
       });
       return true;
     }
-    
-    this.logger.debug('UnitRegistryManager', 'removeUnit', 'Unit not found for removal', { unitId });
+
+    this.logger.debug('UnitRegistryManager', 'removeUnit', 'Unit not found for removal', {
+      unitId,
+    });
     return false;
   }
 
@@ -120,8 +122,10 @@ export class UnitRegistryManager implements IUnitRegistryManager {
       this.logger.info('UnitRegistryManager', 'activateUnit', 'Unit activated', { unitId });
       return true;
     }
-    
-    this.logger.warn('UnitRegistryManager', 'activateUnit', 'Unit not found for activation', { unitId });
+
+    this.logger.warn('UnitRegistryManager', 'activateUnit', 'Unit not found for activation', {
+      unitId,
+    });
     return false;
   }
 
@@ -136,8 +140,10 @@ export class UnitRegistryManager implements IUnitRegistryManager {
       this.logger.info('UnitRegistryManager', 'deactivateUnit', 'Unit deactivated', { unitId });
       return true;
     }
-    
-    this.logger.warn('UnitRegistryManager', 'deactivateUnit', 'Unit not found for deactivation', { unitId });
+
+    this.logger.warn('UnitRegistryManager', 'deactivateUnit', 'Unit not found for deactivation', {
+      unitId,
+    });
     return false;
   }
 

@@ -32,7 +32,7 @@ describe('CalculateSizeCommand', () => {
   describe('Size Calculation Execution', () => {
     it('should execute size calculation successfully', () => {
       const result = command.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
       expect(command.getResult()).toBe(result);
@@ -44,7 +44,7 @@ describe('CalculateSizeCommand', () => {
         { value: 200 },
         { value: 50 },
         { sizeArray: [100, 200, 300] },
-        { sizeString: 'auto' }
+        { sizeString: 'auto' },
       ];
 
       for (const input of inputs) {
@@ -59,7 +59,7 @@ describe('CalculateSizeCommand', () => {
       const contexts = [
         createMockContext(),
         { parent: { width: 1000, height: 800, x: 0, y: 0 }, dimension: 'width' as const },
-        { scene: { width: 1600, height: 1200 }, dimension: 'height' as const }
+        { scene: { width: 1600, height: 1200 }, dimension: 'height' as const },
       ];
 
       for (const context of contexts) {
@@ -74,7 +74,7 @@ describe('CalculateSizeCommand', () => {
     it('should handle invalid input gracefully', () => {
       const invalidInput = { invalidProperty: 'invalid' };
       const invalidCommand = new CalculateSizeCommand(invalidInput as any, mockContext);
-      
+
       const result = invalidCommand.execute(mockContext);
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0); // Should return fallback value
@@ -83,7 +83,7 @@ describe('CalculateSizeCommand', () => {
     it('should handle missing context properties', () => {
       const partialContext = { dimension: 'width' as const };
       const result = command.execute(partialContext as any);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });
@@ -94,7 +94,7 @@ describe('CalculateSizeCommand', () => {
       const numericInput = { value: 150 };
       const numericCommand = new CalculateSizeCommand(numericInput as any, mockContext);
       const result = numericCommand.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });
@@ -103,7 +103,7 @@ describe('CalculateSizeCommand', () => {
       const arrayInput = { sizeArray: [100, 200, 300] };
       const arrayCommand = new CalculateSizeCommand(arrayInput as any, mockContext);
       const result = arrayCommand.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });
@@ -112,7 +112,7 @@ describe('CalculateSizeCommand', () => {
       const stringInput = { sizeString: 'auto' };
       const stringCommand = new CalculateSizeCommand(stringInput as any, mockContext);
       const result = stringCommand.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });
@@ -121,7 +121,7 @@ describe('CalculateSizeCommand', () => {
       const objectInput = { sizeObject: { width: 100, height: 200 } };
       const objectCommand = new CalculateSizeCommand(objectInput as any, mockContext);
       const result = objectCommand.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });
@@ -130,12 +130,12 @@ describe('CalculateSizeCommand', () => {
   describe('Undo Functionality', () => {
     it('should undo size calculation', () => {
       const result = command.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(command.getResult()).toBe(result);
-      
+
       command.undo();
-      
+
       // After undo, the result should be the previous result
       expect(command.getResult()).toBeDefined();
     });
@@ -143,7 +143,7 @@ describe('CalculateSizeCommand', () => {
     it('should handle undo without previous execution', () => {
       // Create a new command without executing it
       const newCommand = new CalculateSizeCommand({ value: 100 } as any, mockContext);
-      
+
       // Undo should not throw an error
       expect(() => newCommand.undo()).not.toThrow();
     });
@@ -154,7 +154,7 @@ describe('CalculateSizeCommand', () => {
       const startTime = Date.now();
       const result = command.execute(mockContext);
       const endTime = Date.now();
-      
+
       expect(typeof result).toBe('number');
       expect(command.getTimestamp()).toBeInstanceOf(Date);
       expect(endTime - startTime).toBeGreaterThanOrEqual(0);
@@ -166,7 +166,7 @@ describe('CalculateSizeCommand', () => {
         const result = command.execute(mockContext);
         results.push(result);
       }
-      
+
       results.forEach(result => {
         expect(typeof result).toBe('number');
         expect(result).toBeGreaterThan(0);
@@ -179,9 +179,9 @@ describe('CalculateSizeCommand', () => {
       const contexts = [
         { parent: { width: 800, height: 600, x: 0, y: 0 }, dimension: 'width' as const },
         { parent: { width: 1200, height: 800, x: 0, y: 0 }, dimension: 'width' as const },
-        { parent: { width: 400, height: 300, x: 0, y: 0 }, dimension: 'width' as const }
+        { parent: { width: 400, height: 300, x: 0, y: 0 }, dimension: 'width' as const },
       ];
-      
+
       for (const context of contexts) {
         const result = command.execute(context);
         expect(typeof result).toBe('number');
@@ -193,9 +193,9 @@ describe('CalculateSizeCommand', () => {
       const contexts = [
         { scene: { width: 1200, height: 800 }, dimension: 'width' as const },
         { scene: { width: 1920, height: 1080 }, dimension: 'width' as const },
-        { scene: { width: 800, height: 600 }, dimension: 'width' as const }
+        { scene: { width: 800, height: 600 }, dimension: 'width' as const },
       ];
-      
+
       for (const context of contexts) {
         const result = command.execute(context);
         expect(typeof result).toBe('number');
@@ -206,9 +206,9 @@ describe('CalculateSizeCommand', () => {
     it('should handle viewport contexts', () => {
       const contexts = [
         { viewport: { width: 1200, height: 800 }, dimension: 'width' as const },
-        { viewport: { width: 1600, height: 900 }, dimension: 'width' as const }
+        { viewport: { width: 1600, height: 900 }, dimension: 'width' as const },
       ];
-      
+
       for (const context of contexts) {
         const result = command.execute(context);
         expect(typeof result).toBe('number');
@@ -222,7 +222,7 @@ describe('CalculateSizeCommand', () => {
       const zeroInput = { value: 0 };
       const zeroCommand = new CalculateSizeCommand(zeroInput as any, mockContext);
       const result = zeroCommand.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThanOrEqual(0);
     });
@@ -231,7 +231,7 @@ describe('CalculateSizeCommand', () => {
       const negativeInput = { value: -50 };
       const negativeCommand = new CalculateSizeCommand(negativeInput as any, mockContext);
       const result = negativeCommand.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
     });
 
@@ -239,7 +239,7 @@ describe('CalculateSizeCommand', () => {
       const largeInput = { value: 10000 };
       const largeCommand = new CalculateSizeCommand(largeInput as any, mockContext);
       const result = largeCommand.execute(mockContext);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });

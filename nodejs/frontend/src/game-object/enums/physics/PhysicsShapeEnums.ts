@@ -1,6 +1,6 @@
 /**
  * Physics Shape Enums
- * 
+ *
  * Enums for physics shapes, collision types, and physics-specific functionality
  */
 

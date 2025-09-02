@@ -1,6 +1,6 @@
 /**
  * Performance System Enums
- * 
+ *
  * Enums for performance optimization, caching, and performance-specific functionality
  */
 

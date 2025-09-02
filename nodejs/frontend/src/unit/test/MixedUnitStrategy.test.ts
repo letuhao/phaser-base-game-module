@@ -37,7 +37,7 @@ describe('MixedUnitStrategy', () => {
       const input = {
         size: { value: 100 },
         position: { value: 'center' },
-        scale: { value: 1.5 }
+        scale: { value: 1.5 },
       } as any;
       expect(strategy.canHandle(input)).toBe(true);
     });
@@ -79,7 +79,7 @@ describe('MixedUnitStrategy', () => {
       const input = {
         size: { value: 100 },
         position: { value: 'center' },
-        scale: { value: 1.5 }
+        scale: { value: 1.5 },
       } as any;
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);
@@ -87,7 +87,7 @@ describe('MixedUnitStrategy', () => {
 
     it('should handle object with only size properties', () => {
       const input = {
-        size: { value: 200 }
+        size: { value: 200 },
       } as any;
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);
@@ -95,7 +95,7 @@ describe('MixedUnitStrategy', () => {
 
     it('should handle object with only position properties', () => {
       const input = {
-        position: { value: 'center' }
+        position: { value: 'center' },
       } as any;
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);
@@ -103,7 +103,7 @@ describe('MixedUnitStrategy', () => {
 
     it('should handle object with only scale properties', () => {
       const input = {
-        scale: { value: 2.0 }
+        scale: { value: 2.0 },
       } as any;
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);
@@ -144,11 +144,11 @@ describe('MixedUnitStrategy', () => {
     it('should handle complex nested objects', () => {
       const input = {
         size: {
-          value: 100
+          value: 100,
         },
         position: {
-          value: 'center'
-        }
+          value: 'center',
+        },
       } as any;
       const result = strategy.calculate(input, mockContext);
       expect(result).toBeGreaterThan(0);

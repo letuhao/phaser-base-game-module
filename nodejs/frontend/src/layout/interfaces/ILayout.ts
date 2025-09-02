@@ -4,16 +4,16 @@
  * Fully compatible with Unit System and responsive design
  */
 
-import { 
-  SizeUnit, 
-  PositionUnit, 
+import {
+  SizeUnit,
+  PositionUnit,
   ScaleUnit,
   SizeValue,
   PositionValue,
   ScaleValue,
-  IRandomValueNumber
+  IRandomValueNumber,
 } from '../../unit';
-import { 
+import {
   LayoutType,
   Alignment,
   PositionType,
@@ -30,7 +30,7 @@ import {
   RoundingStrategy,
   ThemeMode,
   ComplexityLevel,
-  ValidationSeverity
+  ValidationSeverity,
 } from '../enums/LayoutEnums';
 
 // ============================================================================
@@ -44,34 +44,34 @@ import {
 export interface ILayout {
   /** Unique identifier for this layout */
   id: string;
-  
+
   /** Human-readable name */
   name: string;
-  
+
   /** Description of what this layout represents */
   description?: string;
-  
+
   /** Whether this layout is currently active */
   isActive: boolean;
-  
+
   /** Priority for layout resolution (higher = more important) */
   priority: number;
-  
+
   /** Layout type */
   type: LayoutType;
-  
+
   /** Layout configuration */
   config: ILayoutConfig;
-  
+
   /** Responsive behavior */
   responsive?: IResponsiveLayout;
-  
+
   /** Unit system integration */
   units?: IUnitLayout;
-  
+
   /** Custom properties */
   custom?: Record<string, unknown>;
-  
+
   /** Metadata for the layout */
   metadata?: ILayoutMetadata;
 }
@@ -91,7 +91,7 @@ export interface ILayoutConfig {
     minHeight?: number | SizeValue | SizeUnit | IRandomValueNumber;
     maxHeight?: number | SizeValue | SizeUnit | IRandomValueNumber;
   };
-  
+
   /** Position configuration */
   position: {
     x?: number | PositionValue | PositionUnit | HorizontalAlignment | IRandomValueNumber;
@@ -99,14 +99,14 @@ export interface ILayoutConfig {
     z?: number | IRandomValueNumber;
     type: PositionType;
   };
-  
+
   /** Alignment configuration */
   alignment: {
     horizontal: HorizontalAlignment;
     vertical: VerticalAlignment;
     combined?: Alignment;
   };
-  
+
   /** Scale configuration */
   scale: {
     x?: number | ScaleValue | ScaleUnit | IRandomValueNumber;
@@ -114,13 +114,13 @@ export interface ILayoutConfig {
     uniform?: number | ScaleValue | ScaleUnit | IRandomValueNumber;
     strategy: ScaleStrategy;
   };
-  
+
   /** Z-index and layering */
   layering: {
     zIndex?: number | IRandomValueNumber;
     zOrder?: number | IRandomValueNumber;
   };
-  
+
   /** Overflow handling */
   overflow: {
     horizontal: OverflowType;
@@ -135,10 +135,10 @@ export interface ILayoutConfig {
 export interface IResponsiveLayout {
   /** Breakpoint-specific configurations */
   breakpoints: Map<BreakpointName, ILayoutConfig>;
-  
+
   /** Default configuration */
   default: ILayoutConfig;
-  
+
   /** Responsive behavior settings */
   behavior: {
     maintainAspectRatio: boolean;
@@ -146,7 +146,7 @@ export interface IResponsiveLayout {
     alignment: Alignment;
     smoothTransitions: boolean;
   };
-  
+
   /** Fallback configuration */
   fallback?: ILayoutConfig;
 }
@@ -162,7 +162,7 @@ export interface IUnitLayout {
     positionUnit: PositionUnit;
     scaleUnit: ScaleUnit;
   };
-  
+
   /** Unit constraints */
   constraints: {
     minValue?: number;
@@ -170,7 +170,7 @@ export interface IUnitLayout {
     step?: number;
     precision?: number;
   };
-  
+
   /** Unit validation rules */
   validation: {
     required?: boolean;
@@ -178,7 +178,7 @@ export interface IUnitLayout {
     allowZero?: boolean;
     allowInfinite?: boolean;
   };
-  
+
   /** Unit conversion settings */
   conversion: {
     autoConvert?: boolean;
@@ -194,26 +194,26 @@ export interface IUnitLayout {
 export interface ILayoutMetadata {
   /** When this layout was created */
   createdAt: Date;
-  
+
   /** When this layout was last modified */
   modifiedAt: Date;
-  
+
   /** Author of this layout */
   author?: string;
-  
+
   /** Version of this layout */
   version?: string;
-  
+
   /** Tags for categorization */
   tags?: string[];
-  
+
   /** Performance metrics */
   performance?: {
     calculationTime: number;
     memoryUsage: number;
     complexity: ComplexityLevel;
   };
-  
+
   /** Custom metadata */
   custom?: Record<string, unknown>;
 }
@@ -235,7 +235,7 @@ export interface ILayoutContext {
     y: number;
     scale: number;
   };
-  
+
   /** Viewport information */
   viewport: {
     width: number;
@@ -243,7 +243,7 @@ export interface ILayoutContext {
     scale: number;
     orientation: DeviceOrientation;
   };
-  
+
   /** Device information */
   device: {
     type: DeviceType;
@@ -251,21 +251,21 @@ export interface ILayoutContext {
     pixelRatio: number;
     capabilities: string[];
   };
-  
+
   /** Performance settings */
   performance: {
     level: PerformanceLevel;
     updateFrequency: UpdateFrequency;
     enableCaching: boolean;
   };
-  
+
   /** Theme context */
   theme?: {
     name: string;
     variant: string;
     mode: ThemeMode;
   };
-  
+
   /** Custom context */
   custom?: Record<string, unknown>;
 }
@@ -289,31 +289,31 @@ export interface ICalculatedLayout {
     scaleY: number;
     zIndex: number;
   };
-  
+
   /** Applied configuration */
   applied: ILayoutConfig;
-  
+
   /** Responsive information */
   responsive: {
     breakpoint: BreakpointName | null;
     isResponsive: boolean;
     breakpointActive: boolean;
   };
-  
+
   /** Unit conversion information */
   units: {
     conversions: IUnitConversion[];
     originalValues: Record<string, unknown>;
     finalValues: Record<string, number>;
   };
-  
+
   /** Performance information */
   performance: {
     calculationTime: number;
     strategyUsed: string;
     cacheHit: boolean;
   };
-  
+
   /** Validation results */
   validation: {
     isValid: boolean;
@@ -329,19 +329,19 @@ export interface ICalculatedLayout {
 export interface IUnitConversion {
   /** Property name */
   property: string;
-  
+
   /** Original value */
   originalValue: number | SizeValue | PositionValue | ScaleValue;
-  
+
   /** Original unit */
   originalUnit: SizeUnit | PositionUnit | ScaleUnit;
-  
+
   /** Final value */
   finalValue: number;
-  
+
   /** Conversion factor */
   conversionFactor: number;
-  
+
   /** Conversion method */
   method: string;
 }
@@ -357,16 +357,16 @@ export interface IUnitConversion {
 export interface ILayoutValidationResult {
   /** Whether the layout is valid */
   isValid: boolean;
-  
+
   /** Validation errors */
   errors: IValidationError[];
-  
+
   /** Validation warnings */
   warnings: IValidationWarning[];
-  
+
   /** Validation suggestions */
   suggestions: IValidationSuggestion[];
-  
+
   /** Validation metadata */
   metadata: {
     validationTime: number;
@@ -381,16 +381,16 @@ export interface ILayoutValidationResult {
 export interface IValidationError {
   /** Error code */
   code: string;
-  
+
   /** Error message */
   message: string;
-  
+
   /** Property path */
   path: string;
-  
+
   /** Error severity */
   severity: ValidationSeverity;
-  
+
   /** Suggested fix */
   suggestion?: string;
 }
@@ -401,16 +401,16 @@ export interface IValidationError {
 export interface IValidationWarning {
   /** Warning code */
   code: string;
-  
+
   /** Warning message */
   message: string;
-  
+
   /** Property path */
   path: string;
-  
+
   /** Warning severity */
   severity: ValidationSeverity;
-  
+
   /** Suggested improvement */
   suggestion?: string;
 }
@@ -421,16 +421,16 @@ export interface IValidationWarning {
 export interface IValidationSuggestion {
   /** Suggestion code */
   code: string;
-  
+
   /** Suggestion message */
   message: string;
-  
+
   /** Property path */
   path: string;
-  
+
   /** Suggested value */
   suggestedValue?: unknown;
-  
+
   /** Reason for suggestion */
   reason: string;
 }

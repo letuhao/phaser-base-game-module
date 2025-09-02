@@ -156,7 +156,7 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
   protected handleCalculationError(error: unknown, input: ITemplateInput): void {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
-    
+
     this.logger.error('ScaleCalculationTemplate', 'handleCalculationError', 'Calculation error', {
       error: errorMessage,
       input,
@@ -171,7 +171,10 @@ export abstract class ScaleCalculationTemplate implements IUnitCalculationTempla
    */
   protected applyRoundingAndBounds(result: number): number {
     // Default implementation: round to 3 decimal places for scale precision
-    return Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT * 10) / (DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT * 10);
+    return (
+      Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT * 10) /
+      (DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT * 10)
+    );
   }
 
   /**

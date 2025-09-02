@@ -1,6 +1,6 @@
 /**
  * Design Patterns Game Object Interfaces Index
- * 
+ *
  * Centralized export for all design pattern-specific game object interfaces
  */
 
@@ -65,7 +65,11 @@ export const DESIGN_PATTERN_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CreationalPatternInterface = typeof CREATIONAL_PATTERN_INTERFACES[keyof typeof CREATIONAL_PATTERN_INTERFACES];
-export type BehavioralPatternInterface = typeof BEHAVIORAL_PATTERN_INTERFACES[keyof typeof BEHAVIORAL_PATTERN_INTERFACES];
-export type StructuralPatternInterface = typeof STRUCTURAL_PATTERN_INTERFACES[keyof typeof STRUCTURAL_PATTERN_INTERFACES];
-export type DesignPatternInterface = typeof DESIGN_PATTERN_INTERFACES[keyof typeof DESIGN_PATTERN_INTERFACES];
+export type CreationalPatternInterface =
+  (typeof CREATIONAL_PATTERN_INTERFACES)[keyof typeof CREATIONAL_PATTERN_INTERFACES];
+export type BehavioralPatternInterface =
+  (typeof BEHAVIORAL_PATTERN_INTERFACES)[keyof typeof BEHAVIORAL_PATTERN_INTERFACES];
+export type StructuralPatternInterface =
+  (typeof STRUCTURAL_PATTERN_INTERFACES)[keyof typeof STRUCTURAL_PATTERN_INTERFACES];
+export type DesignPatternInterface =
+  (typeof DESIGN_PATTERN_INTERFACES)[keyof typeof DESIGN_PATTERN_INTERFACES];

@@ -1,7 +1,16 @@
 // Strategy interfaces
-export type { ISizeValueCalculationStrategy, ISizeValueCalculationStrategyRegistry } from './ISizeValueCalculationStrategy';
-export type { IPositionValueCalculationStrategy, IPositionValueCalculationStrategyRegistry } from '../value-calculation/IPositionValueCalculationStrategy';
-export type { IScaleValueCalculationStrategy, IScaleValueCalculationStrategyRegistry } from '../value-calculation/IScaleValueCalculationStrategy';
+export type {
+  ISizeValueCalculationStrategy,
+  ISizeValueCalculationStrategyRegistry,
+} from './ISizeValueCalculationStrategy';
+export type {
+  IPositionValueCalculationStrategy,
+  IPositionValueCalculationStrategyRegistry,
+} from '../value-calculation/IPositionValueCalculationStrategy';
+export type {
+  IScaleValueCalculationStrategy,
+  IScaleValueCalculationStrategyRegistry,
+} from '../value-calculation/IScaleValueCalculationStrategy';
 
 // Size Strategy implementations
 export {
@@ -9,7 +18,7 @@ export {
   FillSizeValueCalculationStrategy,
   AutoSizeValueCalculationStrategy,
   ParentWidthSizeValueCalculationStrategy,
-  ViewportWidthSizeValueCalculationStrategy
+  ViewportWidthSizeValueCalculationStrategy,
 } from './SizeValueCalculationStrategies';
 
 // Position Strategy implementations
@@ -18,7 +27,7 @@ export {
   CenterPositionValueCalculationStrategy,
   ContentLeftPositionValueCalculationStrategy,
   ParentCenterXPositionValueCalculationStrategy,
-  SceneCenterXPositionValueCalculationStrategy
+  SceneCenterXPositionValueCalculationStrategy,
 } from './PositionValueCalculationStrategies';
 
 // Scale Strategy implementations
@@ -27,7 +36,7 @@ export {
   FactorScaleValueCalculationStrategy,
   ResponsiveScaleValueCalculationStrategy,
   RandomScaleValueCalculationStrategy,
-  ContentScaleValueCalculationStrategy
+  ContentScaleValueCalculationStrategy,
 } from './ScaleValueCalculationStrategies';
 
 // Registry implementations

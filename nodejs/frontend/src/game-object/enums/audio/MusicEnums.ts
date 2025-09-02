@@ -1,6 +1,6 @@
 /**
  * Music System Enums
- * 
+ *
  * Enums for music genres, moods, and music-specific functionality
  */
 

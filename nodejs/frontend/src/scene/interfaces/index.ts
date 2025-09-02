@@ -1,6 +1,6 @@
 /**
  * Scene System Interfaces Index
- * 
+ *
  * Centralized export for all scene system interfaces
  */
 
@@ -65,15 +65,15 @@ export * from './performance';
 // SCENE ENUMS
 // ============================================================================
 
-export { 
-  SceneElementType, 
+export {
+  SceneElementType,
   SceneElementState,
-  SceneType, 
+  SceneType,
   SceneState,
-  SceneBuilderType, 
+  SceneBuilderType,
   SceneBuilderState,
-  SceneTransitionType, 
-  SceneTransitionState
+  SceneTransitionType,
+  SceneTransitionState,
 } from '../enums';
 
 // ============================================================================
@@ -149,11 +149,17 @@ export const SCENE_INTERFACES = {
 // TYPE EXPORTS
 // ============================================================================
 
-export type CoreSceneInterface = typeof CORE_SCENE_INTERFACES[keyof typeof CORE_SCENE_INTERFACES];
-export type SceneBuildingInterface = typeof SCENE_BUILDING_INTERFACES[keyof typeof SCENE_BUILDING_INTERFACES];
-export type SceneManagementInterface = typeof SCENE_MANAGEMENT_INTERFACES[keyof typeof SCENE_MANAGEMENT_INTERFACES];
-export type SceneFactoryInterface = typeof SCENE_FACTORY_INTERFACES[keyof typeof SCENE_FACTORY_INTERFACES];
-export type SceneStrategyInterface = typeof SCENE_STRATEGY_INTERFACES[keyof typeof SCENE_STRATEGY_INTERFACES];
-export type SceneEventInterface = typeof SCENE_EVENT_INTERFACES[keyof typeof SCENE_EVENT_INTERFACES];
-export type ScenePerformanceInterface = typeof SCENE_PERFORMANCE_INTERFACES[keyof typeof SCENE_PERFORMANCE_INTERFACES];
-export type SceneInterface = typeof SCENE_INTERFACES[keyof typeof SCENE_INTERFACES];
+export type CoreSceneInterface = (typeof CORE_SCENE_INTERFACES)[keyof typeof CORE_SCENE_INTERFACES];
+export type SceneBuildingInterface =
+  (typeof SCENE_BUILDING_INTERFACES)[keyof typeof SCENE_BUILDING_INTERFACES];
+export type SceneManagementInterface =
+  (typeof SCENE_MANAGEMENT_INTERFACES)[keyof typeof SCENE_MANAGEMENT_INTERFACES];
+export type SceneFactoryInterface =
+  (typeof SCENE_FACTORY_INTERFACES)[keyof typeof SCENE_FACTORY_INTERFACES];
+export type SceneStrategyInterface =
+  (typeof SCENE_STRATEGY_INTERFACES)[keyof typeof SCENE_STRATEGY_INTERFACES];
+export type SceneEventInterface =
+  (typeof SCENE_EVENT_INTERFACES)[keyof typeof SCENE_EVENT_INTERFACES];
+export type ScenePerformanceInterface =
+  (typeof SCENE_PERFORMANCE_INTERFACES)[keyof typeof SCENE_PERFORMANCE_INTERFACES];
+export type SceneInterface = (typeof SCENE_INTERFACES)[keyof typeof SCENE_INTERFACES];

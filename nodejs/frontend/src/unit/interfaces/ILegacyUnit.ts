@@ -8,21 +8,21 @@ import { Dimension } from '../enums/Dimension';
 export interface IBaseLegacyUnit {
   /** Unique identifier for the legacy unit */
   id?: string;
-  
+
   /** Human-readable name for the legacy unit */
   name?: string;
-  
+
   /** Legacy unit type */
   type?: string;
-  
+
   /** Legacy unit constructor name */
   constructor?: {
     name: string;
   };
-  
+
   /** Whether the legacy unit is valid */
   isValid?: boolean;
-  
+
   /** Custom metadata for the legacy unit */
   metadata?: Record<string, string | number | boolean>;
 }
@@ -34,28 +34,28 @@ export interface IBaseLegacyUnit {
 export interface ILegacySizeUnit extends IBaseLegacyUnit {
   /** Legacy size value */
   size?: number;
-  
+
   /** Legacy width value */
   width?: number;
-  
+
   /** Legacy height value */
   height?: number;
-  
+
   /** Legacy dimension */
   dimension?: string | Dimension;
-  
+
   /** Legacy unit type */
   unitType?: string | UnitType;
-  
+
   /** Legacy size unit */
   sizeUnit?: string;
-  
+
   /** Legacy base value */
   baseValue?: number;
-  
+
   /** Legacy minimum size */
   minSize?: number;
-  
+
   /** Legacy maximum size */
   maxSize?: number;
 }
@@ -67,25 +67,25 @@ export interface ILegacySizeUnit extends IBaseLegacyUnit {
 export interface ILegacyPositionUnit extends IBaseLegacyUnit {
   /** Legacy position value */
   position?: number;
-  
+
   /** Legacy X coordinate */
   x?: number;
-  
+
   /** Legacy Y coordinate */
   y?: number;
-  
+
   /** Legacy axis */
   axis?: string | Dimension;
-  
+
   /** Legacy unit type */
   unitType?: string | UnitType;
-  
+
   /** Legacy position unit */
   positionUnit?: string;
-  
+
   /** Legacy base value */
   baseValue?: number;
-  
+
   /** Legacy offset */
   offset?: number;
 }
@@ -97,22 +97,22 @@ export interface ILegacyPositionUnit extends IBaseLegacyUnit {
 export interface ILegacyScaleUnit extends IBaseLegacyUnit {
   /** Legacy scale value */
   scale?: number;
-  
+
   /** Legacy scale factor */
   factor?: number;
-  
+
   /** Legacy unit type */
   unitType?: string | UnitType;
-  
+
   /** Legacy scale unit */
   scaleUnit?: string;
-  
+
   /** Legacy base value */
   baseValue?: number;
-  
+
   /** Legacy minimum scale */
   minScale?: number;
-  
+
   /** Legacy maximum scale */
   maxScale?: number;
 }
@@ -124,16 +124,16 @@ export interface ILegacyScaleUnit extends IBaseLegacyUnit {
 export interface ILegacyMixedUnit extends IBaseLegacyUnit {
   /** Legacy size properties */
   size?: Partial<ILegacySizeUnit>;
-  
+
   /** Legacy position properties */
   position?: Partial<ILegacyPositionUnit>;
-  
+
   /** Legacy scale properties */
   scale?: Partial<ILegacyScaleUnit>;
-  
+
   /** Legacy unit type */
   unitType?: string | UnitType;
-  
+
   /** Legacy base values */
   baseValues?: Record<string, number>;
 }
@@ -145,10 +145,10 @@ export interface ILegacyMixedUnit extends IBaseLegacyUnit {
 export interface ILegacyUnknownUnit extends IBaseLegacyUnit {
   /** Legacy unit data */
   data: Record<string, unknown>;
-  
+
   /** Legacy unit type */
   unitType?: string | UnitType;
-  
+
   /** Legacy unit properties */
   properties?: Record<string, unknown>;
 }
@@ -157,11 +157,11 @@ export interface ILegacyUnknownUnit extends IBaseLegacyUnit {
  * Union type for all legacy unit types
  * Used in adapter methods to accept any valid legacy unit type
  */
-export type ILegacyUnit = 
-  | ILegacySizeUnit 
-  | ILegacyPositionUnit 
-  | ILegacyScaleUnit 
-  | ILegacyMixedUnit 
+export type ILegacyUnit =
+  | ILegacySizeUnit
+  | ILegacyPositionUnit
+  | ILegacyScaleUnit
+  | ILegacyMixedUnit
   | ILegacyUnknownUnit;
 
 /**
@@ -169,7 +169,7 @@ export type ILegacyUnit =
  */
 export function isLegacySizeUnit(input: unknown): input is ILegacySizeUnit {
   if (!input || typeof input !== 'object') return false;
-  
+
   const legacyUnit = input as ILegacySizeUnit;
   return (
     'size' in legacyUnit ||
@@ -184,7 +184,7 @@ export function isLegacySizeUnit(input: unknown): input is ILegacySizeUnit {
  */
 export function isLegacyPositionUnit(input: unknown): input is ILegacyPositionUnit {
   if (!input || typeof input !== 'object') return false;
-  
+
   const legacyUnit = input as ILegacyPositionUnit;
   return (
     'position' in legacyUnit ||
@@ -199,13 +199,9 @@ export function isLegacyPositionUnit(input: unknown): input is ILegacyPositionUn
  */
 export function isLegacyScaleUnit(input: unknown): input is ILegacyScaleUnit {
   if (!input || typeof input !== 'object') return false;
-  
+
   const legacyUnit = input as ILegacyScaleUnit;
-  return (
-    'scale' in legacyUnit ||
-    'factor' in legacyUnit ||
-    'scaleUnit' in legacyUnit
-  );
+  return 'scale' in legacyUnit || 'factor' in legacyUnit || 'scaleUnit' in legacyUnit;
 }
 
 /**
@@ -213,13 +209,9 @@ export function isLegacyScaleUnit(input: unknown): input is ILegacyScaleUnit {
  */
 export function isLegacyMixedUnit(input: unknown): input is ILegacyMixedUnit {
   if (!input || typeof input !== 'object') return false;
-  
+
   const legacyUnit = input as ILegacyMixedUnit;
-  return (
-    'size' in legacyUnit ||
-    'position' in legacyUnit ||
-    'scale' in legacyUnit
-  );
+  return 'size' in legacyUnit || 'position' in legacyUnit || 'scale' in legacyUnit;
 }
 
 /**
@@ -227,7 +219,7 @@ export function isLegacyMixedUnit(input: unknown): input is ILegacyMixedUnit {
  */
 export function isLegacyUnknownUnit(input: unknown): input is ILegacyUnknownUnit {
   if (!input || typeof input !== 'object') return false;
-  
+
   const legacyUnit = input as ILegacyUnknownUnit;
   return 'data' in legacyUnit;
 }
@@ -265,7 +257,7 @@ export function createLegacySizeUnit(
     minSize: options?.minSize,
     maxSize: options?.maxSize,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -288,7 +280,7 @@ export function createLegacyPositionUnit(
     baseValue: options?.baseValue || 0,
     offset: options?.offset || 0,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -310,7 +302,7 @@ export function createLegacyScaleUnit(
     minScale: options?.minScale,
     maxScale: options?.maxScale,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -330,7 +322,7 @@ export function createLegacyMixedUnit(
     scale: options?.scale,
     baseValues: options?.baseValues || {},
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -349,7 +341,7 @@ export function createLegacyUnknownUnit(
     data,
     properties: options?.properties,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -361,9 +353,9 @@ export function convertToLegacyUnit(input: unknown): ILegacyUnit {
   if (!input || typeof input !== 'object') {
     return createLegacyUnknownUnit({ input: 'null-or-undefined' });
   }
-  
+
   const obj = input as Record<string, unknown>;
-  
+
   // Check if it's a size unit
   if ('size' in obj || 'width' in obj || 'height' in obj || 'sizeUnit' in obj) {
     return createLegacySizeUnit({
@@ -373,10 +365,10 @@ export function convertToLegacyUnit(input: unknown): ILegacyUnit {
       sizeUnit: typeof obj.sizeUnit === 'string' ? obj.sizeUnit : undefined,
       baseValue: typeof obj.baseValue === 'number' ? obj.baseValue : undefined,
       unitType: obj.unitType as UnitType,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Check if it's a position unit
   if ('position' in obj || 'x' in obj || 'y' in obj || 'positionUnit' in obj) {
     return createLegacyPositionUnit({
@@ -386,10 +378,10 @@ export function convertToLegacyUnit(input: unknown): ILegacyUnit {
       positionUnit: typeof obj.positionUnit === 'string' ? obj.positionUnit : undefined,
       baseValue: typeof obj.baseValue === 'number' ? obj.baseValue : undefined,
       unitType: obj.unitType as UnitType,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Check if it's a scale unit
   if ('scale' in obj || 'factor' in obj || 'scaleUnit' in obj) {
     return createLegacyScaleUnit({
@@ -398,25 +390,25 @@ export function convertToLegacyUnit(input: unknown): ILegacyUnit {
       scaleUnit: typeof obj.scaleUnit === 'string' ? obj.scaleUnit : undefined,
       baseValue: typeof obj.baseValue === 'number' ? obj.baseValue : undefined,
       unitType: obj.unitType as UnitType,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Check if it has mixed properties
   if ('size' in obj || 'position' in obj || 'scale' in obj) {
     return createLegacyMixedUnit({
-      size: 'size' in obj ? obj.size as Partial<ILegacySizeUnit> : undefined,
-      position: 'position' in obj ? obj.position as Partial<ILegacyPositionUnit> : undefined,
-      scale: 'scale' in obj ? obj.scale as Partial<ILegacyScaleUnit> : undefined,
+      size: 'size' in obj ? (obj.size as Partial<ILegacySizeUnit>) : undefined,
+      position: 'position' in obj ? (obj.position as Partial<ILegacyPositionUnit>) : undefined,
+      scale: 'scale' in obj ? (obj.scale as Partial<ILegacyScaleUnit>) : undefined,
       unitType: obj.unitType as UnitType,
       baseValues: obj.baseValues as Record<string, number>,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Default to unknown unit
   return createLegacyUnknownUnit(obj, {
     unitType: obj.unitType as UnitType,
-    metadata: obj.metadata as Record<string, string | number | boolean>
+    metadata: obj.metadata as Record<string, string | number | boolean>,
   });
 }

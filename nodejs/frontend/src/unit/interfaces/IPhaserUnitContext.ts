@@ -11,27 +11,27 @@ export interface IPhaserUnitContext extends UnitContext {
    * Phaser Scene instance
    */
   phaserScene: Scene;
-  
+
   /**
    * Phaser Game instance
    */
   game: Game;
-  
+
   /**
    * Current Phaser GameObject (the one being positioned/sized)
    */
   currentObject: GameObjects.GameObject;
-  
+
   /**
    * Parent Phaser GameObject (container)
    */
   phaserParent?: GameObjects.GameObject;
-  
+
   /**
    * Target Phaser GameObject (for relative positioning)
    */
   target?: GameObjects.GameObject;
-  
+
   /**
    * Phaser camera information
    */
@@ -42,7 +42,7 @@ export interface IPhaserUnitContext extends UnitContext {
     height: number;
     zoom: number;
   };
-  
+
   /**
    * Phaser input information
    */
@@ -51,7 +51,7 @@ export interface IPhaserUnitContext extends UnitContext {
     y: number;
     isDown: boolean;
   };
-  
+
   /**
    * Phaser time information
    */
@@ -60,7 +60,7 @@ export interface IPhaserUnitContext extends UnitContext {
     delta: number;
     elapsed: number;
   };
-  
+
   /**
    * Phaser physics information
    */
@@ -87,7 +87,7 @@ export class PhaserUnitContext implements IPhaserUnitContext {
   get scene() {
     return {
       width: this.phaserScene.scale.width,
-      height: this.phaserScene.scale.height
+      height: this.phaserScene.scale.height,
     };
   }
 
@@ -103,7 +103,7 @@ export class PhaserUnitContext implements IPhaserUnitContext {
         width: parent.width,
         height: parent.height,
         x: parent.x || 0,
-        y: parent.y || 0
+        y: parent.y || 0,
       };
     }
     return undefined;
@@ -112,7 +112,7 @@ export class PhaserUnitContext implements IPhaserUnitContext {
   get viewport() {
     return {
       width: this.game.scale.width,
-      height: this.game.scale.height
+      height: this.game.scale.height,
     };
   }
 
@@ -131,10 +131,13 @@ export class PhaserUnitContext implements IPhaserUnitContext {
       };
       return {
         width: obj.width,
-        height: obj.height
+        height: obj.height,
       };
     }
-    return { width: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT, height: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT };
+    return {
+      width: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
+      height: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT,
+    };
   }
 
   // Enhanced properties for your Container system
@@ -153,7 +156,7 @@ export class PhaserUnitContext implements IPhaserUnitContext {
         type: obj.containerType,
         childCount: obj.childCount || 0,
         hasChildren: obj.hasChildren || false,
-        spacing: obj.spacing || { gap: 0, padding: { left: 0, right: 0, top: 0, bottom: 0 } }
+        spacing: obj.spacing || { gap: 0, padding: { left: 0, right: 0, top: 0, bottom: 0 } },
       };
     }
     return undefined;
@@ -191,29 +194,26 @@ export class PhaserUnitContextFactory {
    * Create context from a Phaser GameObject
    */
   static fromGameObject(gameObject: GameObjects.GameObject): PhaserUnitContext {
-    return new PhaserUnitContext(
-      gameObject.scene,
-      gameObject.scene.game,
-      gameObject
-    );
+    return new PhaserUnitContext(gameObject.scene, gameObject.scene.game, gameObject);
   }
 
   /**
    * Create context with parent relationship
    */
-  static withParent(gameObject: GameObjects.GameObject, parent: GameObjects.GameObject): PhaserUnitContext {
-    return new PhaserUnitContext(
-      gameObject.scene,
-      gameObject.scene.game,
-      gameObject,
-      parent
-    );
+  static withParent(
+    gameObject: GameObjects.GameObject,
+    parent: GameObjects.GameObject
+  ): PhaserUnitContext {
+    return new PhaserUnitContext(gameObject.scene, gameObject.scene.game, gameObject, parent);
   }
 
   /**
    * Create context with target for relative positioning
    */
-  static withTarget(gameObject: GameObjects.GameObject, target: GameObjects.GameObject): PhaserUnitContext {
+  static withTarget(
+    gameObject: GameObjects.GameObject,
+    target: GameObjects.GameObject
+  ): PhaserUnitContext {
     return new PhaserUnitContext(
       gameObject.scene,
       gameObject.scene.game,
@@ -245,36 +245,29 @@ export class PhaserUnitContextFactory {
    * Provides enhanced access to Container-specific properties
    */
   static fromContainer(container: GameObjects.GameObject): PhaserUnitContext {
-    return new PhaserUnitContext(
-      container.scene,
-      container.scene.game,
-      container
-    );
+    return new PhaserUnitContext(container.scene, container.scene.game, container);
   }
 
   /**
    * Create context for Container with parent relationship
    * Perfect for nested container layouts
    */
-  static fromContainerWithParent(container: GameObjects.GameObject, parent: GameObjects.GameObject): PhaserUnitContext {
-    return new PhaserUnitContext(
-      container.scene,
-      container.scene.game,
-      container,
-      parent
-    );
+  static fromContainerWithParent(
+    container: GameObjects.GameObject,
+    parent: GameObjects.GameObject
+  ): PhaserUnitContext {
+    return new PhaserUnitContext(container.scene, container.scene.game, container, parent);
   }
 
   /**
    * Create context for Container with style information
    * Integrates with your existing style system
    */
-  static fromContainerWithStyle(container: GameObjects.GameObject, styleOverrides?: Record<string, unknown>): PhaserUnitContext {
-    const context = new PhaserUnitContext(
-      container.scene,
-      container.scene.game,
-      container
-    );
+  static fromContainerWithStyle(
+    container: GameObjects.GameObject,
+    styleOverrides?: Record<string, unknown>
+  ): PhaserUnitContext {
+    const context = new PhaserUnitContext(container.scene, container.scene.game, container);
 
     // Add style overrides to context
     if (styleOverrides) {

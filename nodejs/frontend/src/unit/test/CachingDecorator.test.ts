@@ -55,7 +55,7 @@ describe('CachingDecorator', () => {
     decorator = new CachingDecorator('cache-decorator', 'Cache Decorator', mockUnit);
     mockContext = {
       parent: { width: 800, height: 600, x: 0, y: 0 },
-      scene: { width: 1200, height: 800 }
+      scene: { width: 1200, height: 800 },
     };
   });
 
@@ -148,10 +148,10 @@ describe('CachingDecorator', () => {
     it('should provide cache statistics', async () => {
       // Perform some calculations
       decorator.calculate(mockContext);
-      
+
       // Add a small delay to ensure cache entries have some age
       await new Promise(resolve => setTimeout(resolve, 5));
-      
+
       decorator.calculate(mockContext); // Should be cached
 
       const stats = decorator.getCacheStats();
@@ -234,7 +234,7 @@ describe('CachingDecorator', () => {
   describe('integration scenarios', () => {
     it('should handle multiple rapid calculations', () => {
       const results: number[] = [];
-      
+
       // Perform multiple calculations rapidly
       for (let i = 0; i < 10; i++) {
         results.push(decorator.calculate(mockContext));
@@ -275,7 +275,7 @@ describe('CachingDecorator', () => {
   describe('error handling', () => {
     it('should handle invalid context gracefully', () => {
       const invalidContext = null as any;
-      
+
       expect(() => decorator.calculate(invalidContext)).toThrow();
     });
 

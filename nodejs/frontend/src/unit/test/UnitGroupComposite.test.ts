@@ -25,7 +25,7 @@ class MockUnit implements IUnit {
       case UnitType.POSITION:
         return (context.parent?.x || 0) + parseInt(this.id.split('-')[1] || '0');
       case UnitType.SCALE:
-        return 1.0 + (parseInt(this.id.split('-')[1] || '0') / 10);
+        return 1.0 + parseInt(this.id.split('-')[1] || '0') / 10;
       default:
         return 0;
     }
@@ -56,7 +56,7 @@ describe('UnitGroupComposite', () => {
     composite = new UnitGroupComposite('test-group', 'Test Group', 0, 'sum');
     mockContext = {
       parent: { width: 800, height: 600, x: 100, y: 50 },
-      scene: { width: 1200, height: 800 }
+      scene: { width: 1200, height: 800 },
     };
   });
 
@@ -74,12 +74,7 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should create a unit group composite with custom settings', () => {
-      const customComposite = new UnitGroupComposite(
-        'custom-group',
-        'Custom Group',
-        50,
-        'average'
-      );
+      const customComposite = new UnitGroupComposite('custom-group', 'Custom Group', 50, 'average');
 
       expect(customComposite.id).toBe('custom-group');
       expect(customComposite.name).toBe('Custom Group');
@@ -301,9 +296,9 @@ describe('UnitGroupComposite', () => {
 
       // Should not throw, but log a warning
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-      
+
       const result = composite.calculate(mockContext);
-      
+
       expect(result).toBe(0); // Should return base value
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('Error calculating child unit error-child:'),
@@ -318,7 +313,7 @@ describe('UnitGroupComposite', () => {
       composite.addChild(child);
 
       const invalidContext = null as any;
-      
+
       // Should not throw, but handle gracefully
       expect(() => composite.calculate(invalidContext)).not.toThrow();
     });

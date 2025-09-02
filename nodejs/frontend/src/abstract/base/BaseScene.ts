@@ -780,7 +780,7 @@ export abstract class BaseScene extends Phaser.Scene {
           id: objConfig.id || 'unknown',
           type: objConfig.type || 'container',
           scene: this,
-          config: objConfig
+          config: objConfig,
         };
         gameObject = this.factoryManager.createGameObject(factoryInput);
 

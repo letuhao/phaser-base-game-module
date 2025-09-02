@@ -16,11 +16,7 @@ export interface IPositionValueCalculationStrategy {
   /**
    * Check if this strategy can handle the given parameters
    */
-  canHandle(
-    positionValue: PositionValue,
-    positionUnit: PositionUnit,
-    axisUnit: AxisUnit
-  ): boolean;
+  canHandle(positionValue: PositionValue, positionUnit: PositionUnit, axisUnit: AxisUnit): boolean;
 
   /**
    * Calculate the position value

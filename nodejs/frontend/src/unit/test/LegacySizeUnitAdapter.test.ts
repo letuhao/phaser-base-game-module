@@ -22,8 +22,8 @@ describe('LegacySizeUnitAdapter', () => {
       metadata: {
         legacyType: 'old-size-format',
         convertedAt: new Date().toISOString(),
-        description: 'Legacy size unit for testing'
-      }
+        description: 'Legacy size unit for testing',
+      },
     });
     adapter = new LegacySizeUnitAdapter('adapter-1', 'Legacy Size Adapter', mockLegacyUnit);
     mockContext = createMockContext();
@@ -57,10 +57,14 @@ describe('LegacySizeUnitAdapter', () => {
         size: 500,
         width: 500,
         height: 500,
-        sizeUnit: SizeUnit.PIXEL
+        sizeUnit: SizeUnit.PIXEL,
       });
-      const largeAdapter = new LegacySizeUnitAdapter('large-adapter', 'Large Adapter', largeLegacyUnit);
-      
+      const largeAdapter = new LegacySizeUnitAdapter(
+        'large-adapter',
+        'Large Adapter',
+        largeLegacyUnit
+      );
+
       const result = largeAdapter.calculate(mockContext);
       expect(result).toBe(500);
     });
@@ -68,10 +72,14 @@ describe('LegacySizeUnitAdapter', () => {
     it('should handle legacy units with different units', () => {
       const percentLegacyUnit = createLegacySizeUnit({
         size: 50,
-        sizeUnit: 'percent' as any
+        sizeUnit: 'percent' as any,
       });
-      const percentAdapter = new LegacySizeUnitAdapter('percent-adapter', 'Percent Adapter', percentLegacyUnit);
-      
+      const percentAdapter = new LegacySizeUnitAdapter(
+        'percent-adapter',
+        'Percent Adapter',
+        percentLegacyUnit
+      );
+
       const result = percentAdapter.calculate(mockContext);
       // Should convert percent to pixels based on context
       expect(result).toBeGreaterThan(0);
@@ -80,10 +88,14 @@ describe('LegacySizeUnitAdapter', () => {
     it('should handle legacy units with different dimensions', () => {
       const heightLegacyUnit = createLegacySizeUnit({
         size: 200,
-        dimension: Dimension.HEIGHT
+        dimension: Dimension.HEIGHT,
       });
-      const heightAdapter = new LegacySizeUnitAdapter('height-adapter', 'Height Adapter', heightLegacyUnit);
-      
+      const heightAdapter = new LegacySizeUnitAdapter(
+        'height-adapter',
+        'Height Adapter',
+        heightLegacyUnit
+      );
+
       const result = heightAdapter.calculate(mockContext);
       expect(result).toBe(200);
     });
@@ -92,29 +104,37 @@ describe('LegacySizeUnitAdapter', () => {
   describe('isResponsive', () => {
     it('should be responsive for parent width units', () => {
       const parentWidthLegacyUnit = createLegacySizeUnit({ sizeUnit: SizeUnit.PARENT_WIDTH });
-      const parentWidthAdapter = new LegacySizeUnitAdapter('parent-width-adapter', 'Parent Width Adapter', parentWidthLegacyUnit);
-      
+      const parentWidthAdapter = new LegacySizeUnitAdapter(
+        'parent-width-adapter',
+        'Parent Width Adapter',
+        parentWidthLegacyUnit
+      );
+
       expect(parentWidthAdapter.isResponsive()).toBe(true);
     });
 
     it('should be responsive for viewport width units', () => {
       const vwLegacyUnit = createLegacySizeUnit({ sizeUnit: SizeUnit.VIEWPORT_WIDTH });
       const vwAdapter = new LegacySizeUnitAdapter('vw-adapter', 'VW Adapter', vwLegacyUnit);
-      
+
       expect(vwAdapter.isResponsive()).toBe(true);
     });
 
     it('should not be responsive for pixel units', () => {
       const pixelLegacyUnit = createLegacySizeUnit({ sizeUnit: SizeUnit.PIXEL });
-      const pixelAdapter = new LegacySizeUnitAdapter('pixel-adapter', 'Pixel Adapter', pixelLegacyUnit);
-      
+      const pixelAdapter = new LegacySizeUnitAdapter(
+        'pixel-adapter',
+        'Pixel Adapter',
+        pixelLegacyUnit
+      );
+
       expect(pixelAdapter.isResponsive()).toBe(false);
     });
 
     it('should not be responsive for auto units', () => {
       const autoLegacyUnit = createLegacySizeUnit({ sizeUnit: SizeUnit.PIXEL });
       const autoAdapter = new LegacySizeUnitAdapter('auto-adapter', 'Auto Adapter', autoLegacyUnit);
-      
+
       expect(autoAdapter.isResponsive()).toBe(false);
     });
   });
@@ -207,12 +227,16 @@ describe('LegacySizeUnitAdapter', () => {
           legacyType: 'complex-format',
           convertedAt: new Date().toISOString(),
           description: 'Complex legacy unit',
-          additionalData: 'old-system'
-        }
+          additionalData: 'old-system',
+        },
       });
 
-      const complexAdapter = new LegacySizeUnitAdapter('complex-adapter', 'Complex Adapter', complexLegacyUnit);
-      
+      const complexAdapter = new LegacySizeUnitAdapter(
+        'complex-adapter',
+        'Complex Adapter',
+        complexLegacyUnit
+      );
+
       expect(complexAdapter.id).toBe('complex-adapter');
       expect(complexAdapter.getLegacyTypeName()).toBe('LegacySizeUnit');
       expect(complexAdapter.isResponsive()).toBe(true);
@@ -220,10 +244,16 @@ describe('LegacySizeUnitAdapter', () => {
     });
 
     it('should handle multiple adapters with different legacy units', () => {
-      const adapter1 = new LegacySizeUnitAdapter('adapter-1', 'Adapter 1', 
-        createLegacySizeUnit({ size: 100, sizeUnit: SizeUnit.PIXEL }));
-      const adapter2 = new LegacySizeUnitAdapter('adapter-2', 'Adapter 2', 
-        createLegacySizeUnit({ size: 50, sizeUnit: SizeUnit.PARENT_WIDTH }));
+      const adapter1 = new LegacySizeUnitAdapter(
+        'adapter-1',
+        'Adapter 1',
+        createLegacySizeUnit({ size: 100, sizeUnit: SizeUnit.PIXEL })
+      );
+      const adapter2 = new LegacySizeUnitAdapter(
+        'adapter-2',
+        'Adapter 2',
+        createLegacySizeUnit({ size: 50, sizeUnit: SizeUnit.PARENT_WIDTH })
+      );
 
       const result1 = adapter1.calculate(mockContext);
       const result2 = adapter2.calculate(mockContext);
@@ -241,18 +271,26 @@ describe('LegacySizeUnitAdapter', () => {
         size: undefined,
         width: undefined,
         height: undefined,
-        baseValue: undefined
+        baseValue: undefined,
       });
-      const noValueAdapter = new LegacySizeUnitAdapter('no-value-adapter', 'No Value Adapter', noValueLegacyUnit);
-      
+      const noValueAdapter = new LegacySizeUnitAdapter(
+        'no-value-adapter',
+        'No Value Adapter',
+        noValueLegacyUnit
+      );
+
       const result = noValueAdapter.calculate(mockContext);
       expect(result).toBe(100); // Factory function provides default baseValue: 100
     });
 
     it('should handle legacy unit without unit', () => {
       const noUnitLegacyUnit = createLegacySizeUnit({ size: 100 });
-      const noUnitAdapter = new LegacySizeUnitAdapter('no-unit-adapter', 'No Unit Adapter', noUnitLegacyUnit);
-      
+      const noUnitAdapter = new LegacySizeUnitAdapter(
+        'no-unit-adapter',
+        'No Unit Adapter',
+        noUnitLegacyUnit
+      );
+
       const result = noUnitAdapter.calculate(mockContext);
       expect(result).toBe(100); // Should default to pixels
     });

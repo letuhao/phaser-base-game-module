@@ -54,10 +54,16 @@ export class SizeUnitCalculator implements ISizeUnit {
     let measuredSize: number;
     switch (this.sizeUnit) {
       case SizeUnit.PIXEL:
-        measuredSize = typeof this.baseValue === 'number' ? this.baseValue : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+        measuredSize =
+          typeof this.baseValue === 'number'
+            ? this.baseValue
+            : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
         break;
       case SizeUnit.PERCENTAGE:
-        measuredSize = typeof this.baseValue === 'number' ? this.baseValue : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+        measuredSize =
+          typeof this.baseValue === 'number'
+            ? this.baseValue
+            : DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
         break;
       case SizeUnit.PARENT_WIDTH:
         measuredSize = this.calculateParentWidthSize(context);
@@ -111,7 +117,7 @@ export class SizeUnitCalculator implements ISizeUnit {
           return this.applyConstraints(measuredSize);
       }
     }
-    
+
     // If baseValue is a number, just return the measured size (direct value)
     return this.applyConstraints(measuredSize);
   }
@@ -176,10 +182,7 @@ export class SizeUnitCalculator implements ISizeUnit {
     if (this.sizeUnit === SizeUnit.SCENE_WIDTH || this.sizeUnit === SizeUnit.SCENE_HEIGHT) {
       return !!context.scene;
     }
-    if (
-      this.sizeUnit === SizeUnit.VIEWPORT_WIDTH ||
-      this.sizeUnit === SizeUnit.VIEWPORT_HEIGHT
-    ) {
+    if (this.sizeUnit === SizeUnit.VIEWPORT_WIDTH || this.sizeUnit === SizeUnit.VIEWPORT_HEIGHT) {
       return !!context.viewport;
     }
     // Check if the baseValue requires specific context
@@ -215,12 +218,16 @@ export class SizeUnitCalculator implements ISizeUnit {
 
   // Private calculation methods
   private calculateAutoSize(context: UnitContext): number {
-    return context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+    return (
+      context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ??
+      DEFAULT_FALLBACK_VALUES.SIZE.CONTENT
+    );
   }
 
   private calculateFitSize(context: UnitContext): number {
     const contentSize =
-      context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
+      context.content?.[this.dimension === Dimension.WIDTH ? 'width' : 'height'] ??
+      DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     const availableSize =
       this.dimension === Dimension.WIDTH
         ? (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE)
@@ -266,7 +273,10 @@ export class SizeUnitCalculator implements ISizeUnit {
     if (this.dimension === Dimension.HEIGHT) {
       return context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT;
     }
-    return Math.max(context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT, context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT);
+    return Math.max(
+      context.content?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT,
+      context.content?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.CONTENT
+    );
   }
 
   private calculateIntrinsicSize(context: UnitContext): number {
@@ -300,8 +310,12 @@ export class SizeUnitCalculator implements ISizeUnit {
       default:
         // For PIXEL and PERCENTAGE, FILL should use the measured size
         return this.dimension === Dimension.WIDTH
-          ? (context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT)
-          : (context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
+          ? (context.scene?.width ??
+              context.viewport?.width ??
+              DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT)
+          : (context.scene?.height ??
+              context.viewport?.height ??
+              DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT);
     }
   }
 
@@ -320,12 +334,12 @@ export class SizeUnitCalculator implements ISizeUnit {
    */
   getAspectRatio(): number | undefined {
     if (!this.maintainAspectRatio) return undefined;
-    
+
     // If we have both width and height constraints, calculate aspect ratio
     if (this.minSize !== undefined && this.maxSize !== undefined) {
       return this.maxSize / this.minSize;
     }
-    
+
     return undefined;
   }
 
@@ -343,8 +357,7 @@ export class SizeUnitCalculator implements ISizeUnit {
     return {
       min: this.minSize,
       max: this.maxSize,
-      hasConstraints: this.hasConstraints()
+      hasConstraints: this.hasConstraints(),
     };
   }
-
 }

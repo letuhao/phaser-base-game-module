@@ -20,9 +20,8 @@ export class TextFactory extends BaseGameObjectFactory {
     // Extract config and scene from input
     const config = (input as any).config || {};
     const scene = input.scene;
-    
+
     try {
-      
       const textConfig: Phaser.Types.GameObjects.Text.TextStyle = {
         fontSize: config.fontSize || '32px',
         fontFamily: config.fontFamily || 'Arial',

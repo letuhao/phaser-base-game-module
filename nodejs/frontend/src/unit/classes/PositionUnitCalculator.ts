@@ -156,7 +156,7 @@ export class PositionUnitCalculator implements IPositionUnit {
           return referencePoint + this.offset;
       }
     }
-    
+
     // If baseValue is a number, just return the reference point + offset (direct value)
     return referencePoint + this.offset;
   }
@@ -345,7 +345,7 @@ export class PositionUnitCalculator implements IPositionUnit {
       axis: this.axis,
       alignment: this.alignment,
       offset: this.offset,
-      isResponsive: this.isResponsive()
+      isResponsive: this.isResponsive(),
     };
   }
 
@@ -354,11 +354,13 @@ export class PositionUnitCalculator implements IPositionUnit {
    */
   isWithinBounds(position: number, context: UnitContext): boolean {
     if (this.axis === Dimension.X) {
-      const maxX = context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+      const maxX =
+        context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
       return position >= 0 && position <= maxX;
     }
     if (this.axis === Dimension.Y) {
-      const maxY = context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
+      const maxY =
+        context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE;
       return position >= 0 && position <= maxY;
     }
     return true;
@@ -371,13 +373,14 @@ export class PositionUnitCalculator implements IPositionUnit {
     if (this.axis === Dimension.X) {
       return {
         min: 0,
-        max: context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
+        max: context.scene?.width ?? context.viewport?.width ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE,
       };
     }
     if (this.axis === Dimension.Y) {
       return {
         min: 0,
-        max: context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE
+        max:
+          context.scene?.height ?? context.viewport?.height ?? DEFAULT_FALLBACK_VALUES.SIZE.SCENE,
       };
     }
     return { min: 0, max: 0 };

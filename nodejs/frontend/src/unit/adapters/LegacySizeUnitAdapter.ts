@@ -9,11 +9,7 @@ import { UnitType } from '../enums/UnitType';
  * Adapter for legacy size units to modern unit system
  */
 export class LegacySizeUnitAdapter extends BaseUnitAdapter<ILegacyUnit> {
-  constructor(
-    id: string,
-    name: string,
-    adaptedUnit: ILegacyUnit
-  ) {
+  constructor(id: string, name: string, adaptedUnit: ILegacyUnit) {
     super(id, name, UnitType.SIZE, adaptedUnit);
   }
 
@@ -41,12 +37,18 @@ export class LegacySizeUnitAdapter extends BaseUnitAdapter<ILegacyUnit> {
 
   isResponsive(): boolean {
     const unit = this.extractLegacyUnit();
-    return unit === SizeUnit.PARENT_WIDTH || unit === SizeUnit.PARENT_HEIGHT || 
-           unit === SizeUnit.VIEWPORT_WIDTH || unit === SizeUnit.VIEWPORT_HEIGHT;
+    return (
+      unit === SizeUnit.PARENT_WIDTH ||
+      unit === SizeUnit.PARENT_HEIGHT ||
+      unit === SizeUnit.VIEWPORT_WIDTH ||
+      unit === SizeUnit.VIEWPORT_HEIGHT
+    );
   }
 
   canAdapt(unit: ILegacyUnit): boolean {
-    return this.hasSizeProperty(unit) || this.hasWidthProperty(unit) || this.hasHeightProperty(unit);
+    return (
+      this.hasSizeProperty(unit) || this.hasWidthProperty(unit) || this.hasHeightProperty(unit)
+    );
   }
 
   getLegacyTypeName(): string {
@@ -67,8 +69,8 @@ export class LegacySizeUnitAdapter extends BaseUnitAdapter<ILegacyUnit> {
       metadata: {
         ...this.adaptedUnit.metadata,
         legacyType: 'size',
-        convertedAt: new Date().toISOString()
-      }
+        convertedAt: new Date().toISOString(),
+      },
     };
   }
 

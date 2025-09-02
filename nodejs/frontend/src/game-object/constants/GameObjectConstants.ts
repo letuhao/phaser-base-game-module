@@ -1,6 +1,6 @@
 /**
  * Game Object System Constants
- * 
+ *
  * This file contains all constants for the new game object system.
  * Organized by category for better maintainability and type safety.
  */
@@ -19,18 +19,18 @@ export const GAMEOBJECT_TYPES = {
   TEXT: 'text',
   GRAPHICS: 'graphics',
   SHAPE: 'shape',
-  
+
   // Interactive Types
   BUTTON: 'button',
   ZONE: 'zone',
   INPUT_FIELD: 'input_field',
-  
+
   // Advanced Types
   PARTICLE_EMITTER: 'particle_emitter',
   VIDEO: 'video',
   RENDER_TEXTURE: 'render_texture',
   MESH: 'mesh',
-  
+
   // Custom Types
   UI_PANEL: 'ui_panel',
   UI_LIST: 'ui_list',
@@ -46,19 +46,19 @@ export const GAMEOBJECT_STATES = {
   // Creation States
   CREATING: 'creating',
   CREATED: 'created',
-  
+
   // Active States
   ACTIVE: 'active',
   INACTIVE: 'inactive',
-  
+
   // Visibility States
   VISIBLE: 'visible',
   HIDDEN: 'hidden',
-  
+
   // Interaction States
   INTERACTIVE: 'interactive',
   NON_INTERACTIVE: 'non_interactive',
-  
+
   // Destruction States
   DESTROYING: 'destroying',
   DESTROYED: 'destroyed',
@@ -74,25 +74,25 @@ export const GAMEOBJECT_PROPERTIES = {
   ROTATION: 'rotation',
   SKEW: 'skew',
   ORIGIN: 'origin',
-  
+
   // Visual Properties
   VISIBILITY: 'visibility',
   ALPHA: 'alpha',
   TINT: 'tint',
   BLEND_MODE: 'blend_mode',
   MASK: 'mask',
-  
+
   // Layout Properties
   SIZE: 'size',
   BOUNDS: 'bounds',
   PADDING: 'padding',
   MARGIN: 'margin',
-  
+
   // Animation Properties
   ANIMATION: 'animation',
   ANIMATION_SPEED: 'animation_speed',
   ANIMATION_LOOP: 'animation_loop',
-  
+
   // Physics Properties
   VELOCITY: 'velocity',
   ACCELERATION: 'acceleration',
@@ -100,7 +100,7 @@ export const GAMEOBJECT_PROPERTIES = {
   MASS: 'mass',
   FRICTION: 'friction',
   BOUNCE: 'bounce',
-  
+
   // Input Properties
   HIT_AREA: 'hit_area',
   DRAGGABLE: 'draggable',
@@ -119,26 +119,26 @@ export const COMPONENT_TYPES = {
   TRANSFORM: 'transform',
   RENDER: 'render',
   INPUT: 'input',
-  
+
   // Physics Components
   PHYSICS_BODY: 'physics_body',
   COLLIDER: 'collider',
   RIGID_BODY: 'rigid_body',
-  
+
   // Animation Components
   ANIMATOR: 'animator',
   TWEEN: 'tween',
   TIMELINE: 'timeline',
-  
+
   // UI Components
   LAYOUT: 'layout',
   THEME: 'theme',
   RESPONSIVE: 'responsive',
-  
+
   // Audio Components
   AUDIO_SOURCE: 'audio_source',
   AUDIO_LISTENER: 'audio_listener',
-  
+
   // Custom Components
   HEALTH: 'health',
   INVENTORY: 'inventory',
@@ -167,12 +167,12 @@ export const COMPONENT_PRIORITIES = {
   PHYSICS: 1000,
   INPUT: 900,
   AI: 800,
-  
+
   // Medium priority
   ANIMATION: 500,
   TWEEN: 400,
   AUDIO: 300,
-  
+
   // Low priority (updated last)
   RENDER: 100,
   UI: 50,
@@ -211,29 +211,29 @@ export const COMMON_STATES = {
   IDLE: 'idle',
   ACTIVE: 'active',
   INACTIVE: 'inactive',
-  
+
   // Movement States
   MOVING: 'moving',
   STOPPED: 'stopped',
   JUMPING: 'jumping',
   FALLING: 'falling',
-  
+
   // Interaction States
   HOVERED: 'hovered',
   PRESSED: 'pressed',
   DRAGGING: 'dragging',
   DROPPED: 'dropped',
-  
+
   // Animation States
   PLAYING: 'playing',
   PAUSED: 'paused',
-  
+
   // UI States
   OPENING: 'opening',
   OPEN: 'open',
   CLOSING: 'closing',
   CLOSED: 'closed',
-  
+
   // Game States
   SPAWNING: 'spawning',
   ALIVE: 'alive',
@@ -298,18 +298,18 @@ export const THEME_PROPERTIES = {
   SURFACE_COLOR: 'surface_color',
   TEXT_COLOR: 'text_color',
   ACCENT_COLOR: 'accent_color',
-  
+
   // Typography
   FONT_FAMILY: 'font_family',
   FONT_SIZE: 'font_size',
   FONT_WEIGHT: 'font_weight',
   LINE_HEIGHT: 'line_height',
-  
+
   // Spacing
   SPACING_UNIT: 'spacing_unit',
   BORDER_RADIUS: 'border_radius',
   BORDER_WIDTH: 'border_width',
-  
+
   // Effects
   SHADOW: 'shadow',
   BLUR: 'blur',
@@ -319,7 +319,7 @@ export const THEME_PROPERTIES = {
 // ============================================================================
 // ANIMATION SYSTEM CONSTANTS - REMOVED (Use Layout System Constants Instead)
 // ============================================================================
-// ANIMATION_TYPES, ANIMATION_DIRECTIONS, EASING_FUNCTIONS are now imported 
+// ANIMATION_TYPES, ANIMATION_DIRECTIONS, EASING_FUNCTIONS are now imported
 // from the Layout System to avoid duplication
 
 // ============================================================================
@@ -350,18 +350,18 @@ export const INPUT_EVENTS = {
   POINTER_OUT: 'pointer_out',
   POINTER_ENTER: 'pointer_enter',
   POINTER_LEAVE: 'pointer_leave',
-  
+
   // Drag Events
   DRAG_START: 'drag_start',
   DRAG: 'drag',
   DRAG_END: 'drag_end',
   DROP: 'drop',
-  
+
   // Keyboard Events
   KEY_DOWN: 'key_down',
   KEY_UP: 'key_up',
   KEY_PRESS: 'key_press',
-  
+
   // Gamepad Events
   BUTTON_DOWN: 'button_down',
   BUTTON_UP: 'button_up',
@@ -488,8 +488,8 @@ export const PERFORMANCE_THRESHOLDS = {
   TARGET_FPS: 60,
   MIN_FPS: 30,
   MAX_FRAME_TIME: 16.67, // 60 FPS
-  MAX_UPDATE_TIME: 8.33,  // Half frame time
-  MAX_RENDER_TIME: 8.33,  // Half frame time
+  MAX_UPDATE_TIME: 8.33, // Half frame time
+  MAX_RENDER_TIME: 8.33, // Half frame time
 } as const;
 
 /**
@@ -511,66 +511,66 @@ export const GAMEOBJECT_SYSTEM_CONSTANTS = {
   TYPES: GAMEOBJECT_TYPES,
   STATES: GAMEOBJECT_STATES,
   PROPERTIES: GAMEOBJECT_PROPERTIES,
-  
+
   // Components
   COMPONENT_TYPES: COMPONENT_TYPES,
   COMPONENT_STATES: COMPONENT_STATES,
   COMPONENT_PRIORITIES: COMPONENT_PRIORITIES,
-  
+
   // State Management
   STATE_MACHINE_TYPES: STATE_MACHINE_TYPES,
   STATE_TRANSITION_TYPES: STATE_TRANSITION_TYPES,
   COMMON_STATES: COMMON_STATES,
-  
+
   // Factory
   FACTORY_TYPES: FACTORY_TYPES,
   FACTORY_MODES: FACTORY_MODES,
   POOL_CONSTANTS: POOL_CONSTANTS,
-  
+
   // Layout - REMOVED (Use Layout System Constants)
   // LAYOUT_TYPES, LAYOUT_DIRECTIONS, ALIGNMENT_TYPES, RESPONSIVE_BREAKPOINTS
-  
+
   // Theme - REMOVED (Use Layout System Constants)
   // THEME_TYPES
   THEME_PROPERTIES: THEME_PROPERTIES,
-  
+
   // Animation - REMOVED (Use Layout System Constants)
   // ANIMATION_TYPES, ANIMATION_DIRECTIONS, EASING_FUNCTIONS
-  
+
   // Input
   INPUT_TYPES: INPUT_TYPES,
   INPUT_EVENTS: INPUT_EVENTS,
-  
+
   // Physics - REMOVED (Use Layout System Constants)
   // PHYSICS_BODY_TYPES
   COLLISION_SHAPES: COLLISION_SHAPES,
   PHYSICS_MATERIALS: PHYSICS_MATERIALS,
-  
+
   // Audio
   AUDIO_TYPES: AUDIO_TYPES,
   AUDIO_STATES: AUDIO_STATES,
-  
+
   // Network
   NETWORK_MESSAGE_TYPES: NETWORK_MESSAGE_TYPES,
   NETWORK_STATES: NETWORK_STATES,
-  
+
   // Debug
   DEBUG_LEVELS: DEBUG_LEVELS,
   DEBUG_CATEGORIES: DEBUG_CATEGORIES,
-  
+
   // Performance
   PERFORMANCE_THRESHOLDS: PERFORMANCE_THRESHOLDS,
   MEMORY_LIMITS: MEMORY_LIMITS,
 } as const;
 
 // Type exports for TypeScript
-export type GameObjectType = typeof GAMEOBJECT_TYPES[keyof typeof GAMEOBJECT_TYPES];
-export type GameObjectState = typeof GAMEOBJECT_STATES[keyof typeof GAMEOBJECT_STATES];
-export type GameObjectProperty = typeof GAMEOBJECT_PROPERTIES[keyof typeof GAMEOBJECT_PROPERTIES];
-export type ComponentType = typeof COMPONENT_TYPES[keyof typeof COMPONENT_TYPES];
-export type ComponentState = typeof COMPONENT_STATES[keyof typeof COMPONENT_STATES];
+export type GameObjectType = (typeof GAMEOBJECT_TYPES)[keyof typeof GAMEOBJECT_TYPES];
+export type GameObjectState = (typeof GAMEOBJECT_STATES)[keyof typeof GAMEOBJECT_STATES];
+export type GameObjectProperty = (typeof GAMEOBJECT_PROPERTIES)[keyof typeof GAMEOBJECT_PROPERTIES];
+export type ComponentType = (typeof COMPONENT_TYPES)[keyof typeof COMPONENT_TYPES];
+export type ComponentState = (typeof COMPONENT_STATES)[keyof typeof COMPONENT_STATES];
 // LayoutType, ThemeType, AnimationType, PhysicsBodyType removed - use Layout System types
-export type InputType = typeof INPUT_TYPES[keyof typeof INPUT_TYPES];
-export type AudioType = typeof AUDIO_TYPES[keyof typeof AUDIO_TYPES];
-export type NetworkMessageType = typeof NETWORK_MESSAGE_TYPES[keyof typeof NETWORK_MESSAGE_TYPES];
-export type DebugLevel = typeof DEBUG_LEVELS[keyof typeof DEBUG_LEVELS];
+export type InputType = (typeof INPUT_TYPES)[keyof typeof INPUT_TYPES];
+export type AudioType = (typeof AUDIO_TYPES)[keyof typeof AUDIO_TYPES];
+export type NetworkMessageType = (typeof NETWORK_MESSAGE_TYPES)[keyof typeof NETWORK_MESSAGE_TYPES];
+export type DebugLevel = (typeof DEBUG_LEVELS)[keyof typeof DEBUG_LEVELS];

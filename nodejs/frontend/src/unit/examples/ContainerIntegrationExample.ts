@@ -17,7 +17,8 @@ import type { CommonIStyleProperties } from '../../abstract/configs/IStyleProper
  */
 
 // Example 1: Enhanced Container with Unit System Integration
-export class ResponsiveContainer extends (await import('../../object/container/Container')).Container {
+export class ResponsiveContainer extends (await import('../../object/container/Container'))
+  .Container {
   private sizeCalculator!: ISizeUnit;
   private positionCalculator!: IPositionUnit;
   private scaleCalculator!: IScaleUnit;
@@ -58,14 +59,14 @@ export class ResponsiveContainer extends (await import('../../object/container/C
 
   constructor(scene: Phaser.Scene, id: string, x: number = 0, y: number = 0, parent: any = null) {
     super(scene, id, x, y, parent);
-    
+
     // Initialize calculators with your Container's properties
     this.initializeCalculators();
   }
 
   private initializeCalculators() {
     const factory = UnitCalculatorFactory.getInstance();
-    
+
     // Create calculators that work with your Container's responsive system
     this.sizeCalculator = factory.createSizeUnit(
       `${this.id}-size`,
@@ -97,7 +98,7 @@ export class ResponsiveContainer extends (await import('../../object/container/C
   setStyleWithUnits(layoutProperties: CommonIStyleProperties): void {
     // Call your existing setStyle method
     this.setStyle(layoutProperties);
-    
+
     // Now apply unit-based calculations
     this.applyUnitCalculations();
   }
@@ -105,24 +106,24 @@ export class ResponsiveContainer extends (await import('../../object/container/C
   private applyUnitCalculations(): void {
     // Create type-safe context from your Container
     const context = PhaserUnitContextFactory.fromContainer(this);
-    
+
     // Calculate new size using unit system
     const newWidth = this.sizeCalculator.calculate(context);
     const newHeight = this.sizeCalculator.calculate(context);
-    
+
     // Apply calculated size
     this.setSize(newWidth, newHeight);
-    
+
     // Calculate new position using unit system
     const newX = this.positionCalculator.calculate(context);
     const newY = this.positionCalculator.calculate(context);
-    
+
     // Apply calculated position
     this.setPosition(newX, newY);
-    
+
     // Calculate new scale using unit system
     const newScale = this.scaleCalculator.calculate(context);
-    
+
     // Apply calculated scale
     this.setScale(newScale);
   }
@@ -144,30 +145,33 @@ export class ResponsiveContainer extends (await import('../../object/container/C
   handleResponsiveResize(width: number, height: number): void {
     // Call your existing responsive resize logic
     super.handleResponsiveResize(width, height);
-    
+
     // Now recalculate using unit system
     this.applyUnitCalculations();
   }
 }
 
 // Example 2: Using your existing style system with unit calculations
-export class StyleAwareContainer extends (await import('../../object/container/Container')).Container {
-  
+export class StyleAwareContainer extends (await import('../../object/container/Container'))
+  .Container {
   // Enhanced setStyle that integrates with unit system
   setStyleWithUnitIntegration(layoutProperties: CommonIStyleProperties): void {
     // Apply your existing style logic
     this.setStyle(layoutProperties);
-    
+
     // Extract unit-based properties
     const unitProperties = this.extractUnitProperties(layoutProperties);
-    
+
     // Apply unit calculations if present
     if (unitProperties.hasUnits) {
       this.applyUnitStyle(unitProperties);
     }
   }
 
-  private extractUnitProperties(layoutProperties: CommonIStyleProperties): { hasUnits: boolean; units: Partial<CommonIStyleProperties> } {
+  private extractUnitProperties(layoutProperties: CommonIStyleProperties): {
+    hasUnits: boolean;
+    units: Partial<CommonIStyleProperties>;
+  } {
     const units: Partial<CommonIStyleProperties> = {};
     let hasUnits = false;
 
@@ -195,47 +199,49 @@ export class StyleAwareContainer extends (await import('../../object/container/C
     return { hasUnits, units };
   }
 
-  private applyUnitStyle(unitProperties: { hasUnits: boolean; units: Partial<CommonIStyleProperties> }): void {
+  private applyUnitStyle(unitProperties: {
+    hasUnits: boolean;
+    units: Partial<CommonIStyleProperties>;
+  }): void {
     const factory = UnitCalculatorFactory.getInstance();
     const context = PhaserUnitContextFactory.fromContainer(this);
 
-         // Apply width calculation
-     if (unitProperties.units.width) {
-       const widthCalculator = factory.createSizeUnit(
-         `${this.id}-width`,
-         'Dynamic Width',
-         SizeUnit.PARENT_WIDTH,
-         Dimension.WIDTH,
-         unitProperties.units.width,
-         this.getStyle()?.maintainAspectRatio || false
-       );
-       
-       const newWidth = widthCalculator.calculate(context);
-       this.setSize(newWidth, this.height);
-     }
+    // Apply width calculation
+    if (unitProperties.units.width) {
+      const widthCalculator = factory.createSizeUnit(
+        `${this.id}-width`,
+        'Dynamic Width',
+        SizeUnit.PARENT_WIDTH,
+        Dimension.WIDTH,
+        unitProperties.units.width,
+        this.getStyle()?.maintainAspectRatio || false
+      );
 
-     // Apply height calculation
-     if (unitProperties.units.height) {
-       const heightCalculator = factory.createSizeUnit(
-         `${this.id}-height`,
-         'Dynamic Height',
-         SizeUnit.PARENT_HEIGHT,
-         Dimension.HEIGHT,
-         unitProperties.units.height,
-         this.getStyle()?.maintainAspectRatio || false
-       );
-       
-       const newHeight = heightCalculator.calculate(context);
-       this.setSize(this.width, newHeight);
-     }
+      const newWidth = widthCalculator.calculate(context);
+      this.setSize(newWidth, this.height);
+    }
+
+    // Apply height calculation
+    if (unitProperties.units.height) {
+      const heightCalculator = factory.createSizeUnit(
+        `${this.id}-height`,
+        'Dynamic Height',
+        SizeUnit.PARENT_HEIGHT,
+        Dimension.HEIGHT,
+        unitProperties.units.height,
+        this.getStyle()?.maintainAspectRatio || false
+      );
+
+      const newHeight = heightCalculator.calculate(context);
+      this.setSize(this.width, newHeight);
+    }
 
     // Apply position calculations
     if (unitProperties.units.positionX) {
       // Convert positionX to a valid baseValue
-      const baseValue = typeof unitProperties.units.positionX === 'number' 
-        ? unitProperties.units.positionX 
-        : 0; // Default to 0 for non-numeric values
-      
+      const baseValue =
+        typeof unitProperties.units.positionX === 'number' ? unitProperties.units.positionX : 0; // Default to 0 for non-numeric values
+
       const xCalculator = factory.createPositionUnit(
         `${this.id}-posX`,
         'Dynamic Position X',
@@ -243,17 +249,16 @@ export class StyleAwareContainer extends (await import('../../object/container/C
         Dimension.X,
         baseValue
       );
-      
+
       const newX = xCalculator.calculate(context);
       this.setPosition(newX, this.y);
     }
 
     if (unitProperties.units.positionY) {
       // Convert positionY to a valid baseValue
-      const baseValue = typeof unitProperties.units.positionY === 'number' 
-        ? unitProperties.units.positionY 
-        : 0; // Default to 0 for non-numeric values
-      
+      const baseValue =
+        typeof unitProperties.units.positionY === 'number' ? unitProperties.units.positionY : 0; // Default to 0 for non-numeric values
+
       const yCalculator = factory.createPositionUnit(
         `${this.id}-posY`,
         'Dynamic Position Y',
@@ -261,7 +266,7 @@ export class StyleAwareContainer extends (await import('../../object/container/C
         Dimension.Y,
         baseValue
       );
-      
+
       const newY = yCalculator.calculate(context);
       this.setPosition(this.x, newY);
     }
@@ -292,7 +297,7 @@ export class ResponsiveScene extends (await import('phaser')).Scene {
     this.containers.forEach(container => {
       // Get type-safe context
       //const context = container.getUnitContextWithParent();
-      
+
       // Trigger unit-based recalculation
       container.setStyleWithUnits(container.getStyle());
     });
@@ -311,14 +316,11 @@ export class IntegrationBenefits {
     // const context = PhaserUnitContextFactory.fromContainer(container);
     // const width = context.scene.width; // TypeScript knows this exists
     // const height = context.scene.height; // TypeScript knows this exists
-
     // ✅ INTEGRATION: Works with your existing Container system
     // container.setStyleWithUnits(layoutProperties);
     // container.handleResponsiveResize(width, height);
-
     // ✅ PERFORMANCE: No runtime type checking overhead
     // All calculations use your existing Phaser properties
-
     // ✅ MAINTAINABILITY: Clear contracts and interfaces
     // Easy to refactor and extend
   }
@@ -326,7 +328,7 @@ export class IntegrationBenefits {
 
 /**
  * Key Benefits of This Integration:
- * 
+ *
  * 1. **Seamless Integration**: Works with your existing Container architecture
  * 2. **Type Safety**: Full TypeScript support with Phaser types
  * 3. **Performance**: No overhead, uses existing Phaser properties
@@ -334,6 +336,6 @@ export class IntegrationBenefits {
  * 5. **Maintainable**: Clear separation of concerns
  * 6. **Extensible**: Easy to add new unit types and calculations
  * 7. **Backward Compatible**: Works with your existing style system
- * 
+ *
  * Your Container system is perfectly designed for this integration!
  */

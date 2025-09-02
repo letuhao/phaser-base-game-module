@@ -413,7 +413,7 @@ export class UnitMementoManager {
     // Simple comparison without using compareWith method
     const lastResult = lastMemento.getCalculationResult();
     const lastTime = lastMemento.getPerformanceMetrics().totalTime;
-    
+
     const resultDifference = Math.abs(newResult - lastResult);
     const timeDifference = Math.abs(newTime - lastTime);
 

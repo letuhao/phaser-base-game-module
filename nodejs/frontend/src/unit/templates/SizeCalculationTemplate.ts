@@ -155,7 +155,7 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
   protected handleCalculationError(error: unknown, input: ITemplateInput): void {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
-    
+
     Logger.getInstance().error(
       'SizeCalculationTemplate',
       'handleCalculationError',
@@ -175,7 +175,10 @@ export abstract class SizeCalculationTemplate implements IUnitCalculationTemplat
    */
   protected applyRoundingAndBounds(result: number): number {
     // Default implementation: round to 2 decimal places
-    return Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    return (
+      Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) /
+      DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT
+    );
   }
 
   /**

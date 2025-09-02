@@ -1,4 +1,12 @@
-import { Dimension, SizeUnit, PositionUnit, ScaleUnit, SizeValue, PositionValue, ScaleValue } from '../';
+import {
+  Dimension,
+  SizeUnit,
+  PositionUnit,
+  ScaleUnit,
+  SizeValue,
+  PositionValue,
+  ScaleValue,
+} from '../';
 
 /**
  * Base configuration interface for all unit types
@@ -7,19 +15,19 @@ import { Dimension, SizeUnit, PositionUnit, ScaleUnit, SizeValue, PositionValue,
 export interface IBaseUnitConfig {
   /** Unique identifier for the unit */
   id: string;
-  
+
   /** Human-readable name for the unit */
   name: string;
-  
+
   /** Whether to maintain aspect ratio when scaling */
   maintainAspectRatio?: boolean;
-  
+
   /** Minimum value constraint */
   minValue?: number;
-  
+
   /** Maximum value constraint */
   maxValue?: number;
-  
+
   /** Custom metadata for the unit */
   metadata?: Record<string, string | number | boolean>;
 }
@@ -30,19 +38,19 @@ export interface IBaseUnitConfig {
 export interface ISizeUnitConfig extends IBaseUnitConfig {
   /** Size unit type */
   sizeUnit?: SizeUnit;
-  
+
   /** Dimension to apply the size to */
   dimension?: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH;
-  
+
   /** Base value for size calculation */
   baseValue: number | SizeValue;
-  
+
   /** Whether to maintain aspect ratio */
   maintainAspectRatio?: boolean;
-  
+
   /** Minimum size constraint */
   minSize?: number;
-  
+
   /** Maximum size constraint */
   maxSize?: number;
 }
@@ -53,16 +61,16 @@ export interface ISizeUnitConfig extends IBaseUnitConfig {
 export interface IPositionUnitConfig extends IBaseUnitConfig {
   /** Position unit type */
   positionUnit?: PositionUnit;
-  
+
   /** Axis to apply the position to */
   axis?: Dimension.X | Dimension.Y | Dimension.XY;
-  
+
   /** Base value for position calculation */
   baseValue: number | PositionValue;
-  
+
   /** Offset from calculated position */
   offset?: number;
-  
+
   /** Whether to respect parent bounds */
   respectBounds?: boolean;
 }
@@ -73,16 +81,16 @@ export interface IPositionUnitConfig extends IBaseUnitConfig {
 export interface IScaleUnitConfig extends IBaseUnitConfig {
   /** Scale unit type */
   scaleUnit?: ScaleUnit;
-  
+
   /** Base value for scale calculation */
   baseValue: number | ScaleValue;
-  
+
   /** Whether to maintain aspect ratio */
   maintainAspectRatio?: boolean;
-  
+
   /** Minimum scale constraint */
   minScale?: number;
-  
+
   /** Maximum scale constraint */
   maxScale?: number;
 }
@@ -134,7 +142,7 @@ export function createSizeUnitConfig(
     maxSize: options?.maxSize,
     minValue: options?.minValue,
     maxValue: options?.maxValue,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -157,7 +165,7 @@ export function createPositionUnitConfig(
     respectBounds: options?.respectBounds || true,
     minValue: options?.minValue,
     maxValue: options?.maxValue,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -180,6 +188,6 @@ export function createScaleUnitConfig(
     maxScale: options?.maxScale,
     minValue: options?.minValue,
     maxValue: options?.maxValue,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }

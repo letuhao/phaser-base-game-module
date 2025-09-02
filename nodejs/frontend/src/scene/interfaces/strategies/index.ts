@@ -1,6 +1,6 @@
 /**
  * Scene Strategy Interfaces Index
- * 
+ *
  * Centralized export for all scene strategy interfaces
  */
 
@@ -18,4 +18,5 @@ export const SCENE_STRATEGY_INTERFACES = {
   ISceneValidationStrategy: 'ISceneValidationStrategy',
 } as const;
 
-export type SceneStrategyInterface = typeof SCENE_STRATEGY_INTERFACES[keyof typeof SCENE_STRATEGY_INTERFACES];
+export type SceneStrategyInterface =
+  (typeof SCENE_STRATEGY_INTERFACES)[keyof typeof SCENE_STRATEGY_INTERFACES];

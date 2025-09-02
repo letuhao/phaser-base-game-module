@@ -91,17 +91,17 @@ export class UnitSystemManager implements IUnitSystemManager {
     try {
       // Initialize all managers
       this.performanceManager.startMeasurement('system_initialization');
-      
+
       // Set up default configuration
       this.resetToDefaults();
-      
+
       this.logger.info('UnitSystemManager', 'initialize', 'Unit system initialized successfully');
       this.isInitialized = true;
-      
+
       this.performanceManager.endMeasurement('system_initialization');
     } catch (error) {
       this.logger.error('UnitSystemManager', 'initialize', 'Failed to initialize unit system', {
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -115,25 +115,25 @@ export class UnitSystemManager implements IUnitSystemManager {
 
     try {
       this.performanceManager.startMeasurement('system_shutdown');
-      
+
       // Clear all data
       this.unitRegistryManager.getAllUnits().forEach(unit => {
         this.unitRegistryManager.removeUnit(unit.id);
       });
-      
+
       this.strategyManager.clearStrategies();
       this.commandManager.clearCommandHistory();
       this.observerManager.clearObservers();
       this.validationManager.clearValidators();
       this.performanceManager.clearPerformanceData();
-      
+
       this.isInitialized = false;
-      
+
       this.performanceManager.endMeasurement('system_shutdown');
       this.logger.info('UnitSystemManager', 'shutdown', 'Unit system shut down successfully');
     } catch (error) {
       this.logger.error('UnitSystemManager', 'shutdown', 'Failed to shut down unit system', {
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -154,7 +154,7 @@ export class UnitSystemManager implements IUnitSystemManager {
       totalUnits: this.unitRegistryManager.getUnitCount(),
       activeStrategies: this.strategyManager.getStrategyCount(),
       registeredObservers: this.observerManager.getObserverCount(),
-      validationErrors: this.validationManager.getErrorCount()
+      validationErrors: this.validationManager.getErrorCount(),
     };
   }
 
@@ -172,7 +172,7 @@ export class UnitSystemManager implements IUnitSystemManager {
       totalCalculations: metrics.totalOperations,
       averageCalculationTime: metrics.averageExecutionTime,
       memoryUsage: metrics.memoryUsage,
-      errorRate: metrics.errorRate
+      errorRate: metrics.errorRate,
     };
   }
 
@@ -181,16 +181,16 @@ export class UnitSystemManager implements IUnitSystemManager {
    */
   public updateConfiguration(config: Record<string, unknown>): void {
     this.logger.info('UnitSystemManager', 'updateConfiguration', 'Updating system configuration', {
-      configKeys: Object.keys(config)
+      configKeys: Object.keys(config),
     });
 
     this.configuration = { ...this.configuration, ...config };
-    
+
     // Apply configuration to managers
     if ('performanceThreshold' in config) {
       this.performanceManager.setPerformanceThreshold(config.performanceThreshold as number);
     }
-    
+
     if ('memoryLimit' in config) {
       this.performanceManager.setMemoryLimit(config.memoryLimit as number);
     }
@@ -208,12 +208,12 @@ export class UnitSystemManager implements IUnitSystemManager {
    */
   public resetToDefaults(): void {
     this.logger.info('UnitSystemManager', 'resetToDefaults', 'Resetting to default configuration');
-    
+
     this.configuration = {
       performanceThreshold: 100,
       memoryLimit: 1000,
       maxValidationErrors: 10,
-      enablePerformanceMonitoring: true
+      enablePerformanceMonitoring: true,
     };
   }
 
@@ -260,17 +260,17 @@ export class UnitSystemManager implements IUnitSystemManager {
   }
 
   // Convenience methods that delegate to appropriate managers
-  
+
   /**
    * Create a unit (delegates to UnitRegistryManager)
    */
   public createUnit(unitType: string, config: IUnitConfig): IUnit {
     this.performanceManager.startMeasurement('create_unit');
-    
+
     try {
       const unit = this.unitRegistryManager.createUnit(unitType, config);
       this.observerManager.notifyUnitCreated(unit.id, unit.unitType);
-      
+
       this.performanceManager.endMeasurement('create_unit');
       return unit;
     } catch (error) {

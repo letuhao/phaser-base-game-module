@@ -22,14 +22,14 @@ export class ResponsiveSprite extends GameObjects.Sprite {
 
   constructor(scene: Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
-    
+
     // Initialize calculators with type-safe context
     this.initializeCalculators();
   }
 
   private initializeCalculators() {
     const factory = UnitCalculatorFactory.getInstance();
-    
+
     // Create calculators with specific configurations
     this.sizeCalculator = factory.createSizeUnit(
       `${this.name}-size`,
@@ -61,7 +61,7 @@ export class ResponsiveSprite extends GameObjects.Sprite {
   updateSize(context: PhaserUnitContext): void {
     const newWidth = this.sizeCalculator.calculate(context);
     const newHeight = this.sizeCalculator.calculate(context);
-    
+
     this.setSize(newWidth, newHeight);
   }
 
@@ -69,14 +69,14 @@ export class ResponsiveSprite extends GameObjects.Sprite {
   updatePosition(context: PhaserUnitContext): void {
     const newX = this.positionCalculator.calculate(context);
     const newY = this.positionCalculator.calculate(context);
-    
+
     this.setPosition(newX, newY);
   }
 
   // Type-safe scale calculation
   updateScale(context: PhaserUnitContext): void {
     const newScale = this.scaleCalculator.calculate(context);
-    
+
     this.setScale(newScale);
   }
 
@@ -84,7 +84,7 @@ export class ResponsiveSprite extends GameObjects.Sprite {
   updateWithContext(): void {
     // Create type-safe context
     const context = PhaserUnitContextFactory.fromGameObject(this);
-    
+
     // All calculations are now type-safe
     this.updateSize(context);
     this.updatePosition(context);
@@ -137,7 +137,7 @@ export class ResponsiveScene extends Scene {
   updateLayout(): void {
     // Update container layout
     this.container.updateChildrenLayout();
-    
+
     // Update individual sprites
     this.responsiveSprites.forEach(sprite => {
       sprite.updateWithContext();
@@ -163,7 +163,7 @@ export class MyGameObject extends GameObjects.GameObject {
   calculateResponsiveSize(): { width: number; height: number } {
     // This context is fully type-safe
     const factory = UnitCalculatorFactory.getInstance();
-    
+
     const sizeCalculator = factory.createSizeUnit(
       `${this.name}-size`,
       'Dynamic Size',
@@ -192,7 +192,6 @@ export class TypeSafeExample {
     // This could crash at runtime
     // const width = oldContext.scene.width; // What if scene is undefined?
     // const height = oldContext.parent.height; // What if parent is null?
-
     // ✅ NEW WAY (type-safe with PhaserUnitContext)
     // const context = PhaserUnitContextFactory.fromGameObject(gameObject);
     // const width = context.scene.width; // TypeScript knows this exists
@@ -202,7 +201,7 @@ export class TypeSafeExample {
 
 /**
  * Key Benefits of This Approach:
- * 
+ *
  * 1. **Type Safety**: No more 'any' types, compile-time error checking
  * 2. **IntelliSense**: Full autocomplete and documentation in your IDE
  * 3. **Runtime Safety**: Phaser objects are guaranteed to exist

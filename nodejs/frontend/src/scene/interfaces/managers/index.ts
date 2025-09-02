@@ -1,6 +1,6 @@
 /**
  * Scene Manager Interfaces Index
- * 
+ *
  * Centralized export for all scene manager interfaces
  */
 
@@ -21,4 +21,5 @@ export const SCENE_MANAGER_INTERFACES = {
   ISceneBuilderManager: 'ISceneBuilderManager',
 } as const;
 
-export type SceneManagerInterface = typeof SCENE_MANAGER_INTERFACES[keyof typeof SCENE_MANAGER_INTERFACES];
+export type SceneManagerInterface =
+  (typeof SCENE_MANAGER_INTERFACES)[keyof typeof SCENE_MANAGER_INTERFACES];

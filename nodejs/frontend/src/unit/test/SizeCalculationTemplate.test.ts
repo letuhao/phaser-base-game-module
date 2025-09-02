@@ -48,12 +48,12 @@ describe('SizeCalculationTemplate', () => {
       expect(validatorInfo).toContainEqual({
         name: 'RangeValidator',
         type: 'RangeValidator',
-        enabled: true
+        enabled: true,
       });
       expect(validatorInfo).toContainEqual({
         name: 'TypeValidator',
         type: 'TypeValidator',
-        enabled: true
+        enabled: true,
       });
     });
   });
@@ -62,7 +62,7 @@ describe('SizeCalculationTemplate', () => {
     it('should calculate size successfully', () => {
       const input = createSizeTemplateInput(SizeUnit.PIXEL, 100);
       const result = template.calculate(input);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });
@@ -70,7 +70,7 @@ describe('SizeCalculationTemplate', () => {
     it('should handle size value enum', () => {
       const input = createSizeTemplateInput(SizeUnit.PIXEL, SizeValue.AUTO);
       const result = template.calculate(input);
-      
+
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
     });
@@ -79,7 +79,7 @@ describe('SizeCalculationTemplate', () => {
       const invalidInput = {
         type: TemplateInputType.SIZE,
         unit: SizeUnit.PIXEL,
-        value: -1000 // Invalid value that should fail validation
+        value: -1000, // Invalid value that should fail validation
       } as any;
 
       expect(() => template.calculate(invalidInput)).toThrow('Pre-calculation validation failed');
@@ -87,17 +87,17 @@ describe('SizeCalculationTemplate', () => {
 
     it('should handle calculation errors gracefully', () => {
       const input = createSizeTemplateInput(SizeUnit.PIXEL, 100);
-      
+
       // Mock strategy to throw error
       const mockStrategy = {
         calculate: jest.fn().mockImplementation(() => {
           throw new Error('Strategy calculation failed');
-        })
+        }),
       };
-      
+
       // Replace strategy temporarily
       (template as any).strategy = mockStrategy;
-      
+
       expect(() => template.calculate(input)).toThrow('Strategy calculation failed');
     });
   });
@@ -106,32 +106,32 @@ describe('SizeCalculationTemplate', () => {
     it('should add custom validator', () => {
       const customValidator = new RangeValidator('CustomValidator', 0, 500, true);
       template.addValidator(customValidator);
-      
+
       const validatorInfo = template.getValidatorInfo();
       expect(validatorInfo).toHaveLength(3);
       expect(validatorInfo).toContainEqual({
         name: 'RangeValidator',
         type: 'RangeValidator',
-        enabled: true
+        enabled: true,
       });
     });
 
     it('should remove validator by name', () => {
       template.removeValidator('RangeValidator');
-      
+
       const validatorInfo = template.getValidatorInfo();
       expect(validatorInfo).toHaveLength(1);
       expect(validatorInfo).not.toContainEqual({
         name: 'RangeValidator',
         type: 'RangeValidator',
-        enabled: true
+        enabled: true,
       });
     });
 
     it('should not remove non-existent validator', () => {
       const initialCount = template.getValidatorInfo().length;
       template.removeValidator('NonExistentValidator');
-      
+
       expect(template.getValidatorInfo()).toHaveLength(initialCount);
     });
   });
@@ -145,7 +145,7 @@ describe('SizeCalculationTemplate', () => {
     it('should update context', () => {
       const newContext = { parent: { width: 1000, height: 800, x: 0, y: 0 } };
       template.updateContext(newContext);
-      
+
       const updatedContext = template.getContext();
       expect(updatedContext.parent?.width).toBe(1000);
       expect(updatedContext.parent?.height).toBe(800);
@@ -155,33 +155,33 @@ describe('SizeCalculationTemplate', () => {
   describe('metadata and information', () => {
     it('should return calculation metadata', () => {
       const metadata = template.getCalculationMetadata();
-      
+
       expect(metadata).toEqual({
         templateName: 'TestSizeCalculationTemplate',
         version: '1.0.0',
         supportedInputs: ['size', 'ISizeTemplateInput'],
-        calculationSteps: ['validation', 'preprocessing', 'calculation', 'postprocessing']
+        calculationSteps: ['validation', 'preprocessing', 'calculation', 'postprocessing'],
       });
     });
 
     it('should return calculation statistics', () => {
       const stats = template.getCalculationStats();
-      
+
       expect(stats).toEqual({
         totalCalculations: 0,
         validationFailures: 0,
         calculationErrors: 0,
-        averageResult: 0
+        averageResult: 0,
       });
     });
 
     it('should return performance metrics', () => {
       const metrics = template.getPerformanceMetrics();
-      
+
       expect(metrics).toEqual({
         totalTime: 0,
         stepTimes: {},
-        memoryUsage: 0
+        memoryUsage: 0,
       });
     });
 
@@ -200,7 +200,7 @@ describe('SizeCalculationTemplate', () => {
 
     it('should handle size template input with dimension', () => {
       const input = createSizeTemplateInput(SizeUnit.PIXEL, 100, {
-        dimension: Dimension.HEIGHT
+        dimension: Dimension.HEIGHT,
       });
       expect(template.canHandle(input)).toBe(true);
     });
@@ -209,7 +209,7 @@ describe('SizeCalculationTemplate', () => {
       const input = createSizeTemplateInput(SizeUnit.PIXEL, 100, {
         minSize: 50,
         maxSize: 200,
-        maintainAspectRatio: true
+        maintainAspectRatio: true,
       });
       expect(template.canHandle(input)).toBe(true);
     });
@@ -218,9 +218,9 @@ describe('SizeCalculationTemplate', () => {
       const nonSizeInput = {
         type: TemplateInputType.POSITION,
         unit: 'pixel',
-        value: 100
+        value: 100,
       } as any;
-      
+
       expect(template.canHandle(nonSizeInput)).toBe(false);
     });
   });
@@ -229,7 +229,7 @@ describe('SizeCalculationTemplate', () => {
     it('should apply rounding to results', () => {
       const input = createSizeTemplateInput(SizeUnit.PIXEL, 100.123456);
       const result = template.calculate(input);
-      
+
       // Should be rounded to 2 decimal places
       expect(result).toBe(Math.round(result * 100) / 100);
     });
@@ -238,7 +238,7 @@ describe('SizeCalculationTemplate', () => {
   describe('error handling', () => {
     it('should handle validation failures', () => {
       const invalidInput = createSizeTemplateInput(SizeUnit.PIXEL, -1000);
-      
+
       expect(() => template.calculate(invalidInput)).toThrow('Pre-calculation validation failed');
     });
 
@@ -246,12 +246,14 @@ describe('SizeCalculationTemplate', () => {
       const invalidInput = {
         type: 'invalid-type',
         unit: SizeUnit.PIXEL,
-        value: 100
+        value: 100,
       } as any;
-      
+
       // The validation might not fail because validators don't handle template inputs properly
       // This test documents the current behavior
-      expect(() => template.calculate(invalidInput)).not.toThrow('Pre-calculation validation failed');
+      expect(() => template.calculate(invalidInput)).not.toThrow(
+        'Pre-calculation validation failed'
+      );
     });
   });
 
@@ -259,7 +261,7 @@ describe('SizeCalculationTemplate', () => {
     it('should use SizeUnitStrategy for calculations', () => {
       const input = createSizeTemplateInput(SizeUnit.PIXEL, 100);
       const result = template.calculate(input);
-      
+
       // The result should be calculated by the strategy
       expect(typeof result).toBe('number');
       expect(result).toBeGreaterThan(0);
@@ -268,10 +270,10 @@ describe('SizeCalculationTemplate', () => {
     it('should handle different size units', () => {
       const pixelInput = createSizeTemplateInput(SizeUnit.PIXEL, 100);
       const parentWidthInput = createSizeTemplateInput(SizeUnit.PARENT_WIDTH, 50);
-      
+
       const pixelResult = template.calculate(pixelInput);
       const parentWidthResult = template.calculate(parentWidthInput);
-      
+
       expect(typeof pixelResult).toBe('number');
       expect(typeof parentWidthResult).toBe('number');
       expect(pixelResult).toBeGreaterThan(0);

@@ -1,6 +1,6 @@
 /**
  * Scene Error Interfaces Index
- * 
+ *
  * Centralized export for all scene error interfaces
  */
 
@@ -18,4 +18,5 @@ export const SCENE_ERROR_INTERFACES = {
   ISceneErrorHandler: 'ISceneErrorHandler',
 } as const;
 
-export type SceneErrorInterface = typeof SCENE_ERROR_INTERFACES[keyof typeof SCENE_ERROR_INTERFACES];
+export type SceneErrorInterface =
+  (typeof SCENE_ERROR_INTERFACES)[keyof typeof SCENE_ERROR_INTERFACES];

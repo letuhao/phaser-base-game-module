@@ -1,6 +1,6 @@
 /**
  * Positioning System Enums
- * 
+ *
  * Enums for positioning, alignment, and layout positioning functionality
  */
 

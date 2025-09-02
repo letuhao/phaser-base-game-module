@@ -1,6 +1,6 @@
 /**
  * Network System Enums
- * 
+ *
  * Enums for networking, synchronization, and multiplayer functionality
  */
 
@@ -170,11 +170,11 @@ export enum NetworkBandwidth {
  * Network latency categories enum
  */
 export enum NetworkLatency {
-  VERY_LOW = 'very_low',    // < 50ms
-  LOW = 'low',              // 50-100ms
-  MEDIUM = 'medium',        // 100-200ms
-  HIGH = 'high',            // 200-500ms
-  VERY_HIGH = 'very_high',  // > 500ms
+  VERY_LOW = 'very_low', // < 50ms
+  LOW = 'low', // 50-100ms
+  MEDIUM = 'medium', // 100-200ms
+  HIGH = 'high', // 200-500ms
+  VERY_HIGH = 'very_high', // > 500ms
 }
 
 // ============================================================================

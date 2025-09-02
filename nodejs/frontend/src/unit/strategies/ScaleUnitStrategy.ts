@@ -161,10 +161,10 @@ export class ScaleUnitStrategy implements IUnitStrategy {
    */
   private calculateParentScale(input: unknown, context: UnitContext): number {
     if (
-      context.parent && 
-      typeof input === 'object' && 
-      input !== null && 
-      'getValue' in input && 
+      context.parent &&
+      typeof input === 'object' &&
+      input !== null &&
+      'getValue' in input &&
       typeof (input as { getValue(parent: unknown): number }).getValue === 'function'
     ) {
       return (input as { getValue(parent: unknown): number }).getValue(context.parent);
@@ -231,18 +231,20 @@ export class ScaleUnitStrategy implements IUnitStrategy {
   }
 
   private isRandomValue(input: unknown): input is { getRandomValue(): number } {
-    return input !== null && input !== undefined && typeof (input as { getRandomValue(): number }).getRandomValue === 'function';
+    return (
+      input !== null &&
+      input !== undefined &&
+      typeof (input as { getRandomValue(): number }).getRandomValue === 'function'
+    );
   }
 
   private isParentScale(input: unknown): input is { getValue(parent: unknown): number } {
-    return input !== null && input !== undefined && typeof (input as { getValue(parent: unknown): number }).getValue === 'function';
+    return (
+      input !== null &&
+      input !== undefined &&
+      typeof (input as { getValue(parent: unknown): number }).getValue === 'function'
+    );
   }
-
-
-
-
-
-
 
   /**
    * Get scale strategy information
@@ -266,8 +268,8 @@ export class ScaleUnitStrategy implements IUnitStrategy {
         'CSS-like strings',
         'parent-relative scaling',
         'aspect ratio preservation',
-        'constraint-based scaling'
-      ]
+        'constraint-based scaling',
+      ],
     };
   }
 }

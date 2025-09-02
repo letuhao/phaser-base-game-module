@@ -5,7 +5,7 @@ import {
   FillSizeValueCalculationStrategy,
   AutoSizeValueCalculationStrategy,
   ParentWidthSizeValueCalculationStrategy,
-  ViewportWidthSizeValueCalculationStrategy
+  ViewportWidthSizeValueCalculationStrategy,
 } from '../strategies/value';
 import { SizeValue } from '../enums/SizeValue';
 import { SizeUnit } from '../enums/SizeUnit';
@@ -19,7 +19,7 @@ describe('RefactoredSizeUnitCalculator', () => {
 
   beforeEach(() => {
     strategyRegistry = new SizeValueCalculationStrategyRegistry();
-    
+
     // Register all strategies
     strategyRegistry.registerStrategy(new PixelSizeValueCalculationStrategy());
     strategyRegistry.registerStrategy(new FillSizeValueCalculationStrategy());
@@ -31,7 +31,7 @@ describe('RefactoredSizeUnitCalculator', () => {
       parent: { width: 800, height: 600, x: 0, y: 0 },
       scene: { width: 1920, height: 1080 },
       viewport: { width: 1366, height: 768 },
-      content: { width: 200, height: 150 }
+      content: { width: 200, height: 150 },
     };
   });
 
@@ -115,7 +115,9 @@ describe('RefactoredSizeUnitCalculator', () => {
         strategyRegistry
       );
 
-      expect(() => calculator.calculateWidth(mockContext)).toThrow('Cannot calculate width for height-only dimension');
+      expect(() => calculator.calculateWidth(mockContext)).toThrow(
+        'Cannot calculate width for height-only dimension'
+      );
     });
   });
 
@@ -355,7 +357,7 @@ describe('RefactoredSizeUnitCalculator', () => {
       const cloned = calculator.clone({
         id: 'new-id',
         name: 'New Calculator',
-        baseValue: 200
+        baseValue: 200,
       });
 
       expect(cloned.id).toBe('new-id');
@@ -448,15 +450,15 @@ describe('RefactoredSizeUnitCalculator', () => {
       );
 
       const startTime = performance.now();
-      
+
       // Perform multiple calculations
       for (let i = 0; i < 1000; i++) {
         calculator.calculate(mockContext);
       }
-      
+
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       // Should complete within reasonable time (adjust threshold as needed)
       expect(duration).toBeLessThan(10000); // 10 seconds
     });
@@ -494,11 +496,20 @@ describe('RefactoredSizeUnitCalculator', () => {
         readonly sizeUnit = SizeUnit.PIXEL;
         readonly dimension = Dimension.WIDTH;
 
-        canHandle(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH): boolean {
+        canHandle(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH
+        ): boolean {
           return _sizeValue === SizeValue.PIXEL && _sizeUnit === SizeUnit.PIXEL;
         }
 
-        calculate(_sizeValue: SizeValue, _sizeUnit: SizeUnit, _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH, _context: any): number {
+        calculate(
+          _sizeValue: SizeValue,
+          _sizeUnit: SizeUnit,
+          _dimension: Dimension.WIDTH | Dimension.HEIGHT | Dimension.BOTH,
+          _context: any
+        ): number {
           return 999; // Custom calculation
         }
 

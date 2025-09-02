@@ -107,7 +107,7 @@ export class PerformanceObserver implements IUnitObserver {
   onUnitCalculationCompleted(unitId: string, _result: number, duration: number): void {
     // Increment total calculations counter
     this.performanceMetrics.totalCalculations++;
-    
+
     // Update performance metrics
     this.updatePerformanceMetrics(duration);
 
@@ -202,7 +202,11 @@ export class PerformanceObserver implements IUnitObserver {
   } {
     const avgTime = this.performanceMetrics.averageCalculationTime;
     const errorRate =
-      this.performanceMetrics.errors / Math.max(this.performanceMetrics.totalCalculations, DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT / 100);
+      this.performanceMetrics.errors /
+      Math.max(
+        this.performanceMetrics.totalCalculations,
+        DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT / 100
+      );
 
     let status: 'excellent' | 'good' | 'fair' | 'poor' = 'excellent';
     const recommendations: string[] = [];

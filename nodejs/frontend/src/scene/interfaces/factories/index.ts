@@ -1,6 +1,6 @@
 /**
  * Scene Factory Interfaces Index
- * 
+ *
  * Centralized export for all scene factory interfaces
  */
 
@@ -18,4 +18,5 @@ export const SCENE_FACTORY_INTERFACES = {
   ISceneFactory: 'ISceneFactory',
 } as const;
 
-export type SceneFactoryInterface = typeof SCENE_FACTORY_INTERFACES[keyof typeof SCENE_FACTORY_INTERFACES];
+export type SceneFactoryInterface =
+  (typeof SCENE_FACTORY_INTERFACES)[keyof typeof SCENE_FACTORY_INTERFACES];

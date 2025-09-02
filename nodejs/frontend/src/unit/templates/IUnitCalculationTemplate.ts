@@ -90,7 +90,10 @@ export abstract class BaseUnitCalculationTemplate implements IUnitCalculationTem
   /**
    * Abstract methods that subclasses must implement
    */
-  protected abstract validateInput(input: ITemplateInput, context: UnitContext): IUnitValidationResult;
+  protected abstract validateInput(
+    input: ITemplateInput,
+    context: UnitContext
+  ): IUnitValidationResult;
   protected abstract preprocessInput(input: ITemplateInput, context: UnitContext): ITemplateInput;
   protected abstract performCalculation(input: ITemplateInput, context: UnitContext): number;
   protected abstract postprocessResult(result: number, context: UnitContext): number;

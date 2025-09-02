@@ -156,7 +156,7 @@ export abstract class PositionCalculationTemplate implements IUnitCalculationTem
   protected handleCalculationError(error: unknown, input: ITemplateInput): void {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
-    
+
     this.logger.error(
       'PositionCalculationTemplate',
       'handleCalculationError',
@@ -176,7 +176,10 @@ export abstract class PositionCalculationTemplate implements IUnitCalculationTem
    */
   protected applyRoundingAndBounds(result: number): number {
     // Default implementation: round to 2 decimal places
-    return Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) / DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT;
+    return (
+      Math.round(result * DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT) /
+      DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT
+    );
   }
 
   /**

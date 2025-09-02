@@ -6,7 +6,9 @@ import { Logger } from '../../../core/Logger';
  * LRU (Least Recently Used) Strategy Cache Implementation
  * Provides efficient caching with automatic eviction of least recently used entries
  */
-export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TValue, TUnit, TResult> {
+export class StrategyCache<TValue, TUnit, TResult>
+  implements IStrategyCache<TValue, TUnit, TResult>
+{
   readonly cacheId: string;
   maxSize: number;
   defaultTtl: number;
@@ -48,7 +50,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
       this.logger.debug('StrategyCache', 'get', 'Cache hit', {
         cacheId: this.cacheId,
         key,
-        accessCount: entry.accessCount
+        accessCount: entry.accessCount,
       });
 
       return entry.value;
@@ -59,7 +61,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
 
     this.logger.debug('StrategyCache', 'get', 'Cache miss', {
       cacheId: this.cacheId,
-      key
+      key,
     });
 
     return null;
@@ -72,7 +74,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
       timestamp: Date.now(),
       ttl: ttl || this.defaultTtl,
       accessCount: 0,
-      lastAccess: Date.now()
+      lastAccess: Date.now(),
     };
 
     // Check if cache is full and evict if necessary
@@ -86,7 +88,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
     this.logger.debug('StrategyCache', 'set', 'Entry cached', {
       cacheId: this.cacheId,
       key,
-      ttl: entry.ttl
+      ttl: entry.ttl,
     });
   }
 
@@ -99,12 +101,12 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
   delete(value: TValue, unit: TUnit, context: UnitContext): boolean {
     const key = this.keyGenerator(value, unit, context);
     const deleted = this.cache.delete(key);
-    
+
     if (deleted) {
       this.removeFromAccessOrder(key);
       this.logger.debug('StrategyCache', 'delete', 'Entry deleted', {
         cacheId: this.cacheId,
-        key
+        key,
       });
     }
 
@@ -120,7 +122,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
     this.accessTimes = [];
 
     this.logger.debug('StrategyCache', 'clear', 'Cache cleared', {
-      cacheId: this.cacheId
+      cacheId: this.cacheId,
     });
   }
 
@@ -135,9 +137,10 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
   } {
     const totalRequests = this.hitCount + this.missCount;
     const hitRate = totalRequests > 0 ? this.hitCount / totalRequests : 0;
-    const averageAccessTime = this.accessTimes.length > 0 
-      ? this.accessTimes.reduce((a, b) => a + b, 0) / this.accessTimes.length 
-      : 0;
+    const averageAccessTime =
+      this.accessTimes.length > 0
+        ? this.accessTimes.reduce((a, b) => a + b, 0) / this.accessTimes.length
+        : 0;
 
     return {
       size: this.cache.size,
@@ -146,7 +149,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
       missCount: this.missCount,
       hitRate,
       averageAccessTime,
-      evictionCount: this.evictionCount
+      evictionCount: this.evictionCount,
     };
   }
 
@@ -180,7 +183,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
     this.logger.debug('StrategyCache', 'setMaxSize', 'Max size updated', {
       cacheId: this.cacheId,
       oldMaxSize,
-      newMaxSize: maxSize
+      newMaxSize: maxSize,
     });
   }
 
@@ -188,7 +191,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
     this.defaultTtl = ttl;
     this.logger.debug('StrategyCache', 'setDefaultTtl', 'Default TTL updated', {
       cacheId: this.cacheId,
-      newTtl: ttl
+      newTtl: ttl,
     });
   }
 
@@ -215,7 +218,7 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
       this.logger.debug('StrategyCache', 'cleanup', 'Expired entries cleaned', {
         cacheId: this.cacheId,
         cleanedCount,
-        remainingSize: this.cache.size
+        remainingSize: this.cache.size,
       });
     }
 
@@ -234,14 +237,14 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
       parent: context.parent ? `${context.parent.width}x${context.parent.height}` : 'null',
       scene: context.scene ? `${context.scene.width}x${context.scene.height}` : 'null',
       viewport: context.viewport ? `${context.viewport.width}x${context.viewport.height}` : 'null',
-      content: context.content ? `${context.content.width}x${context.content.height}` : 'null'
+      content: context.content ? `${context.content.width}x${context.content.height}` : 'null',
     });
-    
+
     // Simple hash function
     let hash = 0;
     for (let i = 0; i < contextStr.length; i++) {
       const char = contextStr.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return Math.abs(hash).toString(36);
@@ -276,13 +279,13 @@ export class StrategyCache<TValue, TUnit, TResult> implements IStrategyCache<TVa
     this.logger.debug('StrategyCache', 'evictLRU', 'LRU entry evicted', {
       cacheId: this.cacheId,
       evictedKey: lruKey,
-      remainingSize: this.cache.size
+      remainingSize: this.cache.size,
     });
   }
 
   private recordAccessTime(time: number): void {
     this.accessTimes.push(time);
-    
+
     // Keep only last 1000 access times for performance
     if (this.accessTimes.length > 1000) {
       this.accessTimes = this.accessTimes.slice(-1000);

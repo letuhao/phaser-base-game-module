@@ -1,6 +1,6 @@
 /**
  * UI System Enums
- * 
+ *
  * Enums for UI types, states, sizes, and UI-specific functionality
  */
 

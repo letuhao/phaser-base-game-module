@@ -14,16 +14,16 @@ import { DEFAULT_FALLBACK_VALUES } from '../constants';
 export interface IBaseStrategyInput {
   /** Unique identifier for the strategy input */
   id?: string;
-  
+
   /** Human-readable name for the strategy input */
   name?: string;
-  
+
   /** Strategy input type */
   type?: string;
-  
+
   /** Whether the strategy input is valid */
   isValid?: boolean;
-  
+
   /** Custom metadata for the strategy input */
   metadata?: Record<string, string | number | boolean>;
 }
@@ -35,32 +35,32 @@ export interface IBaseStrategyInput {
 export interface ISizeStrategyInput extends IBaseStrategyInput {
   /** Size value */
   value?: number | string | SizeValue | SizeUnit;
-  
+
   /** Size dimension */
   dimension?: Dimension;
-  
+
   /** Size unit */
   unit?: SizeUnit;
-  
+
   /** Size value type */
   valueType?: SizeValue;
-  
+
   /** Parent size reference */
   parentSize?: {
     getValue(parent: unknown): number;
   };
-  
+
   /** Random value generator */
   randomValue?: {
     getRandomValue(): number;
   };
-  
+
   /** Size array */
   sizeArray?: Array<number | string | SizeValue | SizeUnit>;
-  
+
   /** Size object */
   sizeObject?: Record<string, number | string | SizeValue | SizeUnit>;
-  
+
   /** Size string */
   sizeString?: string;
 }
@@ -72,32 +72,32 @@ export interface ISizeStrategyInput extends IBaseStrategyInput {
 export interface IPositionStrategyInput extends IBaseStrategyInput {
   /** Position value */
   value?: number | string | PositionValue | PositionUnit;
-  
+
   /** Position axis */
   axis?: Dimension;
-  
+
   /** Position unit */
   unit?: PositionUnit;
-  
+
   /** Position value type */
   valueType?: PositionValue;
-  
+
   /** Parent position reference */
   parentPosition?: {
     getValue(parent: unknown): number;
   };
-  
+
   /** Random value generator */
   randomValue?: {
     getRandomValue(): number;
   };
-  
+
   /** Position array */
   positionArray?: Array<number | string | PositionValue | PositionUnit>;
-  
+
   /** Position object */
   positionObject?: Record<string, number | string | PositionValue | PositionUnit>;
-  
+
   /** Position string */
   positionString?: string;
 }
@@ -109,29 +109,29 @@ export interface IPositionStrategyInput extends IBaseStrategyInput {
 export interface IScaleStrategyInput extends IBaseStrategyInput {
   /** Scale value */
   value?: number | string | ScaleValue | ScaleUnit;
-  
+
   /** Scale unit */
   unit?: ScaleUnit;
-  
+
   /** Scale value type */
   valueType?: ScaleValue;
-  
+
   /** Parent scale reference */
   parentScale?: {
     getValue(parent: unknown): number;
   };
-  
+
   /** Random value generator */
   randomValue?: {
     getRandomValue(): number;
   };
-  
+
   /** Scale array */
   scaleArray?: Array<number | string | ScaleValue | ScaleUnit>;
-  
+
   /** Scale object */
   scaleObject?: Record<string, number | string | ScaleValue | ScaleUnit>;
-  
+
   /** Scale string */
   scaleString?: string;
 }
@@ -143,22 +143,27 @@ export interface IScaleStrategyInput extends IBaseStrategyInput {
 export interface IMixedStrategyInput extends IBaseStrategyInput {
   /** Size properties */
   size?: Partial<ISizeStrategyInput>;
-  
+
   /** Position properties */
   position?: Partial<IPositionStrategyInput>;
-  
+
   /** Scale properties */
   scale?: Partial<IScaleStrategyInput>;
-  
+
   /** Mixed array */
-  mixedArray?: Array<number | string | SizeValue | SizeUnit | PositionValue | PositionUnit | ScaleValue | ScaleUnit>;
-  
+  mixedArray?: Array<
+    number | string | SizeValue | SizeUnit | PositionValue | PositionUnit | ScaleValue | ScaleUnit
+  >;
+
   /** Mixed object */
-  mixedObject?: Record<string, number | string | SizeValue | SizeUnit | PositionValue | PositionUnit | ScaleValue | ScaleUnit>;
-  
+  mixedObject?: Record<
+    string,
+    number | string | SizeValue | SizeUnit | PositionValue | PositionUnit | ScaleValue | ScaleUnit
+  >;
+
   /** Theme object */
   theme?: Record<string, number | string>;
-  
+
   /** Responsive object */
   responsive?: Record<string, number | string>;
 }
@@ -167,10 +172,10 @@ export interface IMixedStrategyInput extends IBaseStrategyInput {
  * Union type for all strategy input types
  * Used in strategy methods to accept any valid strategy input type
  */
-export type IStrategyInput = 
-  | ISizeStrategyInput 
-  | IPositionStrategyInput 
-  | IScaleStrategyInput 
+export type IStrategyInput =
+  | ISizeStrategyInput
+  | IPositionStrategyInput
+  | IScaleStrategyInput
   | IMixedStrategyInput;
 
 /**
@@ -178,7 +183,7 @@ export type IStrategyInput =
  */
 export function isSizeStrategyInput(input: unknown): input is ISizeStrategyInput {
   if (!input || typeof input !== 'object') return false;
-  
+
   const strategyInput = input as ISizeStrategyInput;
   return (
     'value' in strategyInput ||
@@ -198,7 +203,7 @@ export function isSizeStrategyInput(input: unknown): input is ISizeStrategyInput
  */
 export function isPositionStrategyInput(input: unknown): input is IPositionStrategyInput {
   if (!input || typeof input !== 'object') return false;
-  
+
   const strategyInput = input as IPositionStrategyInput;
   return (
     'value' in strategyInput ||
@@ -218,7 +223,7 @@ export function isPositionStrategyInput(input: unknown): input is IPositionStrat
  */
 export function isScaleStrategyInput(input: unknown): input is IScaleStrategyInput {
   if (!input || typeof input !== 'object') return false;
-  
+
   const strategyInput = input as IScaleStrategyInput;
   return (
     'value' in strategyInput ||
@@ -237,7 +242,7 @@ export function isScaleStrategyInput(input: unknown): input is IScaleStrategyInp
  */
 export function isMixedStrategyInput(input: unknown): input is IMixedStrategyInput {
   if (!input || typeof input !== 'object') return false;
-  
+
   const strategyInput = input as IMixedStrategyInput;
   return (
     'size' in strategyInput ||
@@ -282,7 +287,7 @@ export function createSizeStrategyInput(
     sizeObject: options?.sizeObject,
     sizeString: options?.sizeString,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -306,7 +311,7 @@ export function createPositionStrategyInput(
     positionObject: options?.positionObject,
     positionString: options?.positionString,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -329,7 +334,7 @@ export function createScaleStrategyInput(
     scaleObject: options?.scaleObject,
     scaleString: options?.scaleString,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -351,7 +356,7 @@ export function createMixedStrategyInput(
     theme: options?.theme,
     responsive: options?.responsive,
     isValid: options?.isValid ?? true,
-    metadata: options?.metadata
+    metadata: options?.metadata,
   };
 }
 
@@ -363,18 +368,18 @@ export function convertToStrategyInput(input: unknown): IStrategyInput {
   if (!input || typeof input !== 'object') {
     return createSizeStrategyInput({ value: DEFAULT_FALLBACK_VALUES.SIZE.DEFAULT });
   }
-  
+
   // Handle primitive types
   if (typeof input === 'number') {
     return createSizeStrategyInput({ value: input });
   }
-  
+
   if (typeof input === 'string') {
     return createSizeStrategyInput({ sizeString: input });
   }
-  
+
   const obj = input as Record<string, unknown>;
-  
+
   // Check if it's a size-related input
   if ('dimension' in obj || 'sizeUnit' in obj || 'sizeValue' in obj) {
     return createSizeStrategyInput({
@@ -387,10 +392,10 @@ export function convertToStrategyInput(input: unknown): IStrategyInput {
       sizeArray: obj.sizeArray as Array<number | string | SizeValue | SizeUnit>,
       sizeObject: obj.sizeObject as Record<string, number | string | SizeValue | SizeUnit>,
       sizeString: obj.sizeString as string,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Check if it's a position-related input
   if ('axis' in obj || 'positionUnit' in obj || 'positionValue' in obj) {
     return createPositionStrategyInput({
@@ -401,12 +406,15 @@ export function convertToStrategyInput(input: unknown): IStrategyInput {
       parentPosition: obj.parentPosition as { getValue(parent: unknown): number },
       randomValue: obj.randomValue as { getRandomValue(): number },
       positionArray: obj.positionArray as Array<number | string | PositionValue | PositionUnit>,
-      positionObject: obj.positionObject as Record<string, number | string | PositionValue | PositionUnit>,
+      positionObject: obj.positionObject as Record<
+        string,
+        number | string | PositionValue | PositionUnit
+      >,
       positionString: obj.positionString as string,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Check if it's a scale-related input
   if ('scaleUnit' in obj || 'scaleValue' in obj) {
     return createScaleStrategyInput({
@@ -418,27 +426,52 @@ export function convertToStrategyInput(input: unknown): IStrategyInput {
       scaleArray: obj.scaleArray as Array<number | string | ScaleValue | ScaleUnit>,
       scaleObject: obj.scaleObject as Record<string, number | string | ScaleValue | ScaleUnit>,
       scaleString: obj.scaleString as string,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Check if it has mixed properties
-  if ('size' in obj || 'position' in obj || 'scale' in obj || 'theme' in obj || 'responsive' in obj) {
+  if (
+    'size' in obj ||
+    'position' in obj ||
+    'scale' in obj ||
+    'theme' in obj ||
+    'responsive' in obj
+  ) {
     return createMixedStrategyInput({
       size: obj.size as Partial<ISizeStrategyInput>,
       position: obj.position as Partial<IPositionStrategyInput>,
       scale: obj.scale as Partial<IScaleStrategyInput>,
-      mixedArray: obj.mixedArray as Array<number | string | SizeValue | SizeUnit | PositionValue | PositionUnit | ScaleValue | ScaleUnit>,
-      mixedObject: obj.mixedObject as Record<string, number | string | SizeValue | SizeUnit | PositionValue | PositionUnit | ScaleValue | ScaleUnit>,
+      mixedArray: obj.mixedArray as Array<
+        | number
+        | string
+        | SizeValue
+        | SizeUnit
+        | PositionValue
+        | PositionUnit
+        | ScaleValue
+        | ScaleUnit
+      >,
+      mixedObject: obj.mixedObject as Record<
+        string,
+        | number
+        | string
+        | SizeValue
+        | SizeUnit
+        | PositionValue
+        | PositionUnit
+        | ScaleValue
+        | ScaleUnit
+      >,
       theme: obj.theme as Record<string, number | string>,
       responsive: obj.responsive as Record<string, number | string>,
-      metadata: obj.metadata as Record<string, string | number | boolean>
+      metadata: obj.metadata as Record<string, string | number | boolean>,
     });
   }
-  
+
   // Default to size strategy input
   return createSizeStrategyInput({
     value: obj.value as number | string | SizeValue | SizeUnit,
-    metadata: obj.metadata as Record<string, string | number | boolean>
+    metadata: obj.metadata as Record<string, string | number | boolean>,
   });
 }

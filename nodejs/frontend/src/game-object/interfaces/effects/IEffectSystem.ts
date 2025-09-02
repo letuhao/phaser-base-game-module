@@ -1,6 +1,6 @@
 /**
  * Effect System Interface
- * 
+ *
  * Defines the contract for effect management systems.
  * Follows SOLID principles with clear separation of concerns.
  */
@@ -34,28 +34,28 @@ export interface IEffectSystemStats {
 
 /**
  * Interface for effect management systems
- * 
+ *
  * Provides a clean, extensible interface for managing effects
  * without violating SOLID principles.
  */
 export interface IEffectSystem {
   // Configuration
   config: IEffectSystemConfig;
-  
+
   // Effect management
   createEffect<T extends IEffect>(type: string, config: any): T | null;
   destroyEffect(effectId: string): boolean;
   getEffect(effectId: string): IEffect | null;
   getAllEffects(): IEffect[];
   getEffectsByType(type: string): IEffect[];
-  
+
   // System control
   start(): void;
   stop(): void;
   pause(): void;
   resume(): void;
   update(deltaTime: number): void;
-  
+
   // Statistics
   getStats(): IEffectSystemStats;
   getPerformanceMetrics(): any;

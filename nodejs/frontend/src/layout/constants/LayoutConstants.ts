@@ -2,7 +2,7 @@
  * Layout System Constants
  * Centralized constants for the layout system, inspired by CSS and modern design systems
  * Based on the best patterns from the existing codebase
- * 
+ *
  * IMPORTANT: This file integrates with the existing Unit System
  * We avoid duplicating Unit System constants and focus on layout-specific constants
  */
@@ -17,18 +17,18 @@ import { SizeUnit, SizeValue } from '../../unit';
 export const BREAKPOINT_CONSTANTS = {
   // CSS-like breakpoints (inspired by Bootstrap)
   BREAKPOINTS: {
-    XS: 0,      // Extra small devices (phones)
-    SM: 576,    // Small devices (landscape phones)
-    MD: 768,    // Medium devices (tablets)
-    LG: 992,    // Large devices (desktops)
-    XL: 1200,   // Extra large devices (large desktops)
-    XXL: 1400,  // Extra extra large devices
+    XS: 0, // Extra small devices (phones)
+    SM: 576, // Small devices (landscape phones)
+    MD: 768, // Medium devices (tablets)
+    LG: 992, // Large devices (desktops)
+    XL: 1200, // Extra large devices (large desktops)
+    XXL: 1400, // Extra extra large devices
   },
 
   // Breakpoint names (CSS-like)
   NAMES: {
     XS: 'xs',
-    SM: 'sm', 
+    SM: 'sm',
     MD: 'md',
     LG: 'lg',
     XL: 'xl',
@@ -167,11 +167,11 @@ export const SPACING_CONSTANTS = {
 
   // Spacing scale (inspired by Tailwind CSS)
   SCALE: {
-    XS: 4,   // 0.25rem
-    SM: 8,   // 0.5rem
-    MD: 16,  // 1rem
-    LG: 24,  // 1.5rem
-    XL: 32,  // 2rem
+    XS: 4, // 0.25rem
+    SM: 8, // 0.5rem
+    MD: 16, // 1rem
+    LG: 24, // 1.5rem
+    XL: 32, // 2rem
     XXL: 48, // 3rem
     XXXL: 64, // 4rem
   },
@@ -295,9 +295,9 @@ export const TYPOGRAPHY_CONSTANTS = {
 export const ANIMATION_CONSTANTS = {
   // Animation durations (inspired by CSS transition-duration)
   DURATIONS: {
-    FAST: 150,   // ms
+    FAST: 150, // ms
     NORMAL: 300, // ms
-    SLOW: 500,   // ms
+    SLOW: 500, // ms
     SLOWER: 1000, // ms
   },
 
@@ -378,9 +378,9 @@ export const PERFORMANCE_CONSTANTS = {
 
   // Debounce/throttle delays
   DELAYS: {
-    FAST: 16,    // ms (60fps)
+    FAST: 16, // ms (60fps)
     NORMAL: 100, // ms
-    SLOW: 300,   // ms
+    SLOW: 300, // ms
   },
 
   // Cache settings

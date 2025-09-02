@@ -48,10 +48,10 @@ export class CachingDecorator extends BaseUnitDecorator {
     this.cacheMisses++;
     // Perform actual calculation
     const result = this.wrappedUnit.calculate(context);
-    
+
     // Cache the result
     this.cacheResult(context, result);
-    
+
     return result;
   }
 
@@ -88,7 +88,7 @@ export class CachingDecorator extends BaseUnitDecorator {
       type: 'CachingDecorator',
       priority: this.getPriority(),
       description: 'Caches unit calculation results for improved performance',
-      version: '1.0.0'
+      version: '1.0.0',
     };
   }
 
@@ -124,7 +124,7 @@ export class CachingDecorator extends BaseUnitDecorator {
       hits: this.cacheHits,
       misses: this.cacheMisses,
       hitRate,
-      averageAge
+      averageAge,
     };
   }
 
@@ -168,9 +168,9 @@ export class CachingDecorator extends BaseUnitDecorator {
       viewport: context.viewport,
       breakpoint: context.breakpoint,
       content: context.content,
-      dimension: context.dimension
+      dimension: context.dimension,
     });
-    
+
     return `${this.wrappedUnit.id}-${this.hashString(contextStr)}`;
   }
 
@@ -186,7 +186,7 @@ export class CachingDecorator extends BaseUnitDecorator {
    */
   private isCacheValid(entry: { result: number; timestamp: number; contextHash: string }): boolean {
     const now = Date.now();
-    return (now - entry.timestamp) < this.cacheTimeout;
+    return now - entry.timestamp < this.cacheTimeout;
   }
 
   /**
@@ -195,11 +195,11 @@ export class CachingDecorator extends BaseUnitDecorator {
   private cacheResult(context: UnitContext, result: number): void {
     const cacheKey = this.generateCacheKey(context);
     const contextHash = this.generateCacheKey(context);
-    
+
     this.cache.set(cacheKey, {
       result,
       timestamp: Date.now(),
-      contextHash
+      contextHash,
     });
 
     // Limit cache size - enforce immediately

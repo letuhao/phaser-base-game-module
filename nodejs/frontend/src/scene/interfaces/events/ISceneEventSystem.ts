@@ -1,6 +1,6 @@
 /**
  * Scene Event System Interface
- * 
+ *
  * Defines event system functionality for scene management.
  * Handles scene events, subscriptions, and notifications.
  */
@@ -69,55 +69,64 @@ export interface SceneEventSubscription {
  */
 export interface ISceneEventSystem {
   readonly eventSystemId: string;
-  
+
   /** Event system configuration */
   eventSystemConfig: SceneEventSystemConfig;
-  
+
   /** Event subscriptions */
   eventSubscriptions: Map<SceneEventType, SceneEventSubscription[]>;
-  
+
   /** Event system statistics */
   eventSystemStatistics: SceneEventSystemStatistics;
-  
+
   /** Event system metadata */
   eventSystemMetadata: Record<string, any>;
-  
+
   /** Set event system configuration */
   setEventSystemConfig(config: SceneEventSystemConfig): this;
-  
+
   /** Set event system metadata */
   setEventSystemMetadata(metadata: Record<string, any>): this;
-  
+
   /** Get event system configuration */
   getEventSystemConfig(): SceneEventSystemConfig;
-  
+
   /** Get event subscriptions */
   getEventSubscriptions(): Map<SceneEventType, SceneEventSubscription[]>;
-  
+
   /** Get event system statistics */
   getEventSystemStatistics(): SceneEventSystemStatistics;
-  
+
   /** Get event system metadata */
   getEventSystemMetadata(): Record<string, any>;
-  
+
   /** Subscribe to event */
-  subscribeToEvent(eventType: SceneEventType, callback: (event: SceneEvent) => void, options?: { priority?: SceneEventPriority; once?: boolean; metadata?: any }): string;
-  
+  subscribeToEvent(
+    eventType: SceneEventType,
+    callback: (event: SceneEvent) => void,
+    options?: { priority?: SceneEventPriority; once?: boolean; metadata?: any }
+  ): string;
+
   /** Unsubscribe from event */
   unsubscribeFromEvent(eventType: SceneEventType, subscriptionId: string): Promise<boolean>;
-  
+
   /** Emit event */
   emitEvent(event: SceneEvent): Promise<this>;
-  
+
   /** Emit scene event */
-  emitSceneEvent(eventType: SceneEventType, eventData: any, eventSource: string, options?: { priority?: SceneEventPriority; metadata?: any }): Promise<this>;
-  
+  emitSceneEvent(
+    eventType: SceneEventType,
+    eventData: any,
+    eventSource: string,
+    options?: { priority?: SceneEventPriority; metadata?: any }
+  ): Promise<this>;
+
   /** Get subscriptions by event type */
   getSubscriptionsByEventType(eventType: SceneEventType): SceneEventSubscription[];
-  
+
   /** Clear event subscriptions */
   clearEventSubscriptions(eventType?: SceneEventType): Promise<this>;
-  
+
   /** Update event system */
   updateEventSystem(deltaTime: number): void;
 }
