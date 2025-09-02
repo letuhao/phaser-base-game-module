@@ -1,9 +1,13 @@
 import Phaser from 'phaser';
 import { ConfigManager } from '../../core/ConfigManager';
+import { IConfigManager } from '../../core/interfaces';
 import { Logger } from '../../core/Logger';
 import { GameObjectFactoryManager } from '../../factory/GameObjectFactoryManager';
 import { ResponsiveConfigLoader } from '../../core/ResponsiveConfigLoader';
-import { ThemeConfigLoader } from '../../core/ThemeConfigLoader';
+import { ThemeActivator } from '../../layout/classes/ThemeActivator';
+import { IThemeActivator } from '../../layout/interfaces/IThemeActivator';
+import { ThemeElementType } from '../../layout/enums/LayoutEnums';
+// ThemeConfigLoader is deprecated - themes are now managed directly via ConfigManager
 
 /**
  * Base Scene Class
@@ -14,15 +18,17 @@ import { ThemeConfigLoader } from '../../core/ThemeConfigLoader';
  * - Common scene lifecycle methods
  */
 export abstract class BaseScene extends Phaser.Scene {
-  protected configManager: ConfigManager;
+  protected configManager: IConfigManager;
   protected sceneConfigs: any = {};
   protected gameObjects: Map<string, Phaser.GameObjects.GameObject> = new Map();
   protected factoryManager: GameObjectFactoryManager;
   protected logger: Logger = Logger.getInstance();
 
-  // NEW: Responsive and theme configuration loaders
+  // NEW: Responsive configuration loader
   protected responsiveConfigLoader: ResponsiveConfigLoader;
-  protected themeConfigLoader: ThemeConfigLoader;
+
+  // NEW: Theme activator for theme management
+  protected themeActivator: IThemeActivator;
 
   // NEW: Cached responsive configurations for performance
   protected cachedResponsiveConfigs: Map<string, any> = new Map();
@@ -34,11 +40,13 @@ export abstract class BaseScene extends Phaser.Scene {
     this.configManager = ConfigManager.getInstance();
     this.factoryManager = GameObjectFactoryManager.getInstance();
 
-    // Initialize responsive and theme loaders
+    // Initialize responsive loader
     this.responsiveConfigLoader = ResponsiveConfigLoader.getInstance();
-    this.themeConfigLoader = ThemeConfigLoader.getInstance();
 
-    this.logger.debug('BaseScene', 'super', 'BaseScene constructor called', {
+    // Initialize theme activator
+    this.themeActivator = new ThemeActivator();
+
+    this.logger.trace('BaseScene', 'super', 'BaseScene constructor called', {
       sceneKey,
       timestamp: Date.now(),
     });
@@ -61,7 +69,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * This method is called manually after configurations are loaded
    */
   preload(): void {
-    this.logger.debug('BaseScene', 'preload', 'Scene preload() method started', {
+    this.logger.trace('BaseScene', 'preload', 'Scene preload() method started', {
       sceneKey: this.scene.key,
       timestamp: Date.now(),
     });
@@ -69,7 +77,7 @@ export abstract class BaseScene extends Phaser.Scene {
     try {
       // Load background images from asset configuration
       if (this.sceneConfigs.asset && this.sceneConfigs.asset.backgrounds) {
-        this.logger.debug('BaseScene', 'preload', 'Loading background images', {
+        this.logger.trace('BaseScene', 'preload', 'Loading background images', {
           backgroundKeys: Object.keys(this.sceneConfigs.asset.backgrounds),
         });
 
@@ -77,7 +85,7 @@ export abstract class BaseScene extends Phaser.Scene {
         if (this.sceneConfigs.asset.backgrounds.desktop) {
           const desktopBg = this.sceneConfigs.asset.backgrounds.desktop;
           const desktopPath = this.sceneConfigs.asset.basePath + desktopBg.path;
-          this.logger.debug('BaseScene', 'preload', 'Loading desktop background', {
+          this.logger.trace('BaseScene', 'preload', 'Loading desktop background', {
             key: desktopBg.key,
             path: desktopPath,
           });
@@ -88,7 +96,7 @@ export abstract class BaseScene extends Phaser.Scene {
         if (this.sceneConfigs.asset.backgrounds.mobile) {
           const mobileBg = this.sceneConfigs.asset.backgrounds.mobile;
           const mobilePath = this.sceneConfigs.asset.basePath + mobileBg.path;
-          this.logger.debug('BaseScene', 'preload', 'Loading mobile background', {
+          this.logger.trace('BaseScene', 'preload', 'Loading mobile background', {
             key: mobileBg.key,
             path: mobilePath,
           });
@@ -99,7 +107,7 @@ export abstract class BaseScene extends Phaser.Scene {
         if (this.sceneConfigs.asset.backgrounds.mobileOrigin) {
           const mobileOriginBg = this.sceneConfigs.asset.backgrounds.mobileOrigin;
           const mobileOriginPath = this.sceneConfigs.asset.basePath + mobileOriginBg.path;
-          this.logger.debug('BaseScene', 'preload', 'Loading mobile origin background', {
+          this.logger.trace('BaseScene', 'preload', 'Loading mobile origin background', {
             key: mobileOriginBg.key,
             path: mobileOriginPath,
           });
@@ -175,7 +183,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Scene initialization - purely configuration-driven
    */
   async create(): Promise<void> {
-    this.logger.debug('BaseScene', 'create', 'Scene create() method started', {
+    this.logger.trace('BaseScene', 'create', 'Scene create() method started', {
       sceneKey: this.scene.key,
       gameWidth: this.game.config.width,
       gameHeight: this.game.config.height,
@@ -232,7 +240,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Load all scene configurations
    */
   private loadSceneConfigs(): void {
-    this.logger.debug('BaseScene', 'loadSceneConfigs', 'Starting to load scene configurations');
+    this.logger.trace('BaseScene', 'loadSceneConfigs', 'Starting to load scene configurations');
 
     try {
       const sceneName = this.getSceneName();
@@ -240,7 +248,7 @@ export abstract class BaseScene extends Phaser.Scene {
       // Load all configurations
       this.sceneConfigs = this.configManager.loadSceneConfigs(sceneName);
 
-      this.logger.debug('BaseScene', 'loadSceneConfigs', 'Scene configurations loaded', {
+      this.logger.trace('BaseScene', 'loadSceneConfigs', 'Scene configurations loaded', {
         sceneName,
         sceneConfigs: this.sceneConfigs,
         configKeys: Object.keys(this.sceneConfigs),
@@ -274,7 +282,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * Initialize scene purely from configuration
    */
   private async initializeSceneFromConfig(): Promise<void> {
-    this.logger.debug(
+    this.logger.trace(
       'BaseScene',
       'initializeSceneFromConfig',
       'Starting scene initialization from config'
@@ -294,7 +302,7 @@ export abstract class BaseScene extends Phaser.Scene {
       }
 
       const sceneConfig = this.sceneConfigs.scene;
-      this.logger.debug('BaseScene', 'initializeSceneFromConfig', 'Scene config found', {
+      this.logger.trace('BaseScene', 'initializeSceneFromConfig', 'Scene config found', {
         sceneName: sceneConfig.sceneName,
         gameObjectCount: sceneConfig.gameObjects?.length || 0,
         backgroundColor: sceneConfig.backgroundColor,
@@ -323,11 +331,10 @@ export abstract class BaseScene extends Phaser.Scene {
         throw new Error('Responsive configuration is required for scene functionality');
       }
 
-      // NEW: Set active theme if specified (now loaded via ConfigManager)
+      // NEW: Theme is now managed directly via ConfigManager
       if (this.sceneConfigs.theme) {
-        this.themeConfigLoader.setActiveTheme(this.sceneConfigs.theme.themeName);
-        this.logger.info('BaseScene', 'initializeSceneFromConfig', 'Theme activated', {
-          themeName: this.sceneConfigs.theme.themeName,
+        this.logger.info('BaseScene', 'initializeSceneFromConfig', 'Theme loaded', {
+          themeName: this.sceneConfigs.theme.name,
           hasThemeClasses: !!this.sceneConfigs.theme.themeClasses,
         });
       } else {
@@ -1302,7 +1309,7 @@ export abstract class BaseScene extends Phaser.Scene {
    * This prevents lag during resize by pre-loading all configs
    */
   private cacheResponsiveConfigs(): void {
-    this.logger.debug(
+    this.logger.trace(
       'BaseScene',
       'cacheResponsiveConfigs',
       'cacheResponsiveConfigs',
@@ -1393,5 +1400,164 @@ export abstract class BaseScene extends Phaser.Scene {
       theme: this.sceneConfigs.theme,
       currentBreakpoint,
     };
+  }
+
+  // ============================================================================
+  // THEME ACTIVATION METHODS
+  // ============================================================================
+
+  /**
+   * Activate a theme for this scene
+   */
+  protected async activateTheme(themeId: string): Promise<void> {
+    try {
+      this.logger.info('BaseScene', 'activateTheme', 'Activating theme for scene', {
+        sceneKey: this.scene.key,
+        themeId,
+      });
+
+      const result = await this.themeActivator.activateThemeForScene(this.scene.key, themeId, {
+        sceneKey: this.scene.key,
+        elementType: ThemeElementType.SCENE,
+        priority: 1,
+      });
+
+      if (result.success) {
+        this.logger.info('BaseScene', 'activateTheme', 'Theme activated successfully', {
+          sceneKey: this.scene.key,
+          themeId,
+          appliedClasses: result.appliedClasses.length,
+          duration: result.duration,
+        });
+      } else {
+        this.logger.error('BaseScene', 'activateTheme', 'Theme activation failed', {
+          sceneKey: this.scene.key,
+          themeId,
+          errors: result.errors,
+        });
+      }
+    } catch (error) {
+      this.logger.error('BaseScene', 'activateTheme', 'Theme activation error', {
+        error,
+        sceneKey: this.scene.key,
+        themeId,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Apply theme to a game object
+   */
+  protected async applyThemeToGameObject(
+    gameObject: Phaser.GameObjects.GameObject,
+    themeId: string
+  ): Promise<void> {
+    try {
+      this.logger.debug('BaseScene', 'applyThemeToGameObject', 'Applying theme to game object', {
+        sceneKey: this.scene.key,
+        gameObjectType: gameObject.constructor.name,
+        themeId,
+      });
+
+      const result = await this.themeActivator.applyThemeToGameObject(gameObject, themeId, {
+        sceneKey: this.scene.key,
+        gameObjectId: gameObject.name || gameObject.constructor.name,
+        elementType: ThemeElementType.GAME_OBJECT,
+        priority: 2,
+      });
+
+      if (result.success) {
+        this.logger.debug('BaseScene', 'applyThemeToGameObject', 'Theme applied to game object', {
+          sceneKey: this.scene.key,
+          gameObjectType: gameObject.constructor.name,
+          themeId,
+          duration: result.duration,
+        });
+      } else {
+        this.logger.warn('BaseScene', 'applyThemeToGameObject', 'Theme application failed', {
+          sceneKey: this.scene.key,
+          gameObjectType: gameObject.constructor.name,
+          themeId,
+          errors: result.errors,
+        });
+      }
+    } catch (error) {
+      this.logger.error('BaseScene', 'applyThemeToGameObject', 'Theme application error', {
+        error,
+        sceneKey: this.scene.key,
+        gameObjectType: gameObject.constructor.name,
+        themeId,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Switch theme for this scene
+   */
+  protected async switchTheme(newThemeId: string): Promise<void> {
+    try {
+      this.logger.info('BaseScene', 'switchTheme', 'Switching theme for scene', {
+        sceneKey: this.scene.key,
+        newThemeId,
+      });
+
+      const result = await this.themeActivator.switchThemeForScene(this.scene.key, newThemeId, {
+        sceneKey: this.scene.key,
+        elementType: ThemeElementType.SCENE,
+        priority: 1,
+      });
+
+      if (result.success) {
+        this.logger.info('BaseScene', 'switchTheme', 'Theme switched successfully', {
+          sceneKey: this.scene.key,
+          newThemeId,
+          appliedClasses: result.appliedClasses.length,
+          duration: result.duration,
+        });
+      } else {
+        this.logger.error('BaseScene', 'switchTheme', 'Theme switch failed', {
+          sceneKey: this.scene.key,
+          newThemeId,
+          errors: result.errors,
+        });
+      }
+    } catch (error) {
+      this.logger.error('BaseScene', 'switchTheme', 'Theme switch error', {
+        error,
+        sceneKey: this.scene.key,
+        newThemeId,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get active theme for this scene
+   */
+  protected getActiveTheme(): any {
+    return this.themeActivator.getActiveThemeForScene(this.scene.key);
+  }
+
+  /**
+   * Get available themes for this scene
+   */
+  protected getAvailableThemes(): any[] {
+    return this.themeActivator.getAvailableThemesForScene(this.scene.key);
+  }
+
+  /**
+   * Check if a theme is active for this scene
+   */
+  protected isThemeActive(themeId: string): boolean {
+    return this.themeActivator.isThemeActiveForScene(this.scene.key, themeId);
+  }
+
+  /**
+   * Get applied theme classes for this scene
+   */
+  protected getAppliedThemeClasses(): string[] {
+    return this.themeActivator.getAppliedClasses(this.scene.key);
   }
 }

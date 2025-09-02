@@ -10,6 +10,9 @@
 // Original interfaces (backward compatibility)
 export * from './ITheme';
 export * from './IThemeManager';
+export * from './IThemeActivator';
+export * from './IThemeActivationResult';
+export * from './IThemeApplicationContext';
 
 // All other interfaces (with explicit re-exports to avoid conflicts)
 export type { IBreakpoint } from './IBreakpoint';

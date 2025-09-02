@@ -284,6 +284,21 @@ export {
 } from './interfaces';
 
 // ============================================================================
+// LAYOUT SYSTEM CLASSES
+// ============================================================================
+
+export {
+  // Theme classes
+  ThemeManager,
+  ThemeClassManager,
+  ThemeStyleEngine,
+  ThemeActivator,
+
+  // Class bundles
+  THEME_CLASSES,
+} from './classes';
+
+// ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 

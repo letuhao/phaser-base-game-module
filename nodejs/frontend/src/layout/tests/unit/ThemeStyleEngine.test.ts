@@ -24,7 +24,7 @@ describe('ThemeStyleEngine', () => {
 
   beforeEach(() => {
     themeStyleEngine = new ThemeStyleEngine();
-    
+
     mockThemeClass = {
       backgroundColor: '#ffffff',
       color: '#000000',
@@ -169,7 +169,7 @@ describe('ThemeStyleEngine', () => {
   describe('CSS Generation', () => {
     it('should generate theme CSS', () => {
       const css = themeStyleEngine.generateThemeCSS(mockTheme);
-      
+
       expect(css).toContain(':root {');
       expect(css).toContain('--theme-color-primary:#007bff');
       expect(css).toContain('test-class {');
@@ -186,7 +186,7 @@ describe('ThemeStyleEngine', () => {
       };
 
       const css = themeStyleEngine.generateThemeCSS(mockTheme, options);
-      
+
       expect(css).toContain('/* Custom Prefix */');
       expect(css).toContain('/* Custom Suffix */');
       expect(css).not.toContain(':root {');
@@ -195,7 +195,7 @@ describe('ThemeStyleEngine', () => {
     it('should generate theme classes CSS', () => {
       const themeClassesMap = new Map(Object.entries(mockTheme.themeClasses!));
       const css = themeStyleEngine.generateThemeClassesCSS(themeClassesMap);
-      
+
       expect(css).toContain('/* Theme Classes */');
       expect(css).toContain('test-class {');
       expect(css).toContain('button-primary {');
@@ -203,7 +203,7 @@ describe('ThemeStyleEngine', () => {
 
     it('should generate CSS variables', () => {
       const css = themeStyleEngine.generateCSSVariables(mockTheme);
-      
+
       expect(css).toContain(':root {');
       expect(css).toContain('--theme-color-primary: #007bff');
       expect(css).toContain('--theme-font-family: Arial, sans-serif');
@@ -217,7 +217,7 @@ describe('ThemeStyleEngine', () => {
       };
 
       const css = themeStyleEngine.generateCSSVariables(mockTheme, options);
-      
+
       expect(css).toContain('.custom-scope {');
       expect(css).toContain('--custom-color-primary: #007bff');
     });
@@ -225,7 +225,7 @@ describe('ThemeStyleEngine', () => {
     it('should generate responsive CSS', () => {
       const breakpoints = { mobile: 768, tablet: 1024 };
       const css = themeStyleEngine.generateResponsiveCSS(mockTheme, breakpoints);
-      
+
       expect(css).toContain('/* Responsive Styles */');
       expect(css).toContain('@media (max-width: 768px)');
       expect(css).toContain('@media (max-width: 1024px)');
@@ -235,7 +235,7 @@ describe('ThemeStyleEngine', () => {
       const breakpoints = { mobile: 768, tablet: 1024 };
       const options = { mobileFirst: false };
       const css = themeStyleEngine.generateResponsiveCSS(mockTheme, breakpoints, options);
-      
+
       expect(css).toContain('@media (max-width: 768px)');
       expect(css).toContain('@media (max-width: 1024px)');
     });
@@ -244,7 +244,7 @@ describe('ThemeStyleEngine', () => {
   describe('CSS-in-JS Generation', () => {
     it('should generate CSS-in-JS styles', () => {
       const styles = themeStyleEngine.generateCSSInJSStyles(mockThemeClass);
-      
+
       expect(styles.backgroundColor).toBe('#ffffff');
       expect(styles.color).toBe('#000000');
       expect(styles.padding).toBe('16px');
@@ -270,7 +270,7 @@ describe('ThemeStyleEngine', () => {
     it('should generate CSS-in-JS styles with vendor prefixes', () => {
       const options = { includeVendorPrefixes: true };
       const styles = themeStyleEngine.generateCSSInJSStyles(mockThemeClass, options);
-      
+
       // Should include vendor prefixes for transition, animation (transform not in mock styles)
       expect(styles).toHaveProperty('transition');
       expect(styles).toHaveProperty('-webkit-transition');
@@ -280,7 +280,7 @@ describe('ThemeStyleEngine', () => {
 
     it('should generate theme CSS-in-JS styles', () => {
       const styles = themeStyleEngine.generateThemeCSSInJSStyles(mockTheme);
-      
+
       expect(styles).toHaveProperty('test-class');
       expect(styles).toHaveProperty('button-primary');
       expect(styles['test-class']).toHaveProperty('backgroundColor');
@@ -290,7 +290,7 @@ describe('ThemeStyleEngine', () => {
     it('should convert CSS-in-JS to CSS', () => {
       const styles = { color: 'red', fontSize: '16px' };
       const css = themeStyleEngine.convertCSSInJSToCSS(styles, '.test-selector');
-      
+
       expect(css).toContain('.test-selector {');
       expect(css).toContain('color: red');
       expect(css).toContain('fontSize: 16px');
@@ -317,7 +317,7 @@ describe('ThemeStyleEngine', () => {
       // Mock document methods
       document.createElement = jest.fn().mockReturnValue(mockStyleElement);
       document.getElementById = jest.fn().mockReturnValue(null);
-      
+
       // Mock document.head
       Object.defineProperty(document, 'head', {
         value: mockHead,
@@ -328,7 +328,7 @@ describe('ThemeStyleEngine', () => {
     it('should inject CSS variables', () => {
       const variables = { '--test-var': 'red', '--test-var2': 'blue' };
       const result = themeStyleEngine.injectCSSVariables(variables);
-      
+
       expect(result).toBe(true);
       expect(document.createElement).toHaveBeenCalledWith('style');
     });
@@ -336,9 +336,9 @@ describe('ThemeStyleEngine', () => {
     it('should remove CSS variables', () => {
       const mockElement = { remove: jest.fn() };
       document.getElementById = jest.fn().mockReturnValue(mockElement);
-      
+
       const result = themeStyleEngine.removeCSSVariables();
-      
+
       expect(result).toBe(true);
       expect(mockElement.remove).toHaveBeenCalled();
     });
@@ -346,7 +346,7 @@ describe('ThemeStyleEngine', () => {
     it('should update CSS variables', () => {
       const variables = { '--test-var': 'green' };
       const result = themeStyleEngine.updateCSSVariables(variables);
-      
+
       expect(result).toBe(true);
     });
 
@@ -355,9 +355,9 @@ describe('ThemeStyleEngine', () => {
         getPropertyValue: jest.fn().mockReturnValue('red'),
       };
       window.getComputedStyle = jest.fn().mockReturnValue(mockComputedStyle);
-      
+
       const value = themeStyleEngine.getCSSVariableValue('--test-var');
-      
+
       expect(value).toBe('red');
       expect(mockComputedStyle.getPropertyValue).toHaveBeenCalledWith('--test-var');
     });
@@ -371,9 +371,9 @@ describe('ThemeStyleEngine', () => {
           background-color: blue;
         }
       `;
-      
+
       const optimized = themeStyleEngine.optimizeCSS(css);
-      
+
       expect(optimized).not.toContain('\n');
       expect(optimized).toContain('.test-class {color:red;background-color:blue}');
     });
@@ -385,9 +385,9 @@ describe('ThemeStyleEngine', () => {
           background-color:   blue;
         }
       `;
-      
+
       const minified = themeStyleEngine.minifyCSS(css);
-      
+
       expect(minified).not.toContain('  ');
       expect(minified).toContain('.test-class {color:red;background-color:blue}');
     });
@@ -397,9 +397,9 @@ describe('ThemeStyleEngine', () => {
         .used-class { color: red; }
         .unused-class { color: blue; }
       `;
-      
+
       const filtered = themeStyleEngine.removeUnusedCSS(css, ['used-class']);
-      
+
       expect(filtered).toContain('.used-class');
       // The current implementation keeps lines that contain used selectors
       // but doesn't remove lines that don't contain them, so both lines remain
@@ -415,9 +415,9 @@ describe('ThemeStyleEngine', () => {
           background-color: blue;
         }
       `;
-      
+
       const merged = themeStyleEngine.mergeDuplicateCSSRules(css);
-      
+
       expect(merged).toContain('.test-class {');
       expect(merged).toContain('color: red');
       expect(merged).toContain('background-color: blue');
@@ -428,7 +428,7 @@ describe('ThemeStyleEngine', () => {
     it('should add vendor prefixes', () => {
       const css = 'transform: translateX(10px);';
       const prefixed = themeStyleEngine.addVendorPrefixes(css);
-      
+
       expect(prefixed).toContain('-webkit-transform:');
       expect(prefixed).toContain('-moz-transform:');
       expect(prefixed).toContain('-ms-transform:');
@@ -437,7 +437,7 @@ describe('ThemeStyleEngine', () => {
     it('should generate fallback CSS', () => {
       const css = 'display: flex; display: grid;';
       const fallback = themeStyleEngine.generateFallbackCSS(css);
-      
+
       expect(fallback).toContain('display: -webkit-box; display: -ms-flexbox; display: flex');
       expect(fallback).toContain('display: -ms-grid; display: grid');
     });
@@ -463,9 +463,9 @@ describe('ThemeStyleEngine', () => {
           background-color: blue;
         }
       `;
-      
+
       const result = themeStyleEngine.validateCSS(css);
-      
+
       expect(result.isValid).toBe(true);
       expect(result.errors).toHaveLength(0);
       expect(result.rules).toHaveLength(2);
@@ -477,9 +477,9 @@ describe('ThemeStyleEngine', () => {
           color: red;
           background-color: blue;
         `;
-      
+
       const result = themeStyleEngine.validateCSS(css);
-      
+
       expect(result.isValid).toBe(false);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0].message).toBe('Unmatched braces in CSS');
@@ -511,9 +511,9 @@ describe('ThemeStyleEngine', () => {
     it('should clear caches', () => {
       themeStyleEngine.cssVariableCache.set('test', 'value');
       themeStyleEngine.generatedCSSCache.set('test', 'css');
-      
+
       themeStyleEngine.clearCaches();
-      
+
       expect(themeStyleEngine.cssVariableCache.size).toBe(0);
       expect(themeStyleEngine.generatedCSSCache.size).toBe(0);
     });
@@ -521,9 +521,9 @@ describe('ThemeStyleEngine', () => {
     it('should get cache statistics', () => {
       themeStyleEngine.cssVariableCache.set('test', 'value');
       themeStyleEngine.generatedCSSCache.set('test', 'css');
-      
+
       const stats = themeStyleEngine.getCacheStatistics();
-      
+
       expect(stats.cssVariableCacheSize).toBe(1);
       expect(stats.generatedCSSCacheSize).toBe(1);
       expect(stats.cacheHitRatio).toBe(0);
@@ -533,7 +533,7 @@ describe('ThemeStyleEngine', () => {
 
     it('should preload CSS resources', async () => {
       const css = 'background-image: url("test.jpg"); background-image: url("test.png");';
-      
+
       // Mock DOM methods
       document.createElement = jest.fn().mockReturnValue({
         rel: '',
@@ -544,12 +544,14 @@ describe('ThemeStyleEngine', () => {
         appendChild: jest.fn(),
       });
       document.head = { appendChild: jest.fn() } as any;
-      
+
       // Mock the preloadCSSResources method to avoid timeout
-      const preloadSpy = jest.spyOn(themeStyleEngine, 'preloadCSSResources').mockResolvedValue(true);
-      
+      const preloadSpy = jest
+        .spyOn(themeStyleEngine, 'preloadCSSResources')
+        .mockResolvedValue(true);
+
       await themeStyleEngine.preloadCSSResources(css);
-      
+
       expect(preloadSpy).toHaveBeenCalledWith(css);
       preloadSpy.mockRestore();
     }, 5000);
@@ -558,17 +560,17 @@ describe('ThemeStyleEngine', () => {
   describe('Error Handling', () => {
     it('should handle errors in CSS generation gracefully', () => {
       const invalidTheme = { ...mockTheme, id: null as any };
-      
+
       const css = themeStyleEngine.generateThemeCSS(invalidTheme);
-      
+
       expect(css).not.toBe('');
     });
 
     it('should handle errors in CSS validation gracefully', () => {
       const invalidCSS = null as any;
-      
+
       const result = themeStyleEngine.validateCSS(invalidCSS);
-      
+
       expect(result.isValid).toBe(false);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0].message).toBe('CSS validation failed');
@@ -579,9 +581,9 @@ describe('ThemeStyleEngine', () => {
       document.createElement = jest.fn().mockImplementation(() => {
         throw new Error('DOM error');
       });
-      
+
       const result = themeStyleEngine.injectCSSVariables({ '--test': 'value' });
-      
+
       expect(result).toBe(false);
     });
   });
@@ -589,38 +591,40 @@ describe('ThemeStyleEngine', () => {
   describe('Edge Cases', () => {
     it('should handle empty theme', () => {
       const emptyTheme = { id: 'empty', name: 'Empty Theme' };
-      
+
       const css = themeStyleEngine.generateThemeCSS(emptyTheme);
-      
+
       expect(css).toBe('');
     });
 
     it('should handle theme with no theme classes', () => {
       const themeWithoutClasses = { ...mockTheme, themeClasses: undefined };
-      
+
       const css = themeStyleEngine.generateThemeCSS(themeWithoutClasses);
-      
+
       expect(css).toContain(':root {');
       expect(css).not.toContain('.test-class');
     });
 
     it('should handle theme with no breakpoints', () => {
       const themeWithoutBreakpoints = { ...mockTheme, breakpoints: undefined };
-      
-      const css = themeStyleEngine.generateThemeCSS(themeWithoutBreakpoints, { includeResponsive: true });
-      
+
+      const css = themeStyleEngine.generateThemeCSS(themeWithoutBreakpoints, {
+        includeResponsive: true,
+      });
+
       expect(css).not.toContain('@media');
     });
 
     it('should handle empty CSS string in optimization', () => {
       const optimized = themeStyleEngine.optimizeCSS('');
-      
+
       expect(optimized).toBe('');
     });
 
     it('should handle empty CSS string in validation', () => {
       const result = themeStyleEngine.validateCSS('');
-      
+
       expect(result.isValid).toBe(true);
       expect(result.errors).toHaveLength(0);
       expect(result.rules).toHaveLength(0);

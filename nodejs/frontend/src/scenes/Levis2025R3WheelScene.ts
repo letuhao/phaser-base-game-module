@@ -1,109 +1,89 @@
 /**
  * Levis 2025 R3 Wheel Scene
  *
- * A scene that uses the asset system with the levis-2025-r3-wheel-scene-1.asset.config.ts
- * The scene handles concrete logic, while the asset manager handles abstract logic.
+ * A scene that follows the proper configuration-driven architecture.
+ * Uses ConfigManager to coordinate all systems including asset loading.
  */
 
-import * as Phaser from 'phaser';
-import { Logger } from '../core/Logger';
-import { AssetManager } from '../asset/classes/AssetManager';
-import { SceneAssetConfigLoader } from '../asset/classes/SceneAssetConfigLoader';
-import type { IAssetManager } from '../asset/interfaces/IAssetManager';
-import type { ISceneAssetLoader } from '../asset/interfaces/scene/ISceneAssetLoader';
+import { BaseScene } from '../abstract/base/BaseScene';
 import { levis2025R3WheelScene1AssetConfig } from '../runtime/games/levis-2025-r3-wheel/scene-1/levis-2025-r3-wheel-scene-1.asset.config';
+import { levis2025r3wheelResponsiveConfig } from '../runtime/scene/levis2025r3wheel/levis2025r3wheel.responsive.config';
+import { levis2025r3wheelSceneLoaderConfig } from '../runtime/scene/levis2025r3wheel/levis2025r3wheel.scene_loader.config';
+import { levis2025r3wheelLoggingConfig } from '../runtime/scene/levis2025r3wheel/levis2025r3wheel.logging.config';
+import { fortuneWheelTheme } from '../runtime/games/levis-2025-r3-wheel/scene-1/fortune-wheel-theme.config';
 
-export class Levis2025R3WheelScene extends Phaser.Scene {
-  private logger: Logger = Logger.getInstance();
-  private assetManager: IAssetManager;
-  private sceneAssetLoader: ISceneAssetLoader;
-  private backgroundImage: Phaser.GameObjects.Image | null = null;
-  private assetsLoaded: boolean = false;
-
+export class Levis2025R3WheelScene extends BaseScene {
   constructor() {
-    super({ key: 'Levis2025R3WheelScene' });
-
-    // Initialize asset system with the concrete config
-    this.assetManager = new AssetManager('levis-2025-r3-wheel-asset-manager');
-
-    // Create scene asset loader with the concrete config
-    this.sceneAssetLoader = new SceneAssetConfigLoader(
-      'levis-2025-r3-wheel-loader',
-      levis2025R3WheelScene1AssetConfig.sceneId,
-      this.assetManager,
-      levis2025R3WheelScene1AssetConfig as any // Type assertion for now
-    ) as ISceneAssetLoader;
+    super('Levis2025R3WheelScene');
   }
 
   /**
-   * Scene preload - Load assets using the asset system
+   * Register all scene configurations through ConfigManager
    */
-  async preload(): Promise<void> {
+  protected registerSceneConfigs(): void {
+    this.configManager.registerSceneConfigs(
+      'levis2025r3wheel',
+      levis2025r3wheelLoggingConfig, // Logging configuration
+      levis2025r3wheelResponsiveConfig, // Responsive layout configuration
+      levis2025r3wheelSceneLoaderConfig, // Scene structure configuration
+      levis2025R3WheelScene1AssetConfig, // Asset loading configuration
+      fortuneWheelTheme // Theme styling configuration
+    );
+  }
+
+  /**
+   * Get scene name for configuration loading
+   */
+  protected getSceneName(): string {
+    return 'levis2025r3wheel';
+  }
+
+  /**
+   * Scene preload - Assets are loaded by BaseScene using ConfigManager
+   * This method can be overridden for scene-specific asset loading if needed
+   */
+  preload(): void {
+    // BaseScene handles asset loading through ConfigManager
+    // Call parent implementation
+    super.preload();
+
     this.logger.info(
       'Levis2025R3WheelScene',
       'preload',
-      'Starting asset loading with asset system'
+      'Asset loading handled by BaseScene through ConfigManager'
     );
+  }
+
+  /**
+   * Scene create - BaseScene handles the main creation flow
+   * This method can be overridden for scene-specific creation logic
+   */
+  async create(): Promise<void> {
+    this.logger.info('Levis2025R3WheelScene', 'create', 'Starting scene creation');
 
     try {
-      // Single call to asset system - it handles everything
-      await this.sceneAssetLoader.loadSceneAssets();
-      this.assetsLoaded = true;
+      // BaseScene handles the main creation flow through ConfigManager
+      // Call parent implementation
+      await super.create();
 
-      this.logger.info(
-        'Levis2025R3WheelScene',
-        'preload',
-        'Assets loaded successfully by asset system'
-      );
+      // Add scene-specific creation logic here if needed
+      this.addSceneSpecificElements();
+
+      // Activate the theme for this scene
+      await this.activateSceneTheme();
+
+      this.logger.info('Levis2025R3WheelScene', 'create', 'Scene creation completed');
     } catch (error) {
-      this.logger.error('Levis2025R3WheelScene', 'preload', 'Failed to load assets', { error });
+      this.logger.error('Levis2025R3WheelScene', 'create', 'Failed to create scene', { error });
       throw error;
     }
   }
 
   /**
-   * Scene create - Create game objects using loaded assets
+   * Add scene-specific elements that aren't defined in configuration
    */
-  create(): void {
-    this.logger.info('Levis2025R3WheelScene', 'create', 'Creating scene objects');
-
-    if (!this.assetsLoaded) {
-      this.logger.warn(
-        'Levis2025R3WheelScene',
-        'create',
-        'Assets not loaded, skipping object creation'
-      );
-      return;
-    }
-
+  private addSceneSpecificElements(): void {
     try {
-      // Determine which background to use based on screen size
-      const isMobile = this.scale.width < 768;
-      const backgroundKey = isMobile ? 'levis2025r3wheel-mobile-bg' : 'levis2025r3wheel-desktop-bg';
-
-      // Check if the asset is loaded using the asset manager
-      if (this.assetManager.isAssetLoaded(backgroundKey)) {
-        // Create background image
-        this.backgroundImage = this.add.image(
-          this.scale.width / 2,
-          this.scale.height / 2,
-          backgroundKey
-        );
-
-        // Scale the background to fit the screen
-        this.scaleBackground();
-
-        this.logger.info('Levis2025R3WheelScene', 'create', 'Background created successfully', {
-          backgroundKey,
-          screenWidth: this.scale.width,
-          screenHeight: this.scale.height,
-        });
-      } else {
-        this.logger.warn('Levis2025R3WheelScene', 'create', 'Background asset not loaded', {
-          backgroundKey,
-        });
-      }
-
       // Add some basic text
       this.add
         .text(this.scale.width / 2, 50, 'Levis 2025 R3 Wheel - Scene 1', {
@@ -115,74 +95,76 @@ export class Levis2025R3WheelScene extends Phaser.Scene {
 
       // Add loading status text
       this.add
-        .text(
-          this.scale.width / 2,
-          this.scale.height - 50,
-          `Assets Loaded: ${this.assetsLoaded ? 'Yes' : 'No'}`,
-          {
-            fontSize: '16px',
-            color: '#ffffff',
-            fontFamily: 'Arial',
-          }
-        )
+        .text(this.scale.width / 2, this.scale.height - 50, 'Scene Created with ConfigManager', {
+          fontSize: '16px',
+          color: '#ffffff',
+          fontFamily: 'Arial',
+        })
         .setOrigin(0.5, 1);
 
-      this.logger.info('Levis2025R3WheelScene', 'create', 'Scene created successfully');
+      this.logger.info(
+        'Levis2025R3WheelScene',
+        'addSceneSpecificElements',
+        'Scene-specific elements added'
+      );
     } catch (error) {
-      this.logger.error('Levis2025R3WheelScene', 'create', 'Failed to create scene objects', {
-        error,
-      });
+      this.logger.error(
+        'Levis2025R3WheelScene',
+        'addSceneSpecificElements',
+        'Failed to add scene-specific elements',
+        { error }
+      );
     }
   }
 
   /**
-   * Scale background to fit screen
+   * Activate the theme for this scene
    */
-  private scaleBackground(): void {
-    if (!this.backgroundImage) return;
+  private async activateSceneTheme(): Promise<void> {
+    try {
+      this.logger.info('Levis2025R3WheelScene', 'activateSceneTheme', 'Activating scene theme');
 
-    const { width: screenWidth, height: screenHeight } = this.scale;
-    const { width: imageWidth, height: imageHeight } = this.backgroundImage;
+      // Get the theme from the scene configs
+      const theme = this.sceneConfigs.theme;
+      if (theme && theme.id) {
+        // Activate the theme using the BaseScene method
+        await this.activateTheme(theme.id);
 
-    // Calculate scale to cover the entire screen
-    const scaleX = screenWidth / imageWidth;
-    const scaleY = screenHeight / imageHeight;
-    const scale = Math.max(scaleX, scaleY);
-
-    this.backgroundImage.setScale(scale);
-  }
-
-  /**
-   * Handle window resize
-   */
-  private handleResize(): void {
-    if (this.backgroundImage) {
-      this.scaleBackground();
+        this.logger.info(
+          'Levis2025R3WheelScene',
+          'activateSceneTheme',
+          'Scene theme activated successfully',
+          {
+            themeId: theme.id,
+            themeName: theme.name,
+          }
+        );
+      } else {
+        this.logger.warn(
+          'Levis2025R3WheelScene',
+          'activateSceneTheme',
+          'No theme found in scene configs'
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        'Levis2025R3WheelScene',
+        'activateSceneTheme',
+        'Failed to activate scene theme',
+        { error }
+      );
+      // Don't throw error - theme activation failure shouldn't break the scene
     }
   }
 
   /**
-   * Scene update
+   * Scene shutdown - BaseScene handles cleanup
    */
-  update(): void {
-    // Handle resize events
-    if (this.scale.width !== this.lastResizeWidth) {
-      this.lastResizeWidth = this.scale.width;
-      this.handleResize();
-    }
-  }
-
-  private lastResizeWidth: number = 0;
-
-  /**
-   * Scene shutdown
-   */
-  shutdown(): void {
+  async shutdown(): Promise<void> {
     this.logger.info('Levis2025R3WheelScene', 'shutdown', 'Scene shutting down');
 
-    // Clean up references
-    this.backgroundImage = null;
-    this.assetsLoaded = false;
+    // Call parent shutdown
+    await super.shutdown();
   }
 }
 

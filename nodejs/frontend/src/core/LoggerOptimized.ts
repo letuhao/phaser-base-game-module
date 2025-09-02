@@ -284,12 +284,26 @@ export class LoggerOptimized {
     try {
       // Simple sanitization for performance
       if (typeof data === 'object') {
+        // For better debugging, let's serialize objects properly
+        if (Array.isArray(data)) {
+          return data
+            .slice(0, 10)
+            .map(item =>
+              typeof item === 'object' && item !== null ? this.sanitizeDataMinimal(item) : item
+            );
+        }
+
         const sanitized: any = {};
-        const keys = Object.keys(data).slice(0, 5); // Limit to 5 keys
+        const keys = Object.keys(data).slice(0, 10); // Increased to 10 keys for better debugging
 
         for (const key of keys) {
           if (this.isSafeProperty(key, data[key])) {
-            sanitized[key] = typeof data[key] === 'object' ? '[Object]' : data[key];
+            if (typeof data[key] === 'object' && data[key] !== null) {
+              // Recursively sanitize nested objects (limited depth)
+              sanitized[key] = this.sanitizeDataMinimal(data[key]);
+            } else {
+              sanitized[key] = data[key];
+            }
           }
         }
 
@@ -298,7 +312,7 @@ export class LoggerOptimized {
 
       return data;
     } catch (error) {
-      return { error: 'Data sanitization failed' };
+      return { error: 'Data sanitization failed', originalData: String(data) };
     }
   }
 
@@ -432,9 +446,27 @@ export class LoggerOptimized {
     let dataString = '';
     if (entry.data !== undefined && entry.data !== null) {
       try {
-        dataString = JSON.stringify(entry.data, null, 2);
+        // Use a custom replacer to handle circular references and functions
+        const replacer = (_key: string, value: any) => {
+          if (typeof value === 'function') {
+            return '[Function]';
+          }
+          if (typeof value === 'symbol') {
+            return '[Symbol]';
+          }
+          if (value instanceof Error) {
+            return {
+              name: value.name,
+              message: value.message,
+              stack: value.stack,
+            };
+          }
+          return value;
+        };
+
+        dataString = JSON.stringify(entry.data, replacer, 2);
       } catch (error) {
-        dataString = '[Circular or non-serializable data]';
+        dataString = `[Circular or non-serializable data: ${error instanceof Error ? error.message : String(error)}]`;
       }
     }
 

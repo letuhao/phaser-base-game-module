@@ -499,6 +499,79 @@ public static applyThemeToLayout(layoutProperties: IStyleProperties): IStyleProp
 - **Calculation**: Handles positioning and sizing calculations
 - **Responsive Units**: Supports responsive measurement strategies
 
+## System Integration Architecture
+
+```mermaid
+graph TD
+    A[Scene Creation] --> B[ConfigManager]
+    B --> C[ThemeConfigLoader]
+    B --> D[SceneLoaderConfigLoader]
+    B --> E[AssetLoaderConfigLoader]
+    B --> F[ResponsiveConfigLoader]
+    B --> G[LoggingConfigLoader]
+    
+    C --> H[Theme System]
+    D --> I[Game Object System]
+    E --> J[Asset System]
+    F --> K[Layout System]
+    G --> L[Logging System]
+    
+    H --> M[Theme Application]
+    I --> N[Object Creation]
+    J --> O[Asset Loading]
+    K --> P[Responsive Updates]
+    L --> Q[Logging]
+    
+    M --> R[Responsive Updates]
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+    
+    R --> S[Bridge Coordination]
+    S --> T[Theme Updates]
+    S --> U[Game Object Updates]
+    S --> V[Layout Updates]
+    
+    T --> W[Final Scene]
+    U --> W
+    V --> W
+```
+
+## Theme Logic Integration Points
+
+### **1. In Scene Creation Flow:**
+- **Configuration Phase** (Step 3.4): Theme config is loaded via `ThemeConfigLoader`
+- **Scene Element Creation** (Step 6.2): Theme is applied to scene elements
+- **Layout Application** (Step 8.1-8.2): Theme classes are integrated with responsive layout
+
+### **2. In Responsive Update Flow:**
+- **Bridge Interface Updates** (Step 4): `IResponsiveThemeBridge` coordinates theme updates
+- **System Updates** (Step 5): Theme System updates theme values and classes
+- **Game Object Updates** (Step 6): New theme values are applied to game objects
+
+## Game Object System Logic Integration Points
+
+### **1. In Scene Creation Flow:**
+- **Configuration Phase** (Step 3.1): Scene structure defines game object hierarchy
+- **Scene Element Creation** (Step 6.2): Game objects are created using factory pattern
+- **Scene System Integration** (Step 6.1-6.3): SceneBuilder creates and manages game objects
+
+### **2. In Responsive Update Flow:**
+- **System Updates** (Step 5): Game Object System updates game object properties
+- **Game Object Updates** (Step 6): Final application of layout, theme, and unit calculations
+
+## Asset System Integration Points
+
+### **1. In Scene Creation Flow:**
+- **Configuration Phase** (Step 3.2): Asset loading strategy and priorities are defined
+- **Asset Preloading** (Step 5.1): Assets are loaded based on configuration
+- **Asset Validation** (Step 5.2): Assets are validated against configuration
+
+### **2. In Responsive Update Flow:**
+- **System Updates** (Step 5): Asset System manages asset lifecycle and caching
+- **Game Object Updates** (Step 6): Assets are applied to game objects as needed
+
 ## Configuration File Organization
 
 ```

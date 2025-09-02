@@ -12,8 +12,7 @@ export * from './configs/example-configs';
 // Responsive Configuration Examples
 export * from './responsive/ResponsiveConfigLoader.examples';
 
-// Theme Classes Examples
-export * from './theme/theme-classes-example';
+// Theme Classes Examples - REMOVED (deprecated functionality)
 
 // Utility Examples
 export * from './utils/example-utils';

@@ -1231,6 +1231,16 @@ export enum CSSValidationSeverity {
   INFO = 'info',
 }
 
+/**
+ * Theme element types for theme application
+ */
+export enum ThemeElementType {
+  SCENE = 'scene',
+  GAME_OBJECT = 'gameObject',
+  UI = 'ui',
+  CONTAINER = 'container',
+}
+
 // ============================================================================
 // EXPORT ALL ENUMS
 // ============================================================================
@@ -1403,5 +1413,8 @@ export const LAYOUT_SYSTEM_ENUMS = {
   CSS_STYLE_ENGINE: {
     PRELOAD_PRIORITY: CSSPreloadPriority,
     VALIDATION_SEVERITY: CSSValidationSeverity,
+  },
+  THEME_ELEMENT: {
+    TYPE: ThemeElementType,
   },
 } as const;
