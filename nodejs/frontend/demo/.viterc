@@ -1,0 +1,12 @@
+{
+  "root": ".",
+  "build": {
+    "outDir": "../dist-demo",
+    "emptyOutDir": true
+  },
+  "resolve": {
+    "alias": {
+      "@": "./src"
+    }
+  }
+}

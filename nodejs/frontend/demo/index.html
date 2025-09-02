@@ -9,7 +9,7 @@
       body {
         margin: 0;
         padding: 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: transparent;
         font-family: 'Arial', sans-serif;
         display: flex;
         justify-content: center;
@@ -19,9 +19,14 @@
       }
       
       #game-container {
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        width: 100vw;
+        height: 100vh;
+        background: transparent;
         overflow: hidden;
+      }
+      
+      #game-container canvas {
+        background: transparent !important;
       }
       
       .game-title {

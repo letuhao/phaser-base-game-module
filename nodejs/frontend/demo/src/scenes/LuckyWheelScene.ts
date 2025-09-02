@@ -1,16 +1,27 @@
 import Phaser from 'phaser';
 
 export class LuckyWheelScene extends Phaser.Scene {
+  private mainContainer!: Phaser.GameObjects.Container;
   private wheel!: Phaser.GameObjects.Container;
   private wheelGraphics!: Phaser.GameObjects.Graphics;
   private spinButton!: Phaser.GameObjects.Text;
   private resultText!: Phaser.GameObjects.Text;
+  private backgroundImage!: Phaser.GameObjects.Image;
   private isSpinning: boolean = false;
   private wheelSections: Array<{ color: number; text: string; value: number }> = [];
   private currentRotation: number = 0;
+  private isMobile: boolean = false;
+  private containerWidth: number = 0;
+  private containerHeight: number = 0;
 
   constructor() {
     super({ key: 'LuckyWheelScene' });
+  }
+
+  preload() {
+    // Load background images
+    this.load.image('desktop-bg', 'assets/desktop_16x9.png');
+    this.load.image('mobile-bg', 'assets/mobile_origin.png');
   }
 
   create() {
@@ -26,8 +37,80 @@ export class LuckyWheelScene extends Phaser.Scene {
       { color: 0xa29bfe, text: '150', value: 150 }
     ];
 
-    // Create wheel container
-    this.wheel = this.add.container(400, 300);
+    // Initialize responsive container
+    this.initializeMainContainer();
+    
+    // Setup resize listener
+    this.setupResizeListener();
+    
+    // Create game objects inside main container
+    this.createGameObjects();
+  }
+
+  private initializeMainContainer() {
+    // Create main container
+    this.mainContainer = this.add.container(0, 0);
+    
+    // Calculate initial container size
+    this.calculateContainerSize();
+    
+    // Set initial container size
+    this.updateMainContainer();
+  }
+
+  private calculateContainerSize() {
+    const gameWidth = this.scale.width;
+    const gameHeight = this.scale.height;
+    
+    // Check if mobile (width < 768px or height > width)
+    this.isMobile = gameWidth < 768 || gameHeight > gameWidth;
+    
+    if (this.isMobile) {
+      // Mobile: stretch to fill parent
+      this.containerWidth = gameWidth;
+      this.containerHeight = gameHeight;
+    } else {
+      // Desktop: maintain 16:9 aspect ratio
+      const aspectRatio = 16 / 9;
+      
+      if (gameWidth / gameHeight > aspectRatio) {
+        // Height is the limiting factor
+        this.containerHeight = gameHeight;
+        this.containerWidth = gameHeight * aspectRatio;
+      } else {
+        // Width is the limiting factor
+        this.containerWidth = gameWidth;
+        this.containerHeight = gameWidth / aspectRatio;
+      }
+    }
+  }
+
+  private updateMainContainer() {
+    // Center the container
+    this.mainContainer.setPosition(
+      (this.scale.width - this.containerWidth) / 2,
+      (this.scale.height - this.containerHeight) / 2
+    );
+    
+    // Set container size
+    this.mainContainer.setSize(this.containerWidth, this.containerHeight);
+  }
+
+  private setupResizeListener() {
+    this.scale.on('resize', () => {
+      this.calculateContainerSize();
+      this.updateMainContainer();
+      this.updateGameObjectsLayout();
+    });
+  }
+
+  private createGameObjects() {
+    // Create background image
+    this.createBackgroundImage();
+    
+    // Create wheel container inside main container
+    this.wheel = this.add.container(this.containerWidth / 2, this.containerHeight / 2);
+    this.mainContainer.add(this.wheel);
     
     // Create wheel graphics
     this.wheelGraphics = this.add.graphics();
@@ -37,20 +120,24 @@ export class LuckyWheelScene extends Phaser.Scene {
     this.drawWheel();
 
     // Create spin button
-    this.spinButton = this.add.text(400, 500, 'SPIN!', {
-      fontSize: '32px',
+    this.spinButton = this.add.text(this.containerWidth / 2, this.containerHeight * 0.8, 'SPIN!', {
+      fontSize: this.isMobile ? '28px' : '32px',
       color: '#ffffff',
       fontFamily: 'Arial',
       backgroundColor: '#e74c3c',
       padding: { x: 20, y: 10 }
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    
+    this.mainContainer.add(this.spinButton);
 
     // Create result text
-    this.resultText = this.add.text(400, 100, 'Click SPIN to start!', {
-      fontSize: '24px',
+    this.resultText = this.add.text(this.containerWidth / 2, this.containerHeight * 0.15, 'Click SPIN to start!', {
+      fontSize: this.isMobile ? '20px' : '24px',
       color: '#ffffff',
       fontFamily: 'Arial'
     }).setOrigin(0.5);
+    
+    this.mainContainer.add(this.resultText);
 
     // Add button click event
     this.spinButton.on('pointerdown', () => this.spinWheel());
@@ -66,13 +153,77 @@ export class LuckyWheelScene extends Phaser.Scene {
     });
   }
 
+  private createBackgroundImage() {
+    // Choose background image based on device type
+    const backgroundKey = this.isMobile ? 'mobile-bg' : 'desktop-bg';
+    
+    // Create background image that stretches to fill the container
+    this.backgroundImage = this.add.image(0, 0, backgroundKey);
+    this.backgroundImage.setOrigin(0, 0);
+    this.backgroundImage.setDisplaySize(this.containerWidth, this.containerHeight);
+    
+    // Add to main container (as first child so it's behind everything)
+    this.mainContainer.addAt(this.backgroundImage, 0);
+  }
+
+  private updateGameObjectsLayout() {
+    // Update background image
+    this.updateBackgroundImage();
+    
+    // Update wheel position
+    this.wheel.setPosition(this.containerWidth / 2, this.containerHeight / 2);
+    
+    // Update button position
+    this.spinButton.setPosition(this.containerWidth / 2, this.containerHeight * 0.8);
+    
+    // Update result text position
+    this.resultText.setPosition(this.containerWidth / 2, this.containerHeight * 0.15);
+    
+    // Update font sizes for mobile
+    if (this.isMobile) {
+      this.spinButton.setStyle({ fontSize: '28px' });
+      this.resultText.setStyle({ fontSize: '20px' });
+    } else {
+      this.spinButton.setStyle({ fontSize: '32px' });
+      this.resultText.setStyle({ fontSize: '24px' });
+    }
+    
+    // Redraw wheel with new size
+    this.drawWheel();
+  }
+
+  private updateBackgroundImage() {
+    if (this.backgroundImage) {
+      // Choose background image based on device type
+      const backgroundKey = this.isMobile ? 'mobile-bg' : 'desktop-bg';
+      
+      // Update background image texture if device type changed
+      if (this.backgroundImage.texture.key !== backgroundKey) {
+        this.backgroundImage.setTexture(backgroundKey);
+      }
+      
+      // Update background image size to stretch to container
+      this.backgroundImage.setDisplaySize(this.containerWidth, this.containerHeight);
+      this.backgroundImage.setPosition(0, 0);
+    }
+  }
+
   private drawWheel() {
-    const radius = 200;
+    // Calculate responsive wheel size based on container
+    const maxRadius = Math.min(this.containerWidth, this.containerHeight) * 0.3;
+    const radius = Math.max(150, maxRadius); // Minimum radius of 150
     const centerX = 0;
     const centerY = 0;
     const sectionAngle = (Math.PI * 2) / this.wheelSections.length;
 
     this.wheelGraphics.clear();
+
+    // Clear existing text objects
+    this.wheel.list.forEach((child) => {
+      if (child !== this.wheelGraphics && child.type === 'Text') {
+        child.destroy();
+      }
+    });
 
     // Draw wheel sections
     this.wheelSections.forEach((section, index) => {
@@ -100,8 +251,9 @@ export class LuckyWheelScene extends Phaser.Scene {
       const textX = centerX + Math.cos(textAngle) * (radius * 0.7);
       const textY = centerY + Math.sin(textAngle) * (radius * 0.7);
 
+      const fontSize = this.isMobile ? '18px' : '24px';
       const sectionText = this.add.text(textX, textY, section.text, {
-        fontSize: '24px',
+        fontSize: fontSize,
         color: '#ffffff',
         fontFamily: 'Arial'
       }).setOrigin(0.5);
@@ -110,9 +262,10 @@ export class LuckyWheelScene extends Phaser.Scene {
     });
 
     // Draw center circle
+    const centerRadius = this.isMobile ? 25 : 30;
     this.wheelGraphics.fillStyle(0x34495e);
     this.wheelGraphics.beginPath();
-    this.wheelGraphics.arc(centerX, centerY, 30, 0, Math.PI * 2);
+    this.wheelGraphics.arc(centerX, centerY, centerRadius, 0, Math.PI * 2);
     this.wheelGraphics.fill();
 
     // Draw pointer

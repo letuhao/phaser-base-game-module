@@ -24,6 +24,9 @@ export default defineConfig({
         main: resolve(__dirname, 'demo/index.html'),
       },
       output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
         manualChunks: (id) => {
           // Vendor libraries
           if (id.includes('node_modules')) {
@@ -42,9 +45,18 @@ export default defineConfig({
           return 'common';
         },
       },
+      external: (id) => {
+        // Exclude all files from the main src folder
+        return id.includes('/src/') && !id.includes('/demo/');
+      },
     },
   },
   optimizeDeps: {
     include: ['phaser'],
+    exclude: ['**/src/**', '!**/demo/**'],
+  },
+  // Exclude the main src folder from scanning
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
   },
 })
