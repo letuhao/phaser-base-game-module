@@ -21,14 +21,8 @@ export type { IScrollView } from './IScrollView';
 // ADVANCED UI ENUMS
 // ============================================================================
 
-export { SliderOrientation, SliderValueChangeMode } from './ISlider';
-export { CheckboxState } from './ICheckbox';
-export { RadioButtonState } from './IRadioButton';
-export { DropdownState } from './IDropdown';
-export { TooltipPosition, TooltipTrigger } from './ITooltip';
-export { ProgressBarOrientation, ProgressBarFillMode } from './IProgressBar';
-export { TabPosition, TabAlignment } from './ITabContainer';
-export { ScrollViewOrientation } from './IScrollView';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/ui/AdvancedUIEnums.ts
 
 // ============================================================================
 // ADVANCED UI INTERFACE BUNDLES

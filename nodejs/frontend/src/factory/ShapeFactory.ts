@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
 import { Logger } from '../core/Logger';
+import type { IFactoryInput } from './interfaces/IFactoryInput';
 
 /**
  * Factory for creating shape game objects
@@ -18,7 +19,11 @@ export class ShapeFactory extends BaseGameObjectFactory {
   /**
    * Create a shape game object from configuration
    */
-  createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.GameObject | null {
+  createGameObject(input: IFactoryInput): Phaser.GameObjects.GameObject | null {
+    // Extract config and scene from input
+    const config = (input as any).config || {};
+    const scene = input.scene;
+    
     this.logger.debug('ShapeFactory', 'createGameObject', 'Creating shape game object', {
       objectId: config.id,
       objectType: config.type,

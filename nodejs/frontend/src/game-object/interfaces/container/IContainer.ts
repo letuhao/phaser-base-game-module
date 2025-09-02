@@ -6,6 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
+import { GameObjectType, ContainerType, SortOrder } from '../../enums';
 
 /**
  * Interface for container game objects
@@ -27,7 +28,7 @@ export interface IContainer extends IGameObject {
   // ============================================================================
   
   /** The type of this container (always 'container') */
-  readonly gameObjectType: 'container';
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // CONTAINER PROPERTIES
@@ -46,7 +47,7 @@ export interface IContainer extends IGameObject {
   sortChildrenFlag: boolean;
   
   /** Container type (e.g., 'div', 'section', 'article') */
-  readonly containerType: 'div' | 'section' | 'article' | 'main' | 'aside' | 'header' | 'footer' | 'nav';
+  readonly containerType: ContainerType;
   
   // ============================================================================
   // CONTAINER METHODS
@@ -71,7 +72,7 @@ export interface IContainer extends IGameObject {
   setSortableChildren(value: boolean): this;
   
   /** Sort children by property */
-  sortChildren(property: string, order: 'ASC' | 'DESC'): this;
+  sortChildren(property: string, order: SortOrder): this;
   
   /** Get container bounds including all children */
   getContainerBounds(): Phaser.Geom.Rectangle;
@@ -86,5 +87,5 @@ export interface IContainer extends IGameObject {
   findChildByName(name: string, recursive?: boolean): IGameObject | undefined;
   
   /** Find all children by type recursively */
-  findChildrenByType<T extends IGameObject>(type: string, recursive?: boolean): T[];
+  findChildrenByType<T extends IGameObject>(type: GameObjectType, recursive?: boolean): T[];
 }

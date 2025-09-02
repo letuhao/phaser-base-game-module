@@ -277,69 +277,15 @@ export const POOL_CONSTANTS = {
 } as const;
 
 // ============================================================================
-// LAYOUT SYSTEM CONSTANTS
+// LAYOUT SYSTEM CONSTANTS - REMOVED (Use Layout System Constants Instead)
 // ============================================================================
-
-/**
- * Layout types
- */
-export const LAYOUT_TYPES = {
-  ABSOLUTE: 'absolute',
-  RELATIVE: 'relative',
-  FLEXBOX: 'flexbox',
-  GRID: 'grid',
-  STACK: 'stack',
-  FLOW: 'flow',
-} as const;
-
-/**
- * Layout directions
- */
-export const LAYOUT_DIRECTIONS = {
-  HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical',
-  BOTH: 'both',
-} as const;
-
-/**
- * Alignment types
- */
-export const ALIGNMENT_TYPES = {
-  START: 'start',
-  CENTER: 'center',
-  END: 'end',
-  STRETCH: 'stretch',
-  SPACE_BETWEEN: 'space_between',
-  SPACE_AROUND: 'space_around',
-  SPACE_EVENLY: 'space_evenly',
-} as const;
-
-/**
- * Responsive breakpoints
- */
-export const RESPONSIVE_BREAKPOINTS = {
-  XS: 'xs',      // < 480px
-  SM: 'sm',      // 480px - 768px
-  MD: 'md',      // 768px - 1024px
-  LG: 'lg',      // 1024px - 1440px
-  XL: 'xl',      // 1440px - 1920px
-  XXL: 'xxl',    // > 1920px
-} as const;
+// LAYOUT_TYPES, LAYOUT_DIRECTIONS, ALIGNMENT_TYPES, RESPONSIVE_BREAKPOINTS
+// are now imported from the Layout System to avoid duplication
 
 // ============================================================================
-// THEME SYSTEM CONSTANTS
+// THEME SYSTEM CONSTANTS - REMOVED (Use Layout System Constants Instead)
 // ============================================================================
-
-/**
- * Theme types
- */
-export const THEME_TYPES = {
-  LIGHT: 'light',
-  DARK: 'dark',
-  HIGH_CONTRAST: 'high_contrast',
-  COLORBLIND: 'colorblind',
-  CUSTOM: 'custom',
-} as const;
+// THEME_TYPES is now imported from the Layout System to avoid duplication
 
 /**
  * Theme properties
@@ -371,45 +317,10 @@ export const THEME_PROPERTIES = {
 } as const;
 
 // ============================================================================
-// ANIMATION SYSTEM CONSTANTS
+// ANIMATION SYSTEM CONSTANTS - REMOVED (Use Layout System Constants Instead)
 // ============================================================================
-
-/**
- * Animation types
- */
-export const ANIMATION_TYPES = {
-  SPRITE: 'sprite',
-  TWEEN: 'tween',
-  TIMELINE: 'timeline',
-  PARTICLE: 'particle',
-  MORPH: 'morph',
-} as const;
-
-/**
- * Animation directions
- */
-export const ANIMATION_DIRECTIONS = {
-  FORWARD: 'forward',
-  REVERSE: 'reverse',
-  ALTERNATE: 'alternate',
-  ALTERNATE_REVERSE: 'alternate_reverse',
-} as const;
-
-/**
- * Easing functions
- */
-export const EASING_FUNCTIONS = {
-  LINEAR: 'linear',
-  EASE_IN: 'ease_in',
-  EASE_OUT: 'ease_out',
-  EASE_IN_OUT: 'ease_in_out',
-  EASE_IN_BACK: 'ease_in_back',
-  EASE_OUT_BACK: 'ease_out_back',
-  EASE_IN_ELASTIC: 'ease_in_elastic',
-  EASE_OUT_ELASTIC: 'ease_out_elastic',
-  BOUNCE: 'bounce',
-  SPRING: 'spring',
-} as const;
+// ANIMATION_TYPES, ANIMATION_DIRECTIONS, EASING_FUNCTIONS are now imported 
+// from the Layout System to avoid duplication
 
 // ============================================================================
 // INPUT SYSTEM CONSTANTS
@@ -461,14 +372,7 @@ export const INPUT_EVENTS = {
 // PHYSICS SYSTEM CONSTANTS
 // ============================================================================
 
-/**
- * Physics body types
- */
-export const PHYSICS_BODY_TYPES = {
-  STATIC: 'static',
-  DYNAMIC: 'dynamic',
-  KINEMATIC: 'kinematic',
-} as const;
+// PHYSICS_BODY_TYPES removed - use Layout System's PhysicsBodyType instead
 
 /**
  * Collision shapes
@@ -623,27 +527,22 @@ export const GAMEOBJECT_SYSTEM_CONSTANTS = {
   FACTORY_MODES: FACTORY_MODES,
   POOL_CONSTANTS: POOL_CONSTANTS,
   
-  // Layout
-  LAYOUT_TYPES: LAYOUT_TYPES,
-  LAYOUT_DIRECTIONS: LAYOUT_DIRECTIONS,
-  ALIGNMENT_TYPES: ALIGNMENT_TYPES,
-  RESPONSIVE_BREAKPOINTS: RESPONSIVE_BREAKPOINTS,
+  // Layout - REMOVED (Use Layout System Constants)
+  // LAYOUT_TYPES, LAYOUT_DIRECTIONS, ALIGNMENT_TYPES, RESPONSIVE_BREAKPOINTS
   
-  // Theme
-  THEME_TYPES: THEME_TYPES,
+  // Theme - REMOVED (Use Layout System Constants)
+  // THEME_TYPES
   THEME_PROPERTIES: THEME_PROPERTIES,
   
-  // Animation
-  ANIMATION_TYPES: ANIMATION_TYPES,
-  ANIMATION_DIRECTIONS: ANIMATION_DIRECTIONS,
-  EASING_FUNCTIONS: EASING_FUNCTIONS,
+  // Animation - REMOVED (Use Layout System Constants)
+  // ANIMATION_TYPES, ANIMATION_DIRECTIONS, EASING_FUNCTIONS
   
   // Input
   INPUT_TYPES: INPUT_TYPES,
   INPUT_EVENTS: INPUT_EVENTS,
   
-  // Physics
-  PHYSICS_BODY_TYPES: PHYSICS_BODY_TYPES,
+  // Physics - REMOVED (Use Layout System Constants)
+  // PHYSICS_BODY_TYPES
   COLLISION_SHAPES: COLLISION_SHAPES,
   PHYSICS_MATERIALS: PHYSICS_MATERIALS,
   
@@ -670,11 +569,8 @@ export type GameObjectState = typeof GAMEOBJECT_STATES[keyof typeof GAMEOBJECT_S
 export type GameObjectProperty = typeof GAMEOBJECT_PROPERTIES[keyof typeof GAMEOBJECT_PROPERTIES];
 export type ComponentType = typeof COMPONENT_TYPES[keyof typeof COMPONENT_TYPES];
 export type ComponentState = typeof COMPONENT_STATES[keyof typeof COMPONENT_STATES];
-export type LayoutType = typeof LAYOUT_TYPES[keyof typeof LAYOUT_TYPES];
-export type ThemeType = typeof THEME_TYPES[keyof typeof THEME_TYPES];
-export type AnimationType = typeof ANIMATION_TYPES[keyof typeof ANIMATION_TYPES];
+// LayoutType, ThemeType, AnimationType, PhysicsBodyType removed - use Layout System types
 export type InputType = typeof INPUT_TYPES[keyof typeof INPUT_TYPES];
-export type PhysicsBodyType = typeof PHYSICS_BODY_TYPES[keyof typeof PHYSICS_BODY_TYPES];
 export type AudioType = typeof AUDIO_TYPES[keyof typeof AUDIO_TYPES];
 export type NetworkMessageType = typeof NETWORK_MESSAGE_TYPES[keyof typeof NETWORK_MESSAGE_TYPES];
 export type DebugLevel = typeof DEBUG_LEVELS[keyof typeof DEBUG_LEVELS];

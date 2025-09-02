@@ -7,6 +7,7 @@
 
 import type { ILightObject } from './ILightObject';
 import { GameObjectType } from '../../enums/GameObjectEnums';
+import { LightFalloffCurveType } from '../../enums';
 
 
 /**
@@ -15,7 +16,7 @@ import { GameObjectType } from '../../enums/GameObjectEnums';
  * Extends ILightObject with point light-specific functionality.
  */
 export interface IPointLight extends ILightObject {
-  readonly gameObjectType: GameObjectType.POINT_LIGHT;
+  readonly gameObjectType: GameObjectType;
   
   /** Point light position */
   pointLightPosition: { x: number; y: number };
@@ -36,7 +37,7 @@ export interface IPointLight extends ILightObject {
   pointLightOuterIntensity: number;
   
   /** Point light falloff curve */
-  pointLightFalloffCurve: 'linear' | 'quadratic' | 'cubic' | 'exponential';
+  pointLightFalloffCurve: LightFalloffCurveType;
   
   /** Point light falloff exponent */
   pointLightFalloffExponent: number;
@@ -84,7 +85,7 @@ export interface IPointLight extends ILightObject {
   setPointLightOuterIntensity(intensity: number): this;
   
   /** Set point light falloff curve */
-  setPointLightFalloffCurve(curve: 'linear' | 'quadratic' | 'cubic' | 'exponential'): this;
+  setPointLightFalloffCurve(curve: LightFalloffCurveType): this;
   
   /** Set point light falloff exponent */
   setPointLightFalloffExponent(exponent: number): this;
@@ -132,7 +133,7 @@ export interface IPointLight extends ILightObject {
   getPointLightOuterIntensity(): number;
   
   /** Get point light falloff curve */
-  getPointLightFalloffCurve(): 'linear' | 'quadratic' | 'cubic' | 'exponential';
+  getPointLightFalloffCurve(): LightFalloffCurveType;
   
   /** Get point light falloff exponent */
   getPointLightFalloffExponent(): number;

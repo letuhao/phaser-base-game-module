@@ -7,18 +7,7 @@
 
 import type { IObserver } from '../patterns/IObserver';
 import type { IGameObject } from '../IGameObject';
-
-/**
- * Observer manager operations
- */
-export enum ObserverManagerOperation {
-  CREATE_OBSERVER = 'create_observer',
-  DESTROY_OBSERVER = 'destroy_observer',
-  SUBSCRIBE_OBSERVER = 'subscribe_observer',
-  UNSUBSCRIBE_OBSERVER = 'unsubscribe_observer',
-  NOTIFY_OBSERVERS = 'notify_observers',
-  MANAGE_OBSERVER = 'manage_observer'
-}
+// ObserverManagerOperation is now imported from the centralized enum system
 
 /**
  * Observer manager configuration

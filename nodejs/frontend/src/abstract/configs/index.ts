@@ -23,4 +23,4 @@ export * from './ISceneLoaderConfig';
 export * from '../../unit';
 
 // Examples and utilities
-export * from './scene-loader-examples';
+// export * from './scene-loader-examples'; // Module not found - commented out

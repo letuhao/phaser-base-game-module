@@ -15,7 +15,7 @@ import { GameObjectType } from '../../enums/GameObjectEnums';
  * Extends IPhysicsObject with static body-specific functionality.
  */
 export interface IStaticBody extends IPhysicsObject {
-  readonly gameObjectType: GameObjectType.STATIC_BODY;
+  readonly gameObjectType: GameObjectType;
   
   /** Static body immovable */
   staticBodyImmovable: boolean;

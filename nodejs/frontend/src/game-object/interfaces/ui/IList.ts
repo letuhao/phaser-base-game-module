@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IContainer } from '../container/IContainer';
+import { ContainerType, UIState, UIOrientation, UISelectionMode } from '../../enums';
 
 /**
  * Interface for list UI game objects
@@ -31,7 +32,7 @@ export interface IList extends IContainer {
   readonly uiType: 'list';
   
   /** Container type (e.g., 'div', 'section', 'article') */
-  readonly containerType: 'div' | 'section' | 'article' | 'main' | 'aside' | 'header' | 'footer' | 'nav';
+  readonly containerType: ContainerType;
   
   // ============================================================================
   // UI PROPERTIES (from IUIObject)
@@ -53,7 +54,7 @@ export interface IList extends IContainer {
   selected: boolean;
   
   /** UI element state */
-  uiState: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected';
+  uiState: UIState;
   
   /** UI element theme */
   theme: string;
@@ -81,7 +82,7 @@ export interface IList extends IContainer {
   items: Phaser.GameObjects.GameObject[];
   
   /** List orientation */
-  orientation: 'vertical' | 'horizontal';
+  orientation: UIOrientation;
   
   /** List spacing */
   itemSpacing: number;
@@ -96,7 +97,7 @@ export interface IList extends IContainer {
   itemWidth: number;
   
   /** List selection mode */
-  selectionMode: 'none' | 'single' | 'multiple';
+  selectionMode: UISelectionMode;
   
   /** Selected items */
   selectedItems: Phaser.GameObjects.GameObject[];
@@ -154,7 +155,7 @@ export interface IList extends IContainer {
   setSelected(selected: boolean): this;
   
   /** Set UI element state */
-  setUIState(state: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected'): this;
+  setUIState(state: UIState): this;
   
   /** Set UI element theme */
   setTheme(theme: string): this;
@@ -209,7 +210,7 @@ export interface IList extends IContainer {
   setItems(items: Phaser.GameObjects.GameObject[]): this;
   
   /** Set list orientation */
-  setOrientation(orientation: 'vertical' | 'horizontal'): this;
+  setOrientation(orientation: UIOrientation): this;
   
   /** Set list spacing */
   setItemSpacing(spacing: number): this;
@@ -221,7 +222,7 @@ export interface IList extends IContainer {
   setItemSize(width: number, height: number): this;
   
   /** Set list selection mode */
-  setSelectionMode(mode: 'none' | 'single' | 'multiple'): this;
+  setSelectionMode(mode: UISelectionMode): this;
   
   /** Set list scroll position */
   setScrollPosition(position: number): this;

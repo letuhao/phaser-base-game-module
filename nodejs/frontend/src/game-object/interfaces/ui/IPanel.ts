@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IContainer } from '../container/IContainer';
+import { ContainerType, UIState, UISize, UIVariant, UILayout } from '../../enums';
 
 /**
  * Interface for panel UI game objects
@@ -31,7 +32,7 @@ export interface IPanel extends IContainer {
   readonly uiType: 'panel';
   
   /** Container type (e.g., 'div', 'section', 'article') */
-  readonly containerType: 'div' | 'section' | 'article' | 'main' | 'aside' | 'header' | 'footer' | 'nav';
+  readonly containerType: ContainerType;
   
   // ============================================================================
   // UI PROPERTIES (from IUIObject)
@@ -53,7 +54,7 @@ export interface IPanel extends IContainer {
   selected: boolean;
   
   /** UI element state */
-  uiState: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected';
+  uiState: UIState;
   
   /** UI element theme */
   theme: string;
@@ -90,13 +91,13 @@ export interface IPanel extends IContainer {
   content: Phaser.GameObjects.GameObject | null;
   
   /** Panel size */
-  panelSize: 'small' | 'medium' | 'large' | 'full' | 'custom';
+  panelSize: UISize;
   
   /** Panel variant */
-  panelVariant: 'default' | 'elevated' | 'outlined' | 'filled';
+  panelVariant: UIVariant;
   
   /** Panel layout */
-  panelLayout: 'vertical' | 'horizontal' | 'grid' | 'flex';
+  panelLayout: UILayout;
   
   /** Panel spacing */
   panelSpacing: number;
@@ -175,7 +176,7 @@ export interface IPanel extends IContainer {
   setSelected(selected: boolean): this;
   
   /** Set UI element state */
-  setUIState(state: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected'): this;
+  setUIState(state: UIState): this;
   
   /** Set UI element theme */
   setTheme(theme: string): this;
@@ -239,13 +240,13 @@ export interface IPanel extends IContainer {
   setContent(content: Phaser.GameObjects.GameObject | null): this;
   
   /** Set panel size */
-  setPanelSize(size: 'small' | 'medium' | 'large' | 'full' | 'custom'): this;
+  setPanelSize(size: UISize): this;
   
   /** Set panel variant */
-  setPanelVariant(variant: 'default' | 'elevated' | 'outlined' | 'filled'): this;
+  setPanelVariant(variant: UIVariant): this;
   
   /** Set panel layout */
-  setPanelLayout(layout: 'vertical' | 'horizontal' | 'grid' | 'flex'): this;
+  setPanelLayout(layout: UILayout): this;
   
   /** Set panel spacing */
   setPanelSpacing(spacing: number): this;

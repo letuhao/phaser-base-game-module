@@ -7,6 +7,7 @@
 
 import * as Phaser from 'phaser';
 import type { IGameObject } from '../IGameObject';
+import { GameObjectType, UIType, UIState } from '../../enums';
 
 /**
  * Interface for UI game objects
@@ -29,10 +30,10 @@ export interface IUIObject extends IGameObject {
   // ============================================================================
   
   /** The type of this game object (always 'ui') */
-  readonly gameObjectType: 'ui';
+  readonly gameObjectType: GameObjectType;
   
   /** The specific type of UI element */
-  readonly uiType: 'button' | 'text' | 'input' | 'panel' | 'list' | 'scrollview' | 'modal' | 'tooltip' | 'slider' | 'checkbox' | 'radiobutton' | 'dropdown' | 'tab' | 'menu' | 'progressbar';
+  readonly uiType: UIType;
   
   // ============================================================================
   // UI PROPERTIES
@@ -54,7 +55,7 @@ export interface IUIObject extends IGameObject {
   selected: boolean;
   
   /** UI element state */
-  uiState: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected';
+  uiState: UIState;
   
   /** UI element theme */
   theme: string;
@@ -94,7 +95,7 @@ export interface IUIObject extends IGameObject {
   setSelected(selected: boolean): this;
   
   /** Set UI element state */
-  setUIState(state: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected'): this;
+  setUIState(state: UIState): this;
   
   /** Set UI element theme */
   setTheme(theme: string): this;

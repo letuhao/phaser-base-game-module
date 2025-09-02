@@ -6,63 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, DynamicBitmapTextAlign, DynamicBitmapTextBlendMode, DynamicBitmapTextWordWrap, DynamicBitmapTextAnimationMode } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Dynamic bitmap text align modes
- */
-export enum DynamicBitmapTextAlign {
-  LEFT = 'left',
-  CENTER = 'center',
-  RIGHT = 'right',
-  JUSTIFY = 'justify'
-}
-
-/**
- * Dynamic bitmap text blend modes
- */
-export enum DynamicBitmapTextBlendMode {
-  NORMAL = 'normal',
-  ADD = 'add',
-  MULTIPLY = 'multiply',
-  SCREEN = 'screen',
-  OVERLAY = 'overlay',
-  DARKEN = 'darken',
-  LIGHTEN = 'lighten',
-  COLOR_DODGE = 'color-dodge',
-  COLOR_BURN = 'color-burn',
-  HARD_LIGHT = 'hard-light',
-  SOFT_LIGHT = 'soft-light',
-  DIFFERENCE = 'difference',
-  EXCLUSION = 'exclusion',
-  HUE = 'hue',
-  SATURATION = 'saturation',
-  COLOR = 'color',
-  LUMINOSITY = 'luminosity'
-}
-
-/**
- * Dynamic bitmap text word wrap modes
- */
-export enum DynamicBitmapTextWordWrap {
-  NONE = 'none',
-  WORD = 'word',
-  CHAR = 'char'
-}
-
-/**
- * Dynamic bitmap text animation modes
- */
-export enum DynamicBitmapTextAnimationMode {
-  NONE = 'none',
-  TYPEWRITER = 'typewriter',
-  FADE_IN = 'fade-in',
-  SLIDE_IN = 'slide-in',
-  BOUNCE_IN = 'bounce-in',
-  ZOOM_IN = 'zoom-in',
-  CUSTOM = 'custom'
-}
 
 /**
  * Interface for dynamic bitmap text game objects
@@ -84,7 +29,7 @@ export interface IDynamicBitmapText extends IGameObject {
   // ============================================================================
   
   /** The specific type of game object (always 'dynamicBitmapText') */
-  readonly gameObjectType: GameObjectType.DYNAMIC_BITMAP_TEXT;
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // DYNAMIC BITMAP TEXT PROPERTIES

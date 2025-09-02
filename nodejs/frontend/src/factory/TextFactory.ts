@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
 import { Logger } from '../core/Logger';
+import type { IFactoryInput } from './interfaces/IFactoryInput';
 
 /**
  * Factory for creating text game objects
@@ -15,8 +16,13 @@ export class TextFactory extends BaseGameObjectFactory {
   /**
    * Create a text game object from configuration
    */
-  createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.Text | null {
+  createGameObject(input: IFactoryInput): Phaser.GameObjects.Text | null {
+    // Extract config and scene from input
+    const config = (input as any).config || {};
+    const scene = input.scene;
+    
     try {
+      
       const textConfig: Phaser.Types.GameObjects.Text.TextStyle = {
         fontSize: config.fontSize || '32px',
         fontFamily: config.fontFamily || 'Arial',
@@ -50,7 +56,7 @@ export class TextFactory extends BaseGameObjectFactory {
       this.logger.error(
         'TextFactory',
         'createGameObject',
-        `Error creating text '${config.id}':`,
+        `Error creating text '${config?.id || 'unknown'}':`,
         error
       );
       return null;

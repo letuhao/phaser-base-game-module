@@ -6,19 +6,8 @@
  */
 
 import type { IBuilder } from '../patterns/IBuilder';
+import { ManagerType } from '../../enums';
 import type { IGameObject } from '../IGameObject';
-
-/**
- * Builder manager operations
- */
-export enum BuilderManagerOperation {
-  CREATE_BUILDER = 'create_builder',
-  DESTROY_BUILDER = 'destroy_builder',
-  BUILD_PRODUCT = 'build_product',
-  RESET_BUILDER = 'reset_builder',
-  MANAGE_BUILDER = 'manage_builder',
-  VALIDATE_BUILDER = 'validate_builder'
-}
 
 /**
  * Builder manager configuration
@@ -138,7 +127,7 @@ export interface IBuilderManager {
   hasBuilder(builderId: string): boolean;
   
   /** Get builders by type */
-  getBuildersByType(type: string): IBuilder[];
+  getBuildersByType(type: ManagerType): IBuilder[];
   
   /** Get construction context by ID */
   getConstructionContext(contextId: string): BuilderConstructionContext | null;

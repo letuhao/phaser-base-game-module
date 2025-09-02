@@ -5,7 +5,7 @@
  * This interface focuses solely on component management concerns.
  */
 
-import type { ComponentType } from '../constants/GameObjectConstants';
+import { ComponentState } from '../../enums';
 
 /**
  * Component interface for the component system
@@ -15,10 +15,10 @@ export interface IGameObjectComponent {
   readonly name: string;
   
   /** Type of the component */
-  readonly type: ComponentType;
+  readonly type: string;
   
   /** Current state of the component */
-  readonly state: 'creating' | 'created' | 'active' | 'inactive' | 'destroying' | 'destroyed';
+  readonly state: ComponentState;
   
   /** The game object this component belongs to */
   readonly gameObject: IGameObjectComponentSystem;
@@ -51,21 +51,21 @@ export interface IGameObjectComponentSystem {
   // ============================================================================
   
   /** Map of attached components */
-  readonly gameObjectComponents: ReadonlyMap<ComponentType, IGameObjectComponent>;
+  readonly gameObjectComponents: ReadonlyMap<string, IGameObjectComponent>;
   
   // ============================================================================
   // COMPONENT METHODS
   // ============================================================================
   
   /** Whether this game object has a specific component */
-  hasGameObjectComponent(componentType: ComponentType): boolean;
+  hasGameObjectComponent(componentType: string): boolean;
   
   /** Get a specific component */
-  getGameObjectComponent<T extends IGameObjectComponent>(componentType: ComponentType): T | undefined;
+  getGameObjectComponent<T extends IGameObjectComponent>(componentType: string): T | undefined;
   
   /** Add a component to this game object */
   addGameObjectComponent(component: IGameObjectComponent): void;
   
   /** Remove a component from this game object */
-  removeGameObjectComponent(componentType: ComponentType): void;
+  removeGameObjectComponent(componentType: string): void;
 }

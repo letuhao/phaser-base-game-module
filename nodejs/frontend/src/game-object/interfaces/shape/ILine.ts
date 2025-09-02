@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IShape } from './IShape';
+import { ShapeType, LineCapType, LineJoinType } from '../../enums';
 
 /**
  * Interface for line shape game objects
@@ -28,7 +29,7 @@ export interface ILine extends IShape {
   // ============================================================================
   
   /** The specific type of shape (always 'line') */
-  readonly shapeType: 'line';
+  readonly shapeType: ShapeType.LINE;
   
   // ============================================================================
   // LINE PROPERTIES
@@ -50,10 +51,10 @@ export interface ILine extends IShape {
   lineWidth: number;
   
   /** Line cap style */
-  lineCap: 'butt' | 'round' | 'square';
+  lineCap: LineCapType;
   
   /** Line join style */
-  lineJoin: 'miter' | 'round' | 'bevel';
+  lineJoin: LineJoinType;
   
   /** Miter limit for line joins */
   miterLimit: number;
@@ -84,10 +85,10 @@ export interface ILine extends IShape {
   setEndPoint(x: number, y: number): this;
   
   /** Set line cap style */
-  setLineCap(cap: 'butt' | 'round' | 'square'): this;
+  setLineCap(cap: LineCapType): this;
   
   /** Set line join style */
-  setLineJoin(join: 'miter' | 'round' | 'bevel'): this;
+  setLineJoin(join: LineJoinType): this;
   
   /** Set line dash pattern */
   setLineDash(dash: number[]): this;

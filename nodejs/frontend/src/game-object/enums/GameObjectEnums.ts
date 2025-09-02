@@ -317,69 +317,15 @@ export enum FactoryMode {
 }
 
 // ============================================================================
-// LAYOUT SYSTEM ENUMS
+// LAYOUT SYSTEM ENUMS - REMOVED (Use Layout System Enums Instead)
 // ============================================================================
-
-/**
- * Layout types enum
- */
-export enum LayoutType {
-  ABSOLUTE = 'absolute',
-  RELATIVE = 'relative',
-  FLEXBOX = 'flexbox',
-  GRID = 'grid',
-  STACK = 'stack',
-  FLOW = 'flow',
-}
-
-/**
- * Layout directions enum
- */
-export enum LayoutDirection {
-  HORIZONTAL = 'horizontal',
-  VERTICAL = 'vertical',
-  BOTH = 'both',
-}
-
-/**
- * Alignment types enum
- */
-export enum AlignmentType {
-  START = 'start',
-  CENTER = 'center',
-  END = 'end',
-  STRETCH = 'stretch',
-  SPACE_BETWEEN = 'space_between',
-  SPACE_AROUND = 'space_around',
-  SPACE_EVENLY = 'space_evenly',
-}
-
-/**
- * Responsive breakpoints enum
- */
-export enum ResponsiveBreakpoint {
-  XS = 'xs',      // < 480px
-  SM = 'sm',      // 480px - 768px
-  MD = 'md',      // 768px - 1024px
-  LG = 'lg',      // 1024px - 1440px
-  XL = 'xl',      // 1440px - 1920px
-  XXL = 'xxl',    // > 1920px
-}
+// LayoutType, LayoutDirection, AlignmentType, ResponsiveBreakpoint, ThemeType
+// are now imported from the Layout System to avoid duplication
 
 // ============================================================================
-// THEME SYSTEM ENUMS
+// THEME SYSTEM ENUMS - REMOVED (Use Layout System Enums Instead)
 // ============================================================================
-
-/**
- * Theme types enum
- */
-export enum ThemeType {
-  LIGHT = 'light',
-  DARK = 'dark',
-  HIGH_CONTRAST = 'high_contrast',
-  COLORBLIND = 'colorblind',
-  CUSTOM = 'custom',
-}
+// ThemeType is now imported from the Layout System to avoid duplication
 
 /**
  * Theme properties enum
@@ -411,45 +357,10 @@ export enum ThemeProperty {
 }
 
 // ============================================================================
-// ANIMATION SYSTEM ENUMS
+// ANIMATION SYSTEM ENUMS - REMOVED (Use Layout System Enums Instead)
 // ============================================================================
-
-/**
- * Animation types enum
- */
-export enum AnimationType {
-  SPRITE = 'sprite',
-  TWEEN = 'tween',
-  TIMELINE = 'timeline',
-  PARTICLE = 'particle',
-  MORPH = 'morph',
-}
-
-/**
- * Animation directions enum
- */
-export enum AnimationDirection {
-  FORWARD = 'forward',
-  REVERSE = 'reverse',
-  ALTERNATE = 'alternate',
-  ALTERNATE_REVERSE = 'alternate_reverse',
-}
-
-/**
- * Easing functions enum
- */
-export enum EasingFunction {
-  LINEAR = 'linear',
-  EASE_IN = 'ease_in',
-  EASE_OUT = 'ease_out',
-  EASE_IN_OUT = 'ease_in_out',
-  EASE_IN_BACK = 'ease_in_back',
-  EASE_OUT_BACK = 'ease_out_back',
-  EASE_IN_ELASTIC = 'ease_in_elastic',
-  EASE_OUT_ELASTIC = 'ease_out_elastic',
-  BOUNCE = 'bounce',
-  SPRING = 'spring',
-}
+// AnimationType, AnimationDirection, EasingFunction are now imported from 
+// the Layout System to avoid duplication
 
 // ============================================================================
 // INPUT SYSTEM ENUMS
@@ -501,14 +412,7 @@ export enum InputEvent {
 // PHYSICS SYSTEM ENUMS
 // ============================================================================
 
-/**
- * Physics body types enum
- */
-export enum PhysicsBodyType {
-  STATIC = 'static',
-  DYNAMIC = 'dynamic',
-  KINEMATIC = 'kinematic',
-}
+// PhysicsBodyType enum removed - use Layout System's PhysicsBodyType instead
 
 /**
  * Collision shapes enum
@@ -665,27 +569,22 @@ export const GAMEOBJECT_SYSTEM_ENUMS = {
   FactoryType,
   FactoryMode,
   
-  // Layout
-  LayoutType,
-  LayoutDirection,
-  AlignmentType,
-  ResponsiveBreakpoint,
+  // Layout - REMOVED (Use Layout System Enums)
+  // LayoutType, LayoutDirection, AlignmentType, ResponsiveBreakpoint
   
-  // Theme
-  ThemeType,
+  // Theme - REMOVED (Use Layout System Enums)
+  // ThemeType
   ThemeProperty,
   
-  // Animation
-  AnimationType,
-  AnimationDirection,
-  EasingFunction,
+  // Animation - REMOVED (Use Layout System Enums)
+  // AnimationType, AnimationDirection, EasingFunction
   
   // Input
   InputType,
   InputEvent,
   
-  // Physics
-  PhysicsBodyType,
+  // Physics - REMOVED (Use Layout System Enums)
+  // PhysicsBodyType
   CollisionShape,
   PhysicsMaterial,
   

@@ -19,11 +19,8 @@ export type { IRenderTexture } from './IRenderTexture';
 // CORE ENUMS
 // ============================================================================
 
-export { SpriteBlendMode, SpriteCropMode } from './ISprite';
-export { GraphicsLineStyle, GraphicsFillStyle, GraphicsPathCommand } from './IGraphics';
-export { TileSpriteTileMode, TileSpriteBlendMode } from './ITileSprite';
-export { BitmapTextAlign, BitmapTextBlendMode, BitmapTextWordWrap } from './IBitmapText';
-export { DynamicBitmapTextAlign, DynamicBitmapTextBlendMode, DynamicBitmapTextWordWrap, DynamicBitmapTextAnimationMode } from './IDynamicBitmapText';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/core/CoreObjectEnums.ts
 
 // ============================================================================
 // CORE INTERFACE BUNDLES

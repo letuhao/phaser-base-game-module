@@ -19,9 +19,8 @@ export type { IBlitterObject } from './IBlitterObject';
 // LIGHTING ENUMS
 // ============================================================================
 
-export { LightType, LightBlendMode } from './ILightObject';
-export { MeshType, MeshRenderMode } from './IMeshObject';
-export { BlitterType, BlitterBlendMode } from './IBlitterObject';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/lighting/LightingEnums.ts
 
 // ============================================================================
 // LIGHTING INTERFACE BUNDLES

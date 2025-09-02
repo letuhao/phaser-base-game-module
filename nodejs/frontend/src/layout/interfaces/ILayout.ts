@@ -24,7 +24,7 @@ import {
   UpdateFrequency,
   HorizontalAlignment,
   VerticalAlignment,
-  SizeValueType,
+  // SizeValueType removed - use SizeValue from unit system
   ScaleStrategy,
   OverflowType,
   RoundingStrategy,
@@ -83,8 +83,8 @@ export interface ILayout {
 export interface ILayoutConfig {
   /** Size configuration */
   size: {
-    width?: number | SizeValue | SizeUnit | SizeValueType | IRandomValueNumber;
-    height?: number | SizeValue | SizeUnit | SizeValueType | IRandomValueNumber;
+    width?: number | SizeValue | SizeUnit | IRandomValueNumber;
+    height?: number | SizeValue | SizeUnit | IRandomValueNumber;
     maintainAspectRatio?: boolean;
     minWidth?: number | SizeValue | SizeUnit | IRandomValueNumber;
     maxWidth?: number | SizeValue | SizeUnit | IRandomValueNumber;

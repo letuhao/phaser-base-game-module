@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IShape } from './IShape';
+import { ShapeType } from '../../enums';
 
 /**
  * Interface for circle shape game objects
@@ -28,7 +29,7 @@ export interface ICircle extends IShape {
   // ============================================================================
   
   /** The specific type of shape (always 'circle') */
-  readonly shapeType: 'circle';
+  readonly shapeType: ShapeType.CIRCLE;
   
   // ============================================================================
   // CIRCLE PROPERTIES

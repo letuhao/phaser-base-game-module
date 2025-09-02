@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 import { logger } from '../core/Logger';
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
-import type { IFactoryInput, IContainerFactoryInput } from './interfaces/IFactoryInput';
+import type { IFactoryInput } from './interfaces/IFactoryInput';
 import { Container } from '../object/container/Container';
 
 /**
@@ -52,7 +52,7 @@ export class ContainerFactory extends BaseGameObjectFactory {
         config.id,
         config.x || 0,
         config.y || 0,
-        input.parent || null // parent from input
+        (input.parent as any) || null // parent from input
       );
 
       logger.debug('ContainerFactory', 'createGameObject', 'Custom Container wrapper created', {
@@ -117,7 +117,7 @@ export class ContainerFactory extends BaseGameObjectFactory {
           width: config.width,
           height: config.height || config.width,
         });
-        container.setSize(config.width, config.height || config.width);
+        container.setSize(config.width, typeof config.height === 'number' ? config.height : config.width);
       }
 
       // Set name for debugging
@@ -146,9 +146,9 @@ export class ContainerFactory extends BaseGameObjectFactory {
         const background = scene.add.rectangle(
           0,
           0,
-          config.width || 100,
-          config.height || 100,
-          this.parseColor(config.backgroundColor)
+          typeof config.width === 'number' ? config.width : 100,
+          typeof config.height === 'number' ? config.height : 100,
+          this.parseColor(String(config.backgroundColor))
         );
         container.add(background);
 

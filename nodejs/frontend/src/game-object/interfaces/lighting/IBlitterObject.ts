@@ -6,37 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, BlitterType, BlitterBlendMode } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Blitter types
- */
-export enum BlitterType {
-  SPRITE = 'sprite',
-  TEXTURE = 'texture',
-  FRAME = 'frame',
-  CUSTOM = 'custom'
-}
-
-/**
- * Blitter blend modes
- */
-export enum BlitterBlendMode {
-  NORMAL = 'normal',
-  ADD = 'add',
-  MULTIPLY = 'multiply',
-  SCREEN = 'screen',
-  OVERLAY = 'overlay',
-  SOFT_LIGHT = 'soft_light',
-  HARD_LIGHT = 'hard_light',
-  COLOR_DODGE = 'color_dodge',
-  COLOR_BURN = 'color_burn',
-  DARKEN = 'darken',
-  LIGHTEN = 'lighten',
-  DIFFERENCE = 'difference',
-  EXCLUSION = 'exclusion'
-}
 
 /**
  * Interface for blitter game objects
@@ -44,7 +15,7 @@ export enum BlitterBlendMode {
  * Extends IGameObject with blitter-specific functionality.
  */
 export interface IBlitterObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.BLITTER;
+  readonly gameObjectType: GameObjectType;
   
   /** Blitter type */
   blitterType: BlitterType;

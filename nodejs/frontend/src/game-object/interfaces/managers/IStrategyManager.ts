@@ -7,18 +7,7 @@
 
 import type { IStrategy } from '../patterns/IStrategy';
 import type { IGameObject } from '../IGameObject';
-
-/**
- * Strategy manager operations
- */
-export enum StrategyManagerOperation {
-  CREATE_STRATEGY = 'create_strategy',
-  DESTROY_STRATEGY = 'destroy_strategy',
-  SELECT_STRATEGY = 'select_strategy',
-  EXECUTE_STRATEGY = 'execute_strategy',
-  MANAGE_STRATEGY = 'manage_strategy',
-  VALIDATE_STRATEGY = 'validate_strategy'
-}
+// StrategyManagerOperation is now imported from the centralized enum system
 
 /**
  * Strategy manager configuration

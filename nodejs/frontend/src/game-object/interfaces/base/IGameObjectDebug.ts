@@ -5,7 +5,7 @@
  * This interface focuses solely on debugging and utility concerns.
  */
 
-import type { GameObjectType, GameObjectState, ComponentType } from '../constants/GameObjectConstants';
+import type { GameObjectType, GameObjectState, ComponentType } from '../../enums';
 
 /**
  * Debug information interface

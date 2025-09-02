@@ -6,30 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Cache states
- */
-export enum CacheState {
-  VALID = 'valid',
-  INVALID = 'invalid',
-  EXPIRED = 'expired',
-  PENDING = 'pending'
-}
-
-/**
- * Cache types
- */
-export enum CacheType {
-  TEXTURE = 'texture',
-  SOUND = 'sound',
-  DATA = 'data',
-  COMPUTED = 'computed',
-  RENDERED = 'rendered',
-  CUSTOM = 'custom'
-}
+import { GameObjectType, CacheState, CacheType } from '../../enums';
 
 /**
  * Interface for cached game objects
@@ -37,7 +14,7 @@ export enum CacheType {
  * Extends IGameObject with caching functionality.
  */
 export interface ICachedObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.CACHED_OBJECT;
+  readonly gameObjectType: GameObjectType;
   
   /** Cache state */
   cacheState: CacheState;

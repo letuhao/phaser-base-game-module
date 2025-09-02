@@ -7,6 +7,7 @@
 
 import * as Phaser from 'phaser';
 import type { IGameObject } from '../IGameObject';
+import { GameObjectType, AudioType, AudioFilterType } from '../../enums';
 
 /**
  * Interface for audio game objects
@@ -29,10 +30,10 @@ export interface IAudioObject extends IGameObject {
   // ============================================================================
   
   /** The type of this game object (always 'audio') */
-  readonly gameObjectType: 'audio';
+  readonly gameObjectType: GameObjectType;
   
   /** The specific type of audio element */
-  readonly audioType: 'sound' | 'music' | 'ambient' | 'voice' | 'effect' | 'loop' | 'stream' | 'synthesizer';
+  readonly audioType: AudioType;
   
   // ============================================================================
   // AUDIO PROPERTIES
@@ -108,7 +109,7 @@ export interface IAudioObject extends IGameObject {
   coneOuterGain: number;
   
   /** Audio filter type */
-  filterType: 'lowpass' | 'highpass' | 'bandpass' | 'lowshelf' | 'highshelf' | 'peaking' | 'notch' | 'allpass' | 'none';
+  filterType: AudioFilterType;
   
   /** Audio filter frequency */
   filterFrequency: number;
@@ -205,7 +206,7 @@ export interface IAudioObject extends IGameObject {
   setAudioCone(innerAngle: number, outerAngle: number, outerGain: number): this;
   
   /** Set audio filter */
-  setAudioFilter(type: 'lowpass' | 'highpass' | 'bandpass' | 'lowshelf' | 'highshelf' | 'peaking' | 'notch' | 'allpass' | 'none', frequency: number, Q: number, gain: number): this;
+  setAudioFilter(type: AudioFilterType, frequency: number, Q: number, gain: number): this;
   
   /** Set audio compression */
   setAudioCompression(threshold: number, ratio: number, attack: number, release: number): this;
@@ -277,7 +278,7 @@ export interface IAudioObject extends IGameObject {
   getAudioCone(): { innerAngle: number; outerAngle: number; outerGain: number };
   
   /** Get audio filter parameters */
-  getAudioFilter(): { type: string; frequency: number; Q: number; gain: number };
+  getAudioFilter(): { type: AudioFilterType; frequency: number; Q: number; gain: number };
   
   /** Get audio compression parameters */
   getAudioCompression(): { threshold: number; ratio: number; attack: number; release: number };

@@ -6,42 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, GraphicsLineStyle, GraphicsFillStyle, GraphicsPathCommand } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Graphics line styles
- */
-export enum GraphicsLineStyle {
-  SOLID = 'solid',
-  DASHED = 'dashed',
-  DOTTED = 'dotted',
-  DASH_DOT = 'dash-dot',
-  DASH_DOT_DOT = 'dash-dot-dot'
-}
-
-/**
- * Graphics fill styles
- */
-export enum GraphicsFillStyle {
-  SOLID = 'solid',
-  GRADIENT = 'gradient',
-  PATTERN = 'pattern',
-  TEXTURE = 'texture'
-}
-
-/**
- * Graphics path commands
- */
-export enum GraphicsPathCommand {
-  MOVE_TO = 'moveTo',
-  LINE_TO = 'lineTo',
-  ARC = 'arc',
-  ARC_TO = 'arcTo',
-  BEZIER_CURVE_TO = 'bezierCurveTo',
-  QUADRATIC_CURVE_TO = 'quadraticCurveTo',
-  CLOSE_PATH = 'closePath'
-}
 
 /**
  * Interface for graphics game objects
@@ -63,7 +29,7 @@ export interface IGraphics extends IGameObject {
   // ============================================================================
   
   /** The specific type of game object (always 'graphics') */
-  readonly gameObjectType: GameObjectType.GRAPHICS;
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // GRAPHICS PROPERTIES

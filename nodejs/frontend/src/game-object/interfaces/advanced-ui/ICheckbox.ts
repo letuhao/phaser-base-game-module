@@ -6,17 +6,8 @@
  */
 
 import type { IContainer } from '../container/IContainer';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, LabelPositionType, CheckboxState } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Checkbox states
- */
-export enum CheckboxState {
-  UNCHECKED = 'unchecked',
-  CHECKED = 'checked',
-  INDETERMINATE = 'indeterminate'
-}
 
 /**
  * Interface for checkbox UI game objects
@@ -24,7 +15,7 @@ export enum CheckboxState {
  * Extends IContainer with checkbox-specific functionality.
  */
 export interface ICheckbox extends IContainer {
-  readonly gameObjectType: GameObjectType.CHECKBOX;
+  readonly gameObjectType: GameObjectType;
   
   /** Checkbox state */
   checkboxState: CheckboxState;
@@ -57,7 +48,7 @@ export interface ICheckbox extends IContainer {
   checkboxLabelText: string;
   
   /** Checkbox label position */
-  checkboxLabelPosition: 'left' | 'right' | 'top' | 'bottom';
+  checkboxLabelPosition: LabelPositionType;
   
   /** Checkbox label offset */
   checkboxLabelOffset: { x: number; y: number };
@@ -105,7 +96,7 @@ export interface ICheckbox extends IContainer {
   setCheckboxLabelText(text: string): this;
   
   /** Set checkbox label position */
-  setCheckboxLabelPosition(position: 'left' | 'right' | 'top' | 'bottom'): this;
+  setCheckboxLabelPosition(position: LabelPositionType): this;
   
   /** Set checkbox label offset */
   setCheckboxLabelOffset(x: number, y: number): this;
@@ -165,7 +156,7 @@ export interface ICheckbox extends IContainer {
   getCheckboxLabelText(): string;
   
   /** Get checkbox label position */
-  getCheckboxLabelPosition(): 'left' | 'right' | 'top' | 'bottom';
+  getCheckboxLabelPosition(): LabelPositionType;
   
   /** Get checkbox label offset */
   getCheckboxLabelOffset(): { x: number; y: number };

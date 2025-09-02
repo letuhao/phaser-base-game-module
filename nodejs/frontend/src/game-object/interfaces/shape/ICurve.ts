@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IShape } from './IShape';
+import { ShapeType, CurveType } from '../../enums';
 
 /**
  * Interface for curve shape game objects
@@ -28,10 +29,10 @@ export interface ICurve extends IShape {
   // ============================================================================
   
   /** The specific type of shape (always 'curve') */
-  readonly shapeType: 'curve';
+  readonly shapeType: ShapeType.CURVE;
   
   /** The type of curve */
-  readonly curveType: 'bezier' | 'quadratic' | 'cubic' | 'spline' | 'catmull-rom';
+  readonly curveType: CurveType;
   
   // ============================================================================
   // CURVE PROPERTIES

@@ -6,6 +6,7 @@
  */
 
 import type { IEffect } from './IEffect';
+import { EffectQualityLevel } from '../../enums';
 
 /**
  * Effect system configuration
@@ -13,7 +14,7 @@ import type { IEffect } from './IEffect';
 export interface IEffectSystemConfig {
   maxEffects: number;
   performanceBudget: number;
-  qualityLevel: 'low' | 'medium' | 'high' | 'ultra';
+  qualityLevel: EffectQualityLevel;
   enableDebug: boolean;
   enableProfiling: boolean;
 }

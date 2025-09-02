@@ -6,50 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, BitmapTextAlign, BitmapTextBlendMode, BitmapTextWordWrap } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Bitmap text align modes
- */
-export enum BitmapTextAlign {
-  LEFT = 'left',
-  CENTER = 'center',
-  RIGHT = 'right',
-  JUSTIFY = 'justify'
-}
-
-/**
- * Bitmap text blend modes
- */
-export enum BitmapTextBlendMode {
-  NORMAL = 'normal',
-  ADD = 'add',
-  MULTIPLY = 'multiply',
-  SCREEN = 'screen',
-  OVERLAY = 'overlay',
-  DARKEN = 'darken',
-  LIGHTEN = 'lighten',
-  COLOR_DODGE = 'color-dodge',
-  COLOR_BURN = 'color-burn',
-  HARD_LIGHT = 'hard-light',
-  SOFT_LIGHT = 'soft-light',
-  DIFFERENCE = 'difference',
-  EXCLUSION = 'exclusion',
-  HUE = 'hue',
-  SATURATION = 'saturation',
-  COLOR = 'color',
-  LUMINOSITY = 'luminosity'
-}
-
-/**
- * Bitmap text word wrap modes
- */
-export enum BitmapTextWordWrap {
-  NONE = 'none',
-  WORD = 'word',
-  CHAR = 'char'
-}
 
 /**
  * Interface for bitmap text game objects
@@ -71,7 +29,7 @@ export interface IBitmapText extends IGameObject {
   // ============================================================================
   
   /** The specific type of game object (always 'bitmapText') */
-  readonly gameObjectType: GameObjectType.BITMAP_TEXT;
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // BITMAP TEXT PROPERTIES

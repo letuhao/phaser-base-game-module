@@ -6,25 +6,8 @@
  */
 
 import type { IContainer } from '../container/IContainer';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, LabelPositionType, ProgressBarOrientation, ProgressBarFillMode } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Progress bar orientations
- */
-export enum ProgressBarOrientation {
-  HORIZONTAL = 'horizontal',
-  VERTICAL = 'vertical'
-}
-
-/**
- * Progress bar fill modes
- */
-export enum ProgressBarFillMode {
-  FILL = 'fill',
-  STRETCH = 'stretch',
-  TILE = 'tile'
-}
 
 /**
  * Interface for progress bar UI game objects
@@ -32,7 +15,7 @@ export enum ProgressBarFillMode {
  * Extends IContainer with progress bar-specific functionality.
  */
 export interface IProgressBar extends IContainer {
-  readonly gameObjectType: GameObjectType.PROGRESS_BAR;
+  readonly gameObjectType: GameObjectType;
   
   /** Progress bar orientation */
   progressBarOrientation: ProgressBarOrientation;
@@ -83,7 +66,7 @@ export interface IProgressBar extends IContainer {
   progressBarLabelText: string;
   
   /** Progress bar label position */
-  progressBarLabelPosition: 'left' | 'right' | 'top' | 'bottom' | 'center';
+  progressBarLabelPosition: LabelPositionType;
   
   /** Progress bar label offset */
   progressBarLabelOffset: { x: number; y: number };
@@ -155,7 +138,7 @@ export interface IProgressBar extends IContainer {
   setProgressBarLabelText(text: string): this;
   
   /** Set progress bar label position */
-  setProgressBarLabelPosition(position: 'left' | 'right' | 'top' | 'bottom' | 'center'): this;
+  setProgressBarLabelPosition(position: LabelPositionType): this;
   
   /** Set progress bar label offset */
   setProgressBarLabelOffset(x: number, y: number): this;
@@ -242,7 +225,7 @@ export interface IProgressBar extends IContainer {
   getProgressBarLabelText(): string;
   
   /** Get progress bar label position */
-  getProgressBarLabelPosition(): 'left' | 'right' | 'top' | 'bottom' | 'center';
+  getProgressBarLabelPosition(): LabelPositionType;
   
   /** Get progress bar label offset */
   getProgressBarLabelOffset(): { x: number; y: number };

@@ -6,30 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, PhysicsBodyType, PhysicsMaterialType } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Physics body types
- */
-export enum PhysicsBodyType {
-  STATIC = 'static',
-  DYNAMIC = 'dynamic',
-  KINEMATIC = 'kinematic'
-}
-
-/**
- * Physics material types
- */
-export enum PhysicsMaterialType {
-  DEFAULT = 'default',
-  RUBBER = 'rubber',
-  METAL = 'metal',
-  WOOD = 'wood',
-  GLASS = 'glass',
-  ICE = 'ice',
-  CUSTOM = 'custom'
-}
 
 /**
  * Interface for physics-enabled game objects
@@ -43,7 +21,7 @@ export interface IPhysicsObject extends IGameObject {
   // ============================================================================
   
   /** The specific type of game object (always 'physics') */
-  readonly gameObjectType: GameObjectType.PHYSICS;
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // PHYSICS PROPERTIES

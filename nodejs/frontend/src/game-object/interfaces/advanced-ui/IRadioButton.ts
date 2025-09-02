@@ -6,17 +6,8 @@
  */
 
 import type { IContainer } from '../container/IContainer';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, LabelPositionType, RadioButtonState } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Radio button states
- */
-export enum RadioButtonState {
-  UNSELECTED = 'unselected',
-  SELECTED = 'selected',
-  DISABLED = 'disabled'
-}
 
 /**
  * Interface for radio button UI game objects
@@ -24,7 +15,7 @@ export enum RadioButtonState {
  * Extends IContainer with radio button-specific functionality.
  */
 export interface IRadioButton extends IContainer {
-  readonly gameObjectType: GameObjectType.RADIO_BUTTON;
+  readonly gameObjectType: GameObjectType;
   
   /** Radio button state */
   radioButtonState: RadioButtonState;
@@ -57,7 +48,7 @@ export interface IRadioButton extends IContainer {
   radioButtonLabelText: string;
   
   /** Radio button label position */
-  radioButtonLabelPosition: 'left' | 'right' | 'top' | 'bottom';
+  radioButtonLabelPosition: LabelPositionType;
   
   /** Radio button label offset */
   radioButtonLabelOffset: { x: number; y: number };
@@ -108,7 +99,7 @@ export interface IRadioButton extends IContainer {
   setRadioButtonLabelText(text: string): this;
   
   /** Set radio button label position */
-  setRadioButtonLabelPosition(position: 'left' | 'right' | 'top' | 'bottom'): this;
+  setRadioButtonLabelPosition(position: LabelPositionType): this;
   
   /** Set radio button label offset */
   setRadioButtonLabelOffset(x: number, y: number): this;
@@ -168,7 +159,7 @@ export interface IRadioButton extends IContainer {
   getRadioButtonLabelText(): string;
   
   /** Get radio button label position */
-  getRadioButtonLabelPosition(): 'left' | 'right' | 'top' | 'bottom';
+  getRadioButtonLabelPosition(): LabelPositionType;
   
   /** Get radio button label offset */
   getRadioButtonLabelOffset(): { x: number; y: number };

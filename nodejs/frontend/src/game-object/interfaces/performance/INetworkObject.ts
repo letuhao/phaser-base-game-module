@@ -6,39 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Network states
- */
-export enum NetworkState {
-  LOCAL = 'local',
-  REMOTE = 'remote',
-  SYNCHRONIZING = 'synchronizing',
-  CONFLICT = 'conflict',
-  DISCONNECTED = 'disconnected'
-}
-
-/**
- * Network authorities
- */
-export enum NetworkAuthority {
-  SERVER = 'server',
-  CLIENT = 'client',
-  OWNER = 'owner',
-  NONE = 'none'
-}
-
-/**
- * Network update modes
- */
-export enum NetworkUpdateMode {
-  CONTINUOUS = 'continuous',
-  ON_CHANGE = 'on_change',
-  MANUAL = 'manual',
-  INTERVAL = 'interval'
-}
+import { GameObjectType, NetworkState, NetworkAuthority, NetworkUpdateMode } from '../../enums';
 
 /**
  * Interface for network game objects
@@ -46,7 +14,7 @@ export enum NetworkUpdateMode {
  * Extends IGameObject with network synchronization functionality.
  */
 export interface INetworkObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.NETWORK_OBJECT;
+  readonly gameObjectType: GameObjectType;
   
   /** Network state */
   networkState: NetworkState;

@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IShape } from './IShape';
+import { ShapeType } from '../../enums';
 
 /**
  * Interface for polygon shape game objects
@@ -28,7 +29,7 @@ export interface IPolygon extends IShape {
   // ============================================================================
   
   /** The specific type of shape (always 'polygon') */
-  readonly shapeType: 'polygon';
+  readonly shapeType: ShapeType.POLYGON;
   
   // ============================================================================
   // POLYGON PROPERTIES

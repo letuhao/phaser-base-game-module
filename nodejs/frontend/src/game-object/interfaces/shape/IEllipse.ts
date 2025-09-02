@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IShape } from './IShape';
+import { ShapeType } from '../../enums';
 
 /**
  * Interface for ellipse shape game objects
@@ -28,7 +29,7 @@ export interface IEllipse extends IShape {
   // ============================================================================
   
   /** The specific type of shape (always 'ellipse') */
-  readonly shapeType: 'ellipse';
+  readonly shapeType: ShapeType.ELLIPSE;
   
   // ============================================================================
   // ELLIPSE PROPERTIES

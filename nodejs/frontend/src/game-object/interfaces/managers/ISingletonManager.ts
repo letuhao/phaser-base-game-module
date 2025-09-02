@@ -6,19 +6,8 @@
  */
 
 import type { ISingleton } from '../patterns/ISingleton';
+import { ManagerType, AccessType } from '../../enums';
 import type { IGameObject } from '../IGameObject';
-
-/**
- * Singleton manager operations
- */
-export enum SingletonManagerOperation {
-  CREATE_SINGLETON = 'create_singleton',
-  DESTROY_SINGLETON = 'destroy_singleton',
-  GET_INSTANCE = 'get_instance',
-  RESET_SINGLETON = 'reset_singleton',
-  MANAGE_SINGLETON = 'manage_singleton',
-  VALIDATE_SINGLETON = 'validate_singleton'
-}
 
 /**
  * Singleton manager configuration
@@ -66,7 +55,7 @@ export interface SingletonInstance {
 export interface SingletonAccessContext {
   contextId: string;
   singletonId: string;
-  accessType: 'get' | 'create' | 'reset';
+  accessType: AccessType;
   accessParameters: Record<string, any>;
   accessMetadata?: Record<string, any>;
 }
@@ -141,7 +130,7 @@ export interface ISingletonManager {
   hasSingleton(singletonId: string): boolean;
   
   /** Get singletons by type */
-  getSingletonsByType(type: string): ISingleton[];
+  getSingletonsByType(type: ManagerType): ISingleton[];
   
   /** Get instance by ID */
   getInstance(instanceId: string): SingletonInstance | null;

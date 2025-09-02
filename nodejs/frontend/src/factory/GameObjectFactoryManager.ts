@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 import { logger } from '../core/Logger';
 import { IGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
-import type { IFactoryInput, convertToFactoryInput } from './interfaces/IFactoryInput';
+import type { IFactoryInput } from './interfaces/IFactoryInput';
 import { ContainerFactory } from './ContainerFactory';
 import { ImageFactory } from './ImageFactory';
 import { TextFactory } from './TextFactory';

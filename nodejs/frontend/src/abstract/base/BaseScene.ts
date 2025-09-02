@@ -776,7 +776,13 @@ export abstract class BaseScene extends Phaser.Scene {
         );
 
         // Fallback to factory manager
-        gameObject = this.factoryManager.createGameObject(objConfig, this);
+        const factoryInput = {
+          id: objConfig.id || 'unknown',
+          type: objConfig.type || 'container',
+          scene: this,
+          config: objConfig
+        };
+        gameObject = this.factoryManager.createGameObject(factoryInput);
 
         this.logger.debug(
           'BaseScene',

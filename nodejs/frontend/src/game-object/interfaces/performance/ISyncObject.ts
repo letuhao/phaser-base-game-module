@@ -6,40 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Sync states
- */
-export enum SyncState {
-  SYNCHRONIZED = 'synchronized',
-  PENDING = 'pending',
-  CONFLICT = 'conflict',
-  OUT_OF_SYNC = 'out_of_sync',
-  DISABLED = 'disabled'
-}
-
-/**
- * Sync modes
- */
-export enum SyncMode {
-  AUTOMATIC = 'automatic',
-  MANUAL = 'manual',
-  ON_DEMAND = 'on_demand',
-  INTERVAL = 'interval'
-}
-
-/**
- * Conflict resolution strategies
- */
-export enum ConflictResolutionStrategy {
-  SERVER_WINS = 'server_wins',
-  CLIENT_WINS = 'client_wins',
-  LAST_WRITE_WINS = 'last_write_wins',
-  MERGE = 'merge',
-  CUSTOM = 'custom'
-}
+import { GameObjectType, SyncState, SyncMode, ConflictResolutionStrategy } from '../../enums';
 
 /**
  * Interface for sync game objects
@@ -47,7 +14,7 @@ export enum ConflictResolutionStrategy {
  * Extends IGameObject with synchronization functionality.
  */
 export interface ISyncObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.SYNC_OBJECT;
+  readonly gameObjectType: GameObjectType;
   
   /** Sync state */
   syncState: SyncState;

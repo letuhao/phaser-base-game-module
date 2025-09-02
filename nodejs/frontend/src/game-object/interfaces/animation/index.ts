@@ -17,8 +17,8 @@ export type { ITimelineObject } from './ITimelineObject';
 // ANIMATION ENUMS
 // ============================================================================
 
-export { AnimationState, AnimationDirection } from './IAnimatedObject';
-export { TweenEasingType } from './ITweenObject';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/animation/AnimationEnums.ts
 
 // ============================================================================
 // ANIMATION INTERFACE BUNDLES

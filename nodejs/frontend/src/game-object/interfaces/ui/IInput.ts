@@ -5,6 +5,7 @@
  */
 
 import type { IUIObject } from './IUIObject';
+import { InputType, UISize, InputVariant, ValidationState, UIType } from '../../enums';
 
 /**
  * Interface for input UI game objects
@@ -27,7 +28,7 @@ export interface IInput extends IUIObject {
   // ============================================================================
   
   /** The specific type of UI element (always 'input') */
-  readonly uiType: 'input';
+  readonly uiType: UIType.INPUT;
   
   // ============================================================================
   // INPUT PROPERTIES
@@ -40,13 +41,13 @@ export interface IInput extends IUIObject {
   placeholder: string;
   
   /** Input type */
-  inputType: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search';
+  inputType: InputType;
   
   /** Input size */
-  inputSize: 'small' | 'medium' | 'large';
+  inputSize: UISize;
   
   /** Input variant */
-  inputVariant: 'outlined' | 'filled' | 'underlined';
+  inputVariant: InputVariant;
   
   /** Maximum input length */
   maxLength: number;
@@ -73,7 +74,7 @@ export interface IInput extends IUIObject {
   rows: number;
   
   /** Input validation state */
-  validationState: 'valid' | 'invalid' | 'pending';
+  validationState: ValidationState;
   
   /** Input validation message */
   validationMessage: string;
@@ -110,13 +111,13 @@ export interface IInput extends IUIObject {
   setPlaceholder(placeholder: string): this;
   
   /** Set input type */
-  setInputType(type: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search'): this;
+  setInputType(type: InputType): this;
   
   /** Set input size */
-  setInputSize(size: 'small' | 'medium' | 'large'): this;
+  setInputSize(size: UISize): this;
   
   /** Set input variant */
-  setInputVariant(variant: 'outlined' | 'filled' | 'underlined'): this;
+  setInputVariant(variant: InputVariant): this;
   
   /** Set maximum input length */
   setMaxLength(maxLength: number): this;
@@ -140,7 +141,7 @@ export interface IInput extends IUIObject {
   setMultiline(multiline: boolean, rows?: number): this;
   
   /** Set input validation state */
-  setValidationState(state: 'valid' | 'invalid' | 'pending', message?: string): this;
+  setValidationState(state: ValidationState, message?: string): this;
   
   /** Set input autocomplete */
   setAutocomplete(autocomplete: boolean): this;

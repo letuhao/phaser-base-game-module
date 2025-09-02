@@ -6,30 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Singleton types
- */
-export enum SingletonType {
-  EAGER = 'eager',
-  LAZY = 'lazy',
-  THREAD_SAFE = 'thread_safe',
-  REGISTRY = 'registry',
-  ENUM = 'enum'
-}
-
-/**
- * Singleton states
- */
-export enum SingletonState {
-  UNINITIALIZED = 'uninitialized',
-  INITIALIZING = 'initializing',
-  INITIALIZED = 'initialized',
-  DESTROYED = 'destroyed',
-  ERROR = 'error'
-}
+import { GameObjectType, SingletonType, SingletonState } from '../../enums';
 
 /**
  * Singleton configuration
@@ -49,7 +26,7 @@ export interface SingletonConfig {
  * Extends IGameObject with singleton pattern functionality.
  */
 export interface ISingleton extends IGameObject {
-  readonly gameObjectType: GameObjectType.SINGLETON;
+  readonly gameObjectType: GameObjectType;
   
   /** Singleton type */
   singletonType: SingletonType;

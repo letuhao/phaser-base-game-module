@@ -7,39 +7,21 @@
 
 import type { IGameObject } from '../IGameObject';
 import type { IObserverManager } from '../managers/IObserverManager';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Observer types
- */
-export enum ObserverType {
-  SUBJECT = 'subject',
-  OBSERVER = 'observer',
-  BOTH = 'both'
-}
-
-/**
- * Observer states
- */
-export enum ObserverState {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  SUSPENDED = 'suspended',
-  ERROR = 'error'
-}
+import { GameObjectType, EventType, EventCategory, EventPriority, EventState, ObserverType, ObserverState } from '../../enums';
 
 /**
  * Observer event
  */
 export interface ObserverEvent {
   id: string;
-  type: string;
+  type: EventType;
+  category: EventCategory;
   data: any;
   timestamp: number;
   source: string;
   target?: string;
-  priority: number;
+  priority: EventPriority;
+  state: EventState;
   metadata?: any;
 }
 
@@ -48,9 +30,9 @@ export interface ObserverEvent {
  */
 export interface ObserverSubscription {
   id: string;
-  eventType: string;
+  eventType: EventType;
   callback: (event: ObserverEvent) => void;
-  priority: number;
+  priority: EventPriority;
   once: boolean;
   active: boolean;
   metadata?: any;
@@ -62,7 +44,7 @@ export interface ObserverSubscription {
  * Extends IGameObject with observer pattern functionality.
  */
 export interface IObserver extends IGameObject {
-  readonly gameObjectType: GameObjectType.OBSERVER;
+  readonly gameObjectType: GameObjectType;
   
   /** Observer type */
   observerType: ObserverType;
@@ -173,7 +155,7 @@ export interface IObserver extends IGameObject {
   getObserverMetadata(): any;
   
   /** Subscribe to event */
-  subscribeToEvent(eventType: string, callback: (event: ObserverEvent) => void, options?: { priority?: number; once?: boolean; metadata?: any }): string;
+  subscribeToEvent(eventType: EventType, callback: (event: ObserverEvent) => void, options?: { priority?: EventPriority; once?: boolean; metadata?: any }): string;
   
   /** Unsubscribe from event */
   unsubscribeFromEvent(subscriptionId: string): this;
@@ -194,7 +176,7 @@ export interface IObserver extends IGameObject {
   clearEventHistory(): this;
   
   /** Get events by type */
-  getEventsByType(eventType: string): ObserverEvent[];
+  getEventsByType(eventType: EventType): ObserverEvent[];
   
   /** Get events by source */
   getEventsBySource(source: string): ObserverEvent[];
@@ -203,10 +185,10 @@ export interface IObserver extends IGameObject {
   getEventsByTimeRange(startTime: number, endTime: number): ObserverEvent[];
   
   /** Check if has subscription */
-  hasSubscription(eventType: string): boolean;
+  hasSubscription(eventType: EventType): boolean;
   
   /** Check if has active subscription */
-  hasActiveSubscription(eventType: string): boolean;
+  hasActiveSubscription(eventType: EventType): boolean;
   
   /** Check if can publish */
   canPublish(): boolean;

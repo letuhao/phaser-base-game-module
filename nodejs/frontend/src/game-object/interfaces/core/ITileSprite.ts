@@ -6,41 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, TileSpriteTileMode, TileSpriteBlendMode } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Tile sprite tile modes
- */
-export enum TileSpriteTileMode {
-  NORMAL = 'normal',
-  REPEAT = 'repeat',
-  MIRROR = 'mirror',
-  CLAMP = 'clamp'
-}
-
-/**
- * Tile sprite blend modes
- */
-export enum TileSpriteBlendMode {
-  NORMAL = 'normal',
-  ADD = 'add',
-  MULTIPLY = 'multiply',
-  SCREEN = 'screen',
-  OVERLAY = 'overlay',
-  DARKEN = 'darken',
-  LIGHTEN = 'lighten',
-  COLOR_DODGE = 'color-dodge',
-  COLOR_BURN = 'color-burn',
-  HARD_LIGHT = 'hard-light',
-  SOFT_LIGHT = 'soft-light',
-  DIFFERENCE = 'difference',
-  EXCLUSION = 'exclusion',
-  HUE = 'hue',
-  SATURATION = 'saturation',
-  COLOR = 'color',
-  LUMINOSITY = 'luminosity'
-}
 
 /**
  * Interface for tile sprite game objects
@@ -62,7 +29,7 @@ export interface ITileSprite extends IGameObject {
   // ============================================================================
   
   /** The specific type of game object (always 'tileSprite') */
-  readonly gameObjectType: GameObjectType.TILE_SPRITE;
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // TILE SPRITE PROPERTIES

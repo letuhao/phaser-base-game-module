@@ -7,26 +7,7 @@
 
 import * as Phaser from 'phaser';
 import type { IEffect } from './IEffect';
-
-/**
- * Particle spawn modes
- */
-export enum ParticleSpawnMode {
-  CONTINUOUS = 'continuous',
-  BURST = 'burst',
-  EXPLOSION = 'explosion',
-  TRAIL = 'trail',
-  CUSTOM = 'custom'
-}
-
-/**
- * Particle update modes
- */
-export enum ParticleUpdateMode {
-  PHYSICS = 'physics',
-  KINEMATIC = 'kinematic',
-  CUSTOM = 'custom'
-}
+import { ParticleType, ParticleSpawnMode, ParticleUpdateMode, EffectType } from '../../enums';
 
 /**
  * Interface for particle effects
@@ -49,7 +30,7 @@ export interface IParticleEffect extends IEffect {
   // ============================================================================
   
   /** The specific type of effect (always 'particle') */
-  readonly effectType: 'particle';
+  readonly effectType: EffectType.PARTICLE;
   
   // ============================================================================
   // PARTICLE PROPERTIES
@@ -75,7 +56,7 @@ export interface IParticleEffect extends IEffect {
   
   /** Particle spawn area */
   spawnArea: {
-    type: 'point' | 'circle' | 'rectangle' | 'line' | 'custom';
+    type: ParticleType;
     width?: number;
     height?: number;
     radius?: number;
@@ -185,7 +166,7 @@ export interface IParticleEffect extends IEffect {
   
   /** Set particle spawn area */
   setParticleSpawnArea(area: {
-    type: 'point' | 'circle' | 'rectangle' | 'line' | 'custom';
+    type: ParticleType;
     width?: number;
     height?: number;
     radius?: number;
@@ -254,7 +235,7 @@ export interface IParticleEffect extends IEffect {
   
   /** Get particle spawn area */
   getParticleSpawnArea(): {
-    type: 'point' | 'circle' | 'rectangle' | 'line' | 'custom';
+    type: ParticleType;
     width?: number;
     height?: number;
     radius?: number;

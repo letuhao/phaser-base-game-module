@@ -18,7 +18,8 @@ export type { IDynamicBody } from './IDynamicBody';
 // PHYSICS ENUMS
 // ============================================================================
 
-export { PhysicsBodyType, PhysicsMaterialType } from './IPhysicsObject';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/physics/PhysicsEnums.ts
 
 // ============================================================================
 // PHYSICS INTERFACE BUNDLES

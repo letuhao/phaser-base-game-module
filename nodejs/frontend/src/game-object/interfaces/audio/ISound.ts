@@ -6,6 +6,7 @@
 
 
 import type { IAudioObject } from './IAudioObject';
+import { SoundCategoryType, AudioFormatType, AudioChannelType, AudioQualityLevel, AudioCurveType, AudioType } from '../../enums';
 
 /**
  * Interface for sound audio game objects
@@ -28,14 +29,14 @@ export interface ISound extends IAudioObject {
   // ============================================================================
   
   /** The specific type of audio element (always 'sound') */
-  readonly audioType: 'sound';
+  readonly audioType: AudioType.SOUND;
   
   // ============================================================================
   // SOUND PROPERTIES
   // ============================================================================
   
   /** Sound category */
-  soundCategory: 'effect' | 'ui' | 'ambient' | 'voice' | 'music' | 'notification' | 'alert' | 'feedback';
+  soundCategory: SoundCategoryType;
   
   /** Sound priority (higher = more important) */
   priority: number;
@@ -56,7 +57,7 @@ export interface ISound extends IAudioObject {
   streaming: boolean;
   
   /** Sound compression format */
-  compressionFormat: 'mp3' | 'ogg' | 'wav' | 'aac' | 'flac' | 'webm' | 'm4a';
+  compressionFormat: AudioFormatType;
   
   /** Sound bitrate */
   bitrate: number;
@@ -65,19 +66,19 @@ export interface ISound extends IAudioObject {
   sampleRate: number;
   
   /** Sound channels (mono/stereo) */
-  channels: 'mono' | 'stereo' | 'surround';
+  channels: AudioChannelType;
   
   /** Sound quality level */
-  quality: 'low' | 'medium' | 'high' | 'lossless';
+  quality: AudioQualityLevel;
   
   /** Sound fade in curve */
-  fadeInCurve: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine';
+  fadeInCurve: AudioCurveType;
   
   /** Sound fade out curve */
-  fadeOutCurve: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine';
+  fadeOutCurve: AudioCurveType;
   
   /** Sound crossfade curve */
-  crossfadeCurve: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine';
+  crossfadeCurve: AudioCurveType;
   
   /** Sound envelope attack time */
   envelopeAttack: number;
@@ -141,7 +142,7 @@ export interface ISound extends IAudioObject {
   // ============================================================================
   
   /** Set sound category */
-  setSoundCategory(category: 'effect' | 'ui' | 'ambient' | 'voice' | 'music' | 'notification' | 'alert' | 'feedback'): this;
+  setSoundCategory(category: SoundCategoryType): this;
   
   /** Set sound priority */
   setPriority(priority: number): this;
@@ -159,7 +160,7 @@ export interface ISound extends IAudioObject {
   setStreaming(streaming: boolean): this;
   
   /** Set sound compression format */
-  setCompressionFormat(format: 'mp3' | 'ogg' | 'wav' | 'aac' | 'flac' | 'webm' | 'm4a'): this;
+  setCompressionFormat(format: AudioFormatType): this;
   
   /** Set sound bitrate */
   setBitrate(bitrate: number): this;
@@ -168,16 +169,16 @@ export interface ISound extends IAudioObject {
   setSampleRate(sampleRate: number): this;
   
   /** Set sound channels */
-  setChannels(channels: 'mono' | 'stereo' | 'surround'): this;
+  setChannels(channels: AudioChannelType): this;
   
   /** Set sound quality level */
-  setQuality(quality: 'low' | 'medium' | 'high' | 'lossless'): this;
+  setQuality(quality: AudioQualityLevel): this;
   
   /** Set sound fade curves */
-  setFadeCurves(fadeIn: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine', fadeOut: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine'): this;
+  setFadeCurves(fadeIn: AudioCurveType, fadeOut: AudioCurveType): this;
   
   /** Set sound crossfade curve */
-  setCrossfadeCurve(curve: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine'): this;
+  setCrossfadeCurve(curve: AudioCurveType): this;
   
   /** Set sound envelope */
   setEnvelope(attack: number, decay: number, sustain: number, release: number): this;
@@ -288,7 +289,7 @@ export interface ISound extends IAudioObject {
   optimizeSound(): this;
   
   /** Compress sound */
-  compressSound(quality: 'low' | 'medium' | 'high'): this;
+  compressSound(quality: AudioQualityLevel): this;
   
   /** Decompress sound */
   decompressSound(): this;

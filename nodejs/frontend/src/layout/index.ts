@@ -189,7 +189,7 @@ export {
   VerticalAlignment,
   
   // Size enums
-  SizeValueType,
+  // SizeValueType removed - use SizeValue from unit system
   
   // Border enums
   BorderStyle,

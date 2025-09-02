@@ -6,31 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Builder types
- */
-export enum BuilderType {
-  FLUENT = 'fluent',
-  STEP_BY_STEP = 'step_by_step',
-  CHAINED = 'chained',
-  VALIDATED = 'validated',
-  TEMPLATE = 'template'
-}
-
-/**
- * Builder states
- */
-export enum BuilderState {
-  INITIALIZED = 'initialized',
-  BUILDING = 'building',
-  VALIDATING = 'validating',
-  COMPLETED = 'completed',
-  ERROR = 'error',
-  CANCELLED = 'cancelled'
-}
+import { GameObjectType, BuilderType, BuilderState } from '../../enums';
 
 /**
  * Builder step
@@ -63,7 +39,7 @@ export interface BuilderConfig {
  * Extends IGameObject with builder pattern functionality.
  */
 export interface IBuilder extends IGameObject {
-  readonly gameObjectType: GameObjectType.BUILDER;
+  readonly gameObjectType: GameObjectType;
   
   /** Builder type */
   builderType: BuilderType;

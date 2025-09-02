@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
 import { Logger } from '../core/Logger';
+import type { IFactoryInput } from './interfaces/IFactoryInput';
 
 /**
  * Factory for creating button game objects
@@ -15,8 +16,13 @@ export class ButtonFactory extends BaseGameObjectFactory {
   /**
    * Create a button game object from configuration
    */
-  createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.Container | null {
+  createGameObject(input: IFactoryInput): Phaser.GameObjects.Container | null {
+    // Extract config and scene from input
+    const config = (input as any).config || {};
+    const scene = input.scene;
+    
     try {
+      
       // Create a container for the button
       const button = scene.add.container(config.x || 0, config.y || 0);
 
@@ -88,7 +94,7 @@ export class ButtonFactory extends BaseGameObjectFactory {
       this.logger.error(
         'ButtonFactory',
         'createGameObject',
-        `Error creating button '${config.id}':`,
+        `Error creating button '${config?.id || 'unknown'}':`,
         error
       );
       return null;

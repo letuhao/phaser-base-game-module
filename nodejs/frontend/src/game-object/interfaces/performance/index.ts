@@ -18,11 +18,8 @@ export type { ISyncObject } from './ISyncObject';
 // PERFORMANCE ENUMS
 // ============================================================================
 
-export { PoolState, PoolType } from './IPooledObject';
-export { CacheState, CacheType } from './ICachedObject';
-export { LODLevel, CullingType, OptimizationState } from './IOptimizedObject';
-export { NetworkState, NetworkAuthority, NetworkUpdateMode } from './INetworkObject';
-export { SyncState, SyncMode, ConflictResolutionStrategy } from './ISyncObject';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/performance/PerformanceEnums.ts and ../../enums/network/NetworkEnums.ts
 
 // ============================================================================
 // PERFORMANCE INTERFACE BUNDLES

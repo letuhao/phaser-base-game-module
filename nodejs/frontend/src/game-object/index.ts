@@ -37,11 +37,8 @@ export type {
   GameObjectProperty,
   ComponentType,
   ComponentState,
-  LayoutType,
-  ThemeType,
-  AnimationType,
+  // LayoutType, ThemeType, AnimationType, PhysicsBodyType removed - use Layout System
   InputType,
-  PhysicsBodyType,
   AudioType,
   NetworkMessageType,
   DebugLevel,

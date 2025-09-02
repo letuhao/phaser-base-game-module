@@ -6,7 +6,7 @@
  */
 
 import * as Phaser from 'phaser';
-import type { GameObjectType, GameObjectState } from '../constants/GameObjectConstants';
+import type { GameObjectType, GameObjectState } from '../../enums';
 
 /**
  * Interface for game object identity and basic metadata

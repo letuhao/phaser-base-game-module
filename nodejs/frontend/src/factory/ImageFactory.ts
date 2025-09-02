@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { BaseGameObjectFactory } from '../abstract/factories/IGameObjectFactory';
 import { Logger } from '../core/Logger';
+import type { IFactoryInput } from './interfaces/IFactoryInput';
 
 /**
  * Factory for creating image game objects
@@ -15,8 +16,13 @@ export class ImageFactory extends BaseGameObjectFactory {
   /**
    * Create an image game object from configuration
    */
-  createGameObject(config: any, scene: Phaser.Scene): Phaser.GameObjects.Image | null {
+  createGameObject(input: IFactoryInput): Phaser.GameObjects.Image | null {
+    // Extract config and scene from input
+    const config = (input as any).config || {};
+    const scene = input.scene;
+    
     try {
+      
       // Check if the texture key exists
       if (!config.textureKey || !scene.textures.exists(config.textureKey)) {
         this.logger.warn(
@@ -57,7 +63,7 @@ export class ImageFactory extends BaseGameObjectFactory {
       this.logger.error(
         'ImageFactory',
         'createGameObject',
-        `Error creating image '${config.id}':`,
+        `Error creating image '${config?.id || 'unknown'}':`,
         error
       );
       return null;

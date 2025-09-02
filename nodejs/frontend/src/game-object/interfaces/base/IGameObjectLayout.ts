@@ -6,7 +6,7 @@
  */
 
 import * as Phaser from 'phaser';
-import type { ILayoutStyle } from '../../layout/interfaces/IStyle';
+import type { ILayoutStyle } from '../../../layout/interfaces/IStyle';
 
 /**
  * Interface for game object layout system integration

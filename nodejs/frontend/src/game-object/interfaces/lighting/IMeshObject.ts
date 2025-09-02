@@ -6,35 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { LightCullFaceType, GameObjectType, MeshType, MeshRenderMode } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Mesh types
- */
-export enum MeshType {
-  TRIANGLE = 'triangle',
-  QUAD = 'quad',
-  CUBE = 'cube',
-  SPHERE = 'sphere',
-  CYLINDER = 'cylinder',
-  CONE = 'cone',
-  PLANE = 'plane',
-  CUSTOM = 'custom'
-}
-
-/**
- * Mesh render modes
- */
-export enum MeshRenderMode {
-  TRIANGLES = 'triangles',
-  TRIANGLE_STRIP = 'triangle_strip',
-  TRIANGLE_FAN = 'triangle_fan',
-  LINES = 'lines',
-  LINE_STRIP = 'line_strip',
-  LINE_LOOP = 'line_loop',
-  POINTS = 'points'
-}
 
 /**
  * Interface for mesh game objects
@@ -42,7 +15,7 @@ export enum MeshRenderMode {
  * Extends IGameObject with mesh-specific functionality.
  */
 export interface IMeshObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.MESH;
+  readonly gameObjectType: GameObjectType;
   
   /** Mesh type */
   meshType: MeshType;
@@ -120,7 +93,7 @@ export interface IMeshObject extends IGameObject {
   meshVisible: boolean;
   
   /** Mesh cull face */
-  meshCullFace: 'front' | 'back' | 'none';
+  meshCullFace: LightCullFaceType;
   
   /** Mesh depth test */
   meshDepthTest: boolean;
@@ -207,7 +180,7 @@ export interface IMeshObject extends IGameObject {
   setMeshVisible(visible: boolean): this;
   
   /** Set mesh cull face */
-  setMeshCullFace(face: 'front' | 'back' | 'none'): this;
+  setMeshCullFace(face: LightCullFaceType): this;
   
   /** Set mesh depth test */
   setMeshDepthTest(test: boolean): this;
@@ -294,7 +267,7 @@ export interface IMeshObject extends IGameObject {
   getMeshVisible(): boolean;
   
   /** Get mesh cull face */
-  getMeshCullFace(): 'front' | 'back' | 'none';
+  getMeshCullFace(): LightCullFaceType;
   
   /** Get mesh depth test */
   getMeshDepthTest(): boolean;

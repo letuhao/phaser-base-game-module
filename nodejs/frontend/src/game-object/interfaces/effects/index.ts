@@ -17,12 +17,8 @@ export type { IEffectSystem } from './IEffectSystem';
 // EFFECTS ENUMS
 // ============================================================================
 
-export { EffectState } from './IEffect';
-export { EffectPriority } from './IEffect';
-export { ParticleSpawnMode } from './IParticleEffect';
-export { ParticleUpdateMode } from './IParticleEffect';
-export { EnvironmentalEffectType } from './IEnvironmentalEffect';
-export { WeatherCondition } from './IEnvironmentalEffect';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/effects/EffectEnums.ts and ../../enums/effects/EffectStateEnums.ts
 
 // ============================================================================
 // EFFECTS INTERFACE BUNDLES

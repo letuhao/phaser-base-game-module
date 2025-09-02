@@ -6,28 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-
-/**
- * Effect lifecycle states
- */
-export enum EffectState {
-  IDLE = 'idle',
-  INITIALIZING = 'initializing',
-  ACTIVE = 'active',
-  PAUSED = 'paused',
-  STOPPING = 'stopping',
-  DESTROYED = 'destroyed'
-}
-
-/**
- * Effect priority levels
- */
-export enum EffectPriority {
-  LOW = 0,
-  NORMAL = 1,
-  HIGH = 2,
-  CRITICAL = 3
-}
+import { GameObjectType, EffectType, EffectQualityLevel, EffectState, EffectPriority } from '../../enums';
 
 /**
  * Base interface for all effects
@@ -50,10 +29,10 @@ export interface IEffect extends IGameObject {
   // ============================================================================
   
   /** The type of this game object (always 'effect') */
-  readonly gameObjectType: 'effect';
+  readonly gameObjectType: GameObjectType;
   
   /** The specific type of effect */
-  readonly effectType: 'particle' | 'environmental' | 'visual' | 'audio' | 'physics' | 'composite';
+  readonly effectType: EffectType;
   
   // ============================================================================
   // EFFECT PROPERTIES
@@ -111,7 +90,7 @@ export interface IEffect extends IGameObject {
   performanceBudget: number;
   
   /** Effect quality level */
-  qualityLevel: 'low' | 'medium' | 'high' | 'ultra';
+  qualityLevel: EffectQualityLevel;
   
   /** Effect debug mode */
   debugMode: boolean;
@@ -163,7 +142,7 @@ export interface IEffect extends IGameObject {
   setEffectVisible(visible: boolean): this;
   
   /** Set effect quality level */
-  setEffectQuality(quality: 'low' | 'medium' | 'high' | 'ultra'): this;
+  setEffectQuality(quality: EffectQualityLevel): this;
   
   /** Set effect performance budget */
   setEffectPerformanceBudget(budget: number): this;

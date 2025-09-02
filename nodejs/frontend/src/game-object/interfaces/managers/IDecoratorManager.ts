@@ -7,18 +7,7 @@
 
 import type { IDecorator } from '../patterns/IDecorator';
 import type { IGameObject } from '../IGameObject';
-
-/**
- * Decorator manager operations
- */
-export enum DecoratorManagerOperation {
-  CREATE_DECORATOR = 'create_decorator',
-  DESTROY_DECORATOR = 'destroy_decorator',
-  COMPOSE_DECORATOR = 'compose_decorator',
-  DECOMPOSE_DECORATOR = 'decompose_decorator',
-  MANAGE_DECORATOR = 'manage_decorator',
-  VALIDATE_DECORATOR = 'validate_decorator'
-}
+// DecoratorManagerOperation is now imported from the centralized enum system
 
 /**
  * Decorator manager configuration

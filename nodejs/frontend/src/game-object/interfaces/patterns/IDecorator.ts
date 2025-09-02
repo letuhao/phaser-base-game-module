@@ -7,31 +7,7 @@
 
 import type { IGameObject } from '../IGameObject';
 import type { IDecoratorManager } from '../managers/IDecoratorManager';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Decorator types
- */
-export enum DecoratorType {
-  BEHAVIOR = 'behavior',
-  VISUAL = 'visual',
-  FUNCTIONAL = 'functional',
-  PERFORMANCE = 'performance',
-  SECURITY = 'security',
-  CUSTOM = 'custom'
-}
-
-/**
- * Decorator states
- */
-export enum DecoratorState {
-  ATTACHED = 'attached',
-  DETACHED = 'detached',
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  ERROR = 'error'
-}
+import { GameObjectType, DecoratorType, DecoratorState } from '../../enums';
 
 /**
  * Decorator configuration
@@ -62,7 +38,7 @@ export interface DecoratorChain {
  * Extends IGameObject with decorator pattern functionality.
  */
 export interface IDecorator extends IGameObject {
-  readonly gameObjectType: GameObjectType.DECORATOR;
+  readonly gameObjectType: GameObjectType;
   
   /** Decorator type */
   decoratorType: DecoratorType;

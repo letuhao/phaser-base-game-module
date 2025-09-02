@@ -7,29 +7,8 @@
 
 import type { IGameObject } from '../IGameObject';
 import type { IFactoryManager } from '../managers/IFactoryManager';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, FactoryType, FactoryState } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Factory types
- */
-export enum FactoryType {
-  SIMPLE = 'simple',
-  BUILDER = 'builder',
-  PROTOTYPE = 'prototype',
-  ABSTRACT = 'abstract',
-  SINGLETON = 'singleton'
-}
-
-/**
- * Factory states
- */
-export enum FactoryState {
-  IDLE = 'idle',
-  CREATING = 'creating',
-  ERROR = 'error',
-  DISABLED = 'disabled'
-}
 
 /**
  * Factory configuration
@@ -64,7 +43,7 @@ export interface FactoryOptions {
  * Extends IGameObject with factory pattern functionality.
  */
 export interface IFactory extends IGameObject {
-  readonly gameObjectType: GameObjectType.FACTORY;
+  readonly gameObjectType: GameObjectType;
   
   /** Factory type */
   factoryType: FactoryType;

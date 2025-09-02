@@ -6,38 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, LODLevel, CullingType, OptimizationState } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * LOD levels
- */
-export enum LODLevel {
-  HIGH = 'high',
-  MEDIUM = 'medium',
-  LOW = 'low',
-  ULTRA_LOW = 'ultra_low'
-}
-
-/**
- * Culling types
- */
-export enum CullingType {
-  FRUSTUM = 'frustum',
-  OCCLUSION = 'occlusion',
-  DISTANCE = 'distance',
-  CUSTOM = 'custom'
-}
-
-/**
- * Optimization states
- */
-export enum OptimizationState {
-  OPTIMIZED = 'optimized',
-  PARTIAL = 'partial',
-  UNOPTIMIZED = 'unoptimized',
-  DISABLED = 'disabled'
-}
 
 /**
  * Interface for optimized game objects
@@ -45,7 +15,7 @@ export enum OptimizationState {
  * Extends IGameObject with performance optimization functionality.
  */
 export interface IOptimizedObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.OPTIMIZED_OBJECT;
+  readonly gameObjectType: GameObjectType;
   
   /** LOD level */
   lodLevel: LODLevel;

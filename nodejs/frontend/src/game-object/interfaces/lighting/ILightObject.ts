@@ -6,37 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, LightType, LightBlendMode } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Light types
- */
-export enum LightType {
-  POINT = 'point',
-  DIRECTIONAL = 'directional',
-  SPOT = 'spot',
-  AMBIENT = 'ambient'
-}
-
-/**
- * Light blend modes
- */
-export enum LightBlendMode {
-  NORMAL = 'normal',
-  ADD = 'add',
-  MULTIPLY = 'multiply',
-  SCREEN = 'screen',
-  OVERLAY = 'overlay',
-  SOFT_LIGHT = 'soft_light',
-  HARD_LIGHT = 'hard_light',
-  COLOR_DODGE = 'color_dodge',
-  COLOR_BURN = 'color_burn',
-  DARKEN = 'darken',
-  LIGHTEN = 'lighten',
-  DIFFERENCE = 'difference',
-  EXCLUSION = 'exclusion'
-}
 
 /**
  * Interface for light game objects
@@ -45,7 +16,7 @@ export enum LightBlendMode {
  * light management and control.
  */
 export interface ILightObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.LIGHT;
+  readonly gameObjectType: GameObjectType;
   
   /** Light type */
   lightType: LightType;

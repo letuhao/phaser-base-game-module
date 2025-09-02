@@ -7,18 +7,7 @@
 
 import type { ICommand } from '../patterns/ICommand';
 import type { IGameObject } from '../IGameObject';
-
-/**
- * Command manager operations
- */
-export enum CommandManagerOperation {
-  CREATE_COMMAND = 'create_command',
-  DESTROY_COMMAND = 'destroy_command',
-  EXECUTE_COMMAND = 'execute_command',
-  UNDO_COMMAND = 'undo_command',
-  REDO_COMMAND = 'redo_command',
-  MANAGE_COMMAND = 'manage_command'
-}
+// CommandManagerOperation is now imported from the centralized enum system
 
 /**
  * Command manager configuration

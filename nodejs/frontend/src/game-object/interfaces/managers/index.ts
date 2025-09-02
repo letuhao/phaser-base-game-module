@@ -12,13 +12,8 @@ export type { ICommandManager } from './ICommandManager';
 export type { IBuilderManager } from './IBuilderManager';
 export type { ISingletonManager } from './ISingletonManager';
 
-export { FactoryManagerOperation } from './IFactoryManager';
-export { ObserverManagerOperation } from './IObserverManager';
-export { DecoratorManagerOperation } from './IDecoratorManager';
-export { StrategyManagerOperation } from './IStrategyManager';
-export { CommandManagerOperation } from './ICommandManager';
-export { BuilderManagerOperation } from './IBuilderManager';
-export { SingletonManagerOperation } from './ISingletonManager';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/managers/ManagerEnums.ts
 
 /**
  * Game object manager interfaces bundle

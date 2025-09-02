@@ -24,7 +24,7 @@ export enum ScrollViewOrientation {
  * Extends IContainer with scroll view-specific functionality.
  */
 export interface IScrollView extends IContainer {
-  readonly gameObjectType: GameObjectType.SCROLL_VIEW;
+  readonly gameObjectType: GameObjectType;
   
   /** Scroll view orientation */
   scrollViewOrientation: ScrollViewOrientation;
@@ -85,27 +85,6 @@ export interface IScrollView extends IContainer {
   
   /** Scroll view scroll momentum */
   scrollViewScrollMomentum: boolean;
-  
-  /** Scroll view scroll momentum threshold */
-  scrollViewScrollMomentumThreshold: number;
-  
-  /** Scroll view scroll momentum friction */
-  scrollViewScrollMomentumFriction: number;
-  
-  /** Scroll view scroll momentum max speed */
-  scrollViewScrollMomentumMaxSpeed: number;
-  
-  /** Scroll view scroll momentum min speed */
-  scrollViewScrollMomentumMinSpeed: number;
-  
-  /** Scroll view scroll momentum duration */
-  scrollViewScrollMomentumDuration: number;
-  
-  /** Scroll view scroll momentum easing */
-  scrollViewScrollMomentumEasing: string;
-  
-  /** Scroll view scroll momentum delay */
-  scrollViewScrollMomentumDelay: number;
   
   /** Scroll view scroll momentum threshold */
   scrollViewScrollMomentumThreshold: number;

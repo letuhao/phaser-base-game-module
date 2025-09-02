@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IShape } from './IShape';
+import { ShapeType } from '../../enums';
 
 /**
  * Interface for rectangle shape game objects
@@ -28,7 +29,7 @@ export interface IRectangle extends IShape {
   // ============================================================================
   
   /** The specific type of shape (always 'rectangle') */
-  readonly shapeType: 'rectangle';
+  readonly shapeType: ShapeType.RECTANGLE;
   
   // ============================================================================
   // RECTANGLE PROPERTIES

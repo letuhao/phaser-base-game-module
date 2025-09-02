@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IUIObject } from './IUIObject';
+import { UISize, UIVariant, ButtonShape, UIType } from '../../enums';
 
 /**
  * Interface for button UI game objects
@@ -28,7 +29,7 @@ export interface IButton extends IUIObject {
   // ============================================================================
   
   /** The specific type of UI element (always 'button') */
-  readonly uiType: 'button';
+  readonly uiType: UIType.BUTTON;
   
   // ============================================================================
   // BUTTON PROPERTIES
@@ -41,13 +42,13 @@ export interface IButton extends IUIObject {
   icon: string | Phaser.GameObjects.GameObject | null;
   
   /** Button size */
-  buttonSize: 'small' | 'medium' | 'large' | 'custom';
+  buttonSize: UISize;
   
   /** Button variant */
-  buttonVariant: 'primary' | 'secondary' | 'tertiary' | 'danger' | 'success' | 'warning' | 'info';
+  buttonVariant: UIVariant;
   
   /** Button shape */
-  buttonShape: 'rectangle' | 'rounded' | 'circle' | 'pill';
+  buttonShape: ButtonShape;
   
   /** Whether button is loading */
   loading: boolean;
@@ -87,13 +88,13 @@ export interface IButton extends IUIObject {
   setIcon(icon: string | Phaser.GameObjects.GameObject | null): this;
   
   /** Set button size */
-  setButtonSize(size: 'small' | 'medium' | 'large' | 'custom'): this;
+  setButtonSize(size: UISize): this;
   
   /** Set button variant */
-  setButtonVariant(variant: 'primary' | 'secondary' | 'tertiary' | 'danger' | 'success' | 'warning' | 'info'): this;
+  setButtonVariant(variant: UIVariant): this;
   
   /** Set button shape */
-  setButtonShape(shape: 'rectangle' | 'rounded' | 'circle' | 'pill'): this;
+  setButtonShape(shape: ButtonShape): this;
   
   /** Set button loading state */
   setLoading(loading: boolean): this;

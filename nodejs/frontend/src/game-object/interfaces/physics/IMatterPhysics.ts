@@ -6,6 +6,7 @@
 
 import type { IPhysicsObject } from './IPhysicsObject';
 import { GameObjectType } from '../../enums/GameObjectEnums';
+import { PhysicsShapeType } from '../../enums';
 import * as Phaser from 'phaser';
 
 /**
@@ -14,7 +15,7 @@ import * as Phaser from 'phaser';
  * Extends IPhysicsObject with Matter.js physics-specific functionality.
  */
 export interface IMatterPhysics extends IPhysicsObject {
-  readonly gameObjectType: GameObjectType.MATTER_PHYSICS;
+  readonly gameObjectType: GameObjectType;
   
   /** Matter physics body */
   readonly matterBody: any; // Matter.Body
@@ -23,7 +24,7 @@ export interface IMatterPhysics extends IPhysicsObject {
   readonly matterWorld: any; // Matter.World
   
   /** Set Matter physics body shape */
-  setMatterBodyShape(shape: 'rectangle' | 'circle' | 'polygon' | 'trapezoid'): this;
+  setMatterBodyShape(shape: PhysicsShapeType): this;
   
   /** Set Matter physics body vertices */
   setMatterBodyVertices(vertices: Phaser.Geom.Point[]): this;
@@ -95,7 +96,7 @@ export interface IMatterPhysics extends IPhysicsObject {
   setMatterBodyIsSleeping(sleeping: boolean): this;
   
   /** Set Matter physics body is static */
-  setMatterBodyIsStatic(static: boolean): this;
+  setMatterBodyIsStatic(isStatic: boolean): this;
   
   /** Set Matter physics body is sensor */
   setMatterBodyIsSensor(sensor: boolean): this;

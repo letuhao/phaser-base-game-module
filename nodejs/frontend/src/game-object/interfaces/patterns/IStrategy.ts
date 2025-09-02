@@ -6,31 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, StrategyType, StrategyState } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Strategy types
- */
-export enum StrategyType {
-  BEHAVIOR = 'behavior',
-  ALGORITHM = 'algorithm',
-  RENDERING = 'rendering',
-  PHYSICS = 'physics',
-  AI = 'ai',
-  CUSTOM = 'custom'
-}
-
-/**
- * Strategy states
- */
-export enum StrategyState {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  SWITCHING = 'switching',
-  ERROR = 'error',
-  DISABLED = 'disabled'
-}
 
 /**
  * Strategy configuration
@@ -63,7 +40,7 @@ export interface StrategyContext {
  * Extends IGameObject with strategy pattern functionality.
  */
 export interface IStrategy extends IGameObject {
-  readonly gameObjectType: GameObjectType.STRATEGY;
+  readonly gameObjectType: GameObjectType;
   
   /** Strategy type */
   strategyType: StrategyType;

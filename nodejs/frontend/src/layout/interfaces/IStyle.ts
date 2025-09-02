@@ -26,7 +26,7 @@ import {
   BreakpointName,
   HorizontalAlignment,
   VerticalAlignment,
-  SizeValueType,
+  // SizeValueType removed - use SizeValue from unit system
   BorderStyle,
   TextBaseline,
   TextDecoration,
@@ -143,10 +143,10 @@ export interface ILayoutStyle {
   positionZ?: number | IRandomValueNumber;
   
   /** Width with Unit System support */
-  width?: number | SizeValue | SizeUnit | SizeValueType | IRandomValueNumber;
+  width?: number | SizeValue | SizeUnit | IRandomValueNumber;
   
   /** Height with Unit System support */
-  height?: number | SizeValue | SizeUnit | SizeValueType | IRandomValueNumber;
+  height?: number | SizeValue | SizeUnit | IRandomValueNumber;
   
   /** Position type */
   position?: PositionType;

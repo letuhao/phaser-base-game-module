@@ -6,42 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, CommandType, CommandState, CommandPriority } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Command types
- */
-export enum CommandType {
-  ACTION = 'action',
-  TRANSFORM = 'transform',
-  STATE_CHANGE = 'state_change',
-  PROPERTY_SET = 'property_set',
-  METHOD_CALL = 'method_call',
-  CUSTOM = 'custom'
-}
-
-/**
- * Command states
- */
-export enum CommandState {
-  PENDING = 'pending',
-  EXECUTING = 'executing',
-  EXECUTED = 'executed',
-  UNDONE = 'undone',
-  ERROR = 'error',
-  CANCELLED = 'cancelled'
-}
-
-/**
- * Command priority
- */
-export enum CommandPriority {
-  LOW = 0,
-  NORMAL = 1,
-  HIGH = 2,
-  CRITICAL = 3
-}
 
 /**
  * Command configuration
@@ -74,7 +40,7 @@ export interface CommandContext {
  * Extends IGameObject with command pattern functionality.
  */
 export interface ICommand extends IGameObject {
-  readonly gameObjectType: GameObjectType.COMMAND;
+  readonly gameObjectType: GameObjectType;
   
   /** Command type */
   commandType: CommandType;

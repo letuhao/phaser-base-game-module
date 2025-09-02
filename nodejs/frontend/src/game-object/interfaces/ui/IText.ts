@@ -6,6 +6,8 @@
 
 import * as Phaser from 'phaser';
 import type { IUIObject } from './IUIObject';
+import { UIType } from '../../enums';
+import { TextAlign as TextAlignment, VerticalAlignment } from '../../enums/LayoutSystemImports';
 
 /**
  * Interface for text UI game objects
@@ -28,7 +30,7 @@ export interface IText extends IUIObject {
   // ============================================================================
   
   /** The specific type of UI element (always 'text') */
-  readonly uiType: 'text';
+  readonly uiType: UIType.TEXT;
   
   // ============================================================================
   // TEXT PROPERTIES
@@ -56,10 +58,10 @@ export interface IText extends IUIObject {
   textColor: string;
   
   /** Text alignment */
-  textAlign: 'left' | 'center' | 'right' | 'justify';
+  textAlign: TextAlignment;
   
   /** Vertical alignment */
-  verticalAlign: 'top' | 'middle' | 'bottom';
+  verticalAlign: VerticalAlignment;
   
   /** Line height */
   lineHeight: number;
@@ -132,10 +134,10 @@ export interface IText extends IUIObject {
   setTextColor(color: string): this;
   
   /** Set text alignment */
-  setTextAlign(align: 'left' | 'center' | 'right' | 'justify'): this;
+  setTextAlign(align: TextAlignment): this;
   
   /** Set vertical alignment */
-  setVerticalAlign(align: 'top' | 'middle' | 'bottom'): this;
+  setVerticalAlign(align: VerticalAlignment): this;
   
   /** Set line height */
   setLineHeight(lineHeight: number): this;

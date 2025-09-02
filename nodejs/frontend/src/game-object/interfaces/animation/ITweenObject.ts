@@ -6,24 +6,8 @@
  */
 
 import type { IAnimatedObject } from './IAnimatedObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, TweenEasingType } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Tween easing types
- */
-export enum TweenEasingType {
-  LINEAR = 'linear',
-  EASE_IN = 'ease-in',
-  EASE_OUT = 'ease-out',
-  EASE_IN_OUT = 'ease-in-out',
-  EASE_IN_BACK = 'ease-in-back',
-  EASE_OUT_BACK = 'ease-out-back',
-  EASE_IN_ELASTIC = 'ease-in-elastic',
-  EASE_OUT_ELASTIC = 'ease-out-elastic',
-  BOUNCE = 'bounce',
-  SPRING = 'spring'
-}
 
 /**
  * Interface for tween animation game objects
@@ -31,7 +15,7 @@ export enum TweenEasingType {
  * Extends IAnimatedObject with tween animation-specific functionality.
  */
 export interface ITweenObject extends IAnimatedObject {
-  readonly gameObjectType: GameObjectType.ANIMATED;
+  readonly gameObjectType: GameObjectType;
   
   /** Tween manager */
   readonly tweenManager: Phaser.Tweens.TweenManager;

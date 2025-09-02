@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IContainer } from '../container/IContainer';
+import { ContainerType, UIState, UISize, UIVariant, UIPosition, UIAnimation } from '../../enums';
 
 /**
  * Interface for modal UI game objects
@@ -31,7 +32,7 @@ export interface IModal extends IContainer {
   readonly uiType: 'modal';
   
   /** Container type (e.g., 'div', 'section', 'article') */
-  readonly containerType: 'div' | 'section' | 'article' | 'main' | 'aside' | 'header' | 'footer' | 'nav';
+  readonly containerType: ContainerType;
   
   // ============================================================================
   // UI PROPERTIES (from IUIObject)
@@ -53,7 +54,7 @@ export interface IModal extends IContainer {
   selected: boolean;
   
   /** UI element state */
-  uiState: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected';
+  uiState: UIState;
   
   /** UI element theme */
   theme: string;
@@ -87,13 +88,13 @@ export interface IModal extends IContainer {
   footer: Phaser.GameObjects.GameObject | null;
   
   /** Modal size */
-  modalSize: 'small' | 'medium' | 'large' | 'fullscreen' | 'custom';
+  modalSize: UISize;
   
   /** Modal variant */
-  modalVariant: 'default' | 'alert' | 'confirm' | 'prompt' | 'custom';
+  modalVariant: UIVariant;
   
   /** Modal position */
-  modalPosition: 'center' | 'top' | 'bottom' | 'left' | 'right' | 'custom';
+  modalPosition: UIPosition;
   
   /** Modal backdrop */
   backdrop: boolean;
@@ -111,7 +112,7 @@ export interface IModal extends IContainer {
   backdropBlurAmount: number;
   
   /** Modal animation */
-  animation: 'fade' | 'slide' | 'scale' | 'none';
+  animation: UIAnimation;
   
   /** Modal animation duration */
   animationDuration: number;
@@ -178,7 +179,7 @@ export interface IModal extends IContainer {
   setSelected(selected: boolean): this;
   
   /** Set UI element state */
-  setUIState(state: 'normal' | 'hover' | 'pressed' | 'disabled' | 'focused' | 'selected'): this;
+  setUIState(state: UIState): this;
   
   /** Set UI element theme */
   setTheme(theme: string): this;
@@ -239,13 +240,13 @@ export interface IModal extends IContainer {
   setFooter(footer: Phaser.GameObjects.GameObject | null): this;
   
   /** Set modal size */
-  setModalSize(size: 'small' | 'medium' | 'large' | 'fullscreen' | 'custom'): this;
+  setModalSize(size: UISize): this;
   
   /** Set modal variant */
-  setModalVariant(variant: 'default' | 'alert' | 'confirm' | 'prompt' | 'custom'): this;
+  setModalVariant(variant: UIVariant): this;
   
   /** Set modal position */
-  setModalPosition(position: 'center' | 'top' | 'bottom' | 'left' | 'right' | 'custom'): this;
+  setModalPosition(position: UIPosition): this;
   
   /** Set modal backdrop */
   setBackdrop(backdrop: boolean, color?: string, alpha?: number): this;
@@ -254,7 +255,7 @@ export interface IModal extends IContainer {
   setBackdropBlur(blur: boolean, amount?: number): this;
   
   /** Set modal animation */
-  setAnimation(animation: 'fade' | 'slide' | 'scale' | 'none', duration?: number, easing?: string): this;
+  setAnimation(animation: UIAnimation, duration?: number, easing?: string): this;
   
   /** Set modal closable */
   setClosable(closable: boolean): this;

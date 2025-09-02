@@ -7,6 +7,7 @@
 
 import * as Phaser from 'phaser';
 import type { IGameObject } from '../IGameObject';
+import { GameObjectType, ShapeType } from '../../enums';
 
 /**
  * Interface for shape game objects
@@ -29,10 +30,10 @@ export interface IShape extends IGameObject {
   // ============================================================================
   
   /** The type of this game object (always 'shape') */
-  readonly gameObjectType: 'shape';
+  readonly gameObjectType: GameObjectType;
   
   /** The specific type of shape */
-  readonly shapeType: 'rectangle' | 'circle' | 'ellipse' | 'line' | 'polygon' | 'arc' | 'curve' | 'path';
+  readonly shapeType: ShapeType;
   
   // ============================================================================
   // SHAPE PROPERTIES

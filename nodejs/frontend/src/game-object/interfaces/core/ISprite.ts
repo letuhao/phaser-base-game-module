@@ -6,41 +6,8 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
+import { GameObjectType, SpriteBlendMode, SpriteCropMode } from '../../enums';
 import * as Phaser from 'phaser';
-
-/**
- * Sprite blend modes
- */
-export enum SpriteBlendMode {
-  NORMAL = 'normal',
-  ADD = 'add',
-  MULTIPLY = 'multiply',
-  SCREEN = 'screen',
-  OVERLAY = 'overlay',
-  DARKEN = 'darken',
-  LIGHTEN = 'lighten',
-  COLOR_DODGE = 'color-dodge',
-  COLOR_BURN = 'color-burn',
-  HARD_LIGHT = 'hard-light',
-  SOFT_LIGHT = 'soft-light',
-  DIFFERENCE = 'difference',
-  EXCLUSION = 'exclusion',
-  HUE = 'hue',
-  SATURATION = 'saturation',
-  COLOR = 'color',
-  LUMINOSITY = 'luminosity'
-}
-
-/**
- * Sprite crop modes
- */
-export enum SpriteCropMode {
-  NONE = 'none',
-  MANUAL = 'manual',
-  AUTO = 'auto',
-  FRAME = 'frame'
-}
 
 /**
  * Interface for sprite game objects
@@ -62,7 +29,7 @@ export interface ISprite extends IGameObject {
   // ============================================================================
   
   /** The specific type of game object (always 'sprite') */
-  readonly gameObjectType: GameObjectType.SPRITE;
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // SPRITE PROPERTIES

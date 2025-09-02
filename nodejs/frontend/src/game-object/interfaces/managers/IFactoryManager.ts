@@ -7,19 +7,8 @@
 
 import type { IFactory } from '../patterns/IFactory';
 import type { IGameObject } from '../IGameObject';
-import type { FactoryType, FactoryState, FactoryConfig, FactoryOptions } from '../patterns/IFactory';
-
-/**
- * Factory manager operations
- */
-export enum FactoryManagerOperation {
-  CREATE_FACTORY = 'create_factory',
-  DESTROY_FACTORY = 'destroy_factory',
-  CONFIGURE_FACTORY = 'configure_factory',
-  MANAGE_FACTORY = 'manage_factory',
-  VALIDATE_FACTORY = 'validate_factory',
-  OPTIMIZE_FACTORY = 'optimize_factory'
-}
+import type { FactoryConfig, FactoryOptions } from '../patterns/IFactory';
+import { FactoryType, FactoryState } from '../../enums';
 
 /**
  * Factory manager configuration

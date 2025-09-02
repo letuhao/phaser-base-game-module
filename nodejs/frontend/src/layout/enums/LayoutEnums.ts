@@ -74,38 +74,19 @@ export enum BreakpointCondition {
 // BREAKPOINT SYSTEM ENUMS
 // ============================================================================
 
-/**
- * Comparison operators for breakpoint conditions
- * Inspired by CSS media query operators
- */
-export enum BreakpointOperator {
-  EQUALS = 'eq',
-  GREATER_THAN = 'gt',
-  GREATER_THAN_EQUALS = 'gte',
-  LESS_THAN = 'lt',
-  LESS_THAN_EQUALS = 'lte',
-  NOT_EQUALS = 'ne',
-}
+// Import breakpoint enums from BreakpointEnums.ts to avoid duplication
+import {
+  BreakpointOperator,
+  DeviceOrientation,
+  DeviceType
+} from './BreakpointEnums';
 
-/**
- * Device orientation types
- * Inspired by CSS orientation media query
- */
-export enum DeviceOrientation {
-  PORTRAIT = 'portrait',
-  LANDSCAPE = 'landscape',
-}
-
-/**
- * Device types for responsive design
- * Inspired by CSS device type media queries
- */
-export enum DeviceType {
-  MOBILE = 'mobile',
-  TABLET = 'tablet',
-  DESKTOP = 'desktop',
-  TV = 'tv',
-}
+// Re-export for external use
+export {
+  BreakpointOperator,
+  DeviceOrientation,
+  DeviceType
+};
 
 /**
  * Breakpoint priority levels
@@ -665,13 +646,8 @@ export enum VerticalAlignment {
 // SIZE VALUE ENUMS
 // ============================================================================
 
-/**
- * Size value types
- */
-export enum SizeValueType {
-  FILL = 'fill',
-  AUTO = 'auto',
-}
+// SizeValueType removed - use SizeValue from unit system instead
+// SizeValue.FILL and SizeValue.AUTO are available from the unit system
 
 // ============================================================================
 // BORDER STYLE ENUMS
@@ -1343,7 +1319,7 @@ export const LAYOUT_SYSTEM_ENUMS = {
     VERTICAL_ALIGNMENT: VerticalAlignment,
   },
   SIZE: {
-    VALUE_TYPE: SizeValueType,
+    // VALUE_TYPE removed - use SizeValue from unit system instead
   },
   BORDER: {
     STYLE: BorderStyle,

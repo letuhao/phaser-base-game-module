@@ -20,13 +20,8 @@ export type { IDecorator } from './IDecorator';
 // DESIGN PATTERN ENUMS
 // ============================================================================
 
-export { FactoryType, FactoryState } from './IFactory';
-export { BuilderType, BuilderState } from './IBuilder';
-export { ObserverType, ObserverState } from './IObserver';
-export { StrategyType, StrategyState } from './IStrategy';
-export { CommandType, CommandState, CommandPriority } from './ICommand';
-export { SingletonType, SingletonState } from './ISingleton';
-export { DecoratorType, DecoratorState } from './IDecorator';
+// Enums are now exported from the centralized enum system
+// See: ../../enums/patterns/PatternEnums.ts
 
 // ============================================================================
 // DESIGN PATTERN INTERFACE BUNDLES

@@ -6,31 +6,7 @@
  */
 
 import type { IGameObject } from '../IGameObject';
-import { GameObjectType } from '../../enums/GameObjectEnums';
-
-
-/**
- * Pool states
- */
-export enum PoolState {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  PENDING = 'pending',
-  DESTROYED = 'destroyed'
-}
-
-/**
- * Pool types
- */
-export enum PoolType {
-  SPRITE = 'sprite',
-  GRAPHICS = 'graphics',
-  TEXT = 'text',
-  CONTAINER = 'container',
-  PARTICLE = 'particle',
-  EFFECT = 'effect',
-  CUSTOM = 'custom'
-}
+import { GameObjectType, PoolState, PoolType } from '../../enums';
 
 /**
  * Interface for pooled game objects
@@ -38,7 +14,7 @@ export enum PoolType {
  * Extends IGameObject with object pooling functionality.
  */
 export interface IPooledObject extends IGameObject {
-  readonly gameObjectType: GameObjectType.POOLED_OBJECT;
+  readonly gameObjectType: GameObjectType;
   
   /** Pool state */
   poolState: PoolState;

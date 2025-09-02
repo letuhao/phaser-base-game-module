@@ -6,6 +6,7 @@
 
 import * as Phaser from 'phaser';
 import type { IAudioObject } from './IAudioObject';
+import { MusicGenre, MusicMood, MusicIntensity, MusicRepeatMode, NetworkQuality, AudioCodec, AudioFormat, AudioCurveType, AudioFilterType, AudioType, AudioQualityLevel, AudioChannelType } from '../../enums';
 
 /**
  * Interface for music audio game objects
@@ -28,14 +29,14 @@ export interface IMusic extends IAudioObject {
   // ============================================================================
   
   /** The specific type of audio element (always 'music') */
-  readonly audioType: 'music';
+  readonly audioType: AudioType.MUSIC;
   
   // ============================================================================
   // MUSIC PROPERTIES
   // ============================================================================
   
   /** Music genre */
-  genre: 'classical' | 'rock' | 'pop' | 'jazz' | 'blues' | 'country' | 'electronic' | 'hip-hop' | 'reggae' | 'folk' | 'ambient' | 'orchestral' | 'choral' | 'instrumental' | 'vocal';
+  genre: MusicGenre;
   
   /** Music tempo (BPM) */
   tempo: number;
@@ -47,10 +48,10 @@ export interface IMusic extends IAudioObject {
   timeSignature: string;
   
   /** Music mood */
-  mood: 'happy' | 'sad' | 'energetic' | 'calm' | 'dramatic' | 'romantic' | 'mysterious' | 'epic' | 'melancholic' | 'uplifting' | 'dark' | 'bright';
+  mood: MusicMood;
   
   /** Music intensity level */
-  intensity: 'low' | 'medium' | 'high' | 'extreme';
+  intensity: MusicIntensity;
   
   /** Music energy level */
   energy: number;
@@ -106,11 +107,8 @@ export interface IMusic extends IAudioObject {
   /** Music crossfade enabled */
   crossfadeEnabled: boolean;
   
-  /** Music crossfade duration */
-  crossfadeDuration: number;
-  
   /** Music crossfade curve */
-  crossfadeCurve: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine';
+  crossfadeCurve: AudioCurveType;
   
   /** Music playlist position */
   playlistPosition: number;
@@ -122,7 +120,7 @@ export interface IMusic extends IAudioObject {
   shuffleMode: boolean;
   
   /** Music repeat mode */
-  repeatMode: 'none' | 'one' | 'all';
+  repeatMode: MusicRepeatMode;
   
   /** Music auto-play next */
   autoPlayNext: boolean;
@@ -137,7 +135,7 @@ export interface IMusic extends IAudioObject {
   bufferSize: number;
   
   /** Music streaming quality */
-  streamingQuality: 'low' | 'medium' | 'high' | 'lossless';
+  streamingQuality: AudioQualityLevel;
   
   /** Music adaptive bitrate */
   adaptiveBitrate: boolean;
@@ -148,26 +146,19 @@ export interface IMusic extends IAudioObject {
   /** Music download progress */
   downloadProgress: number;
   
-  /** Music is downloaded */
-  isDownloaded: boolean;
-  
-  /** Music is streaming */
-  isStreaming: boolean;
-  
-  /** Music is buffering */
-  isBuffering: boolean;
+
   
   /** Music buffer health */
   bufferHealth: number;
   
   /** Music network quality */
-  networkQuality: 'poor' | 'fair' | 'good' | 'excellent';
+  networkQuality: NetworkQuality;
   
   /** Music bitrate */
   bitrate: number;
   
   /** Music codec */
-  codec: 'mp3' | 'aac' | 'flac' | 'ogg' | 'wav' | 'm4a' | 'webm';
+  codec: AudioCodec;
   
   /** Music sample rate */
   sampleRate: number;
@@ -176,10 +167,10 @@ export interface IMusic extends IAudioObject {
   bitDepth: number;
   
   /** Music channels */
-  channels: 'mono' | 'stereo' | 'surround' | 'multichannel';
+  channels: AudioChannelType;
   
   /** Music format */
-  format: 'compressed' | 'uncompressed' | 'lossless';
+  format: AudioFormat;
   
   /** Music file size */
   fileSize: number;
@@ -196,23 +187,7 @@ export interface IMusic extends IAudioObject {
   /** Music progress percentage */
   progress: number;
   
-  /** Music is paused */
-  isPaused: boolean;
-  
-  /** Music is playing */
-  isPlaying: boolean;
-  
-  /** Music is stopped */
-  isStopped: boolean;
-  
-  /** Music is loading */
-  isLoading: boolean;
-  
-  /** Music is ready */
-  isReady: boolean;
-  
-  /** Music has error */
-  hasError: boolean;
+
   
   /** Music error message */
   errorMessage: string | null;
@@ -241,8 +216,7 @@ export interface IMusic extends IAudioObject {
   /** Music fade out duration */
   fadeOutDuration: number;
   
-  /** Music crossfade duration */
-  crossfadeDuration: number;
+
   
   /** Music spatial audio */
   spatialAudio: boolean;
@@ -272,7 +246,7 @@ export interface IMusic extends IAudioObject {
   coneOuterGain: number;
   
   /** Music filter type */
-  filterType: 'lowpass' | 'highpass' | 'bandpass' | 'lowshelf' | 'highshelf' | 'peaking' | 'notch' | 'allpass' | 'none';
+  filterType: AudioFilterType;
   
   /** Music filter frequency */
   filterFrequency: number;
@@ -318,7 +292,7 @@ export interface IMusic extends IAudioObject {
   // ============================================================================
   
   /** Set music genre */
-  setGenre(genre: 'classical' | 'rock' | 'pop' | 'jazz' | 'blues' | 'country' | 'electronic' | 'hip-hop' | 'reggae' | 'folk' | 'ambient' | 'orchestral' | 'choral' | 'instrumental' | 'vocal'): this;
+  setGenre(genre: MusicGenre): this;
   
   /** Set music tempo */
   setTempo(tempo: number): this;
@@ -330,10 +304,10 @@ export interface IMusic extends IAudioObject {
   setTimeSignature(timeSignature: string): this;
   
   /** Set music mood */
-  setMood(mood: 'happy' | 'sad' | 'energetic' | 'calm' | 'dramatic' | 'romantic' | 'mysterious' | 'epic' | 'melancholic' | 'uplifting' | 'dark' | 'bright'): this;
+  setMood(mood: MusicMood): this;
   
   /** Set music intensity */
-  setIntensity(intensity: 'low' | 'medium' | 'high' | 'extreme'): this;
+  setIntensity(intensity: MusicIntensity): this;
   
   /** Set music energy */
   setEnergy(energy: number): this;
@@ -366,7 +340,7 @@ export interface IMusic extends IAudioObject {
   setBeatTracking(enabled: boolean, sensitivity?: number, threshold?: number): this;
   
   /** Set music crossfade */
-  setCrossfade(enabled: boolean, duration?: number, curve?: 'linear' | 'exponential' | 'logarithmic' | 'sine' | 'cosine'): this;
+  setCrossfade(enabled: boolean, duration?: number, curve?: AudioCurveType): this;
   
   /** Set music playlist position */
   setPlaylistPosition(position: number): this;
@@ -375,7 +349,7 @@ export interface IMusic extends IAudioObject {
   setShuffleMode(enabled: boolean): this;
   
   /** Set music repeat mode */
-  setRepeatMode(mode: 'none' | 'one' | 'all'): this;
+  setRepeatMode(mode: MusicRepeatMode): this;
   
   /** Set music auto-play next */
   setAutoPlayNext(enabled: boolean): this;
@@ -390,7 +364,7 @@ export interface IMusic extends IAudioObject {
   setBufferSize(size: number): this;
   
   /** Set music streaming quality */
-  setStreamingQuality(quality: 'low' | 'medium' | 'high' | 'lossless'): this;
+  setStreamingQuality(quality: AudioQualityLevel): this;
   
   /** Set music adaptive bitrate */
   setAdaptiveBitrate(enabled: boolean): this;
@@ -630,7 +604,7 @@ export interface IMusic extends IAudioObject {
   getAudioCone(): { innerAngle: number; outerAngle: number; outerGain: number };
   
   /** Get music filter parameters */
-  getAudioFilter(): { type: string; frequency: number; Q: number; gain: number };
+  getAudioFilter(): { type: AudioFilterType; frequency: number; Q: number; gain: number };
   
   /** Get music compression parameters */
   getAudioCompression(): { threshold: number; ratio: number; attack: number; release: number };
@@ -981,7 +955,7 @@ export interface IMusic extends IAudioObject {
   getAudioConeChange(): { innerAngle: number; outerAngle: number; outerGain: number };
   
   /** Get music filter parameters change */
-  getAudioFilterChange(): { type: string; frequency: number; Q: number; gain: number };
+  getAudioFilterChange(): { type: AudioFilterType; frequency: number; Q: number; gain: number };
   
   /** Get music compression parameters change */
   getAudioCompressionChange(): { threshold: number; ratio: number; attack: number; release: number };

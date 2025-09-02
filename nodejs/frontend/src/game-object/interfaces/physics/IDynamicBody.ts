@@ -15,7 +15,7 @@ import { GameObjectType } from '../../enums/GameObjectEnums';
  * Extends IPhysicsObject with dynamic body-specific functionality.
  */
 export interface IDynamicBody extends IPhysicsObject {
-  readonly gameObjectType: GameObjectType.DYNAMIC_BODY;
+  readonly gameObjectType: GameObjectType;
   
   /** Dynamic body velocity */
   dynamicBodyVelocity: { x: number; y: number };

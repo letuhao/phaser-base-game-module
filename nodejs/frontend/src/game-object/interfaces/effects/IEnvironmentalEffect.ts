@@ -7,38 +7,7 @@
 
 import * as Phaser from 'phaser';
 import type { IEffect } from './IEffect';
-
-/**
- * Environmental effect types
- */
-export enum EnvironmentalEffectType {
-  WEATHER = 'weather',
-  ATMOSPHERE = 'atmosphere',
-  LIGHTING = 'lighting',
-  FOG = 'fog',
-  WIND = 'wind',
-  WATER = 'water',
-  FIRE = 'fire',
-  SMOKE = 'smoke',
-  DUST = 'dust',
-  SNOW = 'snow',
-  RAIN = 'rain',
-  CUSTOM = 'custom'
-}
-
-/**
- * Weather conditions
- */
-export enum WeatherCondition {
-  CLEAR = 'clear',
-  CLOUDY = 'cloudy',
-  RAINY = 'rainy',
-  STORMY = 'stormy',
-  SNOWY = 'snowy',
-  FOGGY = 'foggy',
-  WINDY = 'windy',
-  CUSTOM = 'custom'
-}
+import { AudioFilterType, EffectType, EnvironmentalEffectType, WeatherCondition } from '../../enums';
 
 /**
  * Interface for environmental effects
@@ -61,7 +30,7 @@ export interface IEnvironmentalEffect extends IEffect {
   // ============================================================================
   
   /** The specific type of effect (always 'environmental') */
-  readonly effectType: 'environmental';
+  readonly effectType: EffectType.ENVIRONMENTAL;
   
   // ============================================================================
   // ENVIRONMENTAL PROPERTIES
@@ -182,7 +151,7 @@ export interface IEnvironmentalEffect extends IEffect {
   environmentalSound3DConeOuterGain: number;
   
   /** Environmental sound 3D filter type */
-  environmentalSound3DFilterType: 'lowpass' | 'highpass' | 'bandpass' | 'lowshelf' | 'highshelf' | 'peaking' | 'notch' | 'allpass' | 'none';
+  environmentalSound3DFilterType: AudioFilterType;
   
   /** Environmental sound 3D filter frequency */
   environmentalSound3DFilterFrequency: number;
@@ -288,7 +257,7 @@ export interface IEnvironmentalEffect extends IEffect {
   setEnvironmentalSound3DCone(innerAngle: number, outerAngle: number, outerGain: number): this;
   
   /** Set environmental sound 3D filter */
-  setEnvironmentalSound3DFilter(type: 'lowpass' | 'highpass' | 'bandpass' | 'lowshelf' | 'highshelf' | 'peaking' | 'notch' | 'allpass' | 'none', frequency: number, Q: number, gain: number): this;
+  setEnvironmentalSound3DFilter(type: AudioFilterType, frequency: number, Q: number, gain: number): this;
   
   /** Set environmental sound 3D reverb */
   setEnvironmentalSound3DReverb(roomSize: number, damping: number, wet: number, dry: number, width: number, freeze: boolean): this;

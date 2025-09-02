@@ -6,8 +6,7 @@
 
 import type { IAsset } from './IAsset';
 import type { IAssetBundle } from './IAssetBundle';
-import type { AssetType, AssetPriority, AssetState } from './IAsset';
-import type { BundleType, BundleState } from './IAssetBundle';
+// AssetType, AssetPriority, AssetState, BundleType, BundleState are not used in this file
 
 /**
  * Loader types

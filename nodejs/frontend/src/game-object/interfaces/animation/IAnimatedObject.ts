@@ -7,28 +7,12 @@
 
 import type { IGameObject } from '../IGameObject';
 import { GameObjectType } from '../../enums/GameObjectEnums';
+import { AnimationDirection } from '../../../layout/enums/LayoutEnums';
+import { AnimationState, AnimationKey } from '../../enums';
 
+// AnimationState enum is now imported from organized enums
 
-/**
- * Animation states
- */
-export enum AnimationState {
-  STOPPED = 'stopped',
-  PLAYING = 'playing',
-  PAUSED = 'paused',
-  COMPLETED = 'completed',
-  LOOPING = 'looping'
-}
-
-/**
- * Animation directions
- */
-export enum AnimationDirection {
-  FORWARD = 'forward',
-  REVERSE = 'reverse',
-  ALTERNATE = 'alternate',
-  ALTERNATE_REVERSE = 'alternate_reverse'
-}
+// AnimationDirection enum removed - use Layout System's AnimationDirection instead
 
 /**
  * Interface for animated game objects
@@ -42,7 +26,7 @@ export interface IAnimatedObject extends IGameObject {
   // ============================================================================
   
   /** The specific type of game object (always 'animated') */
-  readonly gameObjectType: GameObjectType.ANIMATED;
+  readonly gameObjectType: GameObjectType;
   
   // ============================================================================
   // ANIMATION PROPERTIES
@@ -55,7 +39,7 @@ export interface IAnimatedObject extends IGameObject {
   animationState: AnimationState;
   
   /** Current animation key */
-  currentAnimationKey: string | null;
+  currentAnimationKey: AnimationKey | string | null;
   
   /** Animation speed */
   animationSpeed: number;
@@ -110,7 +94,7 @@ export interface IAnimatedObject extends IGameObject {
   disableAnimation(): this;
   
   /** Play animation */
-  playAnimation(key: string, ignoreIfPlaying?: boolean, startFrame?: number): this;
+  playAnimation(key: AnimationKey | string, ignoreIfPlaying?: boolean, startFrame?: number): this;
   
   /** Stop animation */
   stopAnimation(): this;
@@ -173,7 +157,7 @@ export interface IAnimatedObject extends IGameObject {
   getAnimationState(): AnimationState;
   
   /** Get current animation key */
-  getCurrentAnimationKey(): string | null;
+  getCurrentAnimationKey(): AnimationKey | string | null;
   
   /** Get animation speed */
   getAnimationSpeed(): number;
