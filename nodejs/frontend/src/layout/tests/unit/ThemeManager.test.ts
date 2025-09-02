@@ -7,7 +7,7 @@
 import { ThemeManager } from '../../classes/ThemeManager';
 import { ITheme, IThemeClass } from '../../interfaces/ITheme';
 import { IThemeManager, IThemeListener, IThemeStatistics } from '../../interfaces/IThemeManager';
-import { ThemeType, ThemeVariant, BreakpointName } from '../../enums/LayoutEnums';
+import { BaseThemeType, ExtendedThemeType, ThemeVariant, BreakpointName } from '../../enums/LayoutEnums';
 import { logger } from '../../../core/Logger';
 
 // Mock logger to avoid console output during tests
@@ -53,7 +53,7 @@ describe('ThemeManager', () => {
       name: 'Test Theme 1',
       displayName: 'Test Theme 1',
       description: 'A test theme',
-      type: ThemeType.LIGHT,
+      type: BaseThemeType.LIGHT,
       variant: ThemeVariant.DEFAULT,
       isActive: false,
       supportsDarkMode: true,
@@ -164,7 +164,7 @@ describe('ThemeManager', () => {
       id: 'test-theme-2',
       name: 'Test Theme 2',
       displayName: 'Test Theme 2',
-      type: ThemeType.DARK,
+      type: BaseThemeType.DARK,
       colors: {
         ...mockTheme.colors,
         background: {
@@ -202,7 +202,7 @@ describe('ThemeManager', () => {
     it('should initialize with default values', () => {
       expect(themeManager.activeTheme).toBeNull();
       expect(themeManager.themes.size).toBe(0);
-      expect(themeManager.currentThemeType).toBe(ThemeType.CUSTOM);
+      expect(themeManager.currentThemeType).toBe(BaseThemeType.CUSTOM);
       expect(themeManager.isInitialized).toBe(false);
       expect(themeManager.listeners.size).toBe(0);
       expect(themeManager.themeCache.size).toBe(0);
@@ -302,7 +302,7 @@ describe('ThemeManager', () => {
     it('should get themes with filter', () => {
       themeManager.registerTheme(mockTheme);
       themeManager.registerTheme(mockTheme2);
-      const lightThemes = themeManager.getThemes(theme => theme.type === ThemeType.LIGHT);
+      const lightThemes = themeManager.getThemes(theme => theme.type === BaseThemeType.LIGHT);
       expect(lightThemes).toHaveLength(1);
       expect(lightThemes[0]).toBe(mockTheme);
     });
@@ -310,8 +310,8 @@ describe('ThemeManager', () => {
     it('should get themes by type', () => {
       themeManager.registerTheme(mockTheme);
       themeManager.registerTheme(mockTheme2);
-      const lightThemes = themeManager.getThemesByType(ThemeType.LIGHT);
-      const darkThemes = themeManager.getThemesByType(ThemeType.DARK);
+      const lightThemes = themeManager.getThemesByType(BaseThemeType.LIGHT);
+      const darkThemes = themeManager.getThemesByType(BaseThemeType.DARK);
       expect(lightThemes).toHaveLength(1);
       expect(darkThemes).toHaveLength(1);
       expect(lightThemes[0]).toBe(mockTheme);
@@ -345,7 +345,7 @@ describe('ThemeManager', () => {
     it('should activate a theme successfully', async () => {
       await themeManager.activateTheme('test-theme-1');
       expect(themeManager.activeTheme).toBe(mockTheme);
-      expect(themeManager.currentThemeType).toBe(ThemeType.LIGHT);
+      expect(themeManager.currentThemeType).toBe(BaseThemeType.LIGHT);
     });
 
     it('should throw error when activating non-existent theme', async () => {
@@ -607,7 +607,7 @@ describe('ThemeManager', () => {
       themeManager.reset();
       expect(themeManager.activeTheme).toBeNull();
       expect(themeManager.themes.size).toBe(0);
-      expect(themeManager.currentThemeType).toBe(ThemeType.CUSTOM);
+      expect(themeManager.currentThemeType).toBe(BaseThemeType.CUSTOM);
       expect(themeManager.isInitialized).toBe(false);
       expect(themeManager.listeners.size).toBe(0);
       expect(themeManager.themeCache.size).toBe(0);

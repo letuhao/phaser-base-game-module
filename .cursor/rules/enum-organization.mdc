@@ -1,10 +1,96 @@
 ---
-description: Enums must be defined in dedicated enum folders
+description: Use enums instead of string/number unions and string literals, organize in dedicated folders
 globs:
 alwaysApply: true
 ---
 
-# Enum Organization Rule
+# Enum Usage and Organization Rule
+
+## ❌ FORBIDDEN - String/Number Unions and String Literals
+```typescript
+// ❌ FORBIDDEN - String unions
+type UnitType = 'size' | 'position' | 'scale';
+
+// ❌ FORBIDDEN - Number literals
+type Priority = 1 | 2 | 3 | 4;
+
+// ❌ FORBIDDEN - Mixed types
+type Value = string | number | boolean;
+
+// ❌ FORBIDDEN - String literals in type definitions
+interface IConfig {
+  type: 'linear' | 'radial';           // Use enum instead
+  direction: 'in' | 'out' | 'both';    // Use enum instead
+  format: 'json' | 'yaml' | 'xml';     // Use enum instead
+  logLevel: 'debug' | 'info' | 'warn' | 'error'; // Use enum instead
+}
+
+// ❌ FORBIDDEN - String literals in function parameters
+function processData(type: 'image' | 'audio' | 'video'): void {
+  // Use enum instead
+}
+```
+
+## ✅ CORRECT - Use Enums
+```typescript
+// ✅ CORRECT - Define enums for type-safe values
+export enum SizeUnit {
+  PIXEL = 'pixel',
+  PARENT_WIDTH = 'parent-width',
+  VIEWPORT_WIDTH = 'viewport-width',
+  AUTO = 'auto'
+}
+
+export enum UnitType {
+  SIZE = 'size',
+  POSITION = 'position',
+  SCALE = 'scale'
+}
+
+// ✅ CORRECT - Use enums in interfaces
+export interface IUnit {
+  readonly unitType: UnitType;
+  readonly sizeUnit: SizeUnit;
+}
+
+// ✅ CORRECT - Define enums for all string values
+export enum GradientType {
+  LINEAR = 'linear',
+  RADIAL = 'radial'
+}
+
+export enum TransitionDirection {
+  IN = 'in',
+  OUT = 'out',
+  BOTH = 'both'
+}
+
+export enum ExportFormat {
+  JSON = 'json',
+  YAML = 'yaml',
+  XML = 'xml'
+}
+
+export enum LogLevel {
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error'
+}
+
+// ✅ CORRECT - Use enums in interfaces
+interface IConfig {
+  type: GradientType;
+  direction: TransitionDirection;
+  format: ExportFormat;
+  logLevel: LogLevel;
+}
+
+// ✅ CORRECT - Use enums in function parameters
+function processData(type: AssetType): void {
+  // Implementation
+}
+```
 
 ## ✅ CORRECT - Enums in Dedicated Enum Folders
 ```typescript

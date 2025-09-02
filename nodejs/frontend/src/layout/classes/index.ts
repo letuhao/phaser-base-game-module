@@ -11,6 +11,10 @@ export { ThemeManager } from './ThemeManager';
 export { ThemeClassManager } from './ThemeClassManager';
 export { ThemeStyleEngine } from './ThemeStyleEngine';
 export { ThemeActivator } from './ThemeActivator';
+export { ThemePropertyResolver } from './ThemePropertyResolver';
+export { ThemeRegistry } from './ThemeRegistry';
+export { SegregatedTheme } from './SegregatedTheme';
+export { SegregatedThemeFactory } from './SegregatedThemeFactory';
 
 // ============================================================================
 // CLASS BUNDLES
@@ -22,6 +26,10 @@ export const THEME_CLASSES = [
   'ThemeClassManager',
   'ThemeStyleEngine',
   'ThemeActivator',
+  'ThemePropertyResolver',
+  'ThemeRegistry',
+  'SegregatedTheme',
+  'SegregatedThemeFactory',
 ] as const;
 
 // ============================================================================

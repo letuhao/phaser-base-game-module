@@ -1,0 +1,268 @@
+---
+description: Concrete classes must implement all methods from their interfaces/abstract classes
+globs:
+alwaysApply: true
+---
+
+# Interface/Abstract Class Inheritance Rule
+
+## ❌ FORBIDDEN - Incomplete Interface Implementation
+```typescript
+// ❌ FORBIDDEN - Missing method implementation
+export interface IUnit {
+  readonly id: string;
+  calculate(): number;
+  validate(): boolean;
+  getType(): string;
+}
+
+export class SizeUnit implements IUnit {
+  readonly id: string = 'size-unit';
+  
+  calculate(): number {
+    return 100;
+  }
+  
+  // ❌ FORBIDDEN - Missing validate() method
+  // ❌ FORBIDDEN - Missing getType() method
+}
+```
+
+## ❌ FORBIDDEN - Incomplete Abstract Class Implementation
+```typescript
+// ❌ FORBIDDEN - Missing abstract method implementation
+export abstract class BaseUnit {
+  abstract calculate(): number;
+  abstract validate(): boolean;
+  abstract getType(): string;
+  
+  public getId(): string {
+    return 'base-unit';
+  }
+}
+
+export class PositionUnit extends BaseUnit {
+  calculate(): number {
+    return 200;
+  }
+  
+  // ❌ FORBIDDEN - Missing validate() method
+  // ❌ FORBIDDEN - Missing getType() method
+}
+```
+
+## ❌ FORBIDDEN - Incorrect Method Signatures
+```typescript
+// ❌ FORBIDDEN - Wrong return type
+export interface ICalculator {
+  calculate(input: number): number;
+}
+
+export class MyCalculator implements ICalculator {
+  // ❌ FORBIDDEN - Wrong return type (string instead of number)
+  calculate(input: number): string {
+    return input.toString();
+  }
+}
+
+// ❌ FORBIDDEN - Wrong parameter types
+export interface IValidator {
+  validate(value: string): boolean;
+}
+
+export class MyValidator implements IValidator {
+  // ❌ FORBIDDEN - Wrong parameter type (number instead of string)
+  validate(value: number): boolean {
+    return value > 0;
+  }
+}
+```
+
+## ✅ CORRECT - Complete Interface Implementation
+```typescript
+// ✅ CORRECT - Complete interface implementation
+export interface IUnit {
+  readonly id: string;
+  calculate(): number;
+  validate(): boolean;
+  getType(): string;
+}
+
+export class SizeUnit implements IUnit {
+  readonly id: string = 'size-unit';
+  
+  calculate(): number {
+    return 100;
+  }
+  
+  validate(): boolean {
+    return this.id.length > 0;
+  }
+  
+  getType(): string {
+    return 'size';
+  }
+}
+```
+
+## ✅ CORRECT - Complete Abstract Class Implementation
+```typescript
+// ✅ CORRECT - Complete abstract class implementation
+export abstract class BaseUnit {
+  abstract calculate(): number;
+  abstract validate(): boolean;
+  abstract getType(): string;
+  
+  public getId(): string {
+    return 'base-unit';
+  }
+}
+
+export class PositionUnit extends BaseUnit {
+  calculate(): number {
+    return 200;
+  }
+  
+  validate(): boolean {
+    return true;
+  }
+  
+  getType(): string {
+    return 'position';
+  }
+}
+```
+
+## ✅ CORRECT - Proper Method Signatures
+```typescript
+// ✅ CORRECT - Matching method signatures
+export interface ICalculator {
+  calculate(input: number): number;
+  validate(input: number): boolean;
+}
+
+export class MyCalculator implements ICalculator {
+  calculate(input: number): number {
+    return input * 2;
+  }
+  
+  validate(input: number): boolean {
+    return input > 0;
+  }
+}
+```
+
+## ✅ CORRECT - Interface Extension
+```typescript
+// ✅ CORRECT - Proper interface extension
+export interface IBaseUnit {
+  readonly id: string;
+  calculate(): number;
+}
+
+export interface IAdvancedUnit extends IBaseUnit {
+  validate(): boolean;
+  getType(): string;
+}
+
+export class AdvancedSizeUnit implements IAdvancedUnit {
+  readonly id: string = 'advanced-size-unit';
+  
+  calculate(): number {
+    return 150;
+  }
+  
+  validate(): boolean {
+    return this.id.length > 0;
+  }
+  
+  getType(): string {
+    return 'advanced-size';
+  }
+}
+```
+
+## ✅ CORRECT - Multiple Interface Implementation
+```typescript
+// ✅ CORRECT - Implementing multiple interfaces
+export interface ICalculatable {
+  calculate(): number;
+}
+
+export interface IValidatable {
+  validate(): boolean;
+}
+
+export interface IIdentifiable {
+  readonly id: string;
+}
+
+export class MultiUnit implements ICalculatable, IValidatable, IIdentifiable {
+  readonly id: string = 'multi-unit';
+  
+  calculate(): number {
+    return 300;
+  }
+  
+  validate(): boolean {
+    return this.id.length > 0;
+  }
+}
+```
+
+## Why This Rule Exists
+- **Type Safety**: Ensures all contract methods are implemented
+- **Compile-Time Checking**: TypeScript can verify complete implementation
+- **Maintainability**: Prevents runtime errors from missing methods
+- **SOLID Compliance**: Follows Interface Segregation and Liskov Substitution Principles
+- **Code Reliability**: Guarantees that interfaces are fully implemented
+
+## Implementation Guidelines
+```typescript
+// ✅ CORRECT - Always implement all interface methods
+export interface IThemeManager {
+  initialize(): Promise<void>;
+  activateTheme(themeId: string): void;
+  deactivateTheme(): void;
+  getCurrentTheme(): string;
+  isThemeActive(themeId: string): boolean;
+}
+
+export class ThemeManager implements IThemeManager {
+  private currentTheme: string = '';
+  
+  async initialize(): Promise<void> {
+    logger.info('ThemeManager', 'initialize', 'Initializing theme manager');
+    // Implementation
+  }
+  
+  activateTheme(themeId: string): void {
+    logger.info('ThemeManager', 'activateTheme', 'Activating theme', { themeId });
+    this.currentTheme = themeId;
+    // Implementation
+  }
+  
+  deactivateTheme(): void {
+    logger.info('ThemeManager', 'deactivateTheme', 'Deactivating current theme');
+    this.currentTheme = '';
+    // Implementation
+  }
+  
+  getCurrentTheme(): string {
+    return this.currentTheme;
+  }
+  
+  isThemeActive(themeId: string): boolean {
+    return this.currentTheme === themeId;
+  }
+}
+```
+
+## Verification Checklist
+- [ ] All interface methods are implemented
+- [ ] All abstract methods are implemented
+- [ ] Method signatures match exactly (parameters and return types)
+- [ ] All readonly properties are implemented
+- [ ] Optional properties are handled appropriately
+- [ ] Generic type parameters are properly constrained
+- [ ] Interface extensions are fully implemented

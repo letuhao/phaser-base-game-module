@@ -5,6 +5,7 @@
 export interface IThemeActivationResult {
   success: boolean;
   themeId: string;
+  sceneId?: string;
   appliedClasses: string[];
   errors: string[];
   duration: number;

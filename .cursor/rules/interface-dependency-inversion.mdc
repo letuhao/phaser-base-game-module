@@ -1,6 +1,7 @@
 ---
 name: Interface Dependency Inversion Rule
 description: Force use of interfaces in properties and parameters - concrete classes are not allowed
+alwaysApply: true
 pattern: "(private|public|protected)\\s+\\w+\\s*:\\s*[A-Z]\\w+(?<!Interface|I\\w+)\\s*[;=]|function\\s+\\w+\\s*\\([^)]*:\\s*[A-Z]\\w+(?<!Interface|I\\w+)\\s*[,)]"
 severity: error
 message: "Use interfaces instead of concrete classes in properties and parameters. This enforces the Dependency Inversion Principle (SOLID). Replace concrete class types with their corresponding interfaces (e.g., AssetManager -> IAssetManager, SceneAssetConfigLoader -> ISceneAssetLoader)."

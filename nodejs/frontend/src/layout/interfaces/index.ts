@@ -13,6 +13,7 @@ export * from './IThemeManager';
 export * from './IThemeActivator';
 export * from './IThemeActivationResult';
 export * from './IThemeApplicationContext';
+export * from './IThemePropertyResolver';
 
 // All other interfaces (with explicit re-exports to avoid conflicts)
 export type { IBreakpoint } from './IBreakpoint';

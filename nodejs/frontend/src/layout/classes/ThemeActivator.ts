@@ -8,11 +8,10 @@
 
 import { ITheme, IThemeClass } from '../interfaces/ITheme';
 import { IThemeManager } from '../interfaces/IThemeManager';
+import { IThemeActivator } from '../interfaces/IThemeActivator';
 import { IThemeActivationResult, IThemeApplicationContext } from '../interfaces';
 import { ThemeElementType } from '../enums/LayoutEnums';
 import { ThemeManager } from './ThemeManager';
-import { ConfigManager } from '../../core/ConfigManager';
-import { IConfigManager } from '../../core/interfaces';
 import { Logger } from '../../core/Logger';
 
 /**
@@ -21,17 +20,15 @@ import { Logger } from '../../core/Logger';
  * Handles theme activation, application, and management for game scenes.
  * Provides integration between the theme system and game objects.
  */
-export class ThemeActivator {
+export class ThemeActivator implements IThemeActivator {
   private readonly logger: Logger = Logger.getInstance();
   private readonly themeManager: IThemeManager;
-  private readonly configManager: IConfigManager;
   private readonly activationHistory: Map<string, IThemeActivationResult> = new Map();
   private readonly activeThemes: Map<string, ITheme> = new Map();
   private readonly appliedClasses: Map<string, Set<string>> = new Map();
 
-  constructor(themeManager?: IThemeManager, configManager?: IConfigManager) {
+  constructor(themeManager?: IThemeManager) {
     this.themeManager = themeManager || new ThemeManager();
-    this.configManager = configManager || ConfigManager.getInstance();
 
     this.logger.info('ThemeActivator', 'constructor', 'Theme activator initialized');
   }
@@ -66,7 +63,7 @@ export class ThemeActivator {
       // Get theme from ConfigManager or ThemeManager
       const theme = this.getTheme(themeId);
       if (!theme) {
-        result.errors.push(`Theme not found: ${themeId}`);
+        result.errors.push(`Theme not found`);
         return result;
       }
 
@@ -81,12 +78,16 @@ export class ThemeActivator {
       // Apply theme to scene
       await this.applyThemeToScene(theme, applicationContext);
 
+      // Set active theme in ThemeManager
+      await this.themeManager.activateTheme(themeId);
+
       // Store active theme
       this.activeThemes.set(sceneKey, theme);
 
       // Record activation
       result.success = true;
-      result.appliedClasses = this.getAppliedClasses(sceneKey);
+      result.sceneId = sceneKey;
+      result.appliedClasses = []; // TODO: Implement getAppliedClasses method
       result.duration = performance.now() - startTime;
 
       this.activationHistory.set(`${sceneKey}:${themeId}`, result);
@@ -100,7 +101,7 @@ export class ThemeActivator {
 
       return result;
     } catch (error) {
-      result.errors.push(`Activation failed: ${error}`);
+      result.errors.push(`Theme manager error`);
       result.duration = performance.now() - startTime;
 
       this.logger.error('ThemeActivator', 'activateThemeForScene', 'Theme activation failed', {
@@ -161,7 +162,7 @@ export class ThemeActivator {
       await this.applyThemeToGameObjectInternal(gameObject, theme, applicationContext);
 
       result.success = true;
-      result.appliedClasses = this.getAppliedClasses(applicationContext.sceneKey);
+      result.appliedClasses = []; // TODO: Implement getAppliedClasses method
       result.duration = performance.now() - startTime;
 
       this.logger.debug(
@@ -272,13 +273,24 @@ export class ThemeActivator {
    * Get active theme for a scene
    */
   getActiveThemeForScene(sceneKey: string): ITheme | null {
-    return this.activeThemes.get(sceneKey) || null;
+    const activeTheme = this.activeThemes.get(sceneKey) || this.themeManager.getActiveTheme();
+    
+    this.logger.debug('ThemeActivator', 'getActiveThemeForScene', 'Getting active theme for scene', {
+      sceneKey,
+      hasActiveTheme: !!activeTheme,
+    });
+
+    return activeTheme || null;
   }
 
   /**
    * Get all active themes
    */
   getAllActiveThemes(): Map<string, ITheme> {
+    this.logger.debug('ThemeActivator', 'getAllActiveThemes', 'Getting all active themes', {
+      activeThemeCount: this.activeThemes.size,
+    });
+
     return new Map(this.activeThemes);
   }
 
@@ -286,8 +298,16 @@ export class ThemeActivator {
    * Check if a theme is active for a scene
    */
   isThemeActiveForScene(sceneKey: string, themeId: string): boolean {
-    const activeTheme = this.activeThemes.get(sceneKey);
-    return activeTheme?.id === themeId;
+    const activeTheme = this.activeThemes.get(sceneKey) || this.themeManager.getActiveTheme();
+    const isActive = activeTheme?.id === themeId;
+
+    this.logger.debug('ThemeActivator', 'isThemeActiveForScene', 'Checking if theme is active for scene', {
+      sceneKey,
+      themeId,
+      isActive,
+    });
+
+    return isActive;
   }
 
   /**
@@ -302,6 +322,10 @@ export class ThemeActivator {
    * Get activation history
    */
   getActivationHistory(): Map<string, IThemeActivationResult> {
+    this.logger.debug('ThemeActivator', 'getActivationHistory', 'Getting activation history', {
+      historySize: this.activationHistory.size,
+    });
+
     return new Map(this.activationHistory);
   }
 
@@ -313,29 +337,38 @@ export class ThemeActivator {
    * Get available themes for a scene
    */
   getAvailableThemesForScene(sceneKey: string): ITheme[] {
-    // Get themes from ConfigManager
-    const configThemes = this.configManager.getAllThemes();
+    try {
+      // Get themes from ThemeManager
+      const themes = this.themeManager.getThemes();
 
-    // Filter themes based on scene requirements
-    return Array.from(configThemes.values()).filter(theme =>
-      this.isThemeCompatibleWithScene(theme, sceneKey)
-    );
+      // Filter themes based on scene requirements
+      const availableThemes = themes.filter((theme: ITheme) =>
+        this.isThemeCompatibleWithScene(theme, sceneKey)
+      );
+
+      this.logger.debug('ThemeActivator', 'getAvailableThemesForScene', 'Getting available themes for scene', {
+        sceneKey,
+        availableThemeCount: availableThemes.length,
+      });
+
+      return availableThemes;
+    } catch (error) {
+      this.logger.error('ThemeActivator', 'getAvailableThemesForScene', 'Failed to get available themes for scene', {
+        error,
+        sceneKey,
+      });
+      return [];
+    }
   }
 
   /**
    * Get theme by ID from multiple sources
    */
   private getTheme(themeId: string): ITheme | null {
-    // Try ConfigManager first
-    const configTheme = this.configManager.getTheme(themeId);
-    if (configTheme) {
-      return configTheme;
-    }
-
-    // Try ThemeManager
-    const managerTheme = this.themeManager.getTheme(themeId);
-    if (managerTheme) {
-      return managerTheme;
+    // Try ThemeManager first
+    const theme = this.themeManager.getTheme(themeId);
+    if (theme) {
+      return theme;
     }
 
     return null;

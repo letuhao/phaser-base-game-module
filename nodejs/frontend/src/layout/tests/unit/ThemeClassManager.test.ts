@@ -7,7 +7,7 @@
 import { ThemeClassManager } from '../../classes/ThemeClassManager';
 import { ITheme, IThemeClass } from '../../interfaces/ITheme';
 import { IClassApplicationOptions } from '../../interfaces/IThemeClassManager';
-import { ThemeType, ThemeVariant } from '../../enums/LayoutEnums';
+import { BaseThemeType, ThemeVariant } from '../../enums/LayoutEnums';
 import { logger } from '../../../core/Logger';
 
 // Mock logger to avoid console output during tests
@@ -56,7 +56,7 @@ describe('ThemeClassManager', () => {
       name: 'Test Theme',
       displayName: 'Test Theme',
       description: 'A test theme',
-      type: ThemeType.LIGHT,
+      type: BaseThemeType.LIGHT,
       variant: ThemeVariant.DEFAULT,
       isActive: false,
       supportsDarkMode: true,

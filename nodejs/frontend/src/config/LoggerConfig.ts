@@ -157,7 +157,8 @@ export const DEFAULT_LOGGER_CONFIG: LoggerConfig = {
   },
 
   toJSON(): string {
-    return JSON.stringify(this, null, 2);
+    const { toJSON, fromJSON, clone, ...serializable } = this;
+    return JSON.stringify(serializable, null, 2);
   },
 
   fromJSON(json: string): LoggerConfig {

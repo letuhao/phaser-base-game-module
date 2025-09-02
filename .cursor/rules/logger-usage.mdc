@@ -8,22 +8,20 @@ alwaysApply: true
 
 ## ✅ CORRECT - Use Logger
 ```typescript
-import { Logger } from '../core/Logger';
+import { logger } from '../core/Logger';
 
 export class MyClass {
-  private readonly logger: Logger = Logger.getInstance();
-  
   public doSomething(): void {
-    this.logger.debug('MyClass', 'doSomething', 'Starting operation', {
+    logger.debug('MyClass', 'doSomething', 'Starting operation', {
       param1: 'value1',
       param2: 'value2'
     });
     
     try {
       // ... operation logic
-      this.logger.info('MyClass', 'doSomething', 'Operation completed successfully');
+      logger.info('MyClass', 'doSomething', 'Operation completed successfully');
     } catch (error) {
-      this.logger.error('MyClass', 'doSomething', 'Operation failed', { error });
+      logger.error('MyClass', 'doSomething', 'Operation failed', { error });
     }
   }
 }

@@ -176,7 +176,7 @@ export {
   GameObjectState,
 
   // Theme enums
-  ThemeType,
+  BaseThemeType as ThemeType,
   ThemeVariant,
   ThemeMode,
 
@@ -293,6 +293,10 @@ export {
   ThemeClassManager,
   ThemeStyleEngine,
   ThemeActivator,
+  ThemePropertyResolver,
+  ThemeRegistry,
+  SegregatedTheme,
+  SegregatedThemeFactory,
 
   // Class bundles
   THEME_CLASSES,

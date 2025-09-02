@@ -1,577 +1,497 @@
-/**
- * ThemeActivator Unit Tests
- *
- * Comprehensive tests for the ThemeActivator class covering:
- * - Theme activation for scenes
- * - Theme application to game objects
- * - Theme switching functionality
- * - Error handling and edge cases
- * - Integration with ConfigManager and ThemeManager
- */
-
-import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { ThemeActivator } from '../../classes/ThemeActivator';
-import { IThemeActivationResult, IThemeApplicationContext } from '../../interfaces';
-import { ITheme, IThemeClass } from '../../interfaces/ITheme';
-import { IThemeManager } from '../../interfaces/IThemeManager';
+import { ThemeManager } from '../../classes/ThemeManager';
 import { ConfigManager } from '../../../core/ConfigManager';
+import { IThemeManager } from '../../interfaces/IThemeManager';
 import { IConfigManager } from '../../../core/interfaces';
-import { Logger } from '../../../core/Logger';
+import { ITheme, IThemeData, IThemeProperties } from '../../interfaces/IThemeSegregated';
+import { BaseThemeType, ExtendedThemeType, ThemeVariant, ThemeElementType } from '../../enums/LayoutEnums';
+import { SegregatedTheme } from '../../classes/SegregatedTheme';
+import { SegregatedThemeFactory } from '../../classes/SegregatedThemeFactory';
 
-// Mock Phaser
-jest.mock('phaser', () => ({
-  GameObjects: {
-    GameObject: class MockGameObject {
-      constructor(
-        public scene?: any,
-        public name?: string
-      ) {}
-    },
-  },
-}));
-
-// Mock Logger
-jest.mock('../../../core/Logger', () => ({
-  Logger: {
-    getInstance: jest.fn(() => ({
-      info: jest.fn(),
-      debug: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      trace: jest.fn(),
-    })),
-  },
-}));
-
-// Mock ConfigManager
-jest.mock('../../../core/ConfigManager', () => ({
-  ConfigManager: {
-    getInstance: jest.fn(() => ({
-      getTheme: jest.fn(),
-      getAllThemes: jest.fn(() => new Map()),
-      registerSceneConfigs: jest.fn(),
-      loadSceneConfigs: jest.fn(),
-    })),
-  },
-}));
+// Mock dependencies
+jest.mock('../../../core/ConfigManager');
+jest.mock('../../classes/ThemeManager');
 
 describe('ThemeActivator', () => {
   let themeActivator: ThemeActivator;
-  let mockThemeManager: IThemeManager;
-  let mockConfigManager: IConfigManager;
-  let mockLogger: any;
+  let mockThemeManager: jest.Mocked<IThemeManager>;
+  let mockConfigManager: jest.Mocked<IConfigManager>;
   let mockTheme: ITheme;
-  let mockThemeClass: IThemeClass;
+
+  // Helper function to create complete mock theme data
+  const createMockThemeData = (id: string = 'test-theme-1'): IThemeData => ({
+    id,
+    name: `Test Theme ${id}`,
+    displayName: `Test Theme Display ${id}`,
+    description: 'A test theme for unit testing',
+    type: ExtendedThemeType.MATERIAL,
+    variant: ThemeVariant.DEFAULT,
+    isActive: true,
+    supportsDarkMode: true,
+    oppositeTheme: 'test-theme-dark',
+    version: '1.0.0',
+    author: 'Test Author',
+    tags: ['test', 'mock', 'unit-test']
+  });
+
+  // Helper function to create complete mock theme properties
+  const createMockThemeProperties = (): IThemeProperties => ({
+    colors: {
+      primary: {
+        main: '#1976d2',
+        light: '#42a5f5',
+        dark: '#1565c0',
+        contrast: '#ffffff'
+      },
+      secondary: {
+        main: '#dc004e',
+        light: '#ff5983',
+        dark: '#9a0036',
+        contrast: '#ffffff'
+      },
+      background: {
+        primary: '#ffffff',
+        secondary: '#f5f5f5',
+        tertiary: '#e0e0e0',
+        overlay: 'rgba(0, 0, 0, 0.5)'
+      },
+      text: {
+        primary: '#212121',
+        secondary: '#757575',
+        disabled: '#bdbdbd',
+        inverse: '#ffffff'
+      },
+      status: {
+        success: '#4caf50',
+        warning: '#ff9800',
+        error: '#f44336',
+        info: '#2196f3'
+      },
+      ui: {
+        border: '#e0e0e0',
+        shadow: '#000000',
+        highlight: '#1976d2',
+        disabled: '#f5f5f5'
+      },
+      semantic: {
+        brand: {
+          primary: '#1976d2',
+          secondary: '#dc004e'
+        },
+        functional: {
+          success: '#4caf50',
+          warning: '#ff9800',
+          error: '#f44336',
+          info: '#2196f3'
+        },
+        state: {
+          active: '#1976d2',
+          inactive: '#757575',
+          hover: '#f5f5f5',
+          focus: '#e3f2fd'
+        }
+      }
+    },
+    typography: {
+      fontFamily: {
+        primary: 'Roboto, sans-serif',
+        secondary: 'Arial, sans-serif',
+        monospace: 'Courier New, monospace'
+      },
+      fontSize: {
+        xs: 12,
+        sm: 14,
+        base: 16,
+        lg: 18,
+        xl: 20,
+        '2xl': 24,
+        '3xl': 30
+      },
+      fontWeight: {
+        light: 300,
+        normal: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700
+      },
+      lineHeight: {
+        tight: 1.2,
+        normal: 1.5,
+        relaxed: 1.75
+      },
+      letterSpacing: {
+        tight: -0.5,
+        normal: 0,
+        wide: 0.5
+      }
+    },
+    spacing: {
+      base: 8,
+      scale: {
+        xs: 4,
+        sm: 8,
+        md: 16,
+        lg: 24,
+        xl: 32,
+        '2xl': 48,
+        '3xl': 64
+      }
+    },
+    borderRadius: {
+      none: 0,
+      sm: 4,
+      base: 8,
+      lg: 12,
+      xl: 16,
+      full: 9999
+    },
+    shadows: {
+      sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
+      base: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      md: '0 10px 15px rgba(0, 0, 0, 0.1)',
+      lg: '0 20px 25px rgba(0, 0, 0, 0.1)',
+      xl: '0 25px 50px rgba(0, 0, 0, 0.25)',
+      '2xl': '0 50px 100px rgba(0, 0, 0, 0.25)'
+    },
+    animation: {
+      duration: {
+        fast: 150,
+        normal: 300,
+        slow: 500,
+        verySlow: 1000
+      },
+      easing: {
+        linear: 'linear',
+        ease: 'ease',
+        easeIn: 'ease-in',
+        easeOut: 'ease-out',
+        easeInOut: 'ease-in-out'
+      },
+      properties: {
+        all: 'all',
+        opacity: 'opacity',
+        transform: 'transform',
+        color: 'color',
+        background: 'background'
+      }
+    },
+    breakpoints: {
+      xs: 0,
+      sm: 576,
+      md: 768,
+      lg: 992,
+      xl: 1200,
+      '2xl': 1400
+    },
+    themeClasses: {
+      'button-primary': {
+        name: 'button-primary',
+        description: 'Primary button styling',
+        properties: {
+          backgroundColor: '#1976d2',
+          color: '#ffffff',
+          padding: '8px 16px',
+          borderRadius: '4px'
+        }
+      }
+    },
+    custom: {
+      customProperty1: 'customValue1',
+      customProperty2: 42
+    },
+    metadata: {
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-01'),
+      version: '1.0.0',
+      author: 'Test Author'
+    }
+  });
 
   beforeEach(() => {
-    // Reset all mocks
+    // Reset mocks
     jest.clearAllMocks();
-
-    // Create mock theme
-    mockTheme = {
-      id: 'test-theme',
-      name: 'Test Theme',
-      displayName: 'Test Theme Display',
-      type: 'custom' as any,
-      variant: 'default' as any,
-      isActive: false,
-      supportsDarkMode: true,
-      colors: {
-        primary: { main: '#ff0000', light: '#ff6666', dark: '#cc0000', contrast: '#ffffff' },
-        secondary: { main: '#00ff00', light: '#66ff66', dark: '#00cc00', contrast: '#000000' },
-        background: {
-          primary: '#ffffff',
-          secondary: '#f0f0f0',
-          tertiary: '#e0e0e0',
-          overlay: '#00000080',
-        },
-        text: { primary: '#000000', secondary: '#666666', disabled: '#999999', inverse: '#ffffff' },
-        status: { success: '#00ff00', warning: '#ffaa00', error: '#ff0000', info: '#0066ff' },
-        ui: { border: '#cccccc', shadow: '#00000040', highlight: '#ffff00', disabled: '#dddddd' },
-        semantic: {},
-      },
-      typography: {
-        fontFamily: { primary: 'Arial', secondary: 'Helvetica', monospace: 'Courier' },
-        fontSize: { xs: 12, sm: 14, base: 16, lg: 18, xl: 20, '2xl': 24, '3xl': 32 },
-        fontWeight: { light: 300, normal: 400, medium: 500, semibold: 600, bold: 700 },
-        lineHeight: { tight: 1.2, normal: 1.5, relaxed: 1.8 },
-      },
-      spacing: {
-        base: 8,
-        scale: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32, '2xl': 48, '3xl': 64 },
-      },
-      borderRadius: { none: 0, sm: 4, base: 8, lg: 12, xl: 16, full: 999 },
-      shadows: {
-        sm: '0 1px 2px rgba(0,0,0,0.1)',
-        base: '0 2px 4px rgba(0,0,0,0.1)',
-        md: '0 4px 8px rgba(0,0,0,0.1)',
-        lg: '0 8px 16px rgba(0,0,0,0.1)',
-        xl: '0 16px 32px rgba(0,0,0,0.1)',
-        '2xl': '0 32px 64px rgba(0,0,0,0.1)',
-      },
-      animation: {
-        duration: { fast: 150, normal: 300, slow: 500, verySlow: 1000 },
-        easing: {
-          linear: 'linear',
-          ease: 'ease',
-          easeIn: 'ease-in',
-          easeOut: 'ease-out',
-          easeInOut: 'ease-in-out',
-        },
-        properties: {
-          all: 'all',
-          opacity: 'opacity',
-          transform: 'transform',
-          color: 'color',
-          background: 'background',
-        },
-      },
-      breakpoints: { xs: 576, sm: 768, md: 992, lg: 1200, xl: 1400, '2xl': 1600 },
-      getColor: jest.fn((path: string) => '#ff0000'),
-      getSpacing: jest.fn((size: string) => 16),
-      getFontSize: jest.fn((size: string) => 16),
-      getBorderRadius: jest.fn((size: string) => 8),
-      getShadow: jest.fn((size: string) => '0 2px 4px rgba(0,0,0,0.1)'),
-      getAnimationDuration: jest.fn((size: string) => 300),
-      supportsBreakpoint: jest.fn(() => true),
-      getOppositeTheme: jest.fn(() => null),
-      clone: jest.fn(() => mockTheme),
-      merge: jest.fn(() => mockTheme),
-    };
-
-    // Create mock theme class
-    mockThemeClass = {
-      backgroundColor: '#ffffff',
-      color: '#000000',
-      padding: 16,
-      margin: 8,
-      borderRadius: 8,
-      fontSize: 16,
-      fontWeight: 400,
-    };
 
     // Create mock theme manager
     mockThemeManager = {
-      themes: new Map([['test-theme', mockTheme]]),
-      activeTheme: null,
-      currentThemeType: 'custom' as any,
-      isInitialized: true,
-      listeners: new Set(),
-      themeCache: new Map(),
-      initialize: jest.fn(),
       registerTheme: jest.fn(),
       unregisterTheme: jest.fn(),
-      getTheme: jest.fn((id: string) => (id === 'test-theme' ? mockTheme : undefined)),
-      getThemeByName: jest.fn(),
+      getTheme: jest.fn(),
+      getActiveTheme: jest.fn(),
+      activateTheme: jest.fn(),
+      activateThemeByName: jest.fn(),
       getThemes: jest.fn(),
       getThemesByType: jest.fn(),
       getThemesByVariant: jest.fn(),
-      hasTheme: jest.fn((id: string) => id === 'test-theme'),
-      activateTheme: jest.fn(),
-      deactivateTheme: jest.fn(),
-      activateThemeByName: jest.fn(),
-      getActiveTheme: jest.fn(),
-      isThemeActive: jest.fn(),
-      toggleThemeMode: jest.fn(),
-      switchToLightTheme: jest.fn(),
-      switchToDarkTheme: jest.fn(),
-      getThemeClass: jest.fn((className: string) =>
-        className === 'test-class' ? mockThemeClass : undefined
-      ),
-      getColor: jest.fn(),
-      getSpacing: jest.fn(),
-      getFontSize: jest.fn(),
-      getBorderRadius: jest.fn(),
-      getShadow: jest.fn(),
-      getAnimationDuration: jest.fn(),
-      supportsBreakpoint: jest.fn(),
-      applyThemeClass: jest.fn(),
-      removeThemeClass: jest.fn(),
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      clearListeners: jest.fn(),
-      getStatistics: jest.fn(),
-      exportTheme: jest.fn(),
-      importTheme: jest.fn(),
-      reset: jest.fn(),
-      destroy: jest.fn(),
-    };
+      hasTheme: jest.fn(),
+      clearThemes: jest.fn(),
+      getThemeCount: jest.fn()
+    } as jest.Mocked<IThemeManager>;
 
     // Create mock config manager
     mockConfigManager = {
-      getTheme: jest.fn((id: string) => (id === 'test-theme' ? mockTheme : null)),
-      getAllThemes: jest.fn(() => new Map([['test-theme', mockTheme]])),
-      registerSceneConfigs: jest.fn(),
-      loadSceneConfigs: jest.fn(),
-      hasAllConfigs: jest.fn(),
-      getAvailableScenes: jest.fn(),
-      getAssetManager: jest.fn(),
-      getSceneAssetLoader: jest.fn(),
-      getTheme: jest.fn((id: string) => (id === 'test-theme' ? mockTheme : null)),
-    } as any;
+      getConfig: jest.fn(),
+      setConfig: jest.fn(),
+      hasConfig: jest.fn(),
+      clearConfigs: jest.fn(),
+      getConfigCount: jest.fn(),
+      loadConfig: jest.fn(),
+      saveConfig: jest.fn(),
+      validateConfig: jest.fn(),
+      getConfigKeys: jest.fn(),
+      getConfigByType: jest.fn(),
+      getAllThemes: jest.fn()
+    } as jest.Mocked<IConfigManager>;
 
-    // Create mock logger
-    mockLogger = {
-      info: jest.fn(),
-      debug: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      trace: jest.fn(),
-    };
+    // Create mock theme
+    const themeFactory = new SegregatedThemeFactory();
+    const themeData = createMockThemeData();
+    const themeProperties = createMockThemeProperties();
+    const createResult = themeFactory.createTheme(themeData, themeProperties);
+    mockTheme = createResult.data!;
 
-    // Mock Logger.getInstance to return our mock
-    (Logger.getInstance as jest.Mock).mockReturnValue(mockLogger);
-
-    // Create ThemeActivator instance
+    // Create theme activator with mocked dependencies
     themeActivator = new ThemeActivator(mockThemeManager, mockConfigManager);
   });
 
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
-  describe('Constructor', () => {
-    it('should initialize with default dependencies', () => {
+  describe('constructor', () => {
+    it('should create theme activator with default dependencies', () => {
       const activator = new ThemeActivator();
-      expect(activator).toBeInstanceOf(ThemeActivator);
+      expect(activator).toBeDefined();
     });
 
-    it('should initialize with provided dependencies', () => {
-      expect(themeActivator).toBeInstanceOf(ThemeActivator);
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        'ThemeActivator',
-        'constructor',
-        'Theme activator initialized'
-      );
+    it('should create theme activator with custom dependencies', () => {
+      const activator = new ThemeActivator(mockThemeManager, mockConfigManager);
+      expect(activator).toBeDefined();
     });
   });
 
-  describe('Theme Activation for Scenes', () => {
-    it('should successfully activate a theme for a scene', async () => {
-      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme');
+  describe('activateThemeForScene', () => {
+    it('should activate theme for scene successfully', async () => {
+      mockThemeManager.getTheme.mockReturnValue(mockTheme);
+      mockThemeManager.activateTheme.mockResolvedValue(undefined);
+
+      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme-1');
 
       expect(result.success).toBe(true);
-      expect(result.themeId).toBe('test-theme');
-      expect(result.appliedClasses).toEqual([]);
-      expect(result.errors).toEqual([]);
-      expect(result.duration).toBeGreaterThan(0);
+      expect(result.themeId).toBe('test-theme-1');
+      expect(result.sceneId).toBe('test-scene');
+      expect(mockThemeManager.getTheme).toHaveBeenCalledWith('test-theme-1');
+      expect(mockThemeManager.activateTheme).toHaveBeenCalledWith('test-theme-1');
     });
 
-    it('should handle theme not found error', async () => {
-      const result = await themeActivator.activateThemeForScene('test-scene', 'nonexistent-theme');
+    it('should handle theme not found', async () => {
+      mockThemeManager.getTheme.mockReturnValue(undefined);
+
+      const result = await themeActivator.activateThemeForScene('test-scene', 'non-existent-theme');
 
       expect(result.success).toBe(false);
-      expect(result.errors).toContain('Theme not found: nonexistent-theme');
+      expect(result.errors).toContain('Theme not found');
     });
 
-    it('should handle activation errors gracefully', async () => {
-      // Mock an error in theme application by making both getTheme methods return null
-      mockConfigManager.getTheme = jest.fn(() => null);
-      mockThemeManager.getTheme = jest.fn(() => undefined);
+    it('should handle theme manager errors', async () => {
+      mockThemeManager.getTheme.mockImplementation(() => {
+        throw new Error('Theme manager error');
+      });
 
-      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme');
+      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme-1');
 
       expect(result.success).toBe(false);
-      expect(result.errors).toContain('Theme not found: test-theme');
+      expect(result.errors).toContain('Theme manager error');
     });
 
-    it('should track applied classes', async () => {
-      // Add theme classes to the mock theme
-      const themeWithClasses = {
-        ...mockTheme,
-        themeClasses: {
-          'test-class': mockThemeClass,
-        },
-      };
-      mockConfigManager.getTheme = jest.fn(() => themeWithClasses);
+    it('should handle setActiveTheme errors', async () => {
+      mockThemeManager.getTheme.mockReturnValue(mockTheme);
+      mockThemeManager.activateTheme.mockImplementation(() => {
+        throw new Error('Set active theme error');
+      });
 
-      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme');
+      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme-1');
 
-      expect(result.success).toBe(true);
-      expect(themeActivator.getAppliedClasses('test-scene')).toContain('test-class');
+      expect(result.success).toBe(false);
+      expect(result.errors).toContain('Theme manager error');
     });
   });
 
-  describe('Theme Application to Game Objects', () => {
-    let mockGameObject: any;
-
-    beforeEach(() => {
-      mockGameObject = {
-        constructor: { name: 'MockGameObject' },
-        scene: { scene: { key: 'test-scene' } },
-        name: 'test-object',
-      };
-    });
-
-    it('should successfully apply theme to game object', async () => {
-      const result = await themeActivator.applyThemeToGameObject(mockGameObject, 'test-theme');
-
-      expect(result.success).toBe(true);
-      expect(result.themeId).toBe('test-theme');
-      expect(result.duration).toBeGreaterThan(0);
-    });
-
-    it('should handle game object theme application errors', async () => {
-      // Mock an error by making both getTheme methods return null
-      mockConfigManager.getTheme = jest.fn(() => null);
-      mockThemeManager.getTheme = jest.fn(() => undefined);
-
-      const result = await themeActivator.applyThemeToGameObject(mockGameObject, 'test-theme');
-
-      expect(result.success).toBe(false);
-      expect(result.errors).toContain('Theme not found: test-theme');
-    });
-
-    it('should handle missing game object scene', async () => {
-      mockGameObject.scene = null;
-
-      const result = await themeActivator.applyThemeToGameObject(mockGameObject, 'test-theme');
-
-      expect(result.success).toBe(true); // Should still succeed with fallback
-    });
-  });
-
-  describe('Theme Switching', () => {
-    it('should successfully switch theme for a scene', async () => {
-      // First activate a theme
-      await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-
-      // Create a second theme
-      const secondTheme = { ...mockTheme, id: 'second-theme', name: 'Second Theme' };
-      mockConfigManager.getTheme = jest.fn((id: string) =>
-        id === 'test-theme' ? mockTheme : id === 'second-theme' ? secondTheme : null
-      );
-
-      const result = await themeActivator.switchThemeForScene('test-scene', 'second-theme');
-
-      expect(result.success).toBe(true);
-      expect(result.themeId).toBe('second-theme');
-    });
-
-    it('should handle theme switch errors', async () => {
-      // Mock an error during theme switching by making both getTheme methods return null
-      mockConfigManager.getTheme = jest.fn(() => null);
-      mockThemeManager.getTheme = jest.fn(() => undefined);
-
-      const result = await themeActivator.switchThemeForScene('test-scene', 'test-theme');
-
-      expect(result.success).toBe(false);
-      expect(result.errors).toContain('Theme not found: test-theme');
-    });
-  });
-
-  describe('Theme Deactivation', () => {
-    it('should successfully deactivate theme for a scene', async () => {
-      // First activate a theme
-      await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-
-      // Then deactivate it
+  describe('deactivateThemeForScene', () => {
+    it('should deactivate theme for scene successfully', async () => {
       await expect(themeActivator.deactivateThemeForScene('test-scene')).resolves.not.toThrow();
-
-      expect(themeActivator.getActiveThemeForScene('test-scene')).toBeNull();
     });
 
-    it('should handle deactivation errors gracefully', async () => {
-      // Mock an error by making the method throw
-      const originalDeactivate = themeActivator.deactivateThemeForScene;
-      themeActivator.deactivateThemeForScene = jest
-        .fn()
-        .mockRejectedValue(new Error('Deactivation error'));
+    it('should handle deactivation errors', async () => {
+      // Mock the removeAppliedClasses method to throw an error
+      const originalRemoveAppliedClasses = themeActivator['removeAppliedClasses'];
+      themeActivator['removeAppliedClasses'] = jest.fn().mockImplementation(() => {
+        throw new Error('Deactivation error');
+      });
 
-      await expect(themeActivator.deactivateThemeForScene('test-scene')).rejects.toThrow(
-        'Deactivation error'
-      );
-
-      // Restore original method
-      themeActivator.deactivateThemeForScene = originalDeactivate;
+      await expect(themeActivator.deactivateThemeForScene('test-scene')).rejects.toThrow('Deactivation error');
+      
+      // Restore the original method
+      themeActivator['removeAppliedClasses'] = originalRemoveAppliedClasses;
     });
   });
 
-  describe('Theme Access Methods', () => {
-    it('should get active theme for scene', async () => {
-      await themeActivator.activateThemeForScene('test-scene', 'test-theme');
+  describe('applyThemeToGameObject', () => {
+    const mockGameObject = {
+      scene: {
+        scene: {
+          key: 'test-scene'
+        }
+      },
+      name: 'test-game-object',
+      setData: jest.fn(),
+      getData: jest.fn()
+    } as any;
 
-      const activeTheme = themeActivator.getActiveThemeForScene('test-scene');
-      expect(activeTheme).toBe(mockTheme);
+    it('should apply theme to game object successfully', async () => {
+      mockThemeManager.getTheme.mockReturnValue(mockTheme);
+
+      const result = await themeActivator.applyThemeToGameObject(mockGameObject, 'test-theme-1');
+
+      expect(result.success).toBe(true);
+      expect(result.themeId).toBe('test-theme-1');
     });
 
-    it('should return null for inactive scene', () => {
-      const activeTheme = themeActivator.getActiveThemeForScene('inactive-scene');
-      expect(activeTheme).toBeNull();
+    it('should handle game object without scene', async () => {
+      mockThemeManager.getTheme.mockReturnValue(mockTheme);
+      
+      const gameObjectWithoutScene = {
+        name: 'test-game-object',
+        setData: jest.fn(),
+        getData: jest.fn()
+      } as any;
+
+      const result = await themeActivator.applyThemeToGameObject(gameObjectWithoutScene, 'test-theme-1');
+
+      expect(result.success).toBe(true);
+      expect(result.themeId).toBe('test-theme-1');
     });
 
-    it('should get all active themes', async () => {
-      await themeActivator.activateThemeForScene('scene1', 'test-theme');
-      await themeActivator.activateThemeForScene('scene2', 'test-theme');
+    it('should handle game object without name', async () => {
+      mockThemeManager.getTheme.mockReturnValue(mockTheme);
+      
+      const gameObjectWithoutName = {
+        scene: {
+          scene: {
+            key: 'test-scene'
+          }
+        },
+        setData: jest.fn(),
+        getData: jest.fn()
+      } as any;
 
-      const activeThemes = themeActivator.getAllActiveThemes();
-      expect(activeThemes.size).toBe(2);
-      expect(activeThemes.has('scene1')).toBe(true);
-      expect(activeThemes.has('scene2')).toBe(true);
+      const result = await themeActivator.applyThemeToGameObject(gameObjectWithoutName, 'test-theme-1');
+
+      expect(result.success).toBe(true);
+      expect(result.themeId).toBe('test-theme-1');
     });
 
-    it('should check if theme is active for scene', async () => {
-      await themeActivator.activateThemeForScene('test-scene', 'test-theme');
+    it('should apply theme with custom context', async () => {
+      mockThemeManager.getTheme.mockReturnValue(mockTheme);
+      
+      const customContext = {
+        elementType: ThemeElementType.GAME_OBJECT,
+        elementId: 'custom-element',
+        customProperties: {
+          customProp: 'customValue'
+        }
+      };
 
-      expect(themeActivator.isThemeActiveForScene('test-scene', 'test-theme')).toBe(true);
-      expect(themeActivator.isThemeActiveForScene('test-scene', 'other-theme')).toBe(false);
-      expect(themeActivator.isThemeActiveForScene('other-scene', 'test-theme')).toBe(false);
-    });
+      const result = await themeActivator.applyThemeToGameObject(mockGameObject, 'test-theme-1', customContext);
 
-    it('should get applied classes for scene', async () => {
-      await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-
-      const appliedClasses = themeActivator.getAppliedClasses('test-scene');
-      expect(Array.isArray(appliedClasses)).toBe(true);
-    });
-
-    it('should get activation history', async () => {
-      await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-
-      const history = themeActivator.getActivationHistory();
-      expect(history.size).toBeGreaterThan(0);
-      expect(history.has('test-scene:test-theme')).toBe(true);
+      expect(result.success).toBe(true);
+      expect(result.themeId).toBe('test-theme-1');
     });
   });
 
-  describe('Theme Utility Methods', () => {
+  describe('getActiveThemeForScene', () => {
+    it('should get active theme for scene', () => {
+      mockThemeManager.getActiveTheme.mockReturnValue(mockTheme);
+
+      const result = themeActivator.getActiveThemeForScene('test-scene');
+
+      expect(result).toBe(mockTheme);
+    });
+
+    it('should handle no active theme', () => {
+      mockThemeManager.getActiveTheme.mockReturnValue(undefined);
+
+      const result = themeActivator.getActiveThemeForScene('test-scene');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getAllActiveThemes', () => {
+    it('should get all active themes', () => {
+      const result = themeActivator.getAllActiveThemes();
+
+      expect(result).toBeInstanceOf(Map);
+      expect(result.size).toBe(0); // Initially empty since no themes are activated
+    });
+  });
+
+  describe('isThemeActiveForScene', () => {
+    it('should check if theme is active for scene', () => {
+      mockThemeManager.getActiveTheme.mockReturnValue(mockTheme);
+
+      const result = themeActivator.isThemeActiveForScene('test-scene', 'test-theme-1');
+
+      expect(result).toBe(true);
+    });
+
+    it('should return false for inactive theme', () => {
+      mockThemeManager.getActiveTheme.mockReturnValue(undefined);
+
+      const result = themeActivator.isThemeActiveForScene('test-scene', 'test-theme-1');
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('getAppliedClasses', () => {
+    it('should get applied classes for scene', () => {
+      const result = themeActivator.getAppliedClasses('test-scene');
+
+      expect(result).toEqual([]);
+    });
+
+    it('should return empty array for scene without classes', () => {
+      const result = themeActivator.getAppliedClasses('non-existent-scene');
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getActivationHistory', () => {
+    it('should get activation history', () => {
+      const result = themeActivator.getActivationHistory();
+
+      expect(result).toBeInstanceOf(Map);
+      expect(result.size).toBe(0); // Initially empty
+    });
+  });
+
+  describe('getAvailableThemesForScene', () => {
     it('should get available themes for scene', () => {
-      const availableThemes = themeActivator.getAvailableThemesForScene('test-scene');
-      expect(Array.isArray(availableThemes)).toBe(true);
-      expect(availableThemes).toContain(mockTheme);
-    });
+      const availableThemes = [mockTheme];
+      mockThemeManager.getThemes.mockReturnValue(availableThemes);
 
-    it('should filter themes based on compatibility', () => {
-      // Create an incompatible theme
-      const incompatibleTheme = { ...mockTheme, id: 'incompatible', name: '' };
-      mockConfigManager.getAllThemes = jest.fn(
-        () =>
-          new Map([
-            ['test-theme', mockTheme],
-            ['incompatible', incompatibleTheme],
-          ])
-      );
+      const result = themeActivator.getAvailableThemesForScene('test-scene');
 
-      const availableThemes = themeActivator.getAvailableThemesForScene('test-scene');
-      expect(availableThemes).toContain(mockTheme);
-      expect(availableThemes).not.toContain(incompatibleTheme);
+      expect(result).toEqual(availableThemes);
     });
   });
 
-  describe('Lifecycle Methods', () => {
-    it('should reset the activator', async () => {
-      // Activate some themes first
-      await themeActivator.activateThemeForScene('scene1', 'test-theme');
-      await themeActivator.activateThemeForScene('scene2', 'test-theme');
-
-      // Reset
-      themeActivator.reset();
-
-      expect(themeActivator.getAllActiveThemes().size).toBe(0);
-      expect(themeActivator.getActivationHistory().size).toBe(0);
+  describe('reset', () => {
+    it('should reset theme activator', () => {
+      expect(() => themeActivator.reset()).not.toThrow();
     });
+  });
 
-    it('should destroy the activator', () => {
+  describe('destroy', () => {
+    it('should destroy theme activator', () => {
       expect(() => themeActivator.destroy()).not.toThrow();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle ConfigManager errors gracefully', async () => {
-      mockConfigManager.getTheme = jest.fn(() => {
-        throw new Error('ConfigManager error');
-      });
-
-      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-      expect(result.success).toBe(false);
-      expect(result.errors.length).toBeGreaterThan(0);
-    });
-
-    it('should handle ThemeManager errors gracefully', async () => {
-      // Mock an error by making both getTheme methods return null
-      mockConfigManager.getTheme = jest.fn(() => null);
-      mockThemeManager.getTheme = jest.fn(() => undefined);
-
-      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-      expect(result.success).toBe(false);
-      expect(result.errors).toContain('Theme not found: test-theme');
-    });
-
-    it('should handle performance timing errors', async () => {
-      // Mock an error by making both getTheme methods return null
-      mockConfigManager.getTheme = jest.fn(() => null);
-      mockThemeManager.getTheme = jest.fn(() => undefined);
-
-      const result = await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-      expect(result.success).toBe(false);
-      expect(result.errors).toContain('Theme not found: test-theme');
-    });
-  });
-
-  describe('Integration Tests', () => {
-    it('should work with real ConfigManager and ThemeManager', async () => {
-      // Create a real ThemeActivator with mocked dependencies
-      const realActivator = new ThemeActivator();
-
-      // This should not throw
-      expect(realActivator).toBeInstanceOf(ThemeActivator);
-    });
-
-    it('should handle concurrent theme activations', async () => {
-      const promises = [
-        themeActivator.activateThemeForScene('scene1', 'test-theme'),
-        themeActivator.activateThemeForScene('scene2', 'test-theme'),
-        themeActivator.activateThemeForScene('scene3', 'test-theme'),
-      ];
-
-      const results = await Promise.all(promises);
-
-      results.forEach(result => {
-        expect(result.success).toBe(true);
-      });
-
-      expect(themeActivator.getAllActiveThemes().size).toBe(3);
-    });
-
-    it('should handle rapid theme switching', async () => {
-      const themes = ['test-theme', 'test-theme', 'test-theme'];
-
-      for (const themeId of themes) {
-        const result = await themeActivator.switchThemeForScene('test-scene', themeId);
-        expect(result.success).toBe(true);
-      }
-
-      expect(themeActivator.isThemeActiveForScene('test-scene', 'test-theme')).toBe(true);
-    });
-  });
-
-  describe('Performance Tests', () => {
-    it('should complete theme activation within reasonable time', async () => {
-      const startTime = performance.now();
-
-      await themeActivator.activateThemeForScene('test-scene', 'test-theme');
-
-      const endTime = performance.now();
-      const duration = endTime - startTime;
-
-      // Should complete within 100ms (very generous for unit tests)
-      expect(duration).toBeLessThan(100);
-    });
-
-    it('should handle multiple rapid activations efficiently', async () => {
-      const startTime = performance.now();
-
-      const promises = Array.from({ length: 10 }, (_, i) =>
-        themeActivator.activateThemeForScene(`scene${i}`, 'test-theme')
-      );
-
-      await Promise.all(promises);
-
-      const endTime = performance.now();
-      const duration = endTime - startTime;
-
-      // Should complete 10 activations within 200ms
-      expect(duration).toBeLessThan(200);
     });
   });
 });

@@ -10,22 +10,22 @@ This document defines the coding rules and standards for the Phaser Base Game Mo
 |------|-------|-------------|
 | **1** | **Logger Usage** | Always use logger instead of console |
 | **2** | **Type Safety** | Avoid `any` types, use proper interfaces |
-| **3** | **Magic Number/String Prohibition** | Define constants instead of magic values |
-| **4** | **Constants Folder Organization** | Organize constants in dedicated folders |
-| **5** | **String Literal Prohibition** | Use enums instead of string literals |
-| **6** | **Enum Organization Rules** | Define enums in dedicated folders |
-| **7** | **Interface Organization Rules** | Define interfaces in dedicated folders |
-| **8** | **Enum Usage** | Use enums instead of string/number unions |
-| **9** | **Design Patterns** | Implement SOLID principles |
-| **10** | **Error Handling** | Handle all error scenarios |
-| **11** | **Testing** | Write comprehensive tests |
-| **12** | **Testing Rules** | Use mock context in tests |
-| **13** | **System Documentation Rules** | Document system progression, usage, and structure |
-| **14** | **Documentation File Organization** | Place documentation files in system docs folders |
-| **15** | **Enum/Interface Single Responsibility** | Prevent duplicate enums/interfaces across systems |
-| **16** | **Interface Dependency Inversion** | Force use of interfaces in properties and parameters |
-| **17** | **Require Statement Prohibition** | Prohibit CommonJS require() statements in browser environments |
-| **18** | **Logger Import Rule** | Always import `logger` from Logger, never import `Logger` class from LoggerOptimized |
+| **3** | **Constants Management** | Define constants instead of magic values, organize in dedicated folders |
+
+| **4** | **Enum Usage** | Use enums instead of string/number unions and string literals |
+| **5** | **Enum Organization Rules** | Define enums in dedicated folders |
+| **6** | **Interface Organization Rules** | Define interfaces in dedicated folders |
+| **7** | **Design Patterns** | Implement SOLID principles |
+| **8** | **Error Handling** | Handle all error scenarios |
+| **9** | **Testing** | Write comprehensive tests |
+| **10** | **Testing Rules** | Use mock context in tests |
+| **11** | **System Documentation Rules** | Document system progression, usage, and structure |
+| **12** | **Documentation File Organization** | Place documentation files in system docs folders |
+| **13** | **Enum/Interface Single Responsibility** | Prevent duplicate enums/interfaces across systems |
+| **14** | **Interface Dependency Inversion** | Force use of interfaces in properties and parameters |
+| **15** | **Require Statement Prohibition** | Prohibit CommonJS require() statements in browser environments |
+| **16** | **Logger Import Rule** | Always import `logger` from Logger, never import `Logger` class from LoggerOptimized |
+| **17** | **Interface/Abstract Class Inheritance** | Concrete classes must implement all methods from their interfaces/abstract classes |
 
 ## 🏗️ Architecture Principles
 
@@ -196,68 +196,6 @@ export const VALIDATION_CONSTANTS = {
 } as const;
 ```
 
-### 3. **Magic Number/String Prohibition** 🚫
-
-#### ❌ **NEVER USE MAGIC NUMBERS OR STRINGS**
-```typescript
-// ❌ FORBIDDEN - Magic numbers in code
-function calculateArea(width: number, height: number): number {
-  return width * height * 0.5; // What does 0.5 mean?
-}
-
-// ❌ FORBIDDEN - Magic strings in code
-function processType(type: string): void {
-  if (type === 'admin') { // What does 'admin' mean?
-    // Process admin
-  }
-}
-
-// ❌ FORBIDDEN - Hardcoded values
-const maxRetries = 3; // Should be in constants
-const timeoutMs = 5000; // Should be in constants
-const defaultTheme = 'dark'; // Should be in constants
-```
-
-#### ✅ **ALWAYS DEFINE CONSTANTS**
-```typescript
-// ✅ CORRECT - Define constants for all magic values
-// src/unit/constants/UnitSystemConstants.ts
-export const CALCULATION_CONSTANTS = {
-  AREA_MULTIPLIER: 0.5,
-  PERIMETER_MULTIPLIER: 2.0,
-  VOLUME_MULTIPLIER: 1.0
-} as const;
-
-export const USER_TYPE_CONSTANTS = {
-  ADMIN: 'admin',
-  USER: 'user',
-  GUEST: 'guest',
-  MODERATOR: 'moderator'
-} as const;
-
-export const SYSTEM_CONSTANTS = {
-  MAX_RETRIES: 3,
-  TIMEOUT_MS: 5000,
-  DEFAULT_THEME: 'dark',
-  CACHE_SIZE: 1000
-} as const;
-
-// ✅ CORRECT - Use constants in code
-import { CALCULATION_CONSTANTS, USER_TYPE_CONSTANTS, SYSTEM_CONSTANTS } from '../constants';
-
-function calculateArea(width: number, height: number): number {
-  return width * height * CALCULATION_CONSTANTS.AREA_MULTIPLIER;
-}
-
-function processType(type: string): void {
-  if (type === USER_TYPE_CONSTANTS.ADMIN) {
-    // Process admin
-  }
-}
-```
-
-### 4. **Constants Folder Organization** 📁
-
 #### ✅ **CONSTANTS MUST BE IN CONSTANTS FOLDERS**
 ```typescript
 // ✅ CORRECT - Constants in dedicated constants folders
@@ -329,7 +267,7 @@ export interface IUnit {
 }
 ```
 
-### 5. **Type Safety Rules** 🛡️
+### 3. **Type Safety Rules** 🛡️
 
 #### ✅ **MUST DEFINE INTERFACES**
 ```typescript
@@ -372,7 +310,7 @@ function processUnknownData(data: unknown): number {
 }
 ```
 
-### 6. **Enum Usage Rules** 🎯
+### 4. **Enum Usage Rules** 🎯
 
 #### ✅ **MUST USE ENUMS**
 ```typescript
@@ -397,7 +335,7 @@ export interface IUnit {
 }
 ```
 
-#### ❌ **NEVER USE STRING/NUMBER UNIONS**
+#### ❌ **NEVER USE STRING/NUMBER UNIONS OR STRING LITERALS**
 ```typescript
 // ❌ FORBIDDEN - String unions
 type UnitType = 'size' | 'position' | 'scale';
@@ -407,9 +345,22 @@ type Priority = 1 | 2 | 3 | 4;
 
 // ❌ FORBIDDEN - Mixed types
 type Value = string | number | boolean;
+
+// ❌ FORBIDDEN - String literals in type definitions
+interface IConfig {
+  type: 'linear' | 'radial';           // Use enum instead
+  direction: 'in' | 'out' | 'both';    // Use enum instead
+  format: 'json' | 'yaml' | 'xml';     // Use enum instead
+  logLevel: 'debug' | 'info' | 'warn' | 'error'; // Use enum instead
+}
+
+// ❌ FORBIDDEN - String literals in function parameters
+function processData(type: 'image' | 'audio' | 'video'): void {
+  // Use enum instead
+}
 ```
 
-#### ✅ **USE ENUMS FOR CONSTANTS**
+#### ✅ **USE ENUMS FOR CONSTANTS AND STRING VALUES**
 ```typescript
 // ✅ CORRECT - Use enums for related constants
 export enum StrategyPriority {
@@ -430,28 +381,7 @@ export function getPriority(unitType: UnitType): number {
       return StrategyPriority.MIXED;
   }
 }
-```
 
-### 7. **String Literal Prohibition** 🚫
-
-#### ❌ **NEVER USE STRING LITERALS**
-```typescript
-// ❌ FORBIDDEN - String literals in type definitions
-interface IConfig {
-  type: 'linear' | 'radial';           // Use enum instead
-  direction: 'in' | 'out' | 'both';    // Use enum instead
-  format: 'json' | 'yaml' | 'xml';     // Use enum instead
-  logLevel: 'debug' | 'info' | 'warn' | 'error'; // Use enum instead
-}
-
-// ❌ FORBIDDEN - String literals in function parameters
-function processData(type: 'image' | 'audio' | 'video'): void {
-  // Use enum instead
-}
-```
-
-#### ✅ **ALWAYS USE ENUMS FOR STRING VALUES**
-```typescript
 // ✅ CORRECT - Define enums for all string values
 export enum GradientType {
   LINEAR = 'linear',
@@ -491,7 +421,7 @@ function processData(type: AssetType): void {
 }
 ```
 
-### 8. **Enum Organization Rules** 📁
+### 5. **Enum Organization Rules** 📁
 
 #### ✅ **ENUMS MUST BE IN ENUM FOLDERS**
 ```typescript
@@ -557,7 +487,7 @@ export enum UnitType {
 }
 ```
 
-### 9. **Interface Organization Rules** 📁
+### 6. **Interface Organization Rules** 📁
 
 #### ✅ **INTERFACES MUST BE IN INTERFACE FOLDERS**
 ```typescript
@@ -630,7 +560,7 @@ export class UnitCalculator {
 }
 ```
 
-### 10. **Design Pattern Implementation** 🏗️
+### 7. **Design Pattern Implementation** 🏗️
 
 #### **Strategy Pattern**
 ```typescript
@@ -705,7 +635,7 @@ export class LoggingObserver implements IUnitObserver {
 }
 ```
 
-### 11. **Error Handling** ⚠️
+### 8. **Error Handling** ⚠️
 
 #### ✅ **PROPER ERROR HANDLING**
 ```typescript
@@ -741,7 +671,7 @@ public calculate(): number {
 }
 ```
 
-### 12. **Testing Rules** 🧪
+### 9. **Testing Rules** 🧪
 
 #### ✅ **COMPREHENSIVE TESTING**
 ```typescript
@@ -788,7 +718,7 @@ describe('MyClass', () => {
 });
 ```
 
-### 13. **System Documentation Rules** 📚
+### 10. **System Documentation Rules** 📚
 
 #### ✅ **EACH SYSTEM MUST HAVE PROGRESSION SUMMARY REPORT**
 ```markdown
@@ -1031,7 +961,7 @@ src/system/
 - **Validation**: [Input/output validation]
 ```
 
-### 14. **Documentation File Organization** 📁
+### 11. **Documentation File Organization** 📁
 
 #### ✅ **DOCUMENTATION FILES MUST BE IN SYSTEM DOCS FOLDERS**
 ```typescript
@@ -1160,7 +1090,7 @@ docs/
 └── system-structure.md    # Should be in system/docs/
 ```
 
-### 15. **Enum/Interface Single Responsibility** 🎯
+### 12. **Enum/Interface Single Responsibility** 🎯
 
 #### ✅ **ENUMS/INTERFACES MUST HAVE SINGLE RESPONSIBILITY**
 ```typescript
@@ -1398,6 +1328,7 @@ export interface IMixedInterface {
 - [ ] **All enums/interfaces have single responsibility**
 - [ ] **No duplicate enums/interfaces across systems**
 - [ ] **Shared enums/interfaces used consistently**
+- [ ] **All interface/abstract class methods are implemented in concrete classes**
 - [ ] All design patterns properly implemented
 - [ ] All error scenarios handled
 - [ ] All public methods have tests
@@ -1423,6 +1354,7 @@ export interface IMixedInterface {
 - [ ] **Shared enums/interfaces used consistently**
 - [ ] **Use interfaces instead of concrete classes in properties and parameters**
 - [ ] **Follow Dependency Inversion Principle (SOLID)**
+- [ ] **All interface/abstract class methods are implemented in concrete classes**
 - [ ] Proper logging implemented
 - [ ] Error handling comprehensive
 - [ ] Design patterns correctly applied
@@ -1430,7 +1362,7 @@ export interface IMixedInterface {
 - [ ] Code follows naming conventions
 - [ ] No `any` types in public APIs
 
-### 16. **Interface Dependency Inversion** 🔄
+### 13. **Interface Dependency Inversion** 🔄
 
 #### ❌ **FORBIDDEN - Using Concrete Classes in Properties and Parameters**
 ```typescript
@@ -1544,7 +1476,7 @@ export class MyClass {
 }
 ```
 
-### 17. **Require Statement Prohibition** 🚫
+### 14. **Require Statement Prohibition** 🚫
 
 #### ❌ **FORBIDDEN - Using CommonJS require() Statements**
 ```typescript
@@ -1674,7 +1606,7 @@ import config from './config.json';
 import { func1, func2 } from './utils';
 ```
 
-## 📝 **Rule #18: Logger Import Rule**
+## 📝 **Rule #15: Logger Import Rule**
 
 ### ❌ **FORBIDDEN - Importing Logger Class**
 ```typescript
@@ -1728,6 +1660,269 @@ export class ThemeManager {
 }
 ```
 
+## 📝 **Rule #16: Interface/Abstract Class Inheritance**
+
+### ❌ **FORBIDDEN - Incomplete Interface Implementation**
+```typescript
+// ❌ FORBIDDEN - Missing method implementation
+export interface IUnit {
+  readonly id: string;
+  calculate(): number;
+  validate(): boolean;
+  getType(): string;
+}
+
+export class SizeUnit implements IUnit {
+  readonly id: string = 'size-unit';
+  
+  calculate(): number {
+    return 100;
+  }
+  
+  // ❌ FORBIDDEN - Missing validate() method
+  // ❌ FORBIDDEN - Missing getType() method
+}
+```
+
+### ❌ **FORBIDDEN - Incomplete Abstract Class Implementation**
+```typescript
+// ❌ FORBIDDEN - Missing abstract method implementation
+export abstract class BaseUnit {
+  abstract calculate(): number;
+  abstract validate(): boolean;
+  abstract getType(): string;
+  
+  public getId(): string {
+    return 'base-unit';
+  }
+}
+
+export class PositionUnit extends BaseUnit {
+  calculate(): number {
+    return 200;
+  }
+  
+  // ❌ FORBIDDEN - Missing validate() method
+  // ❌ FORBIDDEN - Missing getType() method
+}
+```
+
+### ❌ **FORBIDDEN - Incorrect Method Signatures**
+```typescript
+// ❌ FORBIDDEN - Wrong return type
+export interface ICalculator {
+  calculate(input: number): number;
+}
+
+export class MyCalculator implements ICalculator {
+  // ❌ FORBIDDEN - Wrong return type (string instead of number)
+  calculate(input: number): string {
+    return input.toString();
+  }
+}
+
+// ❌ FORBIDDEN - Wrong parameter types
+export interface IValidator {
+  validate(value: string): boolean;
+}
+
+export class MyValidator implements IValidator {
+  // ❌ FORBIDDEN - Wrong parameter type (number instead of string)
+  validate(value: number): boolean {
+    return value > 0;
+  }
+}
+```
+
+### ✅ **CORRECT - Complete Interface Implementation**
+```typescript
+// ✅ CORRECT - Complete interface implementation
+export interface IUnit {
+  readonly id: string;
+  calculate(): number;
+  validate(): boolean;
+  getType(): string;
+}
+
+export class SizeUnit implements IUnit {
+  readonly id: string = 'size-unit';
+  
+  calculate(): number {
+    return 100;
+  }
+  
+  validate(): boolean {
+    return this.id.length > 0;
+  }
+  
+  getType(): string {
+    return 'size';
+  }
+}
+```
+
+### ✅ **CORRECT - Complete Abstract Class Implementation**
+```typescript
+// ✅ CORRECT - Complete abstract class implementation
+export abstract class BaseUnit {
+  abstract calculate(): number;
+  abstract validate(): boolean;
+  abstract getType(): string;
+  
+  public getId(): string {
+    return 'base-unit';
+  }
+}
+
+export class PositionUnit extends BaseUnit {
+  calculate(): number {
+    return 200;
+  }
+  
+  validate(): boolean {
+    return true;
+  }
+  
+  getType(): string {
+    return 'position';
+  }
+}
+```
+
+### ✅ **CORRECT - Proper Method Signatures**
+```typescript
+// ✅ CORRECT - Matching method signatures
+export interface ICalculator {
+  calculate(input: number): number;
+  validate(input: number): boolean;
+}
+
+export class MyCalculator implements ICalculator {
+  calculate(input: number): number {
+    return input * 2;
+  }
+  
+  validate(input: number): boolean {
+    return input > 0;
+  }
+}
+```
+
+### ✅ **CORRECT - Interface Extension**
+```typescript
+// ✅ CORRECT - Proper interface extension
+export interface IBaseUnit {
+  readonly id: string;
+  calculate(): number;
+}
+
+export interface IAdvancedUnit extends IBaseUnit {
+  validate(): boolean;
+  getType(): string;
+}
+
+export class AdvancedSizeUnit implements IAdvancedUnit {
+  readonly id: string = 'advanced-size-unit';
+  
+  calculate(): number {
+    return 150;
+  }
+  
+  validate(): boolean {
+    return this.id.length > 0;
+  }
+  
+  getType(): string {
+    return 'advanced-size';
+  }
+}
+```
+
+### ✅ **CORRECT - Multiple Interface Implementation**
+```typescript
+// ✅ CORRECT - Implementing multiple interfaces
+export interface ICalculatable {
+  calculate(): number;
+}
+
+export interface IValidatable {
+  validate(): boolean;
+}
+
+export interface IIdentifiable {
+  readonly id: string;
+}
+
+export class MultiUnit implements ICalculatable, IValidatable, IIdentifiable {
+  readonly id: string = 'multi-unit';
+  
+  calculate(): number {
+    return 300;
+  }
+  
+  validate(): boolean {
+    return this.id.length > 0;
+  }
+}
+```
+
+### **Why This Rule Exists**
+- **Type Safety**: Ensures all contract methods are implemented
+- **Compile-Time Checking**: TypeScript can verify complete implementation
+- **Maintainability**: Prevents runtime errors from missing methods
+- **SOLID Compliance**: Follows Interface Segregation and Liskov Substitution Principles
+- **Code Reliability**: Guarantees that interfaces are fully implemented
+
+### **Implementation Guidelines**
+```typescript
+// ✅ CORRECT - Always implement all interface methods
+export interface IThemeManager {
+  initialize(): Promise<void>;
+  activateTheme(themeId: string): void;
+  deactivateTheme(): void;
+  getCurrentTheme(): string;
+  isThemeActive(themeId: string): boolean;
+}
+
+export class ThemeManager implements IThemeManager {
+  private currentTheme: string = '';
+  
+  async initialize(): Promise<void> {
+    logger.info('ThemeManager', 'initialize', 'Initializing theme manager');
+    // Implementation
+  }
+  
+  activateTheme(themeId: string): void {
+    logger.info('ThemeManager', 'activateTheme', 'Activating theme', { themeId });
+    this.currentTheme = themeId;
+    // Implementation
+  }
+  
+  deactivateTheme(): void {
+    logger.info('ThemeManager', 'deactivateTheme', 'Deactivating current theme');
+    this.currentTheme = '';
+    // Implementation
+  }
+  
+  getCurrentTheme(): string {
+    return this.currentTheme;
+  }
+  
+  isThemeActive(themeId: string): boolean {
+    return this.currentTheme === themeId;
+  }
+}
+```
+
+### **Verification Checklist**
+- [ ] All interface methods are implemented
+- [ ] All abstract methods are implemented
+- [ ] Method signatures match exactly (parameters and return types)
+- [ ] All readonly properties are implemented
+- [ ] Optional properties are handled appropriately
+- [ ] Generic type parameters are properly constrained
+- [ ] Interface extensions are fully implemented
+
 ## 🚀 Best Practices Summary
 
 1. **Always use the Logger** - Never use `console.*`
@@ -1749,12 +1944,13 @@ export class ThemeManager {
 17. **Use interfaces in dependencies** - Force interface usage in properties and parameters
 18. **Prohibit require() statements** - Use ES6 imports instead of CommonJS require()
 19. **Import logger correctly** - Always import `logger` from Logger, never import `Logger` class
-20. **Follow design patterns** - Implement SOLID principles
-20. **Handle errors properly** - Never ignore exceptions
-21. **Write comprehensive tests** - Cover all scenarios
-22. **Use type safety** - Leverage TypeScript's type system
-23. **Follow naming conventions** - Be consistent
-24. **Document your code** - Use JSDoc comments
+20. **Enforce interface inheritance** - Concrete classes must implement all interface/abstract class methods
+21. **Follow design patterns** - Implement SOLID principles
+22. **Handle errors properly** - Never ignore exceptions
+23. **Write comprehensive tests** - Cover all scenarios
+24. **Use type safety** - Leverage TypeScript's type system
+25. **Follow naming conventions** - Be consistent
+26. **Document your code** - Use JSDoc comments
 
 ## 📚 Additional Resources
 

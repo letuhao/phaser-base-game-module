@@ -566,14 +566,39 @@ export enum GameObjectState {
 // ============================================================================
 
 /**
- * Theme types
+ * Base theme types - these are the core types that are always available
  */
-export enum ThemeType {
+export enum BaseThemeType {
   LIGHT = 'light',
   DARK = 'dark',
   AUTO = 'auto',
   CUSTOM = 'custom',
 }
+
+/**
+ * Extended theme types - allows for additional theme types without modifying the enum
+ * This provides flexibility while maintaining type safety
+ */
+export type ThemeType = BaseThemeType | string;
+
+/**
+ * Common extended theme types that are frequently used
+ */
+export const ExtendedThemeType = {
+  ...BaseThemeType,
+  MATERIAL: 'material',
+  BOOTSTRAP: 'bootstrap',
+  TAILWIND: 'tailwind',
+  ANT_DESIGN: 'ant-design',
+  CHAKRA: 'chakra',
+  MUI: 'mui',
+  SEMANTIC: 'semantic',
+} as const;
+
+/**
+ * Type for all predefined theme types (base + extended)
+ */
+export type PredefinedThemeType = typeof ExtendedThemeType[keyof typeof ExtendedThemeType];
 
 /**
  * Theme variants
@@ -1328,7 +1353,7 @@ export const LAYOUT_SYSTEM_ENUMS = {
     STATE: GameObjectState,
   },
   THEME: {
-    TYPE: ThemeType,
+    TYPE: BaseThemeType,
     VARIANT: ThemeVariant,
     MODE: ThemeMode,
   },

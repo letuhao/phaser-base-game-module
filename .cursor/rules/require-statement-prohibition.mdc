@@ -1,3 +1,9 @@
+---
+description: Prohibit CommonJS require() statements in browser environments
+globs:
+alwaysApply: true
+---
+
 # Require Statement Prohibition Rule
 
 ## ❌ FORBIDDEN - Using CommonJS require() Statements

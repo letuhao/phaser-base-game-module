@@ -10,7 +10,7 @@
 
 import { ITheme } from '../../../../layout/interfaces/ITheme';
 import {
-  ThemeType,
+  BaseThemeType,
   ThemeVariant,
   BreakpointName,
   TextAlign,
@@ -46,7 +46,7 @@ export const fortuneWheelTheme: ITheme = {
   displayName: 'Fortune Wheel Theme',
   description:
     'Vibrant theme designed for fortune wheel games with bright colors and engaging animations',
-  type: ThemeType.CUSTOM,
+  type: BaseThemeType.CUSTOM,
   variant: ThemeVariant.PRIMARY,
   isActive: true,
   supportsDarkMode: false,

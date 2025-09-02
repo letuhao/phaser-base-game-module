@@ -12,8 +12,11 @@ import {
   IThemeStatistics,
   IThemeConfiguration,
 } from '../interfaces/IThemeManager';
-import { ThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
+import { BaseThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
 import { logger } from '../../core/Logger';
+
+// Type alias for flexible theme types
+type ThemeType = BaseThemeType | string;
 
 /**
  * Core Theme Manager Implementation
@@ -29,7 +32,7 @@ export class ThemeManager implements IThemeManager {
   // Core properties
   private readonly themesMap: Map<string, ITheme> = new Map();
   private activeThemeInstance: ITheme | null = null;
-  private currentThemeTypeInstance: ThemeType = ThemeType.CUSTOM;
+  private currentThemeTypeInstance: string = BaseThemeType.CUSTOM;
   private isInitializedInstance: boolean = false;
   private readonly listenersSet: Set<IThemeListener> = new Set();
   private readonly themeCacheMap: Map<string, IThemeClass> = new Map();
@@ -296,7 +299,7 @@ export class ThemeManager implements IThemeManager {
    * Switch to the opposite theme (light/dark)
    */
   async toggleThemeMode(): Promise<void> {
-    if (this.currentThemeTypeInstance === ThemeType.LIGHT) {
+    if (this.currentThemeTypeInstance === BaseThemeType.LIGHT) {
       await this.switchToDarkTheme();
     } else {
       await this.switchToLightTheme();
@@ -307,7 +310,7 @@ export class ThemeManager implements IThemeManager {
    * Switch to light theme
    */
   async switchToLightTheme(): Promise<void> {
-    const lightThemes = this.getThemesByType(ThemeType.LIGHT);
+    const lightThemes = this.getThemesByType(BaseThemeType.LIGHT);
     if (lightThemes.length > 0) {
       await this.activateTheme(lightThemes[0].id);
     }
@@ -317,7 +320,7 @@ export class ThemeManager implements IThemeManager {
    * Switch to dark theme
    */
   async switchToDarkTheme(): Promise<void> {
-    const darkThemes = this.getThemesByType(ThemeType.DARK);
+    const darkThemes = this.getThemesByType(BaseThemeType.DARK);
     if (darkThemes.length > 0) {
       await this.activateTheme(darkThemes[0].id);
     }
@@ -541,10 +544,10 @@ export class ThemeManager implements IThemeManager {
         cacheEfficiency: 0,
       },
       themeTypes: {
-        light: this.getThemesByType(ThemeType.LIGHT).length,
-        dark: this.getThemesByType(ThemeType.DARK).length,
-        auto: this.getThemesByType(ThemeType.AUTO).length,
-        custom: this.getThemesByType(ThemeType.CUSTOM).length,
+        light: this.getThemesByType(BaseThemeType.LIGHT).length,
+        dark: this.getThemesByType(BaseThemeType.DARK).length,
+        auto: this.getThemesByType(BaseThemeType.AUTO).length,
+        custom: this.getThemesByType(BaseThemeType.CUSTOM).length,
       },
       themeVariants: {
         default: 0, // TODO: Implement variant counting
@@ -602,7 +605,7 @@ export class ThemeManager implements IThemeManager {
   reset(): void {
     this.themesMap.clear();
     this.activeThemeInstance = null;
-    this.currentThemeTypeInstance = ThemeType.CUSTOM;
+    this.currentThemeTypeInstance = BaseThemeType.CUSTOM;
     this.isInitializedInstance = false;
     this.listenersSet.clear();
     this.themeCacheMap.clear();
