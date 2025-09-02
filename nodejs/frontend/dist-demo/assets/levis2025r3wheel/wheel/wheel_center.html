@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wheel Center - Placeholder</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .placeholder {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: relative;
+            border: 4px solid #fff;
+        }
+        .placeholder::before {
+            content: "★";
+            font-size: 32px;
+        }
+        .placeholder::after {
+            content: "CENTER";
+            position: absolute;
+            bottom: -25px;
+            font-size: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="placeholder"></div>
+    <p><strong>Placeholder for:</strong> wheel_center.png</p>
+    <p><strong>Dimensions:</strong> 120x120 pixels</p>
+    <p><strong>Description:</strong> Center hub of the fortune wheel</p>
+    <p><strong>Center Point:</strong> (60, 60)</p>
+</body>
+</html>
