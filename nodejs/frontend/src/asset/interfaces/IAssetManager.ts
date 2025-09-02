@@ -13,19 +13,9 @@ import type { IAssetValidationManager } from './managers/IAssetValidationManager
 import type { IAssetStatisticsManager } from './managers/IAssetStatisticsManager';
 import type { AssetType, AssetPriority } from './IAsset';
 import type { BundleType } from './IAssetBundle';
+// ManagerOperation is imported from centralized enums but not used in this file
 
-/**
- * Manager operations
- */
-export enum ManagerOperation {
-  LOAD = 'load',
-  UNLOAD = 'unload',
-  CACHE = 'cache',
-  UNCACHE = 'uncache',
-  VALIDATE = 'validate',
-  OPTIMIZE = 'optimize',
-  CLEANUP = 'cleanup'
-}
+// ManagerOperation is now imported from centralized enums
 
 /**
  * Manager configuration

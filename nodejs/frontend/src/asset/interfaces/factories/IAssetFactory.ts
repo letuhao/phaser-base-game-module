@@ -5,19 +5,10 @@
  */
 
 import type { IAsset } from '../IAsset';
+// FactoryOperation is imported from centralized enums but not used in this file
 import type { AssetType, AssetPriority, AssetConfig } from '../IAsset';
 
-/**
- * Factory operations
- */
-export enum FactoryOperation {
-  CREATE = 'create',
-  CLONE = 'clone',
-  CONFIGURE = 'configure',
-  VALIDATE = 'validate',
-  REGISTER = 'register',
-  UNREGISTER = 'unregister'
-}
+// FactoryOperation is now imported from centralized enums
 
 /**
  * Factory configuration

@@ -8,9 +8,9 @@ export type { ISceneElementManager } from './ISceneElementManager';
 export type { ISceneConfigManager } from './ISceneConfigManager';
 export type { ISceneBuilderManager } from './ISceneBuilderManager';
 
-export { ElementManagerOperation } from './ISceneElementManager';
-export { ConfigManagerOperation } from './ISceneConfigManager';
-export { BuilderManagerOperation } from './ISceneBuilderManager';
+export { ElementManagerOperation } from '../../enums';
+export { ConfigManagerOperation } from '../../enums';
+export { BuilderManagerOperation } from '../../enums';
 
 /**
  * Scene manager interfaces bundle

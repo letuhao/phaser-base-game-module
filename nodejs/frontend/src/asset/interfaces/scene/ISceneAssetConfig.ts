@@ -8,6 +8,7 @@ import type { IAsset } from '../IAsset';
 import type { IAssetBundle } from '../IAssetBundle';
 import type { AssetType, AssetPriority } from '../IAsset';
 import type { BundleType } from '../IAssetBundle';
+import { LoadingStrategy, SceneAssetPhase } from '../../enums';
 
 /**
  * Scene asset configuration
@@ -20,7 +21,7 @@ export interface SceneAssetConfig {
   loading: {
     preload: boolean;
     priority: AssetPriority[];
-    strategy: 'sequential' | 'parallel' | 'priority_based';
+    strategy: LoadingStrategy;
   };
   validation: {
     required: string[];
@@ -49,7 +50,7 @@ export interface SceneAssetProgress {
   failedBundles: number;
   percentage: number;
   estimatedTimeRemaining: number;
-  currentPhase: 'assets' | 'bundles' | 'validation' | 'complete';
+  currentPhase: SceneAssetPhase;
 }
 
 /**

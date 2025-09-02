@@ -9,33 +9,10 @@ import type { SceneElementConfig } from './ISceneElement';
 import type { IStyle } from '../../layout/interfaces/IStyle';
 import type { IUnit } from '../../unit/interfaces/IUnit';
 import type { ISceneConfigManager } from './managers/ISceneConfigManager';
+import { GradientType, AssetType, TransitionType, SceneType, SceneState } from '../enums';
+// TransitionDirection is imported from centralized enums but not used in this file
 
-/**
- * Scene types
- */
-export enum SceneType {
-  GAME_SCENE = 'game_scene',
-  UI_SCENE = 'ui_scene',
-  MENU_SCENE = 'menu_scene',
-  LOADING_SCENE = 'loading_scene',
-  TRANSITION_SCENE = 'transition_scene',
-  CUSTOM = 'custom'
-}
-
-/**
- * Scene states
- */
-export enum SceneState {
-  UNINITIALIZED = 'uninitialized',
-  INITIALIZING = 'initializing',
-  LOADING = 'loading',
-  ACTIVE = 'active',
-  PAUSED = 'paused',
-  TRANSITIONING = 'transitioning',
-  DESTROYING = 'destroying',
-  DESTROYED = 'destroyed',
-  ERROR = 'error'
-}
+// SceneType and SceneState are now imported from centralized enums
 
 /**
  * Scene configuration
@@ -59,7 +36,7 @@ export interface SceneConfig {
     image?: string;
     video?: string;
     gradient?: {
-      type: 'linear' | 'radial';
+      type: GradientType;
       colors: string[];
       stops?: number[];
     };
@@ -93,7 +70,7 @@ export interface SceneConfig {
     preload: boolean;
     priority: string[];
     bundles: Record<string, {
-      type: 'image' | 'audio' | 'video' | 'json' | 'atlas';
+      type: AssetType;
       files: string[];
     }>;
   };
@@ -101,12 +78,12 @@ export interface SceneConfig {
   // Scene transitions
   transitions?: {
     enter?: {
-      type: 'fade' | 'slide' | 'zoom' | 'custom';
+      type: TransitionType;
       duration: number;
       easing?: string;
     };
     exit?: {
-      type: 'fade' | 'slide' | 'zoom' | 'custom';
+      type: TransitionType;
       duration: number;
       easing?: string;
     };

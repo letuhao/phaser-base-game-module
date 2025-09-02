@@ -8,17 +8,9 @@
 import type { ISceneConfig } from '../ISceneConfig';
 import type { ISceneBuilder } from '../ISceneBuilder';
 import type { ISceneManager } from '../ISceneManager';
+// SceneFactoryOperation is imported from centralized enums but not used in this file
 
-/**
- * Scene factory operations
- */
-export enum SceneFactoryOperation {
-  CREATE_SCENE = 'create_scene',
-  DESTROY_SCENE = 'destroy_scene',
-  CONFIGURE_SCENE = 'configure_scene',
-  VALIDATE_SCENE = 'validate_scene',
-  OPTIMIZE_SCENE = 'optimize_scene'
-}
+// SceneFactoryOperation is now imported from centralized enums
 
 /**
  * Scene factory configuration

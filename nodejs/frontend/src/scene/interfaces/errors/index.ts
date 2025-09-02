@@ -8,7 +8,7 @@ export type { ISceneError } from './ISceneError';
 export type { ISceneErrorHandler } from './ISceneErrorHandler';
 
 export { SceneErrorType, SceneErrorSeverity } from './ISceneError';
-export { ErrorHandlingStrategy } from './ISceneErrorHandler';
+export { ErrorHandlingStrategy } from '../../enums';
 
 /**
  * Scene error interfaces bundle

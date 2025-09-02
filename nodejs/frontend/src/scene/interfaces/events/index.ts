@@ -6,7 +6,7 @@
 
 export type { ISceneEventSystem } from './ISceneEventSystem';
 
-export { SceneEventType, SceneEventPriority } from './ISceneEventSystem';
+export { SceneEventType, SceneEventPriority } from '../../enums';
 
 /**
  * Scene event interfaces bundle

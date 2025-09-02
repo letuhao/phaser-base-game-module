@@ -8,32 +8,10 @@
 import type { ISceneElement } from './ISceneElement';
 import type { ISceneConfig } from './ISceneConfig';
 import type { ISceneBuilder } from './ISceneBuilder';
-import { SceneType } from './ISceneConfig';
-import { SceneState } from './ISceneConfig';
+import { SceneType, SceneState } from '../enums';
+import { TransitionDirection, SceneTransitionType, SceneTransitionState } from '../enums';
 
-/**
- * Scene transition types
- */
-export enum SceneTransitionType {
-  FADE = 'fade',
-  SLIDE = 'slide',
-  ZOOM = 'zoom',
-  ROTATE = 'rotate',
-  CUSTOM = 'custom',
-  NONE = 'none'
-}
-
-/**
- * Scene transition states
- */
-export enum SceneTransitionState {
-  IDLE = 'idle',
-  PREPARING = 'preparing',
-  TRANSITIONING = 'transitioning',
-  COMPLETED = 'completed',
-  ERROR = 'error',
-  CANCELLED = 'cancelled'
-}
+// SceneTransitionType and SceneTransitionState are now imported from centralized enums
 
 /**
  * Scene transition configuration
@@ -42,7 +20,7 @@ export interface SceneTransitionConfig {
   type: SceneTransitionType;
   duration: number;
   easing?: string;
-  direction?: 'in' | 'out' | 'both';
+  direction?: TransitionDirection;
   customTransition?: string;
   metadata?: Record<string, any>;
 }

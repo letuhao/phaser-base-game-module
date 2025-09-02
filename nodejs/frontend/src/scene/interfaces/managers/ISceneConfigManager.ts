@@ -5,22 +5,12 @@
  */
 
 import type { ISceneConfig } from '../ISceneConfig';
-import type { SceneConfig, SceneType } from '../ISceneConfig';
+import { ExportFormat, ConfigManagerOperation } from '../../enums';
+import type { SceneConfig } from '../ISceneConfig';
+import type { SceneType } from '../../enums';
 import type { SceneElementConfig } from '../ISceneElement';
 
-/**
- * Configuration manager operations
- */
-export enum ConfigManagerOperation {
-  LOAD = 'load',
-  SAVE = 'save',
-  VALIDATE = 'validate',
-  CLONE = 'clone',
-  MERGE = 'merge',
-  EXPORT = 'export',
-  IMPORT = 'import',
-  DELETE = 'delete'
-}
+// ConfigManagerOperation is now imported from centralized enums
 
 /**
  * Configuration manager configuration
@@ -118,12 +108,12 @@ export interface ISceneConfigManager {
   ): Promise<ISceneConfig>;
   
   /** Export configuration */
-  exportConfig(configId: string, format: 'json' | 'yaml' | 'xml'): Promise<string>;
+  exportConfig(configId: string, format: ExportFormat): Promise<string>;
   
   /** Import configuration */
   importConfig(
     configData: string, 
-    format: 'json' | 'yaml' | 'xml', 
+    format: ExportFormat, 
     configId: string
   ): Promise<ISceneConfig>;
   

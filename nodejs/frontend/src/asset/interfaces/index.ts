@@ -24,8 +24,17 @@ export * from './strategies';
 
 export { AssetType, AssetState, AssetPriority } from './IAsset';
 export { BundleType, BundleState } from './IAssetBundle';
-export { LoaderType, LoaderState, LoadingStrategy } from './IAssetLoader';
-export { ManagerOperation } from './IAssetManager';
+export { 
+  LoaderType, 
+  LoaderState, 
+  LoadingStrategy, 
+  LoadingStrategyType,
+  ManagerOperation,
+  FactoryOperation,
+  LoaderFactoryOperation,
+  ValidationStrategyType,
+  SceneAssetPhase
+} from '../enums';
 
 // ============================================================================
 // SCENE ASSET INTERFACES

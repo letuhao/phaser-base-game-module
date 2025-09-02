@@ -65,10 +65,16 @@ export * from './performance';
 // SCENE ENUMS
 // ============================================================================
 
-export { SceneElementType, SceneElementState } from './ISceneElement';
-export { SceneType, SceneState } from './ISceneConfig';
-export { SceneBuilderType, SceneBuilderState } from './ISceneBuilder';
-export { SceneTransitionType, SceneTransitionState } from './ISceneManager';
+export { 
+  SceneElementType, 
+  SceneElementState,
+  SceneType, 
+  SceneState,
+  SceneBuilderType, 
+  SceneBuilderState,
+  SceneTransitionType, 
+  SceneTransitionState
+} from '../enums';
 
 // ============================================================================
 // SCENE INTERFACE BUNDLES

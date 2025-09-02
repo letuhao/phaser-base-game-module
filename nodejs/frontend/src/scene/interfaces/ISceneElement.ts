@@ -10,32 +10,9 @@ import type { IStyle } from '../../layout/interfaces/IStyle';
 import type { IUnit } from '../../unit/interfaces/IUnit';
 import type { ISceneElementManager } from './managers/ISceneElementManager';
 import { GameObjectType } from '../../game-object/enums/GameObjectEnums';
+import { SceneElementType, SceneElementState } from '../enums';
 
-/**
- * Scene element types
- */
-export enum SceneElementType {
-  GAME_OBJECT = 'game_object',
-  CONTAINER = 'container',
-  LAYOUT_CONTAINER = 'layout_container',
-  RESPONSIVE_CONTAINER = 'responsive_container',
-  THEMED_CONTAINER = 'themed_container',
-  CUSTOM = 'custom'
-}
-
-/**
- * Scene element states
- */
-export enum SceneElementState {
-  PENDING = 'pending',
-  CREATING = 'creating',
-  CREATED = 'created',
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  DESTROYING = 'destroying',
-  DESTROYED = 'destroyed',
-  ERROR = 'error'
-}
+// SceneElementType and SceneElementState are now imported from centralized enums
 
 /**
  * Scene element configuration

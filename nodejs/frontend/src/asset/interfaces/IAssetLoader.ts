@@ -6,41 +6,10 @@
 
 import type { IAsset } from './IAsset';
 import type { IAssetBundle } from './IAssetBundle';
+import { LoaderType, LoaderState, LoadingStrategy } from '../enums';
 // AssetType, AssetPriority, AssetState, BundleType, BundleState are not used in this file
 
-/**
- * Loader types
- */
-export enum LoaderType {
-  HTTP = 'http',
-  FETCH = 'fetch',
-  XHR = 'xhr',
-  WEBSOCKET = 'websocket',
-  CUSTOM = 'custom'
-}
-
-/**
- * Loader states
- */
-export enum LoaderState {
-  IDLE = 'idle',
-  LOADING = 'loading',
-  PAUSED = 'paused',
-  COMPLETED = 'completed',
-  ERROR = 'error',
-  CANCELLED = 'cancelled'
-}
-
-/**
- * Loading strategy
- */
-export enum LoadingStrategy {
-  SEQUENTIAL = 'sequential',
-  PARALLEL = 'parallel',
-  PRIORITY_BASED = 'priority_based',
-  LAZY = 'lazy',
-  CUSTOM = 'custom'
-}
+// LoaderType, LoaderState, and LoadingStrategy are now imported from centralized enums
 
 /**
  * Loader configuration

@@ -5,21 +5,11 @@
  */
 
 import type { IAsset } from '../IAsset';
+import { ValidationStrategyType } from '../../enums';
 import type { IAssetBundle } from '../IAssetBundle';
 import type { ValidationType, ValidationResult } from '../managers/IAssetValidationManager';
 
-/**
- * Validation strategy types
- */
-export enum ValidationStrategyType {
-  STRICT = 'strict',
-  LENIENT = 'lenient',
-  CUSTOM = 'custom',
-  BATCH = 'batch',
-  INCREMENTAL = 'incremental',
-  PARALLEL = 'parallel',
-  CACHED = 'cached'
-}
+// ValidationStrategyType is now imported from centralized enums
 
 /**
  * Validation strategy configuration

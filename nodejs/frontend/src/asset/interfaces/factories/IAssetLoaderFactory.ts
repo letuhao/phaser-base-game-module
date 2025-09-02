@@ -5,19 +5,11 @@
  */
 
 import type { IAssetLoader } from '../IAssetLoader';
-import type { LoaderType, LoaderConfig, LoadingStrategy } from '../IAssetLoader';
+// LoaderFactoryOperation is imported from centralized enums but not used in this file
+import type { LoaderConfig } from '../IAssetLoader';
+import type { LoaderType, LoadingStrategy } from '../../enums';
 
-/**
- * Loader factory operations
- */
-export enum LoaderFactoryOperation {
-  CREATE = 'create',
-  CLONE = 'clone',
-  CONFIGURE = 'configure',
-  VALIDATE = 'validate',
-  REGISTER = 'register',
-  UNREGISTER = 'unregister'
-}
+// LoaderFactoryOperation is now imported from centralized enums
 
 /**
  * Loader factory configuration

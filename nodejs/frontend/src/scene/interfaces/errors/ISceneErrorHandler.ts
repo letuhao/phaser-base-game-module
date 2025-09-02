@@ -5,19 +5,10 @@
  */
 
 import type { ISceneError } from './ISceneError';
+import { SceneLogLevel, ErrorHandlingStrategy } from '../../enums';
 import { SceneErrorType, SceneErrorSeverity } from './ISceneError';
 
-/**
- * Error handling strategies
- */
-export enum ErrorHandlingStrategy {
-  IGNORE = 'ignore',
-  LOG = 'log',
-  RETRY = 'retry',
-  FALLBACK = 'fallback',
-  THROW = 'throw',
-  CUSTOM = 'custom'
-}
+// ErrorHandlingStrategy is now imported from centralized enums
 
 /**
  * Error handling configuration
@@ -28,7 +19,7 @@ export interface ErrorHandlingConfig {
   retryDelay?: number;
   fallbackAction?: string;
   customHandler?: string;
-  logLevel?: 'debug' | 'info' | 'warn' | 'error';
+  logLevel?: SceneLogLevel;
   metadata?: Record<string, any>;
 }
 

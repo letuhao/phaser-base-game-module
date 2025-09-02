@@ -12,30 +12,9 @@ import type { IStyle } from '../../layout/interfaces/IStyle';
 import type { IUnit } from '../../unit/interfaces/IUnit';
 import type { ISceneBuilderManager } from './managers/ISceneBuilderManager';
 import type { ISceneBuilderContext } from './context/ISceneBuilderContext';
-import { SceneElementType } from './ISceneElement';
+import { SceneElementType, SceneBuilderType, SceneBuilderState } from '../enums';
 
-/**
- * Builder types
- */
-export enum SceneBuilderType {
-  CONFIG_DRIVEN = 'config_driven',
-  PROGRAMMATIC = 'programmatic',
-  HYBRID = 'hybrid',
-  TEMPLATE_BASED = 'template_based',
-  CUSTOM = 'custom'
-}
-
-/**
- * Builder states
- */
-export enum SceneBuilderState {
-  IDLE = 'idle',
-  BUILDING = 'building',
-  VALIDATING = 'validating',
-  COMPLETED = 'completed',
-  ERROR = 'error',
-  CANCELLED = 'cancelled'
-}
+// SceneBuilderType and SceneBuilderState are now imported from centralized enums
 
 /**
  * Builder context

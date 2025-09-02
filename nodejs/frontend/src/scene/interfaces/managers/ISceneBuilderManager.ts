@@ -5,22 +5,12 @@
  */
 
 import type { ISceneBuilder } from '../ISceneBuilder';
-import type { SceneBuilderType, SceneBuilderState } from '../ISceneBuilder';
+import type { SceneBuilderType, SceneBuilderState } from '../../enums';
+import { BuilderManagerOperation } from '../../enums';
 import type { ISceneElement } from '../ISceneElement';
 import type { ISceneConfig } from '../ISceneConfig';
 
-/**
- * Builder manager operations
- */
-export enum BuilderManagerOperation {
-  CREATE = 'create',
-  BUILD = 'build',
-  VALIDATE = 'validate',
-  CANCEL = 'cancel',
-  RESET = 'reset',
-  CLEAR = 'clear',
-  OPTIMIZE = 'optimize'
-}
+// BuilderManagerOperation is now imported from centralized enums
 
 /**
  * Builder manager configuration

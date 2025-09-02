@@ -9,17 +9,9 @@ import type { ISceneElement } from '../ISceneElement';
 // Note: This import is kept for future extensibility
 // import type { ISceneConfig } from '../ISceneConfig';
 import type { ISceneBuilder } from '../ISceneBuilder';
+// ScenePerformanceMonitorOperation is imported from centralized enums but not used in this file
 
-/**
- * Scene performance monitor operations
- */
-export enum ScenePerformanceMonitorOperation {
-  MONITOR_SCENE = 'monitor_scene',
-  MONITOR_ELEMENT = 'monitor_element',
-  MONITOR_BUILDER = 'monitor_builder',
-  OPTIMIZE_PERFORMANCE = 'optimize_performance',
-  GENERATE_REPORT = 'generate_report'
-}
+// ScenePerformanceMonitorOperation is now imported from centralized enums
 
 /**
  * Scene performance monitor configuration

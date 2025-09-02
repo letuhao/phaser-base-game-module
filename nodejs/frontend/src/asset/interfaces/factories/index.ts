@@ -8,9 +8,9 @@ export type { IAssetFactory } from './IAssetFactory';
 export type { IAssetBundleFactory } from './IAssetBundleFactory';
 export type { IAssetLoaderFactory } from './IAssetLoaderFactory';
 
-export { FactoryOperation } from './IAssetFactory';
+export { FactoryOperation } from '../../enums';
 export { BundleFactoryOperation } from './IAssetBundleFactory';
-export { LoaderFactoryOperation } from './IAssetLoaderFactory';
+export { LoaderFactoryOperation } from '../../enums';
 
 /**
  * Asset factory interfaces bundle

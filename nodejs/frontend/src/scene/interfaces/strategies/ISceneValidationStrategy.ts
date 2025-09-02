@@ -8,16 +8,10 @@
 import type { ISceneElement } from '../ISceneElement';
 import type { ISceneConfig } from '../ISceneConfig';
 import type { ISceneBuilder } from '../ISceneBuilder';
+import { ValidationTargetType } from '../../enums';
+// SceneValidationStrategyOperation is imported from centralized enums but not used in this file
 
-/**
- * Scene validation strategy operations
- */
-export enum SceneValidationStrategyOperation {
-  VALIDATE_SCENE = 'validate_scene',
-  VALIDATE_ELEMENT = 'validate_element',
-  VALIDATE_CONFIG = 'validate_config',
-  VALIDATE_BUILDER = 'validate_builder'
-}
+// SceneValidationStrategyOperation is now imported from centralized enums
 
 /**
  * Scene validation strategy configuration
@@ -51,7 +45,7 @@ export interface SceneValidationStrategyStatistics {
 export interface SceneValidationContext {
   contextId: string;
   strategyType: string;
-  validationTarget: 'scene' | 'element' | 'config' | 'builder';
+  validationTarget: ValidationTargetType;
   validationParameters: Record<string, any>;
   validationMetadata?: Record<string, any>;
 }

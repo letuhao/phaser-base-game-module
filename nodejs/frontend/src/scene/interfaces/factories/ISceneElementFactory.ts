@@ -7,18 +7,11 @@
 
 import type { ISceneElement } from '../ISceneElement';
 import type { IGameObject } from '../../../game-object/interfaces/IGameObject';
-import type { SceneElementType, SceneElementConfig } from '../ISceneElement';
+import type { SceneElementConfig } from '../ISceneElement';
+import { SceneElementType } from '../../enums';
+// SceneElementFactoryOperation is imported from centralized enums but not used in this file
 
-/**
- * Scene element factory operations
- */
-export enum SceneElementFactoryOperation {
-  CREATE_ELEMENT = 'create_element',
-  DESTROY_ELEMENT = 'destroy_element',
-  CONFIGURE_ELEMENT = 'configure_element',
-  VALIDATE_ELEMENT = 'validate_element',
-  OPTIMIZE_ELEMENT = 'optimize_element'
-}
+// SceneElementFactoryOperation is now imported from centralized enums
 
 /**
  * Scene element factory configuration

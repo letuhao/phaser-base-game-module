@@ -8,9 +8,9 @@ export type { ILoadingStrategy } from './ILoadingStrategy';
 export type { ICachingStrategy } from './ICachingStrategy';
 export type { IValidationStrategy } from './IValidationStrategy';
 
-export { LoadingStrategyType } from './ILoadingStrategy';
+export { LoadingStrategyType } from '../../enums';
 export { CachingStrategyType } from './ICachingStrategy';
-export { ValidationStrategyType } from './IValidationStrategy';
+export { ValidationStrategyType } from '../../enums';
 
 /**
  * Asset strategy interfaces bundle

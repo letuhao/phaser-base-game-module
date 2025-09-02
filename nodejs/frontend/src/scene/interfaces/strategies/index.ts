@@ -8,7 +8,7 @@ export type { ISceneBuildingStrategy } from './ISceneBuildingStrategy';
 export type { ISceneValidationStrategy } from './ISceneValidationStrategy';
 
 export { SceneBuildingStrategyOperation } from './ISceneBuildingStrategy';
-export { SceneValidationStrategyOperation } from './ISceneValidationStrategy';
+export { SceneValidationStrategyOperation } from '../../enums';
 
 /**
  * Scene strategy interfaces bundle

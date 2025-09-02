@@ -6,7 +6,7 @@
 
 export type { IScenePerformanceMonitor } from './IScenePerformanceMonitor';
 
-export { ScenePerformanceMonitorOperation } from './IScenePerformanceMonitor';
+export { ScenePerformanceMonitorOperation } from '../../enums';
 
 /**
  * Scene performance interfaces bundle

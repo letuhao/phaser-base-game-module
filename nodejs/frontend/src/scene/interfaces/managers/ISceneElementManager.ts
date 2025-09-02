@@ -5,22 +5,12 @@
  */
 
 import type { ISceneElement } from '../ISceneElement';
-import type { SceneElementType, SceneElementState } from '../ISceneElement';
+import { ElementManagerOperation } from '../../enums';
+// SceneElementConfig is imported but not used in this file
+import { SceneElementType, SceneElementState } from '../../enums';
 
 
-/**
- * Element manager operations
- */
-export enum ElementManagerOperation {
-  CREATE = 'create',
-  DESTROY = 'destroy',
-  UPDATE = 'update',
-  ACTIVATE = 'activate',
-  DEACTIVATE = 'deactivate',
-  MOVE = 'move',
-  RESIZE = 'resize',
-  REPARENT = 'reparent'
-}
+// ElementManagerOperation is now imported from centralized enums
 
 /**
  * Element manager configuration

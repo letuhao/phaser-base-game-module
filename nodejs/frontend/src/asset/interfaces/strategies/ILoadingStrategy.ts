@@ -5,21 +5,11 @@
  */
 
 import type { IAsset } from '../IAsset';
+import { LoadingStrategyType } from '../../enums';
 import type { IAssetBundle } from '../IAssetBundle';
 import type { LoadingProgress } from '../IAssetLoader';
 
-/**
- * Loading strategy types
- */
-export enum LoadingStrategyType {
-  SEQUENTIAL = 'sequential',
-  PARALLEL = 'parallel',
-  PRIORITY_BASED = 'priority_based',
-  LAZY = 'lazy',
-  BATCH = 'batch',
-  STREAMING = 'streaming',
-  CUSTOM = 'custom'
-}
+// LoadingStrategyType is now imported from centralized enums
 
 /**
  * Loading strategy configuration

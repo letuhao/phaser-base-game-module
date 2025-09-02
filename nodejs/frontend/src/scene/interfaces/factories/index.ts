@@ -7,8 +7,8 @@
 export type { ISceneElementFactory } from './ISceneElementFactory';
 export type { ISceneFactory } from './ISceneFactory';
 
-export { SceneElementFactoryOperation } from './ISceneElementFactory';
-export { SceneFactoryOperation } from './ISceneFactory';
+export { SceneElementFactoryOperation } from '../../enums';
+export { SceneFactoryOperation } from '../../enums';
 
 /**
  * Scene factory interfaces bundle
