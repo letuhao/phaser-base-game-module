@@ -462,7 +462,11 @@ export class ProductionMonitoringSystem {
       this.alerts = this.alerts.slice(-100);
     }
 
-    this.logger.warn('ProductionMonitoringSystem', 'createAlert', `Alert created: ${alert.title} - ${alert.message}`);
+    this.logger.warn(
+      'ProductionMonitoringSystem',
+      'createAlert',
+      `Alert created: ${alert.title} - ${alert.message}`
+    );
   }
 
   /**

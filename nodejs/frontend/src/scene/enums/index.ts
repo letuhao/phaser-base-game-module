@@ -41,7 +41,6 @@ export {
   BuilderManagerOperation,
 
   // Scene Configuration Enums
-  ValidationTargetType,
   GradientType,
   AssetType,
   TransitionType,
@@ -66,9 +65,58 @@ export {
   SceneBuilderState as BuilderState,
   SceneTransitionType as TransType,
   SceneTransitionState as TransState,
-  ValidationTargetType as TargetType,
+  ValidationTargetType,
   TransitionDirection as TransDirection,
   ExportFormat as Format,
   SceneLogLevel as LogLevel,
   ErrorHandlingStrategy as ErrorStrategy,
 } from './SceneEnums';
+
+// ============================================================================
+// BUTTON CLICK ENUMS
+// ============================================================================
+
+export {
+  ButtonClickEventType,
+  ButtonClickSource,
+  ClickValidationResult,
+  ClickPriority,
+  ButtonClickActionType,
+  ButtonClickActionStatus,
+} from './ButtonClickEnums';
+
+// ============================================================================
+// RESPONSIVE ENUMS
+// ============================================================================
+
+export { ResponsiveSystem, ResponsiveEventType, UpdatePriority } from './ResponsiveEnums';
+
+// ============================================================================
+// VALIDATION ENUMS
+// ============================================================================
+
+export { ValidationResultType, ValidationRuleType } from './ValidationEnums';
+
+// ============================================================================
+// ERROR ENUMS
+// ============================================================================
+
+export { SceneErrorType, SceneErrorSeverity } from './ErrorEnums';
+
+// ============================================================================
+// CONTEXT ENUMS
+// ============================================================================
+
+export { SceneContextType, SceneContextState, BuilderContextOperation } from './ContextEnums';
+
+// ============================================================================
+// STRATEGY ENUMS
+// ============================================================================
+
+export { SceneBuildingStrategyOperation } from './StrategyEnums';
+
+// ============================================================================
+// EXECUTION ENUMS
+// ============================================================================
+
+export { ExecutionType, FlowType, TargetType, RuleType, SeverityLevel } from './ExecutionEnums';

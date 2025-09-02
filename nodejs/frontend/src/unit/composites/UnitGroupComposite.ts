@@ -39,7 +39,12 @@ export class UnitGroupComposite extends BaseUnitComposite {
           results.push(result);
         } catch (error) {
           // Log error but continue with other children
-          this.logger.warn('UnitGroupComposite', 'calculate', `Error calculating child unit ${child.id}`, { error: error instanceof Error ? error.message : String(error) });
+          this.logger.warn(
+            'UnitGroupComposite',
+            'calculate',
+            `Error calculating child unit ${child.id}`,
+            { error: error instanceof Error ? error.message : String(error) }
+          );
         }
       }
     }

@@ -12,6 +12,8 @@ export type { ISceneElement } from './ISceneElement';
 export type { ISceneConfig } from './ISceneConfig';
 export type { ISceneBuilder } from './ISceneBuilder';
 export type { ISceneManager } from './ISceneManager';
+export type { ILayoutThemeApplicationService } from './ILayoutThemeApplicationService';
+export type { IEnhancedLayoutThemeApplicationService } from './IEnhancedLayoutThemeApplicationService';
 
 // ============================================================================
 // SCENE ERROR INTERFACES
@@ -60,6 +62,24 @@ export * from './events';
 // ============================================================================
 
 export * from './performance';
+
+// ============================================================================
+// BRIDGE INTERFACES
+// ============================================================================
+
+export * from './bridges';
+
+// ============================================================================
+// RESPONSIVE INTERFACES
+// ============================================================================
+
+export * from './responsive';
+
+// ============================================================================
+// BUTTON INTERFACES
+// ============================================================================
+
+export * from './button';
 
 // ============================================================================
 // SCENE ENUMS
@@ -133,6 +153,18 @@ export const SCENE_PERFORMANCE_INTERFACES = {
 } as const;
 
 /**
+ * Scene application interfaces
+ */
+export const SCENE_APPLICATION_INTERFACES = {
+  ILayoutThemeApplicationService: 'ILayoutThemeApplicationService',
+  IEnhancedLayoutThemeApplicationService: 'IEnhancedLayoutThemeApplicationService',
+  IResponsiveEventHandler: 'IResponsiveEventHandler',
+  IResponsiveCoordinator: 'IResponsiveCoordinator',
+  IButtonClickEventHandler: 'IButtonClickEventHandler',
+  IButtonClickCoordinator: 'IButtonClickCoordinator',
+} as const;
+
+/**
  * All scene interfaces
  */
 export const SCENE_INTERFACES = {
@@ -143,6 +175,7 @@ export const SCENE_INTERFACES = {
   ...SCENE_STRATEGY_INTERFACES,
   ...SCENE_EVENT_INTERFACES,
   ...SCENE_PERFORMANCE_INTERFACES,
+  ...SCENE_APPLICATION_INTERFACES,
 } as const;
 
 // ============================================================================
@@ -162,4 +195,6 @@ export type SceneEventInterface =
   (typeof SCENE_EVENT_INTERFACES)[keyof typeof SCENE_EVENT_INTERFACES];
 export type ScenePerformanceInterface =
   (typeof SCENE_PERFORMANCE_INTERFACES)[keyof typeof SCENE_PERFORMANCE_INTERFACES];
+export type SceneApplicationInterface =
+  (typeof SCENE_APPLICATION_INTERFACES)[keyof typeof SCENE_APPLICATION_INTERFACES];
 export type SceneInterface = (typeof SCENE_INTERFACES)[keyof typeof SCENE_INTERFACES];

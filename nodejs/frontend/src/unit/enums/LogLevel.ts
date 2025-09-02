@@ -1,6 +1,6 @@
 /**
  * Log Level Enum
- * 
+ *
  * Defines the available log levels for the unit system.
  * Used to replace string literal types with type-safe enums.
  */
@@ -9,7 +9,7 @@ export enum LogLevel {
   DEBUG = 'debug',
   INFO = 'info',
   WARN = 'warn',
-  ERROR = 'error'
+  ERROR = 'error',
 }
 
 /**
@@ -20,7 +20,7 @@ export const LOG_LEVEL_PRIORITIES = {
   [LogLevel.DEBUG]: 0,
   [LogLevel.INFO]: 1,
   [LogLevel.WARN]: 2,
-  [LogLevel.ERROR]: 3
+  [LogLevel.ERROR]: 3,
 } as const;
 
 /**

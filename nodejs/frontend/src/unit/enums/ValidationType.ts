@@ -1,6 +1,6 @@
 /**
  * Validation Type Enum
- * 
+ *
  * Defines the available validation types for the unit system.
  * Used to replace string literal types with type-safe enums.
  */
@@ -11,7 +11,7 @@ export enum ValidationType {
   SIZE = 'size',
   POSITION = 'position',
   SCALE = 'scale',
-  MIXED = 'mixed'
+  MIXED = 'mixed',
 }
 
 /**
@@ -31,9 +31,9 @@ export function getValidationTypeDisplayName(type: ValidationType): string {
     [ValidationType.SIZE]: 'Size Validation',
     [ValidationType.POSITION]: 'Position Validation',
     [ValidationType.SCALE]: 'Scale Validation',
-    [ValidationType.MIXED]: 'Mixed Validation'
+    [ValidationType.MIXED]: 'Mixed Validation',
   };
-  
+
   return displayNames[type];
 }
 
@@ -47,8 +47,8 @@ export function getValidationTypeDescription(type: ValidationType): string {
     [ValidationType.SIZE]: 'Validates size-related values and constraints',
     [ValidationType.POSITION]: 'Validates position-related values and bounds',
     [ValidationType.SCALE]: 'Validates scale-related values and factors',
-    [ValidationType.MIXED]: 'Validates multiple validation types together'
+    [ValidationType.MIXED]: 'Validates multiple validation types together',
   };
-  
+
   return descriptions[type];
 }

@@ -62,9 +62,9 @@ describe('UnitGroupComposite', () => {
       warn: jest.fn(),
       error: jest.fn(),
       debug: jest.fn(),
-      log: jest.fn()
+      log: jest.fn(),
     };
-    
+
     loggerSpy = mockLogger.warn;
     jest.spyOn(Logger, 'getInstance').mockReturnValue(mockLogger as any);
 
@@ -89,7 +89,12 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should create a unit group composite with custom settings', () => {
-      const customComposite = new UnitGroupComposite('custom-group', 'Custom Group', 50, CalculationStrategy.AVERAGE);
+      const customComposite = new UnitGroupComposite(
+        'custom-group',
+        'Custom Group',
+        50,
+        CalculationStrategy.AVERAGE
+      );
 
       expect(customComposite.id).toBe('custom-group');
       expect(customComposite.name).toBe('Custom Group');
@@ -368,7 +373,12 @@ describe('UnitGroupComposite', () => {
     });
 
     it('should handle nested composites', () => {
-      const nestedComposite = new UnitGroupComposite('nested', 'Nested Group', 0, CalculationStrategy.SUM);
+      const nestedComposite = new UnitGroupComposite(
+        'nested',
+        'Nested Group',
+        0,
+        CalculationStrategy.SUM
+      );
       const child1 = new MockUnit('child-1', 'Child 1');
       const child2 = new MockUnit('child-2', 'Child 2');
 

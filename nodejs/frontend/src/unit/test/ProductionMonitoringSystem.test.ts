@@ -21,9 +21,9 @@ describe('ProductionMonitoringSystem', () => {
       warn: jest.fn(),
       error: jest.fn(),
       debug: jest.fn(),
-      log: jest.fn()
+      log: jest.fn(),
     };
-    
+
     loggerSpy = mockLogger.info;
     jest.spyOn(Logger, 'getInstance').mockReturnValue(mockLogger as any);
 

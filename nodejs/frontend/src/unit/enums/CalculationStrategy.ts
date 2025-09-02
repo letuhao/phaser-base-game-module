@@ -1,6 +1,6 @@
 /**
  * Calculation Strategy Enum
- * 
+ *
  * Defines the available calculation strategies for unit composites.
  * Used to replace string literal types with type-safe enums.
  */
@@ -10,7 +10,7 @@ export enum CalculationStrategy {
   AVERAGE = 'average',
   MIN = 'min',
   MAX = 'max',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }
 
 /**
@@ -29,9 +29,9 @@ export function getCalculationStrategyDisplayName(strategy: CalculationStrategy)
     [CalculationStrategy.AVERAGE]: 'Average',
     [CalculationStrategy.MIN]: 'Minimum',
     [CalculationStrategy.MAX]: 'Maximum',
-    [CalculationStrategy.CUSTOM]: 'Custom'
+    [CalculationStrategy.CUSTOM]: 'Custom',
   };
-  
+
   return displayNames[strategy];
 }
 
@@ -44,8 +44,8 @@ export function getCalculationStrategyDescription(strategy: CalculationStrategy)
     [CalculationStrategy.AVERAGE]: 'Calculates the average of all values',
     [CalculationStrategy.MIN]: 'Returns the minimum value',
     [CalculationStrategy.MAX]: 'Returns the maximum value',
-    [CalculationStrategy.CUSTOM]: 'Uses a custom calculation function'
+    [CalculationStrategy.CUSTOM]: 'Uses a custom calculation function',
   };
-  
+
   return descriptions[strategy];
 }
