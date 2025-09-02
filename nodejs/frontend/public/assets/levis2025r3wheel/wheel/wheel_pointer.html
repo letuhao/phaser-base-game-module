@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wheel Pointer - Placeholder</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .placeholder {
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(180deg, #ff4757, #ff3742);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .placeholder::before {
+            content: "↑";
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+        }
+        .placeholder::after {
+            content: "POINTER";
+            position: absolute;
+            bottom: 20px;
+            font-size: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="placeholder"></div>
+    <p><strong>Placeholder for:</strong> wheel_pointer.png</p>
+    <p><strong>Dimensions:</strong> 100x150 pixels</p>
+    <p><strong>Description:</strong> Wheel pointer/arrow indicator</p>
+    <p><strong>Anchor Point:</strong> Bottom center (0.5, 0.9)</p>
+</body>
+</html>

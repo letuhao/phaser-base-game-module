@@ -11,6 +11,9 @@ import { ThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
 /**
  * Theme manager interface
  * Manages the lifecycle and switching of themes
+ * 
+ * NOTE: This interface now uses the segregated structure for better ISP compliance
+ * For new implementations, consider using the individual interfaces directly
  */
 export interface IThemeManager {
   /** Current active theme */
@@ -30,6 +33,10 @@ export interface IThemeManager {
 
   /** Theme cache for performance */
   readonly themeCache: Map<string, IThemeClass>;
+
+  // ============================================================================
+  // THEME REGISTRY METHODS
+  // ============================================================================
 
   /**
    * Initialize the theme manager
@@ -79,6 +86,10 @@ export interface IThemeManager {
    */
   getThemesByVariant(variant: ThemeVariant): ITheme[];
 
+  // ============================================================================
+  // THEME ACTIVATION METHODS
+  // ============================================================================
+
   /**
    * Activate a theme by ID
    * @param id Theme ID to activate
@@ -116,6 +127,10 @@ export interface IThemeManager {
    * Switch to dark theme
    */
   switchToDarkTheme(): Promise<void>;
+
+  // ============================================================================
+  // THEME ACCESSOR METHODS
+  // ============================================================================
 
   /**
    * Get a color value from the active theme
@@ -160,6 +175,16 @@ export interface IThemeManager {
   getThemeClass(className: string): IThemeClass | undefined;
 
   /**
+   * Check if a theme supports a specific breakpoint
+   * @param breakpoint Breakpoint to check
+   */
+  supportsBreakpoint(breakpoint: BreakpointName): boolean;
+
+  // ============================================================================
+  // THEME CLASS MANAGEMENT METHODS
+  // ============================================================================
+
+  /**
    * Apply a theme class to an element
    * @param element Element to apply class to
    * @param className Class name to apply
@@ -173,11 +198,9 @@ export interface IThemeManager {
    */
   removeThemeClass(element: unknown, className: string): void;
 
-  /**
-   * Check if a theme supports a specific breakpoint
-   * @param breakpoint Breakpoint to check
-   */
-  supportsBreakpoint(breakpoint: BreakpointName): boolean;
+  // ============================================================================
+  // EVENT MANAGEMENT METHODS
+  // ============================================================================
 
   /**
    * Add a listener for theme changes
@@ -196,6 +219,10 @@ export interface IThemeManager {
    */
   clearListeners(): void;
 
+  // ============================================================================
+  // STATISTICS AND IMPORT/EXPORT METHODS
+  // ============================================================================
+
   /**
    * Get theme statistics
    */
@@ -212,6 +239,10 @@ export interface IThemeManager {
    * @param config Theme configuration string
    */
   importTheme(config: string): ITheme;
+
+  // ============================================================================
+  // LIFECYCLE METHODS
+  // ============================================================================
 
   /**
    * Reset the manager to initial state

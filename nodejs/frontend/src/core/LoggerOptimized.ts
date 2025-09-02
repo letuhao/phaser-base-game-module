@@ -349,7 +349,8 @@ export class LoggerOptimized {
   private processLogImmediately(entry: LogEntry): void {
     // Output to console immediately for errors
     if (entry.level === 'ERROR' && this.config.console.enabled) {
-      console.error(`[${entry.objectName}] ${entry.message}`, entry.data);
+      const formattedMessage = this.formatLogMessage(entry);
+      console.error(formattedMessage);
     }
 
     // Send to server immediately for errors
@@ -413,26 +414,77 @@ export class LoggerOptimized {
   }
 
   /**
+   * Format log message with timestamp, class name, method name, message, and data
+   * This creates a single string that can be easily saved to files in Chrome
+   * Includes colors for different log levels
+   */
+  private formatLogMessage(entry: LogEntry): string {
+    const timestamp = new Date().toISOString();
+    const className = entry.objectName || 'Unknown';
+    const methodName = entry.methodName || 'Unknown';
+    const message = entry.message || '';
+
+    // Get color for log level
+    const levelColor = this.getLogLevelColor(entry.level);
+    const resetColor = '\x1b[0m'; // Reset color
+
+    // Format data as JSON string, handling undefined/null cases
+    let dataString = '';
+    if (entry.data !== undefined && entry.data !== null) {
+      try {
+        dataString = JSON.stringify(entry.data, null, 2);
+      } catch (error) {
+        dataString = '[Circular or non-serializable data]';
+      }
+    }
+
+    // Combine all parts into a single formatted string with colors
+    const formattedMessage = `[${timestamp}] ${levelColor}[${entry.level}]${resetColor} [${className}.${methodName}] ${message}${dataString ? '\n' + dataString : ''}`;
+
+    return formattedMessage;
+  }
+
+  /**
+   * Get color code for log level
+   */
+  private getLogLevelColor(level: string): string {
+    switch (level) {
+      case 'ERROR':
+        return '\x1b[31m'; // Red
+      case 'WARN':
+        return '\x1b[33m'; // Yellow
+      case 'INFO':
+        return '\x1b[36m'; // Cyan
+      case 'DEBUG':
+        return '\x1b[32m'; // Green
+      case 'TRACE':
+        return '\x1b[35m'; // Magenta
+      default:
+        return '\x1b[37m'; // White
+    }
+  }
+
+  /**
    * Output to console with minimal overhead
    */
   private outputToConsoleMinimal(entry: LogEntry): void {
-    const message = `[${entry.level}] [${entry.objectName}] ${entry.message}`;
+    const formattedMessage = this.formatLogMessage(entry);
 
     switch (entry.level) {
       case 'ERROR':
-        console.error(message, entry.data);
+        console.error(formattedMessage);
         break;
       case 'WARN':
-        console.warn(message, entry.data);
+        console.warn(formattedMessage);
         break;
       case 'INFO':
-        console.info(message, entry.data);
+        console.info(formattedMessage);
         break;
       case 'DEBUG':
-        console.debug(message, entry.data);
+        console.debug(formattedMessage);
         break;
       default:
-        console.log(message, entry.data);
+        console.log(formattedMessage);
     }
   }
 

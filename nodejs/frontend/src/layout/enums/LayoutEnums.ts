@@ -975,6 +975,9 @@ export enum AlignmentReference {
 export enum DisplayType {
   BLOCK = 'block',
   INLINE = 'inline',
+  INLINE_BLOCK = 'inline-block',
+  FLEX = 'flex',
+  GRID = 'grid',
   NONE = 'none',
 }
 

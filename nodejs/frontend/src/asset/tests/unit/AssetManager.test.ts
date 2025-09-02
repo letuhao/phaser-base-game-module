@@ -24,24 +24,60 @@ class MockAssetFactory implements IAssetFactory {
   public factoryStatistics: any = {};
   public factoryMetadata: any = {};
 
-  setFactoryConfig(config: any): this { return this; }
-  getFactoryConfig(): any { return {}; }
-  setFactoryMetadata(metadata: any): this { return this; }
-  getFactoryMetadata(): any { return {}; }
-  createAssetFromOptions(options: any): Promise<Asset> { return Promise.resolve(new Asset('test', 'test', AssetType.IMAGE, {} as AssetConfig)); }
-  createAssetFromConfig(config: any): Promise<Asset> { return Promise.resolve(new Asset('test', 'test', AssetType.IMAGE, config)); }
-  createAssetsFromOptions(options: any[]): Promise<Asset[]> { return Promise.resolve([]); }
-  createAssetsFromConfigs(configs: any[]): Promise<Asset[]> { return Promise.resolve([]); }
-  cloneAsset(asset: Asset): Asset { return new Asset('test', 'test', AssetType.IMAGE, {} as AssetConfig); }
-  configureAsset(asset: Asset, config: any): this { return this; }
-  validateAssetConfig(config: any): boolean { return true; }
-  registerAssetTypeCreator(type: AssetType, creator: any): this { return this; }
-  unregisterAssetTypeCreator(type: AssetType): this { return this; }
-  getAssetTypeCreator(type: AssetType): any { return null; }
-  getRegisteredAssetTypes(): AssetType[] { return []; }
-  getFactoryStatistics(): any { return {}; }
-  clearFactoryStatistics(): this { return this; }
-  disposeFactory(): this { return this; }
+  setFactoryConfig(config: any): this {
+    return this;
+  }
+  getFactoryConfig(): any {
+    return {};
+  }
+  setFactoryMetadata(metadata: any): this {
+    return this;
+  }
+  getFactoryMetadata(): any {
+    return {};
+  }
+  createAssetFromOptions(options: any): Promise<Asset> {
+    return Promise.resolve(new Asset('test', 'test', AssetType.IMAGE, {} as AssetConfig));
+  }
+  createAssetFromConfig(config: any): Promise<Asset> {
+    return Promise.resolve(new Asset('test', 'test', AssetType.IMAGE, config));
+  }
+  createAssetsFromOptions(options: any[]): Promise<Asset[]> {
+    return Promise.resolve([]);
+  }
+  createAssetsFromConfigs(configs: any[]): Promise<Asset[]> {
+    return Promise.resolve([]);
+  }
+  cloneAsset(asset: Asset): Asset {
+    return new Asset('test', 'test', AssetType.IMAGE, {} as AssetConfig);
+  }
+  configureAsset(asset: Asset, config: any): this {
+    return this;
+  }
+  validateAssetConfig(config: any): boolean {
+    return true;
+  }
+  registerAssetTypeCreator(type: AssetType, creator: any): this {
+    return this;
+  }
+  unregisterAssetTypeCreator(type: AssetType): this {
+    return this;
+  }
+  getAssetTypeCreator(type: AssetType): any {
+    return null;
+  }
+  getRegisteredAssetTypes(): AssetType[] {
+    return [];
+  }
+  getFactoryStatistics(): any {
+    return {};
+  }
+  clearFactoryStatistics(): this {
+    return this;
+  }
+  disposeFactory(): this {
+    return this;
+  }
 }
 
 class MockAssetBundleFactory implements IAssetBundleFactory {
@@ -50,24 +86,60 @@ class MockAssetBundleFactory implements IAssetBundleFactory {
   public bundleFactoryStatistics: any = {};
   public bundleFactoryMetadata: any = {};
 
-  setBundleFactoryConfig(config: any): this { return this; }
-  getBundleFactoryConfig(): any { return {}; }
-  setBundleFactoryMetadata(metadata: any): this { return this; }
-  getBundleFactoryMetadata(): any { return {}; }
-  createBundleFromOptions(options: any): Promise<AssetBundle> { return Promise.resolve(new AssetBundle('test', BundleType.SCENE, {} as BundleConfig)); }
-  createBundleFromConfig(config: any, assets: Map<string, Asset>): Promise<AssetBundle> { return Promise.resolve(new AssetBundle('test', BundleType.SCENE, {} as BundleConfig)); }
-  createBundlesFromOptions(options: any[]): Promise<AssetBundle[]> { return Promise.resolve([]); }
-  createBundlesFromConfigs(configs: any[], assets: Map<string, Asset>): Promise<AssetBundle[]> { return Promise.resolve([]); }
-  cloneBundle(bundle: AssetBundle): AssetBundle { return new AssetBundle('test', BundleType.SCENE, {} as BundleConfig); }
-  configureBundle(bundle: AssetBundle, config: any): this { return this; }
-  validateBundleConfig(config: any): boolean { return true; }
-  registerBundleTypeCreator(type: BundleType, creator: any): this { return this; }
-  unregisterBundleTypeCreator(type: BundleType): this { return this; }
-  getBundleTypeCreator(type: BundleType): any { return null; }
-  getRegisteredBundleTypes(): BundleType[] { return []; }
-  getBundleFactoryStatistics(): any { return {}; }
-  clearBundleFactoryStatistics(): this { return this; }
-  disposeBundleFactory(): this { return this; }
+  setBundleFactoryConfig(config: any): this {
+    return this;
+  }
+  getBundleFactoryConfig(): any {
+    return {};
+  }
+  setBundleFactoryMetadata(metadata: any): this {
+    return this;
+  }
+  getBundleFactoryMetadata(): any {
+    return {};
+  }
+  createBundleFromOptions(options: any): Promise<AssetBundle> {
+    return Promise.resolve(new AssetBundle('test', BundleType.SCENE, {} as BundleConfig));
+  }
+  createBundleFromConfig(config: any, assets: Map<string, Asset>): Promise<AssetBundle> {
+    return Promise.resolve(new AssetBundle('test', BundleType.SCENE, {} as BundleConfig));
+  }
+  createBundlesFromOptions(options: any[]): Promise<AssetBundle[]> {
+    return Promise.resolve([]);
+  }
+  createBundlesFromConfigs(configs: any[], assets: Map<string, Asset>): Promise<AssetBundle[]> {
+    return Promise.resolve([]);
+  }
+  cloneBundle(bundle: AssetBundle): AssetBundle {
+    return new AssetBundle('test', BundleType.SCENE, {} as BundleConfig);
+  }
+  configureBundle(bundle: AssetBundle, config: any): this {
+    return this;
+  }
+  validateBundleConfig(config: any): boolean {
+    return true;
+  }
+  registerBundleTypeCreator(type: BundleType, creator: any): this {
+    return this;
+  }
+  unregisterBundleTypeCreator(type: BundleType): this {
+    return this;
+  }
+  getBundleTypeCreator(type: BundleType): any {
+    return null;
+  }
+  getRegisteredBundleTypes(): BundleType[] {
+    return [];
+  }
+  getBundleFactoryStatistics(): any {
+    return {};
+  }
+  clearBundleFactoryStatistics(): this {
+    return this;
+  }
+  disposeBundleFactory(): this {
+    return this;
+  }
 }
 
 class MockAssetCacheManager implements IAssetCacheManager {
@@ -76,22 +148,54 @@ class MockAssetCacheManager implements IAssetCacheManager {
   public cacheStatistics: any = {};
   public cacheMetadata: any = {};
 
-  setCacheConfig(config: any): this { return this; }
-  getCacheConfig(): any { return {}; }
-  setCacheMetadata(metadata: any): this { return this; }
-  getCacheMetadata(): any { return {}; }
-  cacheAsset(asset: Asset): Promise<boolean> { return Promise.resolve(true); }
-  uncacheAsset(assetKey: string): Promise<boolean> { return Promise.resolve(true); }
-  getCachedAsset(assetKey: string): Promise<Asset | null> { return Promise.resolve(null); }
-  getCachedAssetSize(assetKey: string): number { return 0; }
-  isAssetCached(assetKey: string): boolean { return false; }
-  getCacheSize(): number { return 0; }
-  getCacheUsage(): number { return 0; }
-  optimizeCache(): Promise<this> { return Promise.resolve(this); }
-  clearCache(): Promise<this> { return Promise.resolve(this); }
-  getCacheStatistics(): any { return {}; }
-  clearCacheStatistics(): this { return this; }
-  disposeCacheManager(): this { return this; }
+  setCacheConfig(config: any): this {
+    return this;
+  }
+  getCacheConfig(): any {
+    return {};
+  }
+  setCacheMetadata(metadata: any): this {
+    return this;
+  }
+  getCacheMetadata(): any {
+    return {};
+  }
+  cacheAsset(asset: Asset): Promise<boolean> {
+    return Promise.resolve(true);
+  }
+  uncacheAsset(assetKey: string): Promise<boolean> {
+    return Promise.resolve(true);
+  }
+  getCachedAsset(assetKey: string): Promise<Asset | null> {
+    return Promise.resolve(null);
+  }
+  getCachedAssetSize(assetKey: string): number {
+    return 0;
+  }
+  isAssetCached(assetKey: string): boolean {
+    return false;
+  }
+  getCacheSize(): number {
+    return 0;
+  }
+  getCacheUsage(): number {
+    return 0;
+  }
+  optimizeCache(): Promise<this> {
+    return Promise.resolve(this);
+  }
+  clearCache(): Promise<this> {
+    return Promise.resolve(this);
+  }
+  getCacheStatistics(): any {
+    return {};
+  }
+  clearCacheStatistics(): this {
+    return this;
+  }
+  disposeCacheManager(): this {
+    return this;
+  }
 }
 
 class MockAssetPoolManager implements IAssetPoolManager {
@@ -100,21 +204,51 @@ class MockAssetPoolManager implements IAssetPoolManager {
   public poolStatistics: any = {};
   public poolMetadata: any = {};
 
-  setPoolConfig(config: any): this { return this; }
-  getPoolConfig(): any { return {}; }
-  setPoolMetadata(metadata: any): this { return this; }
-  getPoolMetadata(): any { return {}; }
-  poolAsset(asset: Asset): Promise<boolean> { return Promise.resolve(true); }
-  unpoolAsset(assetKey: string): Promise<Asset | null> { return Promise.resolve(null); }
-  getPooledAsset(assetKey: string): Asset | null { return null; }
-  isAssetPooled(assetKey: string): boolean { return false; }
-  getPoolSize(): number { return 0; }
-  getPoolUsage(): number { return 0; }
-  optimizePool(): Promise<this> { return Promise.resolve(this); }
-  clearPool(): Promise<this> { return Promise.resolve(this); }
-  getPoolStatistics(): any { return {}; }
-  clearPoolStatistics(): this { return this; }
-  disposePoolManager(): this { return this; }
+  setPoolConfig(config: any): this {
+    return this;
+  }
+  getPoolConfig(): any {
+    return {};
+  }
+  setPoolMetadata(metadata: any): this {
+    return this;
+  }
+  getPoolMetadata(): any {
+    return {};
+  }
+  poolAsset(asset: Asset): Promise<boolean> {
+    return Promise.resolve(true);
+  }
+  unpoolAsset(assetKey: string): Promise<Asset | null> {
+    return Promise.resolve(null);
+  }
+  getPooledAsset(assetKey: string): Asset | null {
+    return null;
+  }
+  isAssetPooled(assetKey: string): boolean {
+    return false;
+  }
+  getPoolSize(): number {
+    return 0;
+  }
+  getPoolUsage(): number {
+    return 0;
+  }
+  optimizePool(): Promise<this> {
+    return Promise.resolve(this);
+  }
+  clearPool(): Promise<this> {
+    return Promise.resolve(this);
+  }
+  getPoolStatistics(): any {
+    return {};
+  }
+  clearPoolStatistics(): this {
+    return this;
+  }
+  disposePoolManager(): this {
+    return this;
+  }
 }
 
 class MockAssetValidationManager implements IAssetValidationManager {
@@ -124,27 +258,69 @@ class MockAssetValidationManager implements IAssetValidationManager {
   public validationReports: Map<string, any> = new Map();
   public validationMetadata: any = {};
 
-  setValidationConfig(config: any): this { return this; }
-  setValidationMetadata(metadata: any): this { return this; }
-  getValidationConfig(): any { return {}; }
-  getValidationStatistics(): any { return {}; }
-  getValidationReports(): Map<string, any> { return new Map(); }
-  getValidationMetadata(): any { return {}; }
-  validateAsset(asset: Asset): Promise<any[]> { return Promise.resolve([]); }
-  validateBundle(bundle: AssetBundle): Promise<any[]> { return Promise.resolve([]); }
-  validateIntegrity(asset: Asset): Promise<any> { return Promise.resolve({}); }
-  validateFormat(asset: Asset): Promise<any> { return Promise.resolve({}); }
-  validateDependencies(asset: Asset): Promise<any> { return Promise.resolve({}); }
-  validateSize(asset: Asset): Promise<any> { return Promise.resolve({}); }
-  validateMetadata(asset: Asset): Promise<any> { return Promise.resolve({}); }
-  validateCompatibility(asset: Asset): Promise<any> { return Promise.resolve({}); }
-  getValidationReport(assetKey: string): any[] { return []; }
-  isAssetValid(assetKey: string): boolean { return true; }
-  hasAssetWarnings(assetKey: string): boolean { return false; }
-  hasAssetErrors(assetKey: string): boolean { return false; }
-  clearValidationReports(): this { return this; }
-  clearValidationReport(assetKey: string): this { return this; }
-  getValidationSummary(): any { return {}; }
+  setValidationConfig(config: any): this {
+    return this;
+  }
+  setValidationMetadata(metadata: any): this {
+    return this;
+  }
+  getValidationConfig(): any {
+    return {};
+  }
+  getValidationStatistics(): any {
+    return {};
+  }
+  getValidationReports(): Map<string, any> {
+    return new Map();
+  }
+  getValidationMetadata(): any {
+    return {};
+  }
+  validateAsset(asset: Asset): Promise<any[]> {
+    return Promise.resolve([]);
+  }
+  validateBundle(bundle: AssetBundle): Promise<any[]> {
+    return Promise.resolve([]);
+  }
+  validateIntegrity(asset: Asset): Promise<any> {
+    return Promise.resolve({});
+  }
+  validateFormat(asset: Asset): Promise<any> {
+    return Promise.resolve({});
+  }
+  validateDependencies(asset: Asset): Promise<any> {
+    return Promise.resolve({});
+  }
+  validateSize(asset: Asset): Promise<any> {
+    return Promise.resolve({});
+  }
+  validateMetadata(asset: Asset): Promise<any> {
+    return Promise.resolve({});
+  }
+  validateCompatibility(asset: Asset): Promise<any> {
+    return Promise.resolve({});
+  }
+  getValidationReport(assetKey: string): any[] {
+    return [];
+  }
+  isAssetValid(assetKey: string): boolean {
+    return true;
+  }
+  hasAssetWarnings(assetKey: string): boolean {
+    return false;
+  }
+  hasAssetErrors(assetKey: string): boolean {
+    return false;
+  }
+  clearValidationReports(): this {
+    return this;
+  }
+  clearValidationReport(assetKey: string): this {
+    return this;
+  }
+  getValidationSummary(): any {
+    return {};
+  }
   updateValidationManager(deltaTime: number): void {}
 }
 
@@ -155,28 +331,65 @@ class MockAssetStatisticsManager implements IAssetStatisticsManager {
   public statisticsHistory: any[] = [];
   public statisticsMetadata: any = {};
 
-  setStatisticsConfig(config: any): this { return this; }
-  setStatisticsMetadata(metadata: any): this { return this; }
-  getStatisticsConfig(): any { return {}; }
-  getCurrentStatistics(): any { return {}; }
-  getStatisticsHistory(): any[] { return []; }
-  getStatisticsMetadata(): any { return {}; }
+  setStatisticsConfig(config: any): this {
+    return this;
+  }
+  setStatisticsMetadata(metadata: any): this {
+    return this;
+  }
+  getStatisticsConfig(): any {
+    return {};
+  }
+  getCurrentStatistics(): any {
+    return {};
+  }
+  getStatisticsHistory(): any[] {
+    return [];
+  }
+  getStatisticsMetadata(): any {
+    return {};
+  }
   recordAssetOperation(asset: Asset, operation: string, duration: number, success: boolean): void {}
-  recordBundleOperation(bundle: AssetBundle, operation: string, duration: number, success: boolean): void {}
+  recordBundleOperation(
+    bundle: AssetBundle,
+    operation: string,
+    duration: number,
+    success: boolean
+  ): void {}
   recordPerformanceMetric(metric: string, value: number, timestamp?: number): void {}
   recordMemoryUsage(usage: number, timestamp?: number): void {}
   recordCacheOperation(operation: string, hit: boolean, duration: number): void {}
   recordPoolOperation(operation: string, hit: boolean, duration: number): void {}
-  getAssetStatistics(): any { return {}; }
-  getBundleStatistics(): any { return {}; }
-  getPerformanceStatistics(): any { return {}; }
-  getStatisticsByType(type: any): any { return {}; }
-  getStatisticsForTimeRange(startTime: number, endTime: number): any[] { return []; }
-  getStatisticsSummary(): any { return {}; }
-  clearStatistics(): this { return this; }
-  clearStatisticsHistory(): this { return this; }
-  exportStatistics(): string { return ''; }
-  importStatistics(data: string): this { return this; }
+  getAssetStatistics(): any {
+    return {};
+  }
+  getBundleStatistics(): any {
+    return {};
+  }
+  getPerformanceStatistics(): any {
+    return {};
+  }
+  getStatisticsByType(type: any): any {
+    return {};
+  }
+  getStatisticsForTimeRange(startTime: number, endTime: number): any[] {
+    return [];
+  }
+  getStatisticsSummary(): any {
+    return {};
+  }
+  clearStatistics(): this {
+    return this;
+  }
+  clearStatisticsHistory(): this {
+    return this;
+  }
+  exportStatistics(): string {
+    return '';
+  }
+  importStatistics(data: string): this {
+    return this;
+  }
   updateStatisticsManager(deltaTime: number): void {}
 }
 
@@ -228,9 +441,9 @@ describe('AssetManager', () => {
         maxPoolSize: 100,
         defaultTimeout: 15000,
         retryAttempts: 3,
-        retryDelay: 1000
+        retryDelay: 1000,
       };
-      
+
       const customManager = new AssetManager('custom-manager', customConfig);
       expect(customManager.managerConfig.enableCaching).toBe(false);
       expect(customManager.managerConfig.enablePooling).toBe(false);
@@ -250,7 +463,7 @@ describe('AssetManager', () => {
         maxPoolSize: 100,
         defaultTimeout: 20000,
         retryAttempts: 3,
-        retryDelay: 1000
+        retryDelay: 1000,
       };
 
       manager.setManagerConfig(config);
@@ -301,7 +514,7 @@ describe('AssetManager', () => {
           maxPoolSize: 100,
           defaultTimeout: 5000,
           retryAttempts: 3,
-          retryDelay: 1000
+          retryDelay: 1000,
         })
         .setAssetFactory(mockAssetFactory)
         .setBundleFactory(mockBundleFactory)
@@ -310,7 +523,7 @@ describe('AssetManager', () => {
         .setValidationManager(mockValidationManager)
         .setStatisticsManager(mockStatisticsManager)
         .setManagerMetadata({});
-      
+
       expect(result).toBe(manager);
     });
   });
@@ -325,7 +538,7 @@ describe('AssetManager', () => {
         type: AssetType.IMAGE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
     });
 
@@ -333,7 +546,7 @@ describe('AssetManager', () => {
       // Since we don't have a registerAsset method in the interface,
       // we'll test with the internal map directly
       (manager as any).managedAssets.set('test-asset', testAsset);
-      
+
       const asset = manager.getAsset('test-asset');
       expect(asset).toBe(testAsset);
     });
@@ -345,7 +558,7 @@ describe('AssetManager', () => {
 
     it('should get all assets', () => {
       (manager as any).managedAssets.set('test-asset', testAsset);
-      
+
       const assets = manager.getAllAssets();
       expect(assets).toHaveLength(1);
       expect(assets[0]).toBe(testAsset);
@@ -353,9 +566,9 @@ describe('AssetManager', () => {
 
     it('should check if asset is loaded', () => {
       (manager as any).managedAssets.set('test-asset', testAsset);
-      
+
       expect(manager.isAssetLoaded('test-asset')).toBe(false);
-      
+
       // Mock the asset as loaded
       testAsset.setAssetState(AssetState.LOADED);
       expect(manager.isAssetLoaded('test-asset')).toBe(true);
@@ -363,9 +576,9 @@ describe('AssetManager', () => {
 
     it('should check if asset is cached', () => {
       (manager as any).managedAssets.set('test-asset', testAsset);
-      
+
       expect(manager.isAssetCached('test-asset')).toBe(false);
-      
+
       // Mock the asset as cached
       testAsset.setAssetState(AssetState.CACHED);
       expect(manager.isAssetCached('test-asset')).toBe(true);
@@ -373,7 +586,7 @@ describe('AssetManager', () => {
 
     it('should load asset successfully', async () => {
       (manager as any).managedAssets.set('test-asset', testAsset);
-      
+
       const loadedAsset = await manager.loadAsset('test-asset');
       expect(loadedAsset).toBe(testAsset);
     });
@@ -390,21 +603,21 @@ describe('AssetManager', () => {
         type: AssetType.IMAGE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
-      
+
       const audioAsset = new Asset('audio-asset', 'audio-asset', AssetType.AUDIO, {
         key: 'audio-asset',
         path: '/test/audio.mp3',
         type: AssetType.AUDIO,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
 
       (manager as any).managedAssets.set('image-asset', imageAsset);
       (manager as any).managedAssets.set('audio-asset', audioAsset);
-      
+
       const imageAssets = await manager.loadAssetsByType(AssetType.IMAGE);
       expect(imageAssets).toHaveLength(1);
       expect(imageAssets[0]).toBe(imageAsset);
@@ -417,21 +630,21 @@ describe('AssetManager', () => {
         type: AssetType.IMAGE,
         priority: AssetPriority.HIGH,
         preload: true,
-        cache: true
+        cache: true,
       });
-      
+
       const normalPriorityAsset = new Asset('normal-asset', 'normal-asset', AssetType.IMAGE, {
         key: 'normal-asset',
         path: '/test/normal.png',
         type: AssetType.IMAGE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
 
       (manager as any).managedAssets.set('high-asset', highPriorityAsset);
       (manager as any).managedAssets.set('normal-asset', normalPriorityAsset);
-      
+
       const highPriorityAssets = await manager.loadAssetsByPriority(AssetPriority.HIGH);
       expect(highPriorityAssets).toHaveLength(1);
       expect(highPriorityAssets[0]).toBe(highPriorityAsset);
@@ -439,7 +652,7 @@ describe('AssetManager', () => {
 
     it('should unload asset successfully', async () => {
       (manager as any).managedAssets.set('test-asset', testAsset);
-      
+
       const result = await manager.unloadAsset('test-asset');
       expect(result).toBe(true);
     });
@@ -459,7 +672,7 @@ describe('AssetManager', () => {
 
     it('should get bundle by ID', () => {
       (manager as any).assetBundles.set('test-bundle', testBundle);
-      
+
       const bundle = manager.getBundle('test-bundle');
       expect(bundle).toBe(testBundle);
     });
@@ -471,7 +684,7 @@ describe('AssetManager', () => {
 
     it('should get all bundles', () => {
       (manager as any).assetBundles.set('test-bundle', testBundle);
-      
+
       const bundles = manager.getAllBundles();
       expect(bundles).toHaveLength(1);
       expect(bundles[0]).toBe(testBundle);
@@ -479,9 +692,9 @@ describe('AssetManager', () => {
 
     it('should check if bundle is loaded', () => {
       (manager as any).assetBundles.set('test-bundle', testBundle);
-      
+
       expect(manager.isBundleLoaded('test-bundle')).toBe(false);
-      
+
       // Mock the bundle as loaded
       testBundle.setBundleState(BundleState.LOADED);
       expect(manager.isBundleLoaded('test-bundle')).toBe(true);
@@ -489,9 +702,9 @@ describe('AssetManager', () => {
 
     it('should check if bundle is cached', () => {
       (manager as any).assetBundles.set('test-bundle', testBundle);
-      
+
       expect(manager.isBundleCached('test-bundle')).toBe(false);
-      
+
       // Mock the bundle as loaded (since BundleState doesn't have CACHED)
       testBundle.setBundleState(BundleState.LOADED);
       expect(manager.isBundleCached('test-bundle')).toBe(true);
@@ -499,7 +712,7 @@ describe('AssetManager', () => {
 
     it('should load bundle successfully', async () => {
       (manager as any).assetBundles.set('test-bundle', testBundle);
-      
+
       const loadedBundle = await manager.loadBundle('test-bundle');
       expect(loadedBundle).toBe(testBundle);
     });
@@ -522,7 +735,7 @@ describe('AssetManager', () => {
       // Add bundles directly to the manager's assetBundles map
       (manager as any).assetBundles.set('scene-bundle', sceneBundle);
       (manager as any).assetBundles.set('ui-bundle', uiBundle);
-      
+
       const sceneBundles = await manager.loadBundlesByType(BundleType.SCENE);
       expect(sceneBundles).toHaveLength(1);
       expect(sceneBundles[0]).toBe(sceneBundle);
@@ -530,7 +743,7 @@ describe('AssetManager', () => {
 
     it('should unload bundle successfully', async () => {
       (manager as any).assetBundles.set('test-bundle', testBundle);
-      
+
       const result = await manager.unloadBundle('test-bundle');
       expect(result).toBe(true);
     });
@@ -552,36 +765,36 @@ describe('AssetManager', () => {
         type: AssetType.IMAGE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
-      
+
       testBundle = new AssetBundle('test-bundle', BundleType.SCENE, {} as BundleConfig);
     });
 
     it('should validate asset when validation is enabled', () => {
       manager.managerConfig.enableValidation = true;
-      
+
       const result = manager.validateAsset(testAsset);
       expect(result).toBe(true);
     });
 
     it('should skip validation when validation is disabled', () => {
       manager.managerConfig.enableValidation = false;
-      
+
       const result = manager.validateAsset(testAsset);
       expect(result).toBe(true);
     });
 
     it('should validate bundle when validation is enabled', () => {
       manager.managerConfig.enableValidation = true;
-      
+
       const result = manager.validateBundle(testBundle);
       expect(result).toBe(true);
     });
 
     it('should skip validation when validation is disabled', () => {
       manager.managerConfig.enableValidation = false;
-      
+
       const result = manager.validateBundle(testBundle);
       expect(result).toBe(true);
     });
@@ -613,16 +826,16 @@ describe('AssetManager', () => {
         type: AssetType.IMAGE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
-      
+
       const asset2 = new Asset('asset2', 'asset2', AssetType.AUDIO, {
         key: 'asset2',
         path: '/test/asset2.mp3',
         type: AssetType.AUDIO,
         priority: AssetPriority.HIGH,
         preload: true,
-        cache: true
+        cache: true,
       });
 
       const bundle1 = new AssetBundle('bundle1', BundleType.SCENE, {} as BundleConfig);
@@ -631,7 +844,7 @@ describe('AssetManager', () => {
       // Set assets to different states
       asset1.setAssetState(AssetState.LOADED);
       asset2.setAssetState(AssetState.FAILED);
-      
+
       // Set bundles to different states
       bundle1.setBundleState(BundleState.LOADED);
       bundle2.setBundleState(BundleState.FAILED);
@@ -662,9 +875,9 @@ describe('AssetManager', () => {
         type: AssetType.IMAGE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
-      
+
       const bundle = new AssetBundle('test-bundle', BundleType.SCENE, {} as BundleConfig);
 
       (manager as any).managedAssets.set('test-asset', asset);
@@ -698,7 +911,7 @@ describe('AssetManager', () => {
         type: AssetType.IMAGE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
 
       // Mock the loadAsset method to throw an error

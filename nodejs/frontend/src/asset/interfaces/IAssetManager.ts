@@ -167,7 +167,10 @@ export interface IAssetManager {
   loadBundle(bundleId: string, options?: BundleLoadingOptions): Promise<IAssetBundle | null>;
 
   /** Load bundles by type */
-  loadBundlesByType(bundleType: BundleType, options?: BundleLoadingOptions): Promise<IAssetBundle[]>;
+  loadBundlesByType(
+    bundleType: BundleType,
+    options?: BundleLoadingOptions
+  ): Promise<IAssetBundle[]>;
 
   /** Unload asset */
   unloadAsset(assetKey: string): Promise<boolean>;

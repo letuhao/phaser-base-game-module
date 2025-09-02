@@ -6,7 +6,13 @@
  */
 
 import { Logger } from '../../core/Logger';
-import type { IAssetManager, AssetManagerConfig, AssetManagerStatistics, AssetLoadingOptions, BundleLoadingOptions } from '../interfaces/IAssetManager';
+import type {
+  IAssetManager,
+  AssetManagerConfig,
+  AssetManagerStatistics,
+  AssetLoadingOptions,
+  BundleLoadingOptions,
+} from '../interfaces/IAssetManager';
 import type { IAsset } from '../interfaces/IAsset';
 import type { IAssetBundle } from '../interfaces/IAssetBundle';
 import type { IAssetFactory } from '../interfaces/factories/IAssetFactory';
@@ -39,10 +45,7 @@ export class AssetManager implements IAssetManager {
   private managedAssets: Map<string, IAsset> = new Map();
   private assetBundles: Map<string, IAssetBundle> = new Map();
 
-  constructor(
-    managerId: string,
-    managerConfig?: Partial<AssetManagerConfig>
-  ) {
+  constructor(managerId: string, managerConfig?: Partial<AssetManagerConfig>) {
     this.managerId = managerId;
 
     // Set default manager configuration
@@ -57,7 +60,7 @@ export class AssetManager implements IAssetManager {
       retryAttempts: 3,
       retryDelay: 1000,
       metadata: {},
-      ...managerConfig
+      ...managerConfig,
     };
 
     // Initialize sub-managers with default implementations
@@ -65,7 +68,7 @@ export class AssetManager implements IAssetManager {
 
     this.logger.info('AssetManager', 'constructor', 'Asset manager created', {
       managerId: this.managerId,
-      managerConfig: this.managerConfig
+      managerConfig: this.managerConfig,
     });
   }
 
@@ -76,7 +79,7 @@ export class AssetManager implements IAssetManager {
     // Initialize with default implementations
     this.assetFactory = new AssetFactory('default-asset-factory');
     this.bundleFactory = new AssetBundleFactory('default-bundle-factory');
-    
+
     // Initialize other managers with mock implementations for now
     this.cacheManager = {
       cacheId: 'default-cache-manager',
@@ -88,9 +91,9 @@ export class AssetManager implements IAssetManager {
       isCached: () => false,
       getCachedAsset: () => undefined,
       cacheAsset: () => {},
-      removeCachedAsset: () => {}
+      removeCachedAsset: () => {},
     } as unknown as IAssetCacheManager;
-    
+
     this.poolManager = {
       poolId: 'default-pool-manager',
       poolConfig: { maxSize: this.managerConfig.maxPoolSize },
@@ -99,9 +102,9 @@ export class AssetManager implements IAssetManager {
       getPooledAsset: () => undefined,
       poolAsset: () => {},
       removePooledAsset: () => {},
-      clearPool: () => {}
+      clearPool: () => {},
     } as unknown as IAssetPoolManager;
-    
+
     this.validationManager = {
       validationId: 'default-validation-manager',
       validationConfig: { strictMode: true },
@@ -112,14 +115,19 @@ export class AssetManager implements IAssetManager {
       },
       validateBundleConfig: (config: any) => {
         // Basic validation - check required fields
-        return !!(config && config.bundleId && config.bundleType && Array.isArray(config.assetKeys));
+        return !!(
+          config &&
+          config.bundleId &&
+          config.bundleType &&
+          Array.isArray(config.assetKeys)
+        );
       },
       validateAsset: () => true,
       validateBundle: () => true,
       getValidationErrors: () => [],
-      clearValidationErrors: () => {}
+      clearValidationErrors: () => {},
     } as unknown as IAssetValidationManager;
-    
+
     this.statisticsManager = {
       statisticsId: 'default-statistics-manager',
       statisticsConfig: { enableTracking: true },
@@ -134,10 +142,10 @@ export class AssetManager implements IAssetManager {
         totalLoadTime: 0,
         averageLoadTime: 0,
         cacheHitRate: 0,
-        successRate: 0
+        successRate: 0,
       }),
       updateStatistics: () => {},
-      resetStatistics: () => {}
+      resetStatistics: () => {},
     } as unknown as IAssetStatisticsManager;
   }
 
@@ -148,7 +156,7 @@ export class AssetManager implements IAssetManager {
     this.managerConfig = { ...this.managerConfig, ...config };
     this.logger.debug('AssetManager', 'setManagerConfig', 'Manager configuration updated', {
       managerId: this.managerId,
-      config: this.managerConfig
+      config: this.managerConfig,
     });
     return this;
   }
@@ -160,7 +168,7 @@ export class AssetManager implements IAssetManager {
     this.assetFactory = factory;
     this.logger.debug('AssetManager', 'setAssetFactory', 'Asset factory set', {
       managerId: this.managerId,
-      factoryId: factory.factoryId
+      factoryId: factory.factoryId,
     });
     return this;
   }
@@ -172,7 +180,7 @@ export class AssetManager implements IAssetManager {
     this.bundleFactory = factory;
     this.logger.debug('AssetManager', 'setBundleFactory', 'Bundle factory set', {
       managerId: this.managerId,
-      bundleFactoryId: factory.bundleFactoryId
+      bundleFactoryId: factory.bundleFactoryId,
     });
     return this;
   }
@@ -184,7 +192,7 @@ export class AssetManager implements IAssetManager {
     this.cacheManager = manager;
     this.logger.debug('AssetManager', 'setCacheManager', 'Cache manager set', {
       managerId: this.managerId,
-      cacheManagerId: manager.cacheManagerId
+      cacheManagerId: manager.cacheManagerId,
     });
     return this;
   }
@@ -196,7 +204,7 @@ export class AssetManager implements IAssetManager {
     this.poolManager = manager;
     this.logger.debug('AssetManager', 'setPoolManager', 'Pool manager set', {
       managerId: this.managerId,
-      poolManagerId: manager.poolManagerId
+      poolManagerId: manager.poolManagerId,
     });
     return this;
   }
@@ -208,7 +216,7 @@ export class AssetManager implements IAssetManager {
     this.validationManager = manager;
     this.logger.debug('AssetManager', 'setValidationManager', 'Validation manager set', {
       managerId: this.managerId,
-      validationManagerId: manager.validationManagerId
+      validationManagerId: manager.validationManagerId,
     });
     return this;
   }
@@ -220,7 +228,7 @@ export class AssetManager implements IAssetManager {
     this.statisticsManager = manager;
     this.logger.debug('AssetManager', 'setStatisticsManager', 'Statistics manager set', {
       managerId: this.managerId,
-      statisticsManagerId: manager.statisticsManagerId
+      statisticsManagerId: manager.statisticsManagerId,
     });
     return this;
   }
@@ -232,7 +240,7 @@ export class AssetManager implements IAssetManager {
     this.managerMetadata = { ...this.managerMetadata, ...metadata };
     this.logger.debug('AssetManager', 'setManagerMetadata', 'Manager metadata updated', {
       managerId: this.managerId,
-      metadata: this.managerMetadata
+      metadata: this.managerMetadata,
     });
     return this;
   }
@@ -302,7 +310,7 @@ export class AssetManager implements IAssetManager {
       if (!asset) {
         this.logger.warn('AssetManager', 'loadAsset', 'Asset not found', {
           managerId: this.managerId,
-          assetKey
+          assetKey,
         });
         return null;
       }
@@ -314,19 +322,19 @@ export class AssetManager implements IAssetManager {
 
       // Load the asset
       await asset.loadAsset();
-      
+
       if (asset.isAssetLoaded()) {
         this.logger.info('AssetManager', 'loadAsset', 'Asset loaded successfully', {
           managerId: this.managerId,
           assetKey,
           assetType: asset.assetType,
-          assetSize: asset.assetSize
+          assetSize: asset.assetSize,
         });
       } else {
         this.logger.error('AssetManager', 'loadAsset', 'Asset loading failed', {
           managerId: this.managerId,
           assetKey,
-          assetType: asset.assetType
+          assetType: asset.assetType,
         });
       }
 
@@ -335,7 +343,7 @@ export class AssetManager implements IAssetManager {
       this.logger.error('AssetManager', 'loadAsset', 'Asset loading error', {
         managerId: this.managerId,
         assetKey,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return null;
     }
@@ -345,46 +353,56 @@ export class AssetManager implements IAssetManager {
    * Load assets by type
    */
   async loadAssetsByType(assetType: AssetType, options?: AssetLoadingOptions): Promise<IAsset[]> {
-    const assets = Array.from(this.managedAssets.values()).filter(asset => asset.assetType === assetType);
+    const assets = Array.from(this.managedAssets.values()).filter(
+      asset => asset.assetType === assetType
+    );
     const loadedAssets: IAsset[] = [];
-    
+
     for (const asset of assets) {
       const loadedAsset = await this.loadAsset(asset.assetKey, options);
       if (loadedAsset) {
         loadedAssets.push(loadedAsset);
       }
     }
-    
+
     return loadedAssets;
   }
 
   /**
    * Load assets by priority
    */
-  async loadAssetsByPriority(priority: AssetPriority, options?: AssetLoadingOptions): Promise<IAsset[]> {
-    const assets = Array.from(this.managedAssets.values()).filter(asset => asset.assetConfig.priority === priority);
+  async loadAssetsByPriority(
+    priority: AssetPriority,
+    options?: AssetLoadingOptions
+  ): Promise<IAsset[]> {
+    const assets = Array.from(this.managedAssets.values()).filter(
+      asset => asset.assetConfig.priority === priority
+    );
     const loadedAssets: IAsset[] = [];
-    
+
     for (const asset of assets) {
       const loadedAsset = await this.loadAsset(asset.assetKey, options);
       if (loadedAsset) {
         loadedAssets.push(loadedAsset);
       }
     }
-    
+
     return loadedAssets;
   }
 
   /**
    * Load bundle
    */
-  async loadBundle(bundleId: string, _options?: BundleLoadingOptions): Promise<IAssetBundle | null> {
+  async loadBundle(
+    bundleId: string,
+    _options?: BundleLoadingOptions
+  ): Promise<IAssetBundle | null> {
     try {
       const bundle = this.assetBundles.get(bundleId);
       if (!bundle) {
         this.logger.warn('AssetManager', 'loadBundle', 'Bundle not found', {
           managerId: this.managerId,
-          bundleId
+          bundleId,
         });
         return null;
       }
@@ -396,18 +414,18 @@ export class AssetManager implements IAssetManager {
 
       // Load the bundle
       await bundle.loadBundle();
-      
+
       if (bundle.isBundleLoaded()) {
         this.logger.info('AssetManager', 'loadBundle', 'Bundle loaded successfully', {
           managerId: this.managerId,
           bundleId,
-          bundleType: bundle.bundleType
+          bundleType: bundle.bundleType,
         });
       } else {
         this.logger.error('AssetManager', 'loadBundle', 'Bundle loading failed', {
           managerId: this.managerId,
           bundleId,
-          bundleType: bundle.bundleType
+          bundleType: bundle.bundleType,
         });
       }
 
@@ -416,7 +434,7 @@ export class AssetManager implements IAssetManager {
       this.logger.error('AssetManager', 'loadBundle', 'Bundle loading error', {
         managerId: this.managerId,
         bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return null;
     }
@@ -425,17 +443,22 @@ export class AssetManager implements IAssetManager {
   /**
    * Load bundles by type
    */
-  async loadBundlesByType(bundleType: BundleType, options?: BundleLoadingOptions): Promise<IAssetBundle[]> {
-    const bundles = Array.from(this.assetBundles.values()).filter(bundle => bundle.bundleType === bundleType);
+  async loadBundlesByType(
+    bundleType: BundleType,
+    options?: BundleLoadingOptions
+  ): Promise<IAssetBundle[]> {
+    const bundles = Array.from(this.assetBundles.values()).filter(
+      bundle => bundle.bundleType === bundleType
+    );
     const loadedBundles: IAssetBundle[] = [];
-    
+
     for (const bundle of bundles) {
       const loadedBundle = await this.loadBundle(bundle.bundleId, options);
       if (loadedBundle) {
         loadedBundles.push(loadedBundle);
       }
     }
-    
+
     return loadedBundles;
   }
 
@@ -451,21 +474,21 @@ export class AssetManager implements IAssetManager {
 
       // Unload the asset
       await asset.unloadAsset();
-      
+
       if (asset.assetState === AssetState.PENDING) {
         this.logger.info('AssetManager', 'unloadAsset', 'Asset unloaded successfully', {
           managerId: this.managerId,
-          assetKey
+          assetKey,
         });
         return true;
       }
-      
+
       return false;
     } catch (error) {
       this.logger.error('AssetManager', 'unloadAsset', 'Asset unloading error', {
         managerId: this.managerId,
         assetKey,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return false;
     }
@@ -483,21 +506,21 @@ export class AssetManager implements IAssetManager {
 
       // Unload the bundle
       await bundle.unloadBundle();
-      
+
       if (bundle.bundleState === BundleState.PENDING) {
         this.logger.info('AssetManager', 'unloadBundle', 'Bundle unloaded successfully', {
           managerId: this.managerId,
-          bundleId
+          bundleId,
         });
         return true;
       }
-      
+
       return false;
     } catch (error) {
       this.logger.error('AssetManager', 'unloadBundle', 'Bundle unloading error', {
         managerId: this.managerId,
         bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return false;
     }
@@ -518,7 +541,7 @@ export class AssetManager implements IAssetManager {
     this.logger.debug('AssetManager', 'registerAsset', 'Asset registered', {
       managerId: this.managerId,
       assetKey: asset.assetKey,
-      assetType: asset.assetType
+      assetType: asset.assetType,
     });
     return this;
   }
@@ -531,7 +554,7 @@ export class AssetManager implements IAssetManager {
     if (removed) {
       this.logger.debug('AssetManager', 'unregisterAsset', 'Asset unregistered', {
         managerId: this.managerId,
-        assetKey
+        assetKey,
       });
     }
     return this;
@@ -569,14 +592,18 @@ export class AssetManager implements IAssetManager {
    * Get assets by priority
    */
   getAssetsByPriority(priority: AssetPriority): IAsset[] {
-    return Array.from(this.managedAssets.values()).filter(asset => asset.assetConfig.priority === priority);
+    return Array.from(this.managedAssets.values()).filter(
+      asset => asset.assetConfig.priority === priority
+    );
   }
 
   /**
    * Get bundles by type
    */
   getBundlesByType(bundleType: BundleType): IAssetBundle[] {
-    return Array.from(this.assetBundles.values()).filter(bundle => bundle.bundleType === bundleType);
+    return Array.from(this.assetBundles.values()).filter(
+      bundle => bundle.bundleType === bundleType
+    );
   }
 
   /**
@@ -629,7 +656,7 @@ export class AssetManager implements IAssetManager {
       this.logger.error('AssetManager', 'validateAsset', 'Asset validation error', {
         managerId: this.managerId,
         assetKey: asset.assetKey,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return false;
     }
@@ -652,7 +679,7 @@ export class AssetManager implements IAssetManager {
       this.logger.error('AssetManager', 'validateBundle', 'Bundle validation error', {
         managerId: this.managerId,
         bundleId: bundle.bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return false;
     }
@@ -673,7 +700,7 @@ export class AssetManager implements IAssetManager {
       this.logger.error('AssetManager', 'validateAssetConfig', 'Asset config validation error', {
         managerId: this.managerId,
         assetConfig,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return false;
     }
@@ -689,12 +716,17 @@ export class AssetManager implements IAssetManager {
 
     try {
       // Basic validation - check required fields
-      return !!(bundleConfig && bundleConfig.bundleId && bundleConfig.bundleType && Array.isArray(bundleConfig.assetKeys));
+      return !!(
+        bundleConfig &&
+        bundleConfig.bundleId &&
+        bundleConfig.bundleType &&
+        Array.isArray(bundleConfig.assetKeys)
+      );
     } catch (error) {
       this.logger.error('AssetManager', 'validateBundleConfig', 'Bundle config validation error', {
         managerId: this.managerId,
         bundleConfig,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return false;
     }
@@ -705,18 +737,33 @@ export class AssetManager implements IAssetManager {
    */
   getManagerStatistics(): AssetManagerStatistics {
     const totalAssets = this.managedAssets.size;
-    const loadedAssets = Array.from(this.managedAssets.values()).filter(asset => asset.assetState === AssetState.LOADED).length;
-    const failedAssets = Array.from(this.managedAssets.values()).filter(asset => asset.assetState === AssetState.FAILED).length;
-    const cachedAssets = Array.from(this.managedAssets.values()).filter(asset => asset.assetState === AssetState.CACHED).length;
-    
+    const loadedAssets = Array.from(this.managedAssets.values()).filter(
+      asset => asset.assetState === AssetState.LOADED
+    ).length;
+    const failedAssets = Array.from(this.managedAssets.values()).filter(
+      asset => asset.assetState === AssetState.FAILED
+    ).length;
+    const cachedAssets = Array.from(this.managedAssets.values()).filter(
+      asset => asset.assetState === AssetState.CACHED
+    ).length;
+
     const totalBundles = this.assetBundles.size;
-    const loadedBundles = Array.from(this.assetBundles.values()).filter(bundle => bundle.bundleState === BundleState.LOADED).length;
-    const failedBundles = Array.from(this.assetBundles.values()).filter(bundle => bundle.bundleState === BundleState.FAILED).length;
-    const cachedBundles = Array.from(this.assetBundles.values()).filter(bundle => bundle.bundleState === BundleState.LOADED).length;
-    
-    const totalLoadTime = Array.from(this.managedAssets.values()).reduce((sum, asset) => sum + asset.assetLoadTime, 0);
+    const loadedBundles = Array.from(this.assetBundles.values()).filter(
+      bundle => bundle.bundleState === BundleState.LOADED
+    ).length;
+    const failedBundles = Array.from(this.assetBundles.values()).filter(
+      bundle => bundle.bundleState === BundleState.FAILED
+    ).length;
+    const cachedBundles = Array.from(this.assetBundles.values()).filter(
+      bundle => bundle.bundleState === BundleState.LOADED
+    ).length;
+
+    const totalLoadTime = Array.from(this.managedAssets.values()).reduce(
+      (sum, asset) => sum + asset.assetLoadTime,
+      0
+    );
     const averageLoadTime = totalAssets > 0 ? totalLoadTime / totalAssets : 0;
-    
+
     const successRate = totalAssets > 0 ? (loadedAssets / totalAssets) * 100 : 0;
     const cacheHitRate = totalAssets > 0 ? (cachedAssets / totalAssets) * 100 : 0;
 
@@ -733,7 +780,7 @@ export class AssetManager implements IAssetManager {
       averageLoadTime,
       cacheHitRate,
       successRate,
-      lastUpdateTime: Date.now()
+      lastUpdateTime: Date.now(),
     };
   }
 
@@ -744,17 +791,17 @@ export class AssetManager implements IAssetManager {
     try {
       // Clear all assets
       this.managedAssets.clear();
-      
+
       // Clear all bundles
       this.assetBundles.clear();
-      
+
       this.logger.info('AssetManager', 'clearManager', 'Manager cleared', {
-        managerId: this.managerId
+        managerId: this.managerId,
       });
     } catch (error) {
       this.logger.error('AssetManager', 'clearManager', 'Clear manager error', {
         managerId: this.managerId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
     }
 
@@ -773,7 +820,7 @@ export class AssetManager implements IAssetManager {
     } catch (error) {
       this.logger.error('AssetManager', 'updateManager', 'Manager update error', {
         managerId: this.managerId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
     }
   }

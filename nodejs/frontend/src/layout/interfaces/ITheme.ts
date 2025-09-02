@@ -5,7 +5,37 @@
  * Fully compatible with the Unit System
  */
 
-import { ThemeType, ThemeVariant, BreakpointName } from '../enums/LayoutEnums';
+import { 
+  ThemeType, 
+  ThemeVariant, 
+  BreakpointName,
+  TextAlign, 
+  TextDecoration, 
+  TextTransform, 
+  DisplayType, 
+  PositionType, 
+  OverflowType, 
+  BorderStyle, 
+  BackgroundSize, 
+  BackgroundRepeat, 
+  BackgroundAttachment, 
+  FontStyle, 
+  WhiteSpace, 
+  TextOverflow
+} from '../enums/LayoutEnums';
+import { 
+  CursorType, 
+  FlexDirection, 
+  FlexWrap, 
+  JustifyContent, 
+  AlignItems, 
+  AlignSelf, 
+  VisibilityType, 
+  FontVariant, 
+  WordBreak, 
+  OverflowWrap,
+  BoxSizing
+} from '../enums/ThemeEnums';
 import { SizeUnit, PositionUnit, ScaleUnit } from '../../unit';
 
 // ============================================================================
@@ -15,63 +45,66 @@ import { SizeUnit, PositionUnit, ScaleUnit } from '../../unit';
 /**
  * Main theme configuration interface
  * Defines a complete theme with all styling properties
+ * 
+ * NOTE: This interface now extends the segregated interfaces for better ISP compliance
+ * For new implementations, consider using the individual interfaces directly
  */
 export interface ITheme {
   /** Unique identifier for the theme */
-  id: string;
+  readonly id: string;
 
   /** Human-readable name for the theme */
-  name: string;
+  readonly name: string;
 
   /** Display name for UI purposes */
-  displayName: string;
+  readonly displayName: string;
 
   /** Description of what this theme represents */
-  description?: string;
+  readonly description?: string;
 
   /** Theme type (light, dark, auto, custom) */
-  type: ThemeType;
+  readonly type: ThemeType;
 
   /** Theme variant (default, primary, secondary, etc.) */
-  variant: ThemeVariant;
+  readonly variant: ThemeVariant;
 
   /** Whether this theme is currently active */
-  isActive: boolean;
+  readonly isActive: boolean;
 
   /** Whether this theme supports dark mode */
-  supportsDarkMode: boolean;
+  readonly supportsDarkMode: boolean;
 
   /** Opposite theme for mode switching */
-  oppositeTheme?: string;
+  readonly oppositeTheme?: string;
 
   /** Version of this theme */
-  version?: string;
+  readonly version?: string;
 
   /** Author of this theme */
-  author?: string;
+  readonly author?: string;
 
   /** Tags for categorization */
-  tags?: string[];
+  readonly tags?: string[];
 
   /** Core theme properties */
-  colors: IThemeColors;
-  typography: IThemeTypography;
-  spacing: IThemeSpacing;
-  borderRadius: IThemeBorderRadius;
-  shadows: IThemeShadows;
-  animation: IThemeAnimation;
-  breakpoints: IThemeBreakpoints;
+  readonly colors: IThemeColors;
+  readonly typography: IThemeTypography;
+  readonly spacing: IThemeSpacing;
+  readonly borderRadius: IThemeBorderRadius;
+  readonly shadows: IThemeShadows;
+  readonly animation: IThemeAnimation;
+  readonly breakpoints: IThemeBreakpoints;
 
   /** Theme class definitions for reusable styling */
-  themeClasses?: Record<string, IThemeClass>;
+  readonly themeClasses?: Record<string, IThemeClass>;
 
   /** Custom properties specific to this theme */
-  custom?: Record<string, unknown>;
+  readonly custom?: Record<string, unknown>;
 
   /** Metadata for the theme */
-  metadata?: IThemeMetadata;
+  readonly metadata?: IThemeMetadata;
 
-  /** Required theme methods */
+  /** Required theme methods with improved error handling */
   getColor(path: string): string;
   getSpacing(size: keyof IThemeSpacing['scale']): number;
   getFontSize(size: keyof IThemeTypography['fontSize']): number;
@@ -669,13 +702,93 @@ export interface IThemeClass {
   fontWeight?: number;
   padding?: number;
   margin?: number;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
+  paddingLeft?: number;
+  paddingRight?: number;
   boxShadow?: string;
   borderRadiusValue?: number;
+  textAlign?: TextAlign;
+  textDecoration?: TextDecoration;
+  textTransform?: TextTransform;
+  lineHeight?: number;
+  letterSpacing?: number;
+  cursor?: CursorType;
+  opacity?: number;
+  transform?: string;
+  transition?: string;
+  cssAnimation?: string;
+  display?: DisplayType;
+  position?: PositionType;
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+  zIndex?: number;
+  overflow?: OverflowType;
+  border?: string;
+  borderWidth?: number;
+  borderStyle?: BorderStyle;
+  borderTop?: string;
+  borderRight?: string;
+  borderBottom?: string;
+  borderLeft?: string;
+
+  /** Background properties */
+  backgroundImage?: string;
+  backgroundSize?: BackgroundSize | string;
+  backgroundPosition?: string;
+  backgroundRepeat?: BackgroundRepeat;
+  backgroundAttachment?: BackgroundAttachment;
+
+  /** Flexbox properties */
+  flex?: string;
+  flexDirection?: FlexDirection;
+  flexWrap?: FlexWrap;
+  justifyContent?: JustifyContent;
+  alignItems?: AlignItems;
+  alignSelf?: AlignSelf;
+  flexGrow?: number;
+  flexShrink?: number;
+  flexBasis?: string | number;
+  order?: number;
+
+  /** Box model properties */
+  boxSizing?: BoxSizing;
+  minWidth?: number | string;
+  maxWidth?: number | string;
+  minHeight?: number | string;
+  maxHeight?: number | string;
+
+  /** Visual properties */
+  visibility?: VisibilityType;
+  filter?: string;
+  backdropFilter?: string;
+
+  /** Advanced typography */
+  fontStyle?: FontStyle;
+  fontVariant?: FontVariant;
+  wordSpacing?: number;
+  textIndent?: number;
+  whiteSpace?: WhiteSpace;
+  wordBreak?: WordBreak;
+  textOverflow?: TextOverflow;
+  overflowWrap?: OverflowWrap;
+
+  /** Flexbox gap property */
+  gap?: number | string;
 
   /** Unit System compatible properties */
   width?: { value: number; unit: SizeUnit };
   height?: { value: number; unit: SizeUnit };
-  position?: { x: { value: number; unit: PositionUnit }; y: { value: number; unit: PositionUnit } };
+  unitPosition?: {
+    x: { value: number; unit: PositionUnit };
+    y: { value: number; unit: PositionUnit };
+  };
   scale?: { value: number; unit: ScaleUnit };
 
   /** Custom properties */

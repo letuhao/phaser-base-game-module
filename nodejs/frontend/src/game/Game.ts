@@ -25,7 +25,7 @@ export class Game {
 
     // Create base game
     this.baseGame = new BaseGame(baseGameConfig);
-    
+
     // Add the scene - the scene handles its own asset loading
     const scene = new Levis2025R3WheelScene();
     this.baseGame.addScene(scene);
@@ -42,10 +42,10 @@ export class Game {
   async start(): Promise<void> {
     try {
       logger.info('Game', 'start', 'Starting game');
-      
+
       // Start the scene - asset loading is handled by the scene
       this.baseGame.startScene('Levis2025R3WheelScene');
-      
+
       logger.info('Game', 'start', 'Game started successfully');
     } catch (error) {
       logger.error('Game', 'start', 'Failed to start game', { error });

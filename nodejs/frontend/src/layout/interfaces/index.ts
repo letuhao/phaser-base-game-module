@@ -1,824 +1,218 @@
 /**
- * Layout System Interfaces - Main Export
- *
- * This module exports all interfaces for the layout system.
- * Based on the best patterns from the existing codebase.
+ * Layout System Interfaces Index
+ * Exports all theme-related interfaces for easy importing
  */
 
 // ============================================================================
-// BREAKPOINT INTERFACES
+// CORE THEME INTERFACES
 // ============================================================================
 
+// Original interfaces (backward compatibility)
+export * from './ITheme';
+export * from './IThemeManager';
+
+// All other interfaces (with explicit re-exports to avoid conflicts)
+export type { IBreakpoint } from './IBreakpoint';
+export type { IBreakpointManager } from './IBreakpointManager';
+export type { IStyle } from './IStyle';
+export type { IStyleManager } from './IStyleManager';
+export type { ILayout } from './ILayout';
+export type { ILayoutManager } from './ILayoutManager';
+export type { ILayoutStrategy } from './ILayoutStrategy';
+export type { ILayoutCommand } from './ILayoutCommand';
+export type { ILayoutState } from './ILayoutState';
+export type { IDIContainer } from './IDIContainer';
+
+// ============================================================================
+// SEGREGATED INTERFACES (Improved ISP Compliance)
+// ============================================================================
+
+// Segregated theme interfaces - only export new interfaces to avoid conflicts
 export type {
-  IBreakpoint,
-  IBreakpointCondition,
-  IBreakpointContext,
-  IBreakpointMetadata,
-} from './IBreakpoint';
-
-export type {
-  IBreakpointManager,
-  IBreakpointListener,
-  IBreakpointStatistics,
-} from './IBreakpointManager';
-
-// ============================================================================
-// THEME INTERFACES
-// ============================================================================
-
-export type {
-  // Core theme interfaces
-  ITheme,
-  IThemeColors,
-  IColorPalette,
-  IBackgroundColors,
-  ITextColors,
-  IStatusColors,
-  IUIColors,
-  ISemanticColors,
-
-  // Typography interfaces
-  IThemeTypography,
-  IFontFamilies,
-  IFontSizes,
-  IFontWeights,
-  ILineHeights,
-  ILetterSpacing,
-  ITextAlign,
-
-  // Spacing and layout interfaces
-  IThemeSpacing,
-  ISpacingScale,
-  IThemeBorderRadius,
-  IThemeShadows,
-
-  // Animation interfaces
-  IThemeAnimation,
-  IAnimationDuration,
-  IAnimationEasing,
-  IAnimationProperties,
-
-  // Breakpoint interfaces
-  IThemeBreakpoints,
-
-  // Theme class interfaces
-  IThemeClass,
-
-  // Metadata interfaces
-  IThemeMetadata,
-} from './ITheme';
-
-export type {
-  IThemeManager,
-  IThemeListener,
-  IThemeStatistics,
-  IThemeConfiguration,
-} from './IThemeManager';
+  IThemeResult,
+  IThemeData,
+  IThemeProperties,
+  IThemeOperations,
+  IThemeRegistry,
+  IThemeActivator,
+  IThemeAccessor,
+  IThemeClassManager,
+  IThemeEventManager,
+  IThemeStatisticsProvider,
+  IThemeImportExport,
+  IThemePerformanceMetrics
+} from './IThemeSegregated';
 
 // ============================================================================
-// STYLE INTERFACES
+// INTERFACE BUNDLES (For organized imports)
 // ============================================================================
 
-export type {
-  // Core style interfaces
-  IStyle,
-  IBaseStyle,
-  ILayoutStyle,
-  IFilterStyle,
-  IInteractiveStyle,
-  IResponsiveStyle,
+// Breakpoint interfaces bundle
+export const BREAKPOINT_INTERFACES = [
+  'IBreakpoint',
+  'IBreakpointManager'
+] as const;
 
-  // Style metadata and composition
-  IStyleMetadata,
-  IStyleComposition,
-  IStyleBuilder,
-} from './IStyle';
+// Theme interfaces bundle
+export const THEME_INTERFACES = [
+  'ITheme',
+  'IThemeManager',
+  'IThemeResult',
+  'IThemeData',
+  'IThemeProperties',
+  'IThemeOperations',
+  'IThemeRegistry',
+  'IThemeActivator',
+  'IThemeAccessor',
+  'IThemeClassManager',
+  'IThemeEventManager',
+  'IThemeStatisticsProvider',
+  'IThemeImportExport',
+  'IThemePerformanceMetrics'
+] as const;
 
-export type {
-  IStyleManager,
-  IStyleListener,
-  IStyleStatistics,
-  IStyleConfiguration,
-} from './IStyleManager';
+// Style interfaces bundle
+export const STYLE_INTERFACES = [
+  'IStyle',
+  'IStyleManager'
+] as const;
 
-// ============================================================================
-// LAYOUT INTERFACES
-// ============================================================================
+// Layout interfaces bundle
+export const LAYOUT_INTERFACES = [
+  'ILayout',
+  'ILayoutManager'
+] as const;
 
-export type {
-  // Core layout interfaces
-  ILayout,
-  ILayoutConfig,
-  IResponsiveLayout,
-  IUnitLayout,
-  ILayoutMetadata,
+// Strategy interfaces bundle
+export const STRATEGY_INTERFACES = [
+  'ILayoutStrategy'
+] as const;
 
-  // Layout context interfaces
-  ILayoutContext,
+// Manager interfaces bundle
+export const MANAGER_INTERFACES = [
+  'ILayoutManager',
+  'IThemeManager',
+  'IStyleManager',
+  'IBreakpointManager'
+] as const;
 
-  // Layout result interfaces
-  ICalculatedLayout,
-  IUnitConversion,
+// Command interfaces bundle
+export const COMMAND_INTERFACES = [
+  'ILayoutCommand'
+] as const;
 
-  // Layout validation interfaces
-  ILayoutValidationResult,
-} from './ILayout';
+// State interfaces bundle
+export const STATE_INTERFACES = [
+  'ILayoutState'
+] as const;
 
-// ============================================================================
-// STRATEGY INTERFACES
-// ============================================================================
+// Chain interfaces bundle
+export const CHAIN_INTERFACES = [
+  'ILayoutChain'
+] as const;
 
-export type {
-  // Base strategy interfaces
-  ILayoutStrategy,
-  IResponsiveLayoutStrategy,
-  IUnitLayoutStrategy,
-  IAlignmentLayoutStrategy,
-  IScaleLayoutStrategy,
+// Dependency injection interfaces bundle
+export const DI_INTERFACES = [
+  'IDIContainer'
+] as const;
 
-  // Strategy capabilities interfaces
-  IStrategyCapabilities,
-  IStrategyPerformanceMetrics,
+// Plugin interfaces bundle
+export const PLUGIN_INTERFACES = [
+  'IPluginSystem'
+] as const;
 
-  // Strategy registry interfaces
-  IStrategyRegistry,
-  IStrategyRegistryStatistics,
+// Granular interfaces bundle
+export const GRANULAR_INTERFACES = [
+  'IGranularInterfaces'
+] as const;
 
-  // Strategy factory interfaces
-  IStrategyFactory,
-} from './ILayoutStrategy';
-
-// ============================================================================
-// MANAGER INTERFACES
-// ============================================================================
-
-export type {
-  // Layout manager interfaces
-  ILayoutManager,
-  ILayoutManagerConfig,
-  ILayoutManagerStatistics,
-
-  // Layout cache interfaces
-  ILayoutCache,
-  ILayoutCacheStatistics,
-} from './ILayoutManager';
-
-// ============================================================================
-// COMMAND PATTERN INTERFACES
-// ============================================================================
-
-export type {
-  // Command interfaces
-  ILayoutCommand,
-  ILayoutCommandContext,
-  ILayoutCommandResult,
-  ILayoutCommandValidationResult,
-  ICommandValidationError,
-  ICommandValidationWarning,
-  ICommandValidationSuggestion,
-  ILayoutCommandMetadata,
-  ILayoutChange,
-
-  // Specific command interfaces
-  ICreateLayoutCommand,
-  IUpdateLayoutCommand,
-  IDeleteLayoutCommand,
-  IMoveLayoutCommand,
-  IResizeLayoutCommand,
-  IBatchCommand,
-
-  // Command manager interfaces
-  ILayoutCommandManager,
-  ICommandListener,
-  ICommandManagerStatistics,
-
-  // Command factory interfaces
-  ILayoutCommandFactory,
-} from './ILayoutCommand';
+// Complete layout system interfaces bundle
+export const LAYOUT_SYSTEM_INTERFACES = [
+  ...BREAKPOINT_INTERFACES,
+  ...THEME_INTERFACES,
+  ...STYLE_INTERFACES,
+  ...LAYOUT_INTERFACES,
+  ...STRATEGY_INTERFACES,
+  ...MANAGER_INTERFACES,
+  ...COMMAND_INTERFACES,
+  ...STATE_INTERFACES,
+  ...CHAIN_INTERFACES,
+  ...DI_INTERFACES,
+  ...PLUGIN_INTERFACES,
+  ...GRANULAR_INTERFACES
+] as const;
 
 // ============================================================================
-// STATE PATTERN INTERFACES
-// ============================================================================
-
-export type {
-  // State interfaces
-  ILayoutState,
-  ILayoutStateContext,
-  ILayoutStateAction,
-  ILayoutStateActionResult,
-  ILayoutStateChange,
-  ILayoutStateMetadata,
-  ILayoutStatePerformance,
-  ILayoutStateValidationRule,
-
-  // Specific state interfaces
-  IIdleLayoutState,
-  ICalculatingLayoutState,
-  ICachedLayoutState,
-  IErrorLayoutState,
-  IValidatingLayoutState,
-  ITransitioningLayoutState,
-
-  // State manager interfaces
-  ILayoutStateManager,
-  ILayoutStateTransition,
-  ILayoutStateTransitionResult,
-  IStateListener,
-  IStateManagerStatistics,
-
-  // State factory interfaces
-  ILayoutStateFactory,
-} from './ILayoutState';
-
-// ============================================================================
-// CHAIN OF RESPONSIBILITY PATTERN INTERFACES
-// ============================================================================
-
-export type {
-  // Chain interfaces
-  ILayoutChainHandler,
-  ILayoutChainRequest,
-  ILayoutChainResponse,
-  ILayoutChainContext,
-  ILayoutChainHandlerMetadata,
-  ILayoutChainHandlerCapabilities,
-  ILayoutChainHandlerPerformance,
-
-  // Specific handler interfaces
-  IValidationChainHandler,
-  IUnitConversionChainHandler,
-  IResponsiveChainHandler,
-  IThemeChainHandler,
-  ICalculationChainHandler,
-  IOptimizationChainHandler,
-  ICachingChainHandler,
-  ILayoutChainValidationRule,
-
-  // Chain manager interfaces
-  ILayoutChainManager,
-  IChainListener,
-  IChainManagerStatistics,
-
-  // Chain factory interfaces
-  ILayoutChainFactory,
-} from './ILayoutChain';
-
-// ============================================================================
-// DEPENDENCY INJECTION INTERFACES
-// ============================================================================
-
-export type {
-  // Service container interfaces
-  IDIContainer,
-  IEnhancedDIContainer,
-  IDependencyMetadata,
-  IDependencyLifecycle,
-  IDependencyValidation,
-  IResolutionContext,
-  IResolutionOptions,
-  IDependencyValidationResult,
-  IDependencyValidationError,
-  IDependencyValidationWarning,
-  IDependencyFactory,
-  IFactoryContext,
-  IFactoryMetadata,
-  IDependencyScope,
-  IScopedDIContainer,
-} from './IDIContainer';
-
-// ============================================================================
-// PLUGIN SYSTEM INTERFACES
-// ============================================================================
-
-export type {
-  // Plugin interfaces
-  IPlugin,
-  IPluginContext,
-  IPluginMetadata,
-  IPluginManager,
-  IPluginRegistry,
-  IPluginStatus,
-  IDependencyStatus,
-  IDependencyCheckResult,
-  IVersionMismatch,
-  IConfigurationProvider,
-  IEventBus,
-  ILogger,
-  IPluginCapability,
-  IPluginCapabilityRegistry,
-} from './IPluginSystem';
-
-// ============================================================================
-// GRANULAR INTERFACES
-// ============================================================================
-
-export type {
-  // Layout management interfaces
-  ILayoutCreator,
-  ILayoutStrategyManager,
-  ILayoutThemeManager,
-  ILayoutBreakpointManager,
-  ILayoutEventManager,
-  ILayoutValidator,
-  ILayoutPerformanceMonitor,
-
-  // Style interfaces
-  IPositionStyle,
-  ISizeStyle,
-  IAlignmentStyle,
-  IVisualStyle,
-  IBackgroundStyle,
-  IBorderStyle,
-  IShadowStyle,
-  ITextStyle,
-  IAnimationStyle,
-  ITransformStyle,
-
-  // Game UI interfaces
-  IGameUIStyle,
-  IMenuStyle,
-  IButtonStyle,
-
-  // Specialized interfaces
-  ISizeConstraints,
-  IBorderSides,
-  IBorderSide,
-  IGradientStyle,
-  IPatternStyle,
-  IKeyframe,
-  IAnimationEvent,
-  IInputStyle,
-  IGameObjectState,
-  IPhysicsStyle,
-  IMenuItemStyle,
-  IMenuNavigation,
-  IMenuAnimations,
-  IButtonStates,
-  IButtonStateStyle,
-  IButtonInteractions,
-  IButtonAnimations,
-  IButtonAccessibility,
-  IThemeSwitch,
-  IViewport,
-  ILayoutEvent,
-  IValidationStatistics,
-  IPerformanceHistory,
-  IPerformanceAlert,
-  ILayoutListener,
-  IValidationRule,
-  IValidationContext,
-  IValidationResult,
-  IValidationError,
-  IValidationWarning,
-  IValidationSuggestion,
-  IPerformanceMetrics,
-
-  // Value interfaces
-  BlendMode,
-  PositionValue,
-  SizeValue,
-  HorizontalAlignment,
-  VerticalAlignment,
-  BorderStyle,
-  TextDecoration,
-  AnimationDirection,
-  AnimationFillMode,
-  IAnimationPlayState,
-  IAnimationIterationCount,
-} from './IGranularInterfaces';
-
-// ============================================================================
-// INTERFACE BUNDLES
+// USAGE EXAMPLES AND RECOMMENDATIONS
 // ============================================================================
 
 /**
- * All breakpoint-related interfaces bundled together
+ * RECOMMENDED USAGE PATTERNS:
+ * 
+ * 1. For new implementations, use the segregated interfaces:
+ *    import { IThemeData, IThemeProperties, IThemeOperations } from './IThemeSegregated';
+ * 
+ * 2. For backward compatibility, use the original interfaces:
+ *    import { ITheme, IThemeManager } from './ITheme';
+ * 
+ * 3. For specific functionality, use focused interfaces:
+ *    import { IThemeRegistry, IThemeActivator } from './IThemeSegregated';
+ * 
+ * 4. For better error handling, use result types:
+ *    import { IThemeResult } from './IThemeSegregated';
  */
-export const BREAKPOINT_INTERFACES = {
-  BREAKPOINT: {
-    IBreakpoint: 'IBreakpoint',
-    IBreakpointCondition: 'IBreakpointCondition',
-    IBreakpointContext: 'IBreakpointContext',
-    IBreakpointMetadata: 'IBreakpointMetadata',
-  },
-  MANAGER: {
-    IBreakpointManager: 'IBreakpointManager',
-    IBreakpointListener: 'IBreakpointListener',
-    IBreakpointStatistics: 'IBreakpointStatistics',
-  },
-} as const;
+
+// ============================================================================
+// INTERFACE COMPOSITION EXAMPLES
+// ============================================================================
 
 /**
- * All theme-related interfaces bundled together
+ * Example: Creating a minimal theme data interface
+ * 
+ * ```typescript
+ * import { IThemeData } from './IThemeSegregated';
+ * 
+ * class MinimalTheme implements IThemeData {
+ *   readonly id: string;
+ *   readonly name: string;
+ *   readonly displayName: string;
+ *   readonly type: ThemeType;
+ *   readonly variant: ThemeVariant;
+ *   readonly isActive: boolean;
+ *   readonly supportsDarkMode: boolean;
+ *   // ... other required properties
+ * }
+ * ```
  */
-export const THEME_INTERFACES = {
-  THEME: {
-    ITheme: 'ITheme',
-    IThemeColors: 'IThemeColors',
-    IColorPalette: 'IColorPalette',
-    IBackgroundColors: 'IBackgroundColors',
-    ITextColors: 'ITextColors',
-    IStatusColors: 'IStatusColors',
-    IUIColors: 'IUIColors',
-    ISemanticColors: 'ISemanticColors',
-  },
-  TYPOGRAPHY: {
-    IThemeTypography: 'IThemeTypography',
-    IFontFamilies: 'IFontFamilies',
-    IFontSizes: 'IFontSizes',
-    IFontWeights: 'IFontWeights',
-    ILineHeights: 'ILineHeights',
-    ILetterSpacing: 'ILetterSpacing',
-    ITextAlign: 'ITextAlign',
-  },
-  LAYOUT: {
-    IThemeSpacing: 'IThemeSpacing',
-    ISpacingScale: 'ISpacingScale',
-    IThemeBorderRadius: 'IThemeBorderRadius',
-    IThemeShadows: 'IThemeShadows',
-  },
-  ANIMATION: {
-    IThemeAnimation: 'IThemeAnimation',
-    IAnimationDuration: 'IAnimationDuration',
-    IAnimationEasing: 'IAnimationEasing',
-    IAnimationProperties: 'IAnimationProperties',
-  },
-  BREAKPOINTS: {
-    IThemeBreakpoints: 'IThemeBreakpoints',
-  },
-  CLASSES: {
-    IThemeClass: 'IThemeClass',
-  },
-  METADATA: {
-    IThemeMetadata: 'IThemeMetadata',
-  },
-  MANAGER: {
-    IThemeManager: 'IThemeManager',
-    IThemeListener: 'IThemeListener',
-    IThemeStatistics: 'IThemeStatistics',
-    IThemeConfiguration: 'IThemeConfiguration',
-  },
-} as const;
 
 /**
- * All style-related interfaces bundled together
+ * Example: Creating a theme registry only
+ * 
+ * ```typescript
+ * import { IThemeRegistry } from './IThemeSegregated';
+ * 
+ * class ThemeRegistry implements IThemeRegistry {
+ *   registerTheme(theme: ITheme): IThemeResult<void> {
+ *     // Implementation
+ *   }
+ *   // ... other registry methods
+ * }
+ * ```
  */
-export const STYLE_INTERFACES = {
-  CORE: {
-    IStyle: 'IStyle',
-    IBaseStyle: 'IBaseStyle',
-  },
-  LAYOUT: {
-    ILayoutStyle: 'ILayoutStyle',
-    IVisualStyle: 'IVisualStyle',
-    IBackgroundStyle: 'IBackgroundStyle',
-    IBorderStyle: 'IBorderStyle',
-    ISpacingStyle: 'ISpacingStyle',
-  },
-  CONTENT: {
-    ITextStyle: 'ITextStyle',
-    IShadowStyle: 'IShadowStyle',
-    ITransformStyle: 'ITransformStyle',
-  },
-  INTERACTION: {
-    IAnimationStyle: 'IAnimationStyle',
-    IFilterStyle: 'IFilterStyle',
-    IInteractiveStyle: 'IInteractiveStyle',
-  },
-  RESPONSIVE: {
-    IResponsiveStyle: 'IResponsiveStyle',
-    IThemeStyle: 'IThemeStyle',
-    IUnitStyle: 'IUnitStyle',
-  },
-  METADATA: {
-    IStyleMetadata: 'IStyleMetadata',
-    IStyleComposition: 'IStyleComposition',
-    IStyleBuilder: 'IStyleBuilder',
-  },
-  MANAGER: {
-    IStyleManager: 'IStyleManager',
-    IStyleListener: 'IStyleListener',
-    IStyleStatistics: 'IStyleStatistics',
-    IStyleConfiguration: 'IStyleConfiguration',
-  },
-} as const;
 
 /**
- * All layout-related interfaces bundled together
+ * Example: Using result types for better error handling
+ * 
+ * ```typescript
+ * import { IThemeResult } from './IThemeSegregated';
+ * 
+ * function getThemeColor(theme: ITheme, path: string): IThemeResult<string> {
+ *   try {
+ *     const color = theme.getColor(path);
+ *     return { success: true, data: color };
+ *   } catch (error) {
+ *     return { success: false, error: error.message };
+ *   }
+ * }
+ * ```
  */
-export const LAYOUT_INTERFACES = {
-  CORE: {
-    ILayout: 'ILayout',
-    ILayoutConfig: 'ILayoutConfig',
-    IResponsiveLayout: 'IResponsiveLayout',
-    IUnitLayout: 'IUnitLayout',
-    ILayoutMetadata: 'ILayoutMetadata',
-  },
-  CONTEXT: {
-    ILayoutContext: 'ILayoutContext',
-  },
-  RESULT: {
-    ICalculatedLayout: 'ICalculatedLayout',
-    IUnitConversion: 'IUnitConversion',
-  },
-  VALIDATION: {
-    ILayoutValidationResult: 'ILayoutValidationResult',
-    IValidationError: 'IValidationError',
-    IValidationWarning: 'IValidationWarning',
-    IValidationSuggestion: 'IValidationSuggestion',
-  },
-} as const;
-
-/**
- * All strategy-related interfaces bundled together
- */
-export const STRATEGY_INTERFACES = {
-  BASE: {
-    ILayoutStrategy: 'ILayoutStrategy',
-    IResponsiveLayoutStrategy: 'IResponsiveLayoutStrategy',
-    IUnitLayoutStrategy: 'IUnitLayoutStrategy',
-    IAlignmentLayoutStrategy: 'IAlignmentLayoutStrategy',
-    IScaleLayoutStrategy: 'IScaleLayoutStrategy',
-  },
-  CAPABILITIES: {
-    IStrategyCapabilities: 'IStrategyCapabilities',
-    IStrategyPerformanceMetrics: 'IStrategyPerformanceMetrics',
-  },
-  REGISTRY: {
-    IStrategyRegistry: 'IStrategyRegistry',
-    IStrategyRegistryStatistics: 'IStrategyRegistryStatistics',
-  },
-  FACTORY: {
-    IStrategyFactory: 'IStrategyFactory',
-  },
-} as const;
-
-/**
- * All manager-related interfaces bundled together
- */
-export const MANAGER_INTERFACES = {
-  LAYOUT: {
-    ILayoutManager: 'ILayoutManager',
-    ILayoutManagerConfig: 'ILayoutManagerConfig',
-    ILayoutListener: 'ILayoutListener',
-    ILayoutManagerStatistics: 'ILayoutManagerStatistics',
-  },
-  CACHE: {
-    ILayoutCache: 'ILayoutCache',
-    ILayoutCacheStatistics: 'ILayoutCacheStatistics',
-  },
-} as const;
-
-/**
- * All command pattern interfaces bundled together
- */
-export const COMMAND_INTERFACES = {
-  BASE: {
-    ILayoutCommand: 'ILayoutCommand',
-    ILayoutCommandContext: 'ILayoutCommandContext',
-    ILayoutCommandResult: 'ILayoutCommandResult',
-    ILayoutCommandValidationResult: 'ILayoutCommandValidationResult',
-    ICommandValidationError: 'ICommandValidationError',
-    ICommandValidationWarning: 'ICommandValidationWarning',
-    ICommandValidationSuggestion: 'ICommandValidationSuggestion',
-    ILayoutCommandMetadata: 'ILayoutCommandMetadata',
-    ILayoutChange: 'ILayoutChange',
-  },
-  SPECIFIC: {
-    ICreateLayoutCommand: 'ICreateLayoutCommand',
-    IUpdateLayoutCommand: 'IUpdateLayoutCommand',
-    IDeleteLayoutCommand: 'IDeleteLayoutCommand',
-    IMoveLayoutCommand: 'IMoveLayoutCommand',
-    IResizeLayoutCommand: 'IResizeLayoutCommand',
-    IBatchCommand: 'IBatchCommand',
-  },
-  MANAGER: {
-    ILayoutCommandManager: 'ILayoutCommandManager',
-    ICommandListener: 'ICommandListener',
-    ICommandManagerStatistics: 'ICommandManagerStatistics',
-  },
-  FACTORY: {
-    ILayoutCommandFactory: 'ILayoutCommandFactory',
-  },
-} as const;
-
-/**
- * All state pattern interfaces bundled together
- */
-export const STATE_INTERFACES = {
-  BASE: {
-    ILayoutState: 'ILayoutState',
-    ILayoutStateContext: 'ILayoutStateContext',
-    ILayoutStateAction: 'ILayoutStateAction',
-    ILayoutStateActionResult: 'ILayoutStateActionResult',
-    ILayoutStateChange: 'ILayoutStateChange',
-    ILayoutStateMetadata: 'ILayoutStateMetadata',
-    ILayoutStatePerformance: 'ILayoutStatePerformance',
-    ILayoutStateValidationRule: 'ILayoutStateValidationRule',
-  },
-  SPECIFIC: {
-    IIdleLayoutState: 'IIdleLayoutState',
-    ICalculatingLayoutState: 'ICalculatingLayoutState',
-    ICachedLayoutState: 'ICachedLayoutState',
-    IErrorLayoutState: 'IErrorLayoutState',
-    IValidatingLayoutState: 'IValidatingLayoutState',
-    ITransitioningLayoutState: 'ITransitioningLayoutState',
-  },
-  MANAGER: {
-    ILayoutStateManager: 'ILayoutStateManager',
-    ILayoutStateTransition: 'ILayoutStateTransition',
-    ILayoutStateTransitionResult: 'ILayoutStateTransitionResult',
-    IStateListener: 'IStateListener',
-    IStateManagerStatistics: 'IStateManagerStatistics',
-  },
-  FACTORY: {
-    ILayoutStateFactory: 'ILayoutStateFactory',
-  },
-} as const;
-
-/**
- * All chain of responsibility pattern interfaces bundled together
- */
-export const CHAIN_INTERFACES = {
-  BASE: {
-    ILayoutChainHandler: 'ILayoutChainHandler',
-    ILayoutChainRequest: 'ILayoutChainRequest',
-    ILayoutChainResponse: 'ILayoutChainResponse',
-    ILayoutChainContext: 'ILayoutChainContext',
-    ILayoutChainHandlerMetadata: 'ILayoutChainHandlerMetadata',
-    ILayoutChainHandlerCapabilities: 'ILayoutChainHandlerCapabilities',
-    ILayoutChainHandlerPerformance: 'ILayoutChainHandlerPerformance',
-  },
-  SPECIFIC: {
-    IValidationChainHandler: 'IValidationChainHandler',
-    IUnitConversionChainHandler: 'IUnitConversionChainHandler',
-    IResponsiveChainHandler: 'IResponsiveChainHandler',
-    IThemeChainHandler: 'IThemeChainHandler',
-    ICalculationChainHandler: 'ICalculationChainHandler',
-    IOptimizationChainHandler: 'IOptimizationChainHandler',
-    ICachingChainHandler: 'ICachingChainHandler',
-    ILayoutChainValidationRule: 'ILayoutChainValidationRule',
-  },
-  MANAGER: {
-    ILayoutChainManager: 'ILayoutChainManager',
-    IChainListener: 'IChainListener',
-    IChainManagerStatistics: 'IChainManagerStatistics',
-  },
-  FACTORY: {
-    ILayoutChainFactory: 'ILayoutChainFactory',
-  },
-} as const;
-
-/**
- * All dependency injection interfaces bundled together
- */
-export const DI_INTERFACES = {
-  CONTAINER: {
-    IDIContainer: 'IDIContainer',
-    IEnhancedDIContainer: 'IEnhancedDIContainer',
-    IScopedDIContainer: 'IScopedDIContainer',
-  },
-  METADATA: {
-    IDependencyMetadata: 'IDependencyMetadata',
-    IDependencyLifecycle: 'IDependencyLifecycle',
-    IDependencyValidation: 'IDependencyValidation',
-    IFactoryMetadata: 'IFactoryMetadata',
-  },
-  RESOLUTION: {
-    IResolutionContext: 'IResolutionContext',
-    IResolutionOptions: 'IResolutionOptions',
-    IDependencyValidationResult: 'IDependencyValidationResult',
-    IDependencyValidationError: 'IDependencyValidationError',
-    IDependencyValidationWarning: 'IDependencyValidationWarning',
-  },
-  FACTORY: {
-    IDependencyFactory: 'IDependencyFactory',
-    IFactoryContext: 'IFactoryContext',
-    IDependencyScope: 'IDependencyScope',
-  },
-} as const;
-
-/**
- * All plugin system interfaces bundled together
- */
-export const PLUGIN_INTERFACES = {
-  PLUGIN: {
-    IPlugin: 'IPlugin',
-    IPluginContext: 'IPluginContext',
-    IPluginMetadata: 'IPluginMetadata',
-    IPluginStatus: 'IPluginStatus',
-  },
-  MANAGER: {
-    IPluginManager: 'IPluginManager',
-    IPluginRegistry: 'IPluginRegistry',
-    IPluginCapabilityRegistry: 'IPluginCapabilityRegistry',
-  },
-  DEPENDENCIES: {
-    IDependencyStatus: 'IDependencyStatus',
-    IDependencyCheckResult: 'IDependencyCheckResult',
-    IVersionMismatch: 'IVersionMismatch',
-  },
-  INFRASTRUCTURE: {
-    IConfigurationProvider: 'IConfigurationProvider',
-    IEventBus: 'IEventBus',
-    ILogger: 'ILogger',
-    IPluginCapability: 'IPluginCapability',
-  },
-} as const;
-
-/**
- * All granular interfaces bundled together
- */
-export const GRANULAR_INTERFACES = {
-  LAYOUT_MANAGEMENT: {
-    ILayoutCreator: 'ILayoutCreator',
-    ILayoutStrategyManager: 'ILayoutStrategyManager',
-    ILayoutThemeManager: 'ILayoutThemeManager',
-    ILayoutBreakpointManager: 'ILayoutBreakpointManager',
-    ILayoutEventManager: 'ILayoutEventManager',
-    ILayoutValidator: 'ILayoutValidator',
-    ILayoutPerformanceMonitor: 'ILayoutPerformanceMonitor',
-  },
-  STYLES: {
-    IPositionStyle: 'IPositionStyle',
-    ISizeStyle: 'ISizeStyle',
-    IAlignmentStyle: 'IAlignmentStyle',
-    IVisualStyle: 'IVisualStyle',
-    IBackgroundStyle: 'IBackgroundStyle',
-    IBorderStyle: 'IBorderStyle',
-    IShadowStyle: 'IShadowStyle',
-    ITextStyle: 'ITextStyle',
-    IAnimationStyle: 'IAnimationStyle',
-    ITransformStyle: 'ITransformStyle',
-  },
-  GAME_UI: {
-    IGameUIStyle: 'IGameUIStyle',
-    IMenuStyle: 'IMenuStyle',
-    IButtonStyle: 'IButtonStyle',
-  },
-  SPECIALIZED: {
-    ISizeConstraints: 'ISizeConstraints',
-    IBorderSides: 'IBorderSides',
-    IBorderSide: 'IBorderSide',
-    IGradientStyle: 'IGradientStyle',
-    IPatternStyle: 'IPatternStyle',
-    IKeyframe: 'IKeyframe',
-    IAnimationEvent: 'IAnimationEvent',
-    IInputStyle: 'IInputStyle',
-    IGameObjectState: 'IGameObjectState',
-    IPhysicsStyle: 'IPhysicsStyle',
-    IMenuItemStyle: 'IMenuItemStyle',
-    IMenuNavigation: 'IMenuNavigation',
-    IMenuAnimations: 'IMenuAnimations',
-    IButtonStates: 'IButtonStates',
-    IButtonStateStyle: 'IButtonStateStyle',
-    IButtonInteractions: 'IButtonInteractions',
-    IButtonAnimations: 'IButtonAnimations',
-    IButtonAccessibility: 'IButtonAccessibility',
-    IThemeSwitch: 'IThemeSwitch',
-    IViewport: 'IViewport',
-    ILayoutEvent: 'ILayoutEvent',
-    IValidationStatistics: 'IValidationStatistics',
-    IPerformanceHistory: 'IPerformanceHistory',
-    IPerformanceAlert: 'IPerformanceAlert',
-    ILayoutListener: 'ILayoutListener',
-    IValidationRule: 'IValidationRule',
-    IValidationContext: 'IValidationContext',
-    IValidationResult: 'IValidationResult',
-    IValidationError: 'IValidationError',
-    IValidationWarning: 'IValidationWarning',
-    IValidationSuggestion: 'IValidationSuggestion',
-    IPerformanceMetrics: 'IPerformanceMetrics',
-  },
-  VALUES: {
-    BlendMode: 'BlendMode',
-    PositionValue: 'PositionValue',
-    SizeValue: 'SizeValue',
-    HorizontalAlignment: 'HorizontalAlignment',
-    VerticalAlignment: 'VerticalAlignment',
-    BorderStyle: 'BorderStyle',
-    TextDecoration: 'TextDecoration',
-    AnimationDirection: 'AnimationDirection',
-    AnimationFillMode: 'AnimationFillMode',
-    IAnimationPlayState: 'IAnimationPlayState',
-    IAnimationIterationCount: 'IAnimationIterationCount',
-  },
-} as const;
-
-/**
- * All layout system interfaces bundled together
- */
-export const LAYOUT_SYSTEM_INTERFACES = {
-  BREAKPOINT: BREAKPOINT_INTERFACES,
-  THEME: THEME_INTERFACES,
-  STYLE: STYLE_INTERFACES,
-  LAYOUT: LAYOUT_INTERFACES,
-  STRATEGY: STRATEGY_INTERFACES,
-  MANAGER: MANAGER_INTERFACES,
-  COMMAND: COMMAND_INTERFACES,
-  STATE: STATE_INTERFACES,
-  CHAIN: CHAIN_INTERFACES,
-  DI: DI_INTERFACES,
-  PLUGIN: PLUGIN_INTERFACES,
-  GRANULAR: GRANULAR_INTERFACES,
-} as const;

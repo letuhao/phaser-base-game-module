@@ -7,7 +7,10 @@
 import { Logger } from '../../core/Logger';
 import type { ISceneAssetLoader, SceneLoadingConfig } from '../interfaces/scene/ISceneAssetLoader';
 import { SceneLoadingState, SceneLoadingPhase } from '../interfaces/scene/ISceneAssetLoader';
-import type { SceneAssetProgress, SceneAssetValidation } from '../interfaces/scene/ISceneAssetConfig';
+import type {
+  SceneAssetProgress,
+  SceneAssetValidation,
+} from '../interfaces/scene/ISceneAssetConfig';
 import type { ISceneAssetConfigData } from '../interfaces/scene/ISceneAssetConfigData';
 import type { IAssetManager } from '../interfaces/IAssetManager';
 import type { IAsset } from '../interfaces/IAsset';
@@ -64,7 +67,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       retryAttempts: 3,
       retryDelay: 1000,
       metadata: {},
-      ...loadingConfig
+      ...loadingConfig,
     };
 
     // Initialize progress
@@ -77,7 +80,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       failedBundles: 0,
       percentage: 0,
       estimatedTimeRemaining: 0,
-      currentPhase: SceneAssetPhase.ASSETS
+      currentPhase: SceneAssetPhase.ASSETS,
     };
 
     // Initialize validation result
@@ -88,7 +91,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       missingAssets: [],
       missingBundles: [],
       invalidAssets: [],
-      invalidBundles: []
+      invalidBundles: [],
     };
 
     // Initialize progress with correct values from config
@@ -97,7 +100,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.info('SceneAssetConfigLoader', 'constructor', 'Scene asset config loader created', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      loadingConfig: this.loadingConfig
+      loadingConfig: this.loadingConfig,
     });
   }
 
@@ -108,10 +111,15 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     const previousState = this.loadingState;
     this.loadingState = state;
 
-    this.logger.debug('SceneAssetConfigLoader', 'setLoadingState', `Loading state changed: ${previousState} → ${state}`, {
-      loaderId: this.loaderId,
-      sceneId: this.sceneId
-    });
+    this.logger.debug(
+      'SceneAssetConfigLoader',
+      'setLoadingState',
+      `Loading state changed: ${previousState} → ${state}`,
+      {
+        loaderId: this.loaderId,
+        sceneId: this.sceneId,
+      }
+    );
 
     return this;
   }
@@ -123,10 +131,15 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     const previousPhase = this.currentPhase;
     this.currentPhase = phase;
 
-    this.logger.debug('SceneAssetConfigLoader', 'setCurrentPhase', `Loading phase changed: ${previousPhase} → ${phase}`, {
-      loaderId: this.loaderId,
-      sceneId: this.sceneId
-    });
+    this.logger.debug(
+      'SceneAssetConfigLoader',
+      'setCurrentPhase',
+      `Loading phase changed: ${previousPhase} → ${phase}`,
+      {
+        loaderId: this.loaderId,
+        sceneId: this.sceneId,
+      }
+    );
 
     return this;
   }
@@ -137,11 +150,16 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   setLoadingConfig(config: SceneLoadingConfig): this {
     this.loadingConfig = config;
 
-    this.logger.debug('SceneAssetConfigLoader', 'setLoadingConfig', 'Loading configuration updated', {
-      loaderId: this.loaderId,
-      sceneId: this.sceneId,
-      config
-    });
+    this.logger.debug(
+      'SceneAssetConfigLoader',
+      'setLoadingConfig',
+      'Loading configuration updated',
+      {
+        loaderId: this.loaderId,
+        sceneId: this.sceneId,
+        config,
+      }
+    );
 
     return this;
   }
@@ -155,7 +173,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'setAssetManager', 'Asset manager updated', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      managerId: manager.managerId
+      managerId: manager.managerId,
     });
 
     return this;
@@ -167,11 +185,16 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   setSceneAssetConfig(config: ISceneAssetConfigData): this {
     this.sceneAssetConfig = config;
 
-    this.logger.debug('SceneAssetConfigLoader', 'setSceneAssetConfig', 'Scene asset configuration updated', {
-      loaderId: this.loaderId,
-      sceneId: this.sceneId,
-      configSceneId: config.sceneId
-    });
+    this.logger.debug(
+      'SceneAssetConfigLoader',
+      'setSceneAssetConfig',
+      'Scene asset configuration updated',
+      {
+        loaderId: this.loaderId,
+        sceneId: this.sceneId,
+        configSceneId: config.sceneId,
+      }
+    );
 
     return this;
   }
@@ -185,7 +208,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'setLoadingProgress', 'Loading progress updated', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      progress
+      progress,
     });
 
     return this;
@@ -197,13 +220,18 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   setValidationResult(validation: SceneAssetValidation): this {
     this.validationResult = validation;
 
-    this.logger.debug('SceneAssetConfigLoader', 'setValidationResult', 'Validation result updated', {
-      loaderId: this.loaderId,
-      sceneId: this.sceneId,
-      isValid: validation.isValid,
-      errorCount: validation.errors.length,
-      warningCount: validation.warnings.length
-    });
+    this.logger.debug(
+      'SceneAssetConfigLoader',
+      'setValidationResult',
+      'Validation result updated',
+      {
+        loaderId: this.loaderId,
+        sceneId: this.sceneId,
+        isValid: validation.isValid,
+        errorCount: validation.errors.length,
+        warningCount: validation.warnings.length,
+      }
+    );
 
     return this;
   }
@@ -217,7 +245,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'setLoaderMetadata', 'Loader metadata updated', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      metadata
+      metadata,
     });
 
     return this;
@@ -275,21 +303,21 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   /**
    * Get responsive assets for breakpoint
    */
-  private getResponsiveAssets(breakpoint: string): { assets: any[], bundles: any[] } {
+  private getResponsiveAssets(breakpoint: string): { assets: any[]; bundles: any[] } {
     const config = this.sceneAssetConfig;
     const responsiveConfig = config.responsive?.breakpoints?.[breakpoint];
-    
+
     if (!responsiveConfig) {
       return { assets: [], bundles: [] };
     }
 
-    const assets = responsiveConfig.assets.map(assetKey => 
-      config.assets.find(asset => asset.key === assetKey)
-    ).filter(Boolean);
+    const assets = responsiveConfig.assets
+      .map(assetKey => config.assets.find(asset => asset.key === assetKey))
+      .filter(Boolean);
 
-    const bundles = responsiveConfig.bundles.map(bundleId => 
-      config.bundles.find(bundle => bundle.bundleId === bundleId)
-    ).filter(Boolean);
+    const bundles = responsiveConfig.bundles
+      .map(bundleId => config.bundles.find(bundle => bundle.bundleId === bundleId))
+      .filter(Boolean);
 
     return { assets, bundles };
   }
@@ -304,7 +332,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       errors: [] as string[],
       warnings: [] as string[],
       invalidAssets: [] as string[],
-      invalidBundles: [] as string[]
+      invalidBundles: [] as string[],
     };
 
     // Basic validation
@@ -351,7 +379,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async loadSceneAssets(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'loadSceneAssets', 'Starting scene asset loading', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     try {
@@ -386,13 +414,18 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       this.loadingEndTime = Date.now();
       this.setLoadingState(SceneLoadingState.COMPLETED);
 
-      this.logger.info('SceneAssetConfigLoader', 'loadSceneAssets', 'Scene asset loading completed successfully', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        loadTime: this.loadingEndTime - this.loadingStartTime,
-        loadedAssets: this.loadedAssets.size,
-        loadedBundles: this.loadedBundles.size
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'loadSceneAssets',
+        'Scene asset loading completed successfully',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          loadTime: this.loadingEndTime - this.loadingStartTime,
+          loadedAssets: this.loadedAssets.size,
+          loadedBundles: this.loadedBundles.size,
+        }
+      );
 
       return true;
     } catch (error) {
@@ -404,7 +437,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         loaderId: this.loaderId,
         sceneId: this.sceneId,
         error: error instanceof Error ? error.message : String(error),
-        loadTime: this.loadingEndTime - this.loadingStartTime
+        loadTime: this.loadingEndTime - this.loadingStartTime,
       });
 
       return false;
@@ -415,15 +448,20 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
    * Load scene assets for breakpoint
    */
   async loadSceneAssetsForBreakpoint(breakpoint: string): Promise<boolean> {
-    this.logger.info('SceneAssetConfigLoader', 'loadSceneAssetsForBreakpoint', 'Loading scene assets for breakpoint', {
-      loaderId: this.loaderId,
-      sceneId: this.sceneId,
-      breakpoint
-    });
+    this.logger.info(
+      'SceneAssetConfigLoader',
+      'loadSceneAssetsForBreakpoint',
+      'Loading scene assets for breakpoint',
+      {
+        loaderId: this.loaderId,
+        sceneId: this.sceneId,
+        breakpoint,
+      }
+    );
 
     try {
       const responsiveAssets = this.getResponsiveAssets(breakpoint);
-      
+
       // Load responsive assets
       for (const asset of responsiveAssets.assets) {
         await this.loadAsset(asset.assetKey);
@@ -434,22 +472,32 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         await this.loadBundle(bundle.bundleId);
       }
 
-      this.logger.info('SceneAssetConfigLoader', 'loadSceneAssetsForBreakpoint', 'Breakpoint assets loaded successfully', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        breakpoint,
-        assetCount: responsiveAssets.assets.length,
-        bundleCount: responsiveAssets.bundles.length
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'loadSceneAssetsForBreakpoint',
+        'Breakpoint assets loaded successfully',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          breakpoint,
+          assetCount: responsiveAssets.assets.length,
+          bundleCount: responsiveAssets.bundles.length,
+        }
+      );
 
       return true;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'loadSceneAssetsForBreakpoint', 'Breakpoint asset loading failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        breakpoint,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'loadSceneAssetsForBreakpoint',
+        'Breakpoint asset loading failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          breakpoint,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return false;
     }
@@ -461,7 +509,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async loadRequiredAssets(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'loadRequiredAssets', 'Loading required assets', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     try {
@@ -472,29 +520,44 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         const asset = await this.loadAsset(assetKey);
         if (!asset) {
           this.failedAssets.add(assetKey);
-          this.logger.warn('SceneAssetConfigLoader', 'loadRequiredAssets', 'Required asset failed to load', {
-            loaderId: this.loaderId,
-            sceneId: this.sceneId,
-            assetKey
-          });
+          this.logger.warn(
+            'SceneAssetConfigLoader',
+            'loadRequiredAssets',
+            'Required asset failed to load',
+            {
+              loaderId: this.loaderId,
+              sceneId: this.sceneId,
+              assetKey,
+            }
+          );
         }
       }
 
-      this.logger.info('SceneAssetConfigLoader', 'loadRequiredAssets', 'Required assets loading completed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        totalRequired: requiredAssets.length,
-        loaded: this.loadedAssets.size,
-        failed: this.failedAssets.size
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'loadRequiredAssets',
+        'Required assets loading completed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          totalRequired: requiredAssets.length,
+          loaded: this.loadedAssets.size,
+          failed: this.failedAssets.size,
+        }
+      );
 
       return true;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'loadRequiredAssets', 'Required assets loading failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'loadRequiredAssets',
+        'Required assets loading failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return false;
     }
@@ -506,7 +569,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async loadOptionalAssets(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'loadOptionalAssets', 'Loading optional assets', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     try {
@@ -517,29 +580,44 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         const asset = await this.loadAsset(assetKey);
         if (!asset) {
           this.failedAssets.add(assetKey);
-          this.logger.debug('SceneAssetConfigLoader', 'loadOptionalAssets', 'Optional asset failed to load', {
-            loaderId: this.loaderId,
-            sceneId: this.sceneId,
-            assetKey
-          });
+          this.logger.debug(
+            'SceneAssetConfigLoader',
+            'loadOptionalAssets',
+            'Optional asset failed to load',
+            {
+              loaderId: this.loaderId,
+              sceneId: this.sceneId,
+              assetKey,
+            }
+          );
         }
       }
 
-      this.logger.info('SceneAssetConfigLoader', 'loadOptionalAssets', 'Optional assets loading completed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        totalOptional: optionalAssets.length,
-        loaded: this.loadedAssets.size,
-        failed: this.failedAssets.size
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'loadOptionalAssets',
+        'Optional assets loading completed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          totalOptional: optionalAssets.length,
+          loaded: this.loadedAssets.size,
+          failed: this.failedAssets.size,
+        }
+      );
 
       return true;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'loadOptionalAssets', 'Optional assets loading failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'loadOptionalAssets',
+        'Optional assets loading failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return false;
     }
@@ -552,7 +630,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'loadAsset', 'Loading asset', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      assetKey
+      assetKey,
     });
 
     try {
@@ -572,7 +650,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         loaderId: this.loaderId,
         sceneId: this.sceneId,
         assetKey,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       return null;
@@ -586,14 +664,14 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'loadAssetsByType', 'Loading assets by type', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      assetType
+      assetType,
     });
 
     try {
       // Get assets by type from the manager and load them individually
       const existingAssets = this.assetManager.getAssetsByType(assetType);
       const assets: IAsset[] = [];
-      
+
       for (const existingAsset of existingAssets) {
         const loadedAsset = await this.assetManager.loadAsset(existingAsset.assetKey);
         if (loadedAsset) {
@@ -609,12 +687,17 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
 
       return assets;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'loadAssetsByType', 'Assets by type loading failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        assetType,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'loadAssetsByType',
+        'Assets by type loading failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          assetType,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return [];
     }
@@ -624,17 +707,22 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
    * Load assets by priority
    */
   async loadAssetsByPriority(priority: AssetPriority): Promise<IAsset[]> {
-    this.logger.debug('SceneAssetConfigLoader', 'loadAssetsByPriority', 'Loading assets by priority', {
-      loaderId: this.loaderId,
-      sceneId: this.sceneId,
-      priority
-    });
+    this.logger.debug(
+      'SceneAssetConfigLoader',
+      'loadAssetsByPriority',
+      'Loading assets by priority',
+      {
+        loaderId: this.loaderId,
+        sceneId: this.sceneId,
+        priority,
+      }
+    );
 
     try {
       // Get assets by priority from the manager and load them individually
       const existingAssets = this.assetManager.getAssetsByPriority(priority);
       const assets: IAsset[] = [];
-      
+
       for (const existingAsset of existingAssets) {
         const loadedAsset = await this.assetManager.loadAsset(existingAsset.assetKey);
         if (loadedAsset) {
@@ -650,12 +738,17 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
 
       return assets;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'loadAssetsByPriority', 'Assets by priority loading failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        priority,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'loadAssetsByPriority',
+        'Assets by priority loading failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          priority,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return [];
     }
@@ -668,7 +761,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'loadBundle', 'Loading bundle', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      bundleId
+      bundleId,
     });
 
     try {
@@ -688,7 +781,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         loaderId: this.loaderId,
         sceneId: this.sceneId,
         bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       return null;
@@ -702,14 +795,14 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'loadBundlesByType', 'Loading bundles by type', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      bundleType
+      bundleType,
     });
 
     try {
       // Get bundles by type from the manager and load them individually
       const existingBundles = this.assetManager.getBundlesByType(bundleType);
       const bundles: IAssetBundle[] = [];
-      
+
       for (const existingBundle of existingBundles) {
         const loadedBundle = await this.assetManager.loadBundle(existingBundle.bundleId);
         if (loadedBundle) {
@@ -725,12 +818,17 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
 
       return bundles;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'loadBundlesByType', 'Bundles by type loading failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        bundleType,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'loadBundlesByType',
+        'Bundles by type loading failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          bundleType,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return [];
     }
@@ -742,7 +840,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async unloadSceneAssets(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'unloadSceneAssets', 'Unloading scene assets', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     try {
@@ -764,18 +862,28 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
 
       this.updateProgress();
 
-      this.logger.info('SceneAssetConfigLoader', 'unloadSceneAssets', 'Scene assets unloaded successfully', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'unloadSceneAssets',
+        'Scene assets unloaded successfully',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+        }
+      );
 
       return true;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'unloadSceneAssets', 'Scene assets unloading failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'unloadSceneAssets',
+        'Scene assets unloading failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return false;
     }
@@ -788,12 +896,12 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'unloadAsset', 'Unloading asset', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      assetKey
+      assetKey,
     });
 
     try {
       const success = await this.assetManager.unloadAsset(assetKey);
-      
+
       if (success) {
         this.loadedAssets.delete(assetKey);
         this.failedAssets.delete(assetKey);
@@ -806,7 +914,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         loaderId: this.loaderId,
         sceneId: this.sceneId,
         assetKey,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       return false;
@@ -820,12 +928,12 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
     this.logger.debug('SceneAssetConfigLoader', 'unloadBundle', 'Unloading bundle', {
       loaderId: this.loaderId,
       sceneId: this.sceneId,
-      bundleId
+      bundleId,
     });
 
     try {
       const success = await this.assetManager.unloadBundle(bundleId);
-      
+
       if (success) {
         this.loadedBundles.delete(bundleId);
         this.failedBundles.delete(bundleId);
@@ -838,7 +946,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         loaderId: this.loaderId,
         sceneId: this.sceneId,
         bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       return false;
@@ -851,22 +959,22 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async validateSceneAssets(): Promise<SceneAssetValidation> {
     this.logger.info('SceneAssetConfigLoader', 'validateSceneAssets', 'Validating scene assets', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     try {
       const validation = this.validateConfiguration();
-      
+
       // Additional validation for loaded assets
       for (const [assetKey, asset] of Array.from(this.loadedAssets.entries())) {
-        if (!await this.assetManager.validateAsset(asset)) {
+        if (!(await this.assetManager.validateAsset(asset))) {
           validation.invalidAssets.push(assetKey);
         }
       }
 
       // Additional validation for loaded bundles
       for (const [bundleId, bundle] of Array.from(this.loadedBundles.entries())) {
-        if (!await this.assetManager.validateBundle(bundle)) {
+        if (!(await this.assetManager.validateBundle(bundle))) {
           validation.invalidBundles.push(bundleId);
         }
       }
@@ -879,21 +987,27 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         }
       }
 
-      validation.isValid = validation.errors.length === 0 && 
-                          validation.missingAssets.length === 0 && 
-                          validation.invalidAssets.length === 0;
+      validation.isValid =
+        validation.errors.length === 0 &&
+        validation.missingAssets.length === 0 &&
+        validation.invalidAssets.length === 0;
 
       this.setValidationResult(validation);
 
-      this.logger.info('SceneAssetConfigLoader', 'validateSceneAssets', 'Scene assets validation completed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        isValid: validation.isValid,
-        errorCount: validation.errors.length,
-        warningCount: validation.warnings.length,
-        missingAssets: validation.missingAssets.length,
-        invalidAssets: validation.invalidAssets.length
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'validateSceneAssets',
+        'Scene assets validation completed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          isValid: validation.isValid,
+          errorCount: validation.errors.length,
+          warningCount: validation.warnings.length,
+          missingAssets: validation.missingAssets.length,
+          invalidAssets: validation.invalidAssets.length,
+        }
+      );
 
       return validation;
     } catch (error) {
@@ -904,16 +1018,21 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
         missingAssets: [],
         missingBundles: [],
         invalidAssets: [],
-        invalidBundles: []
+        invalidBundles: [],
       };
 
       this.setValidationResult(validation);
 
-      this.logger.error('SceneAssetConfigLoader', 'validateSceneAssets', 'Scene assets validation failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'validateSceneAssets',
+        'Scene assets validation failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return validation;
     }
@@ -925,7 +1044,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async optimizeSceneAssets(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'optimizeSceneAssets', 'Optimizing scene assets', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     try {
@@ -936,18 +1055,28 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       // - Loading order optimization
       // - Cache optimization
 
-      this.logger.info('SceneAssetConfigLoader', 'optimizeSceneAssets', 'Scene assets optimization completed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'optimizeSceneAssets',
+        'Scene assets optimization completed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+        }
+      );
 
       return true;
     } catch (error) {
-      this.logger.error('SceneAssetConfigLoader', 'optimizeSceneAssets', 'Scene assets optimization failed', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'SceneAssetConfigLoader',
+        'optimizeSceneAssets',
+        'Scene assets optimization failed',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return false;
     }
@@ -959,26 +1088,31 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async cancelLoading(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'cancelLoading', 'Cancelling loading', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     try {
       this.setLoadingState(SceneLoadingState.CANCELLED);
-      
+
       // Unload any partially loaded assets
       await this.unloadSceneAssets();
 
-      this.logger.info('SceneAssetConfigLoader', 'cancelLoading', 'Loading cancelled successfully', {
-        loaderId: this.loaderId,
-        sceneId: this.sceneId
-      });
+      this.logger.info(
+        'SceneAssetConfigLoader',
+        'cancelLoading',
+        'Loading cancelled successfully',
+        {
+          loaderId: this.loaderId,
+          sceneId: this.sceneId,
+        }
+      );
 
       return true;
     } catch (error) {
       this.logger.error('SceneAssetConfigLoader', 'cancelLoading', 'Loading cancellation failed', {
         loaderId: this.loaderId,
         sceneId: this.sceneId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       return false;
@@ -991,7 +1125,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async pauseLoading(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'pauseLoading', 'Pausing loading', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     // In a real implementation, this would pause ongoing loading operations
@@ -1005,7 +1139,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   async resumeLoading(): Promise<boolean> {
     this.logger.info('SceneAssetConfigLoader', 'resumeLoading', 'Resuming loading', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     // In a real implementation, this would resume paused loading operations
@@ -1075,7 +1209,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
   clearLoader(): this {
     this.logger.info('SceneAssetConfigLoader', 'clearLoader', 'Clearing loader', {
       loaderId: this.loaderId,
-      sceneId: this.sceneId
+      sceneId: this.sceneId,
     });
 
     this.loadedAssets.clear();
@@ -1105,7 +1239,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       const elapsedTime = Date.now() - this.loadingStartTime;
       const totalItems = this.loadingProgress.totalAssets + this.loadingProgress.totalBundles;
       const completedItems = this.loadingProgress.loadedAssets + this.loadingProgress.loadedBundles;
-      
+
       if (completedItems > 0 && totalItems > completedItems) {
         const averageTimePerItem = elapsedTime / completedItems;
         const remainingItems = totalItems - completedItems;
@@ -1159,7 +1293,7 @@ export class SceneAssetConfigLoader implements ISceneAssetLoader {
       failedBundles,
       percentage,
       estimatedTimeRemaining: this.loadingProgress.estimatedTimeRemaining,
-      currentPhase: this.mapLoadingPhaseToAssetPhase(this.getCurrentPhase())
+      currentPhase: this.mapLoadingPhaseToAssetPhase(this.getCurrentPhase()),
     };
   }
 }

@@ -8,10 +8,10 @@
 import type { IAssetBundleFactory } from '../interfaces/factories/IAssetBundleFactory';
 import type { IAssetBundle } from '../interfaces/IAssetBundle';
 import type { IAsset } from '../interfaces/IAsset';
-import { 
-  BundleFactoryConfig, 
-  BundleFactoryStatistics, 
-  BundleCreationOptions 
+import {
+  BundleFactoryConfig,
+  BundleFactoryStatistics,
+  BundleCreationOptions,
 } from '../interfaces/factories/IAssetBundleFactory';
 import { BundleType, BundleConfig } from '../interfaces/IAssetBundle';
 import { AssetPriority } from '../interfaces/IAsset';
@@ -42,7 +42,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
    */
   constructor(bundleFactoryId: string, bundleFactoryConfig?: Partial<BundleFactoryConfig>) {
     this.bundleFactoryId = bundleFactoryId;
-    
+
     // Initialize default configuration
     this.bundleFactoryConfig = {
       enableValidation: true,
@@ -53,7 +53,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       defaultCache: true,
       maxBundleSize: 100 * 1024 * 1024, // 100MB default
       metadata: {},
-      ...bundleFactoryConfig
+      ...bundleFactoryConfig,
     };
 
     // Initialize statistics
@@ -64,7 +64,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       totalConfigured: 0,
       totalValidated: 0,
       validationFailures: 0,
-      lastCreationTime: 0
+      lastCreationTime: 0,
     };
 
     this.bundleFactoryMetadata = {};
@@ -72,13 +72,18 @@ export class AssetBundleFactory implements IAssetBundleFactory {
     // Initialize bundle type creators for all supported types
     this.initializeDefaultBundleTypeCreators();
 
-    this.logger.debug('AssetBundleFactory', 'constructor', `Bundle factory created: ${bundleFactoryId}`, {
-      bundleFactoryId,
-      enableValidation: this.bundleFactoryConfig.enableValidation,
-      enableCaching: this.bundleFactoryConfig.enableCaching,
-      defaultPriority: this.bundleFactoryConfig.defaultPriority,
-      maxBundleSize: this.bundleFactoryConfig.maxBundleSize
-    });
+    this.logger.debug(
+      'AssetBundleFactory',
+      'constructor',
+      `Bundle factory created: ${bundleFactoryId}`,
+      {
+        bundleFactoryId,
+        enableValidation: this.bundleFactoryConfig.enableValidation,
+        enableCaching: this.bundleFactoryConfig.enableCaching,
+        defaultPriority: this.bundleFactoryConfig.defaultPriority,
+        maxBundleSize: this.bundleFactoryConfig.maxBundleSize,
+      }
+    );
   }
 
   /**
@@ -86,13 +91,13 @@ export class AssetBundleFactory implements IAssetBundleFactory {
    */
   setBundleFactoryConfig(config: BundleFactoryConfig): this {
     this.bundleFactoryConfig = config;
-    
+
     this.logger.debug('AssetBundleFactory', 'setBundleFactoryConfig', 'Configuration updated', {
       bundleFactoryId: this.bundleFactoryId,
       enableValidation: config.enableValidation,
       enableCaching: config.enableCaching,
       defaultPriority: config.defaultPriority,
-      maxBundleSize: config.maxBundleSize
+      maxBundleSize: config.maxBundleSize,
     });
 
     return this;
@@ -103,10 +108,10 @@ export class AssetBundleFactory implements IAssetBundleFactory {
    */
   setBundleFactoryMetadata(metadata: Record<string, unknown>): this {
     this.bundleFactoryMetadata = { ...this.bundleFactoryMetadata, ...metadata };
-    
+
     this.logger.debug('AssetBundleFactory', 'setBundleFactoryMetadata', 'Metadata updated', {
       bundleFactoryId: this.bundleFactoryId,
-      metadataKeys: Object.keys(metadata)
+      metadataKeys: Object.keys(metadata),
     });
 
     return this;
@@ -144,7 +149,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
         bundleFactoryId: this.bundleFactoryId,
         bundleType: options.bundleType,
         bundleId: options.bundleId,
-        bundleName: options.bundleName
+        bundleName: options.bundleName,
       });
 
       // Validate bundle type is supported
@@ -168,18 +173,18 @@ export class AssetBundleFactory implements IAssetBundleFactory {
         bundleFactoryId: this.bundleFactoryId,
         bundleId: bundle.bundleId,
         bundleType: bundle.bundleType,
-        creationTime: Date.now() - startTime
+        creationTime: Date.now() - startTime,
       });
 
       return bundle;
     } catch (error) {
       this.bundleFactoryStatistics.validationFailures++;
-      
+
       this.logger.error('AssetBundleFactory', 'createBundle', 'Bundle creation failed', {
         bundleFactoryId: this.bundleFactoryId,
         bundleType: options.bundleType,
         bundleId: options.bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       throw error;
@@ -193,12 +198,17 @@ export class AssetBundleFactory implements IAssetBundleFactory {
     const startTime = Date.now();
 
     try {
-      this.logger.info('AssetBundleFactory', 'createBundleFromConfig', 'Creating bundle from config', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleType: config.bundleType,
-        bundleId: config.bundleId,
-        bundleName: config.bundleName
-      });
+      this.logger.info(
+        'AssetBundleFactory',
+        'createBundleFromConfig',
+        'Creating bundle from config',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleType: config.bundleType,
+          bundleId: config.bundleId,
+          bundleName: config.bundleName,
+        }
+      );
 
       // Validate configuration if validation is enabled
       if (this.bundleFactoryConfig.enableValidation) {
@@ -217,25 +227,35 @@ export class AssetBundleFactory implements IAssetBundleFactory {
         preload: config.preload,
         cache: config.cache,
         assets: [], // Will be populated by the creator
-        metadata: config.metadata
+        metadata: config.metadata,
       };
 
       // Create bundle using standard creation method
       const bundle = await this.createBundle(options);
 
-      this.logger.info('AssetBundleFactory', 'createBundleFromConfig', 'Bundle created from config successfully', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleId: bundle.bundleId,
-        creationTime: Date.now() - startTime
-      });
+      this.logger.info(
+        'AssetBundleFactory',
+        'createBundleFromConfig',
+        'Bundle created from config successfully',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleId: bundle.bundleId,
+          creationTime: Date.now() - startTime,
+        }
+      );
 
       return bundle;
     } catch (error) {
-      this.logger.error('AssetBundleFactory', 'createBundleFromConfig', 'Bundle creation from config failed', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleId: config.bundleId,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'AssetBundleFactory',
+        'createBundleFromConfig',
+        'Bundle creation from config failed',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleId: config.bundleId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       throw error;
     }
@@ -251,7 +271,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       this.logger.info('AssetBundleFactory', 'cloneBundle', 'Cloning bundle', {
         bundleFactoryId: this.bundleFactoryId,
         originalBundleId: bundle.bundleId,
-        newId
+        newId,
       });
 
       // Clone the bundle
@@ -265,7 +285,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
         bundleFactoryId: this.bundleFactoryId,
         originalBundleId: bundle.bundleId,
         clonedBundleId: clonedBundle.bundleId,
-        cloneTime: Date.now() - startTime
+        cloneTime: Date.now() - startTime,
       });
 
       return clonedBundle;
@@ -273,7 +293,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       this.logger.error('AssetBundleFactory', 'cloneBundle', 'Bundle cloning failed', {
         bundleFactoryId: this.bundleFactoryId,
         originalBundleId: bundle.bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       throw error;
@@ -283,19 +303,22 @@ export class AssetBundleFactory implements IAssetBundleFactory {
   /**
    * Configure bundle
    */
-  async configureBundle(bundle: IAssetBundle, config: Partial<BundleConfig>): Promise<IAssetBundle> {
+  async configureBundle(
+    bundle: IAssetBundle,
+    config: Partial<BundleConfig>
+  ): Promise<IAssetBundle> {
     try {
       this.logger.info('AssetBundleFactory', 'configureBundle', 'Configuring bundle', {
         bundleFactoryId: this.bundleFactoryId,
         bundleId: bundle.bundleId,
-        configKeys: Object.keys(config)
+        configKeys: Object.keys(config),
       });
 
       // Update bundle configuration
       const currentConfig = bundle.getBundleConfig();
       const newConfig: BundleConfig = {
         ...currentConfig,
-        ...config
+        ...config,
       };
 
       // Validate new configuration if validation is enabled
@@ -314,7 +337,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
 
       this.logger.info('AssetBundleFactory', 'configureBundle', 'Bundle configured successfully', {
         bundleFactoryId: this.bundleFactoryId,
-        bundleId: bundle.bundleId
+        bundleId: bundle.bundleId,
       });
 
       return bundle;
@@ -322,7 +345,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       this.logger.error('AssetBundleFactory', 'configureBundle', 'Bundle configuration failed', {
         bundleFactoryId: this.bundleFactoryId,
         bundleId: bundle.bundleId,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       throw error;
@@ -337,14 +360,14 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       this.logger.debug('AssetBundleFactory', 'validateBundleConfig', 'Validating bundle config', {
         bundleFactoryId: this.bundleFactoryId,
         bundleId: config.bundleId,
-        bundleType: config.bundleType
+        bundleType: config.bundleType,
       });
 
       // Basic validation checks
       if (!config.bundleId || typeof config.bundleId !== 'string') {
         this.logger.warn('AssetBundleFactory', 'validateBundleConfig', 'Invalid bundle ID', {
           bundleFactoryId: this.bundleFactoryId,
-          bundleId: config.bundleId
+          bundleId: config.bundleId,
         });
         this.bundleFactoryStatistics.validationFailures++;
         return false;
@@ -353,7 +376,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       if (!config.bundleName || typeof config.bundleName !== 'string') {
         this.logger.warn('AssetBundleFactory', 'validateBundleConfig', 'Invalid bundle name', {
           bundleFactoryId: this.bundleFactoryId,
-          bundleName: config.bundleName
+          bundleName: config.bundleName,
         });
         this.bundleFactoryStatistics.validationFailures++;
         return false;
@@ -362,7 +385,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       if (!Object.values(BundleType).includes(config.bundleType)) {
         this.logger.warn('AssetBundleFactory', 'validateBundleConfig', 'Invalid bundle type', {
           bundleFactoryId: this.bundleFactoryId,
-          bundleType: config.bundleType
+          bundleType: config.bundleType,
         });
         this.bundleFactoryStatistics.validationFailures++;
         return false;
@@ -371,7 +394,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       if (!Object.values(AssetPriority).includes(config.priority)) {
         this.logger.warn('AssetBundleFactory', 'validateBundleConfig', 'Invalid bundle priority', {
           bundleFactoryId: this.bundleFactoryId,
-          priority: config.priority
+          priority: config.priority,
         });
         this.bundleFactoryStatistics.validationFailures++;
         return false;
@@ -380,7 +403,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       if (typeof config.preload !== 'boolean') {
         this.logger.warn('AssetBundleFactory', 'validateBundleConfig', 'Invalid preload value', {
           bundleFactoryId: this.bundleFactoryId,
-          preload: config.preload
+          preload: config.preload,
         });
         this.bundleFactoryStatistics.validationFailures++;
         return false;
@@ -389,7 +412,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       if (typeof config.cache !== 'boolean') {
         this.logger.warn('AssetBundleFactory', 'validateBundleConfig', 'Invalid cache value', {
           bundleFactoryId: this.bundleFactoryId,
-          cache: config.cache
+          cache: config.cache,
         });
         this.bundleFactoryStatistics.validationFailures++;
         return false;
@@ -398,20 +421,30 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       // Update statistics
       this.bundleFactoryStatistics.totalValidated++;
 
-      this.logger.debug('AssetBundleFactory', 'validateBundleConfig', 'Bundle config validation passed', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleId: config.bundleId
-      });
+      this.logger.debug(
+        'AssetBundleFactory',
+        'validateBundleConfig',
+        'Bundle config validation passed',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleId: config.bundleId,
+        }
+      );
 
       return true;
     } catch (error) {
       this.bundleFactoryStatistics.validationFailures++;
-      
-      this.logger.error('AssetBundleFactory', 'validateBundleConfig', 'Bundle config validation failed', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleId: config.bundleId,
-        error: error instanceof Error ? error.message : String(error)
-      });
+
+      this.logger.error(
+        'AssetBundleFactory',
+        'validateBundleConfig',
+        'Bundle config validation failed',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleId: config.bundleId,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       return false;
     }
@@ -420,16 +453,18 @@ export class AssetBundleFactory implements IAssetBundleFactory {
   /**
    * Register bundle type creator
    */
-  registerBundleTypeCreator(
-    bundleType: BundleType,
-    creator: BundleTypeCreator
-  ): this {
+  registerBundleTypeCreator(bundleType: BundleType, creator: BundleTypeCreator): this {
     this.bundleTypeCreators.set(bundleType, creator);
-    
-    this.logger.debug('AssetBundleFactory', 'registerBundleTypeCreator', 'Bundle type creator registered', {
-      bundleFactoryId: this.bundleFactoryId,
-      bundleType
-    });
+
+    this.logger.debug(
+      'AssetBundleFactory',
+      'registerBundleTypeCreator',
+      'Bundle type creator registered',
+      {
+        bundleFactoryId: this.bundleFactoryId,
+        bundleType,
+      }
+    );
 
     return this;
   }
@@ -439,17 +474,27 @@ export class AssetBundleFactory implements IAssetBundleFactory {
    */
   unregisterBundleTypeCreator(bundleType: BundleType): this {
     const removed = this.bundleTypeCreators.delete(bundleType);
-    
+
     if (removed) {
-      this.logger.debug('AssetBundleFactory', 'unregisterBundleTypeCreator', 'Bundle type creator unregistered', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleType
-      });
+      this.logger.debug(
+        'AssetBundleFactory',
+        'unregisterBundleTypeCreator',
+        'Bundle type creator unregistered',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleType,
+        }
+      );
     } else {
-      this.logger.warn('AssetBundleFactory', 'unregisterBundleTypeCreator', 'Bundle type creator not found', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleType
-      });
+      this.logger.warn(
+        'AssetBundleFactory',
+        'unregisterBundleTypeCreator',
+        'Bundle type creator not found',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleType,
+        }
+      );
     }
 
     return this;
@@ -482,7 +527,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
   async createBundles(options: BundleCreationOptions[]): Promise<IAssetBundle[]> {
     this.logger.info('AssetBundleFactory', 'createBundles', 'Creating multiple bundles', {
       bundleFactoryId: this.bundleFactoryId,
-      count: options.length
+      count: options.length,
     });
 
     const creationPromises = options.map(option => this.createBundle(option));
@@ -501,7 +546,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       bundleFactoryId: this.bundleFactoryId,
       total: options.length,
       successful: successfulBundles.length,
-      failed: failedCreations
+      failed: failedCreations,
     });
 
     return successfulBundles;
@@ -511,10 +556,15 @@ export class AssetBundleFactory implements IAssetBundleFactory {
    * Create bundles from configurations
    */
   async createBundlesFromConfigs(configs: BundleConfig[]): Promise<IAssetBundle[]> {
-    this.logger.info('AssetBundleFactory', 'createBundlesFromConfigs', 'Creating multiple bundles from configs', {
-      bundleFactoryId: this.bundleFactoryId,
-      count: configs.length
-    });
+    this.logger.info(
+      'AssetBundleFactory',
+      'createBundlesFromConfigs',
+      'Creating multiple bundles from configs',
+      {
+        bundleFactoryId: this.bundleFactoryId,
+        count: configs.length,
+      }
+    );
 
     const creationPromises = configs.map(config => this.createBundleFromConfig(config));
     const bundles = await Promise.allSettled(creationPromises);
@@ -528,12 +578,17 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       }
     }
 
-    this.logger.info('AssetBundleFactory', 'createBundlesFromConfigs', 'Multiple bundles creation from configs completed', {
-      bundleFactoryId: this.bundleFactoryId,
-      total: configs.length,
-      successful: successfulBundles.length,
-      failed: failedCreations
-    });
+    this.logger.info(
+      'AssetBundleFactory',
+      'createBundlesFromConfigs',
+      'Multiple bundles creation from configs completed',
+      {
+        bundleFactoryId: this.bundleFactoryId,
+        total: configs.length,
+        successful: successfulBundles.length,
+        failed: failedCreations,
+      }
+    );
 
     return successfulBundles;
   }
@@ -550,13 +605,18 @@ export class AssetBundleFactory implements IAssetBundleFactory {
     const startTime = Date.now();
 
     try {
-      this.logger.info('AssetBundleFactory', 'createBundleFromAssets', 'Creating bundle from assets', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleType,
-        bundleId,
-        bundleName,
-        assetCount: assets.length
-      });
+      this.logger.info(
+        'AssetBundleFactory',
+        'createBundleFromAssets',
+        'Creating bundle from assets',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleType,
+          bundleId,
+          bundleName,
+          assetCount: assets.length,
+        }
+      );
 
       // Create bundle options
       const options: BundleCreationOptions = {
@@ -567,7 +627,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
         preload: this.bundleFactoryConfig.defaultPreload,
         cache: this.bundleFactoryConfig.defaultCache,
         assets,
-        metadata: {}
+        metadata: {},
       };
 
       // Create bundle
@@ -578,21 +638,31 @@ export class AssetBundleFactory implements IAssetBundleFactory {
         bundle.addAsset(asset);
       }
 
-      this.logger.info('AssetBundleFactory', 'createBundleFromAssets', 'Bundle created from assets successfully', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleId: bundle.bundleId,
-        assetCount: assets.length,
-        creationTime: Date.now() - startTime
-      });
+      this.logger.info(
+        'AssetBundleFactory',
+        'createBundleFromAssets',
+        'Bundle created from assets successfully',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleId: bundle.bundleId,
+          assetCount: assets.length,
+          creationTime: Date.now() - startTime,
+        }
+      );
 
       return bundle;
     } catch (error) {
-      this.logger.error('AssetBundleFactory', 'createBundleFromAssets', 'Bundle creation from assets failed', {
-        bundleFactoryId: this.bundleFactoryId,
-        bundleId,
-        assetCount: assets.length,
-        error: error instanceof Error ? error.message : String(error)
-      });
+      this.logger.error(
+        'AssetBundleFactory',
+        'createBundleFromAssets',
+        'Bundle creation from assets failed',
+        {
+          bundleFactoryId: this.bundleFactoryId,
+          bundleId,
+          assetCount: assets.length,
+          error: error instanceof Error ? error.message : String(error),
+        }
+      );
 
       throw error;
     }
@@ -610,10 +680,11 @@ export class AssetBundleFactory implements IAssetBundleFactory {
     const totalCreated = this.bundleFactoryStatistics.totalCreated;
     const totalAttempts = totalCreated + this.bundleFactoryStatistics.validationFailures;
     const successRate = totalAttempts > 0 ? (totalCreated / totalAttempts) * 100 : 100;
-    
-    const averageCreationTime = this.creationTimes.length > 0 
-      ? this.creationTimes.reduce((sum, time) => sum + time, 0) / this.creationTimes.length 
-      : 0;
+
+    const averageCreationTime =
+      this.creationTimes.length > 0
+        ? this.creationTimes.reduce((sum, time) => sum + time, 0) / this.creationTimes.length
+        : 0;
 
     const mostCreatedType = this.getMostCreatedBundleType();
 
@@ -621,7 +692,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       totalCreated,
       successRate,
       averageCreationTime,
-      mostCreatedType
+      mostCreatedType,
     };
   }
 
@@ -630,7 +701,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
    */
   clearBundleFactory(): this {
     this.logger.info('AssetBundleFactory', 'clearBundleFactory', 'Clearing bundle factory', {
-      bundleFactoryId: this.bundleFactoryId
+      bundleFactoryId: this.bundleFactoryId,
     });
 
     // Reset statistics
@@ -641,7 +712,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       totalConfigured: 0,
       totalValidated: 0,
       validationFailures: 0,
-      lastCreationTime: 0
+      lastCreationTime: 0,
     };
 
     // Clear creation times
@@ -651,7 +722,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
     this.bundleFactoryMetadata = {};
 
     this.logger.info('AssetBundleFactory', 'clearBundleFactory', 'Bundle factory cleared', {
-      bundleFactoryId: this.bundleFactoryId
+      bundleFactoryId: this.bundleFactoryId,
     });
 
     return this;
@@ -665,7 +736,7 @@ export class AssetBundleFactory implements IAssetBundleFactory {
     // For now, we'll just log the update
     this.logger.debug('AssetBundleFactory', 'updateBundleFactory', 'Bundle factory updated', {
       bundleFactoryId: this.bundleFactoryId,
-      deltaTime
+      deltaTime,
     });
   }
 
@@ -675,15 +746,20 @@ export class AssetBundleFactory implements IAssetBundleFactory {
   private initializeDefaultBundleTypeCreators(): void {
     // Register default creator for all bundle types
     const bundleTypes = Object.values(BundleType);
-    
+
     for (const bundleType of bundleTypes) {
       this.registerBundleTypeCreator(bundleType, this.createDefaultBundle.bind(this));
     }
 
-    this.logger.debug('AssetBundleFactory', 'initializeDefaultBundleTypeCreators', 'Default bundle type creators initialized', {
-      bundleFactoryId: this.bundleFactoryId,
-      supportedTypes: bundleTypes.length
-    });
+    this.logger.debug(
+      'AssetBundleFactory',
+      'initializeDefaultBundleTypeCreators',
+      'Default bundle type creators initialized',
+      {
+        bundleFactoryId: this.bundleFactoryId,
+        supportedTypes: bundleTypes.length,
+      }
+    );
   }
 
   /**
@@ -695,9 +771,10 @@ export class AssetBundleFactory implements IAssetBundleFactory {
       bundleName: options.bundleName,
       bundleType: options.bundleType,
       priority: options.priority || this.bundleFactoryConfig.defaultPriority,
-      preload: options.preload !== undefined ? options.preload : this.bundleFactoryConfig.defaultPreload,
+      preload:
+        options.preload !== undefined ? options.preload : this.bundleFactoryConfig.defaultPreload,
       cache: options.cache !== undefined ? options.cache : this.bundleFactoryConfig.defaultCache,
-      metadata: options.metadata || {}
+      metadata: options.metadata || {},
     };
 
     return new AssetBundle(options.bundleId, options.bundleType, bundleConfig);
@@ -708,9 +785,10 @@ export class AssetBundleFactory implements IAssetBundleFactory {
    */
   private updateCreationStatistics(bundleType: BundleType, startTime: number): void {
     const creationTime = Date.now() - startTime;
-    
+
     this.bundleFactoryStatistics.totalCreated++;
-    this.bundleFactoryStatistics.createdByType[bundleType] = (this.bundleFactoryStatistics.createdByType[bundleType] || 0) + 1;
+    this.bundleFactoryStatistics.createdByType[bundleType] =
+      (this.bundleFactoryStatistics.createdByType[bundleType] || 0) + 1;
     this.bundleFactoryStatistics.lastCreationTime = Date.now();
 
     // Keep only last 100 creation times for average calculation

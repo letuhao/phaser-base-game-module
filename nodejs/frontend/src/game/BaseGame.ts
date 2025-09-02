@@ -1,6 +1,6 @@
 /**
  * Base Game Class
- * 
+ *
  * Minimal base game class that provides core Phaser game functionality.
  * Follows SOLID principles by having a single responsibility - only Phaser game management.
  */

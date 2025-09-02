@@ -59,11 +59,15 @@ class MockAssetManager {
   }
 
   getAssetsByPriority(priority: AssetPriority): any[] {
-    return Array.from(this.managedAssets.values()).filter(asset => asset.assetConfig.priority === priority);
+    return Array.from(this.managedAssets.values()).filter(
+      asset => asset.assetConfig.priority === priority
+    );
   }
 
   getBundlesByType(bundleType: BundleType): any[] {
-    return Array.from(this.assetBundles.values()).filter(bundle => bundle.bundleType === bundleType);
+    return Array.from(this.assetBundles.values()).filter(
+      bundle => bundle.bundleType === bundleType
+    );
   }
 
   async validateAsset(asset: any): Promise<boolean> {
@@ -87,20 +91,20 @@ class MockSceneAssetConfig {
     loading: {
       preload: true,
       priority: [AssetPriority.HIGH, AssetPriority.NORMAL],
-      strategy: 'parallel' as any
+      strategy: 'parallel' as any,
     },
     validation: {
       required: ['asset1', 'asset2'],
       optional: ['asset3', 'asset4'],
-      fallbacks: { 'asset1': 'fallback1' }
+      fallbacks: { asset1: 'fallback1' },
     },
     responsive: {
       breakpoints: {
-        'mobile': { assets: ['asset1'], bundles: ['bundle1'] },
-        'desktop': { assets: ['asset1', 'asset2'], bundles: ['bundle1', 'bundle2'] }
+        mobile: { assets: ['asset1'], bundles: ['bundle1'] },
+        desktop: { assets: ['asset1', 'asset2'], bundles: ['bundle1', 'bundle2'] },
       },
-      defaultBreakpoint: 'desktop'
-    }
+      defaultBreakpoint: 'desktop',
+    },
   };
 
   getSceneAssetConfig(): any {
@@ -113,8 +117,12 @@ class MockSceneAssetConfig {
       return { assets: [], bundles: [] };
     }
 
-    const assets = breakpointConfig.assets.map((key: string) => this.sceneAssetConfig.assets.get(key)).filter(Boolean);
-    const bundles = breakpointConfig.bundles.map((id: string) => this.sceneAssetConfig.bundles.get(id)).filter(Boolean);
+    const assets = breakpointConfig.assets
+      .map((key: string) => this.sceneAssetConfig.assets.get(key))
+      .filter(Boolean);
+    const bundles = breakpointConfig.bundles
+      .map((id: string) => this.sceneAssetConfig.bundles.get(id))
+      .filter(Boolean);
 
     return { assets, bundles };
   }
@@ -127,7 +135,7 @@ class MockSceneAssetConfig {
       missingAssets: [],
       missingBundles: [],
       invalidAssets: [],
-      invalidBundles: []
+      invalidBundles: [],
     };
   }
 }
@@ -151,7 +159,7 @@ describe('SceneAssetConfigLoader', () => {
       type: AssetType.IMAGE,
       priority: AssetPriority.HIGH,
       preload: true,
-      cache: true
+      cache: true,
     });
 
     mockAsset2 = new Asset('asset2', 'asset2', AssetType.AUDIO, {
@@ -160,7 +168,7 @@ describe('SceneAssetConfigLoader', () => {
       type: AssetType.AUDIO,
       priority: AssetPriority.NORMAL,
       preload: true,
-      cache: true
+      cache: true,
     });
 
     mockBundle1 = new AssetBundle('bundle1', BundleType.SCENE, {
@@ -169,7 +177,7 @@ describe('SceneAssetConfigLoader', () => {
       bundleType: BundleType.SCENE,
       priority: AssetPriority.NORMAL,
       preload: true,
-      cache: true
+      cache: true,
     });
 
     // Add assets to mock manager
@@ -260,7 +268,7 @@ describe('SceneAssetConfigLoader', () => {
         timeout: 60000,
         retryAttempts: 5,
         retryDelay: 2000,
-        metadata: { test: 'value' }
+        metadata: { test: 'value' },
       };
 
       loader.setLoadingConfig(newConfig);
@@ -298,7 +306,7 @@ describe('SceneAssetConfigLoader', () => {
         failedBundles: 0,
         percentage: 60,
         estimatedTimeRemaining: 1000,
-        currentPhase: SceneAssetPhase.BUNDLES
+        currentPhase: SceneAssetPhase.BUNDLES,
       };
 
       loader.setLoadingProgress(newProgress);
@@ -313,7 +321,7 @@ describe('SceneAssetConfigLoader', () => {
         missingAssets: [],
         missingBundles: [],
         invalidAssets: [],
-        invalidBundles: []
+        invalidBundles: [],
       };
 
       loader.setValidationResult(newValidation);

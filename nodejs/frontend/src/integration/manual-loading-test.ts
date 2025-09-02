@@ -1,6 +1,6 @@
 /**
  * Manual Loading Test
- * 
+ *
  * Simple manual test to verify the asset loading logic integration.
  * This can be run to quickly check if the system is working correctly.
  */
@@ -51,14 +51,17 @@ async function runManualLoadingTest() {
     for (const bundleConfig of config.bundles) {
       const isValid = assetManager.validateBundleConfig(bundleConfig);
       if (isValid) validBundles++;
-      console.log(`   ${isValid ? '✅' : '❌'} ${bundleConfig.bundleId} (${bundleConfig.bundleType}) - ${bundleConfig.assetKeys.length} assets`);
+      console.log(
+        `   ${isValid ? '✅' : '❌'} ${bundleConfig.bundleId} (${bundleConfig.bundleType}) - ${bundleConfig.assetKeys.length} assets`
+      );
     }
     console.log(`   📈 Valid Bundles: ${validBundles}/${config.bundles.length}\n`);
 
     // Step 6: Test Asset Creation
     console.log('6️⃣ Testing Asset Creation...');
     let createdAssets = 0;
-    for (const assetConfig of config.assets.slice(0, 3)) { // Test first 3 assets
+    for (const assetConfig of config.assets.slice(0, 3)) {
+      // Test first 3 assets
       try {
         const asset = await assetManager.assetFactory.createAssetFromConfig(assetConfig);
         if (asset && asset.assetKey === assetConfig.key) {
@@ -76,7 +79,8 @@ async function runManualLoadingTest() {
     // Step 7: Test Bundle Creation
     console.log('7️⃣ Testing Bundle Creation...');
     let createdBundles = 0;
-    for (const bundleConfig of config.bundles.slice(0, 2)) { // Test first 2 bundles
+    for (const bundleConfig of config.bundles.slice(0, 2)) {
+      // Test first 2 bundles
       try {
         const bundle = await assetManager.bundleFactory.createBundle(bundleConfig);
         if (bundle && bundle.bundleId === bundleConfig.bundleId) {
@@ -120,19 +124,22 @@ async function runManualLoadingTest() {
     console.log('📋 Test Summary:');
     console.log(`   ✅ Asset Manager: Working`);
     console.log(`   ✅ Scene Asset Loader: Working`);
-    console.log(`   ✅ Configuration: ${config.assets.length} assets, ${config.bundles.length} bundles`);
+    console.log(
+      `   ✅ Configuration: ${config.assets.length} assets, ${config.bundles.length} bundles`
+    );
     console.log(`   ✅ Asset Validation: ${validAssets}/${config.assets.length} valid`);
     console.log(`   ✅ Bundle Validation: ${validBundles}/${config.bundles.length} valid`);
     console.log(`   ✅ Asset Creation: ${createdAssets}/3 successful`);
     console.log(`   ✅ Bundle Creation: ${createdBundles}/2 successful`);
-    
-    const overallSuccess = validAssets === config.assets.length && 
-                          validBundles === config.bundles.length && 
-                          createdAssets > 0 && 
-                          createdBundles > 0;
-    
+
+    const overallSuccess =
+      validAssets === config.assets.length &&
+      validBundles === config.bundles.length &&
+      createdAssets > 0 &&
+      createdBundles > 0;
+
     console.log(`\n🎯 Overall Result: ${overallSuccess ? '✅ SUCCESS' : '❌ FAILED'}`);
-    
+
     if (overallSuccess) {
       console.log('🎉 Loading logic integration is working correctly!');
     } else {
@@ -142,7 +149,6 @@ async function runManualLoadingTest() {
     // Cleanup
     assetManager.clearManager();
     console.log('\n🧹 Cleanup completed.');
-
   } catch (error) {
     console.error('❌ Manual Loading Test Failed:', error);
     process.exit(1);

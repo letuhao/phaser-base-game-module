@@ -1,6 +1,6 @@
 /**
  * Asset Loading Integration Test
- * 
+ *
  * Tests the complete asset loading flow to ensure proper integration
  * between AssetManager, SceneAssetConfigLoader, and the Levis2025R3WheelScene.
  */
@@ -37,7 +37,7 @@ describe('Asset Loading Integration', () => {
       // Verify the config is loaded
       expect(sceneAssetLoader.getSceneId()).toBe(levis2025R3WheelScene1AssetConfig.sceneId);
       expect(sceneAssetLoader.getSceneAssetConfig()).toBeDefined();
-      
+
       // Verify config structure
       const config = sceneAssetLoader.getSceneAssetConfig();
       expect(config.sceneId).toBe('levis-2025-r3-wheel-scene-1');
@@ -47,10 +47,10 @@ describe('Asset Loading Integration', () => {
 
     it('should have correct asset configuration structure', () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
-      
+
       // Check that we have the expected assets
       expect(config.assets.length).toBeGreaterThan(0);
-      
+
       // Verify asset structure
       const firstAsset = config.assets[0];
       expect(firstAsset.key).toBeDefined();
@@ -61,10 +61,10 @@ describe('Asset Loading Integration', () => {
 
     it('should have correct bundle configuration structure', () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
-      
+
       // Check that we have the expected bundles
       expect(config.bundles.length).toBeGreaterThan(0);
-      
+
       // Verify bundle structure
       const firstBundle = config.bundles[0];
       expect(firstBundle.bundleId).toBeDefined();
@@ -87,7 +87,7 @@ describe('Asset Loading Integration', () => {
 
     it('should have proper manager configuration', () => {
       const config = assetManager.getManagerConfig();
-      
+
       expect(config.enableCaching).toBeDefined();
       expect(config.enablePooling).toBeDefined();
       expect(config.enableValidation).toBeDefined();
@@ -110,7 +110,7 @@ describe('Asset Loading Integration', () => {
 
     it('should track loading progress correctly', () => {
       const progress = sceneAssetLoader.getLoadingProgress();
-      
+
       expect(progress).toBeDefined();
       expect(progress.totalAssets).toBeGreaterThan(0);
       expect(progress.loadedAssets).toBe(0); // Initially no assets loaded
@@ -129,7 +129,7 @@ describe('Asset Loading Integration', () => {
   describe('Asset Loading Flow', () => {
     it('should validate asset configuration before loading', async () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
-      
+
       // Test asset validation
       for (const assetConfig of config.assets) {
         const isValid = assetManager.validateAssetConfig(assetConfig);
@@ -139,7 +139,7 @@ describe('Asset Loading Integration', () => {
 
     it('should validate bundle configuration before loading', async () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
-      
+
       // Test bundle validation
       for (const bundleConfig of config.bundles) {
         const isValid = assetManager.validateBundleConfig(bundleConfig);
@@ -149,7 +149,7 @@ describe('Asset Loading Integration', () => {
 
     it('should create assets from configuration', async () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
-      
+
       // Test asset creation
       for (const assetConfig of config.assets) {
         const asset = await assetManager.assetFactory.createAssetFromConfig(assetConfig);
@@ -161,7 +161,7 @@ describe('Asset Loading Integration', () => {
 
     it('should create bundles from configuration', async () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
-      
+
       // Test bundle creation
       for (const bundleConfig of config.bundles) {
         const bundle = await assetManager.bundleFactory.createBundle(bundleConfig);
@@ -175,7 +175,7 @@ describe('Asset Loading Integration', () => {
   describe('Loading Statistics', () => {
     it('should track loading statistics correctly', () => {
       const stats = assetManager.getManagerStatistics();
-      
+
       expect(stats.totalAssets).toBe(0); // Initially no assets
       expect(stats.loadedAssets).toBe(0);
       expect(stats.failedAssets).toBe(0);
@@ -191,12 +191,12 @@ describe('Asset Loading Integration', () => {
     it('should update statistics after asset operations', async () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
       const initialStats = assetManager.getManagerStatistics();
-      
+
       // Create and register an asset
       const assetConfig = config.assets[0];
       const asset = await assetManager.assetFactory.createAssetFromConfig(assetConfig);
       assetManager.registerAsset(asset);
-      
+
       const updatedStats = assetManager.getManagerStatistics();
       expect(updatedStats.totalAssets).toBe(initialStats.totalAssets + 1);
     });
@@ -210,9 +210,9 @@ describe('Asset Loading Integration', () => {
         type: 'invalid-type' as AssetType,
         priority: 'high' as any,
         preload: true,
-        cache: true
+        cache: true,
       };
-      
+
       const isValid = assetManager.validateAssetConfig(invalidConfig);
       expect(isValid).toBe(false);
     });
@@ -225,9 +225,9 @@ describe('Asset Loading Integration', () => {
         priority: 'high' as any,
         preload: true,
         cache: true,
-        assetKeys: []
+        assetKeys: [],
       };
-      
+
       const isValid = assetManager.validateBundleConfig(invalidConfig);
       expect(isValid).toBe(false);
     });
@@ -260,7 +260,7 @@ describe('Asset Loading Integration', () => {
     it('should not leak memory during asset operations', async () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
       const initialStats = assetManager.getManagerStatistics();
-      
+
       // Perform multiple asset operations
       for (let i = 0; i < 10; i++) {
         for (const assetConfig of config.assets) {
@@ -269,22 +269,22 @@ describe('Asset Loading Integration', () => {
           assetManager.unregisterAsset(asset.assetKey);
         }
       }
-      
+
       const finalStats = assetManager.getManagerStatistics();
       expect(finalStats.totalAssets).toBe(initialStats.totalAssets);
     });
 
     it('should handle concurrent asset operations', async () => {
       const config = sceneAssetLoader.getSceneAssetConfig();
-      
+
       // Create multiple assets concurrently
-      const assetPromises = config.assets.map(assetConfig => 
+      const assetPromises = config.assets.map(assetConfig =>
         assetManager.assetFactory.createAssetFromConfig(assetConfig)
       );
-      
+
       const assets = await Promise.all(assetPromises);
       expect(assets.length).toBe(config.assets.length);
-      
+
       // All assets should be created successfully
       assets.forEach(asset => {
         expect(asset).toBeDefined();

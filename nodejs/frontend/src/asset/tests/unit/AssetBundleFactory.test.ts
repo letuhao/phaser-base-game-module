@@ -9,7 +9,10 @@ import { AssetBundle } from '../../classes/AssetBundle';
 import { Asset } from '../../classes/Asset';
 import { BundleType } from '../../interfaces/IAssetBundle';
 import { AssetType, AssetPriority } from '../../interfaces/IAsset';
-import type { BundleCreationOptions, BundleFactoryConfig } from '../../interfaces/factories/IAssetBundleFactory';
+import type {
+  BundleCreationOptions,
+  BundleFactoryConfig,
+} from '../../interfaces/factories/IAssetBundleFactory';
 
 describe('AssetBundleFactory', () => {
   let factory: AssetBundleFactory;
@@ -46,7 +49,7 @@ describe('AssetBundleFactory', () => {
     it('should support all bundle types by default', () => {
       const supportedTypes = factory.getSupportedBundleTypes();
       const allBundleTypes = Object.values(BundleType);
-      
+
       expect(supportedTypes).toHaveLength(allBundleTypes.length);
       for (const bundleType of allBundleTypes) {
         expect(factory.isBundleTypeSupported(bundleType)).toBe(true);
@@ -58,11 +61,11 @@ describe('AssetBundleFactory', () => {
         enableValidation: false,
         defaultPriority: AssetPriority.HIGH,
         defaultPreload: false,
-        maxBundleSize: 50 * 1024 * 1024
+        maxBundleSize: 50 * 1024 * 1024,
       };
 
       const customFactory = new AssetBundleFactory('custom-bundle-factory', customConfig);
-      
+
       expect(customFactory.getBundleFactoryConfig().enableValidation).toBe(false);
       expect(customFactory.getBundleFactoryConfig().defaultPriority).toBe(AssetPriority.HIGH);
       expect(customFactory.getBundleFactoryConfig().defaultPreload).toBe(false);
@@ -80,7 +83,7 @@ describe('AssetBundleFactory', () => {
         defaultPreload: false,
         defaultCache: false,
         maxBundleSize: 200 * 1024 * 1024,
-        metadata: { test: 'value' }
+        metadata: { test: 'value' },
       };
 
       factory.setBundleFactoryConfig(newConfig);
@@ -96,10 +99,10 @@ describe('AssetBundleFactory', () => {
     it('should merge bundle factory metadata', () => {
       factory.setBundleFactoryMetadata({ category: 'test' });
       factory.setBundleFactoryMetadata({ version: '1.0.0' });
-      
+
       expect(factory.getBundleFactoryMetadata()).toEqual({
         category: 'test',
-        version: '1.0.0'
+        version: '1.0.0',
       });
     });
 
@@ -117,12 +120,12 @@ describe('AssetBundleFactory', () => {
       priority: AssetPriority.NORMAL,
       preload: true,
       cache: true,
-      metadata: { test: 'value' }
+      metadata: { test: 'value' },
     };
 
     it('should create bundle successfully', async () => {
       const bundle = await factory.createBundle(mockOptions);
-      
+
       expect(bundle).toBeInstanceOf(AssetBundle);
       expect(bundle.bundleId).toBe('test-bundle');
       expect(bundle.bundleType).toBe(BundleType.SCENE);
@@ -132,7 +135,7 @@ describe('AssetBundleFactory', () => {
 
     it('should update statistics after bundle creation', async () => {
       await factory.createBundle(mockOptions);
-      
+
       const updatedStats = factory.getBundleFactoryStatistics();
       expect(updatedStats.totalCreated).toBe(1);
       expect(updatedStats.createdByType[BundleType.SCENE]).toBe(1);
@@ -143,11 +146,11 @@ describe('AssetBundleFactory', () => {
       const minimalOptions: BundleCreationOptions = {
         bundleType: BundleType.UI,
         bundleId: 'test-ui-bundle',
-        bundleName: 'Test UI Bundle'
+        bundleName: 'Test UI Bundle',
       };
 
       const bundle = await factory.createBundle(minimalOptions);
-      
+
       expect(bundle.getBundleConfig().priority).toBe(AssetPriority.NORMAL);
       expect(bundle.getBundleConfig().preload).toBe(true);
       expect(bundle.getBundleConfig().cache).toBe(true);
@@ -157,11 +160,11 @@ describe('AssetBundleFactory', () => {
       const invalidOptions: BundleCreationOptions = {
         bundleType: 'invalid' as BundleType,
         bundleId: 'test-invalid',
-        bundleName: 'Test Invalid'
+        bundleName: 'Test Invalid',
       };
 
       await expect(factory.createBundle(invalidOptions)).rejects.toThrow();
-      
+
       const stats = factory.getBundleFactoryStatistics();
       expect(stats.validationFailures).toBeGreaterThan(0);
     });
@@ -173,14 +176,14 @@ describe('AssetBundleFactory', () => {
         BundleType.AUDIO,
         BundleType.TEXTURE,
         BundleType.FONT,
-        BundleType.CUSTOM
+        BundleType.CUSTOM,
       ];
 
       for (const bundleType of bundleTypes) {
         const options: BundleCreationOptions = {
           bundleType,
           bundleId: `test-${bundleType}`,
-          bundleName: `Test ${bundleType} Bundle`
+          bundleName: `Test ${bundleType} Bundle`,
         };
 
         const bundle = await factory.createBundle(options);
@@ -197,12 +200,12 @@ describe('AssetBundleFactory', () => {
       priority: AssetPriority.HIGH,
       preload: false,
       cache: true,
-      metadata: { config: 'value' }
+      metadata: { config: 'value' },
     };
 
     it('should create bundle from configuration', async () => {
       const bundle = await factory.createBundleFromConfig(mockConfig);
-      
+
       expect(bundle).toBeInstanceOf(AssetBundle);
       expect(bundle.bundleId).toBe('test-config-bundle');
       expect(bundle.getBundleConfig()).toEqual(mockConfig);
@@ -215,7 +218,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       await expect(factory.createBundleFromConfig(invalidConfig)).rejects.toThrow();
@@ -224,7 +227,7 @@ describe('AssetBundleFactory', () => {
     it('should skip validation when validation is disabled', async () => {
       factory.setBundleFactoryConfig({
         ...factory.getBundleFactoryConfig(),
-        enableValidation: false
+        enableValidation: false,
       });
 
       const invalidConfig = {
@@ -233,7 +236,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       // Should not throw when validation is disabled
@@ -247,11 +250,11 @@ describe('AssetBundleFactory', () => {
       const originalBundle = await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'original',
-        bundleName: 'Original Bundle'
+        bundleName: 'Original Bundle',
       });
 
       const clonedBundle = await factory.cloneBundle(originalBundle);
-      
+
       expect(clonedBundle).toBeInstanceOf(AssetBundle);
       expect(clonedBundle.bundleId).not.toBe(originalBundle.bundleId);
       expect(clonedBundle.bundleType).toBe(originalBundle.bundleType);
@@ -261,7 +264,7 @@ describe('AssetBundleFactory', () => {
       const originalBundle = await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'original',
-        bundleName: 'Original Bundle'
+        bundleName: 'Original Bundle',
       });
 
       await factory.cloneBundle(originalBundle);
@@ -274,7 +277,7 @@ describe('AssetBundleFactory', () => {
       const mockBundle = {
         bundleId: 'mock-id',
         bundleType: BundleType.SCENE,
-        cloneBundle: jest.fn().mockRejectedValue(new Error('Clone failed'))
+        cloneBundle: jest.fn().mockRejectedValue(new Error('Clone failed')),
       } as unknown as AssetBundle;
 
       await expect(factory.cloneBundle(mockBundle)).rejects.toThrow('Clone failed');
@@ -286,16 +289,16 @@ describe('AssetBundleFactory', () => {
       const bundle = await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'test-bundle',
-        bundleName: 'Test Bundle'
+        bundleName: 'Test Bundle',
       });
 
       const newConfig = {
         priority: AssetPriority.HIGH,
-        preload: false
+        preload: false,
       };
 
       const configuredBundle = await factory.configureBundle(bundle, newConfig);
-      
+
       expect(configuredBundle).toBe(bundle);
       expect(bundle.getBundleConfig().priority).toBe(AssetPriority.HIGH);
       expect(bundle.getBundleConfig().preload).toBe(false);
@@ -305,7 +308,7 @@ describe('AssetBundleFactory', () => {
       const bundle = await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'test-bundle',
-        bundleName: 'Test Bundle'
+        bundleName: 'Test Bundle',
       });
 
       await factory.configureBundle(bundle, { priority: AssetPriority.HIGH });
@@ -318,11 +321,11 @@ describe('AssetBundleFactory', () => {
       const bundle = await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'test-bundle',
-        bundleName: 'Test Bundle'
+        bundleName: 'Test Bundle',
       });
 
       const invalidConfig = {
-        priority: 'invalid' as AssetPriority
+        priority: 'invalid' as AssetPriority,
       };
 
       await expect(factory.configureBundle(bundle, invalidConfig)).rejects.toThrow();
@@ -337,7 +340,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       const isValid = await factory.validateBundleConfig(validConfig);
@@ -351,7 +354,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       const isValid = await factory.validateBundleConfig(invalidConfig);
@@ -365,7 +368,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       const isValid = await factory.validateBundleConfig(invalidConfig);
@@ -379,7 +382,7 @@ describe('AssetBundleFactory', () => {
         bundleType: 'invalid' as BundleType,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       const isValid = await factory.validateBundleConfig(invalidConfig);
@@ -393,7 +396,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: 'invalid' as AssetPriority,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       const isValid = await factory.validateBundleConfig(invalidConfig);
@@ -407,7 +410,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: 'invalid' as any,
-        cache: true
+        cache: true,
       };
 
       const isValid = await factory.validateBundleConfig(invalidConfig);
@@ -421,7 +424,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: 'invalid' as any
+        cache: 'invalid' as any,
       };
 
       const isValid = await factory.validateBundleConfig(invalidConfig);
@@ -435,7 +438,7 @@ describe('AssetBundleFactory', () => {
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       });
 
       const updatedStats = factory.getBundleFactoryStatistics();
@@ -445,24 +448,26 @@ describe('AssetBundleFactory', () => {
 
   describe('Bundle Type Creator Management', () => {
     it('should register custom bundle type creator', () => {
-      const customCreator = jest.fn().mockResolvedValue(new AssetBundle('test', BundleType.SCENE, {
-        bundleId: 'test',
-        bundleName: 'Test Bundle',
-        bundleType: BundleType.SCENE,
-        priority: AssetPriority.NORMAL,
-        preload: true,
-        cache: true
-      }));
+      const customCreator = jest.fn().mockResolvedValue(
+        new AssetBundle('test', BundleType.SCENE, {
+          bundleId: 'test',
+          bundleName: 'Test Bundle',
+          bundleType: BundleType.SCENE,
+          priority: AssetPriority.NORMAL,
+          preload: true,
+          cache: true,
+        })
+      );
 
       factory.registerBundleTypeCreator(BundleType.SCENE, customCreator);
-      
+
       const creator = factory.getBundleTypeCreator(BundleType.SCENE);
       expect(creator).toBe(customCreator);
     });
 
     it('should unregister bundle type creator', () => {
       factory.unregisterBundleTypeCreator(BundleType.SCENE);
-      
+
       const creator = factory.getBundleTypeCreator(BundleType.SCENE);
       expect(creator).toBeNull();
       expect(factory.isBundleTypeSupported(BundleType.SCENE)).toBe(false);
@@ -486,22 +491,22 @@ describe('AssetBundleFactory', () => {
         {
           bundleType: BundleType.SCENE,
           bundleId: 'scene1',
-          bundleName: 'Scene Bundle 1'
+          bundleName: 'Scene Bundle 1',
         },
         {
           bundleType: BundleType.UI,
           bundleId: 'ui1',
-          bundleName: 'UI Bundle 1'
+          bundleName: 'UI Bundle 1',
         },
         {
           bundleType: BundleType.AUDIO,
           bundleId: 'audio1',
-          bundleName: 'Audio Bundle 1'
-        }
+          bundleName: 'Audio Bundle 1',
+        },
       ];
 
       const bundles = await factory.createBundles(options);
-      
+
       expect(bundles).toHaveLength(3);
       expect(bundles[0].bundleId).toBe('scene1');
       expect(bundles[1].bundleId).toBe('ui1');
@@ -516,7 +521,7 @@ describe('AssetBundleFactory', () => {
           bundleType: BundleType.SCENE,
           priority: AssetPriority.NORMAL,
           preload: true,
-          cache: true
+          cache: true,
         },
         {
           bundleId: 'config2',
@@ -524,12 +529,12 @@ describe('AssetBundleFactory', () => {
           bundleType: BundleType.UI,
           priority: AssetPriority.HIGH,
           preload: false,
-          cache: true
-        }
+          cache: true,
+        },
       ];
 
       const bundles = await factory.createBundlesFromConfigs(configs);
-      
+
       expect(bundles).toHaveLength(2);
       expect(bundles[0].bundleId).toBe('config1');
       expect(bundles[1].bundleId).toBe('config2');
@@ -540,17 +545,17 @@ describe('AssetBundleFactory', () => {
         {
           bundleType: BundleType.SCENE,
           bundleId: 'valid',
-          bundleName: 'Valid Bundle'
+          bundleName: 'Valid Bundle',
         },
         {
           bundleType: 'invalid' as BundleType,
           bundleId: 'invalid',
-          bundleName: 'Invalid Bundle'
-        }
+          bundleName: 'Invalid Bundle',
+        },
       ];
 
       const bundles = await factory.createBundles(options);
-      
+
       // Should return only the successful bundles
       expect(bundles).toHaveLength(1);
       expect(bundles[0].bundleId).toBe('valid');
@@ -566,7 +571,7 @@ describe('AssetBundleFactory', () => {
           type: AssetType.IMAGE,
           priority: AssetPriority.NORMAL,
           preload: true,
-          cache: true
+          cache: true,
         }),
         new Asset('asset2', 'asset2', AssetType.AUDIO, {
           key: 'asset2',
@@ -574,8 +579,8 @@ describe('AssetBundleFactory', () => {
           type: AssetType.AUDIO,
           priority: AssetPriority.NORMAL,
           preload: true,
-          cache: true
-        })
+          cache: true,
+        }),
       ];
 
       // Set asset sizes manually for testing
@@ -615,7 +620,7 @@ describe('AssetBundleFactory', () => {
       await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'bundle1',
-        bundleName: 'Bundle 1'
+        bundleName: 'Bundle 1',
       });
 
       await new Promise(resolve => setTimeout(resolve, 1)); // Small delay
@@ -623,7 +628,7 @@ describe('AssetBundleFactory', () => {
       await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'bundle2',
-        bundleName: 'Bundle 2'
+        bundleName: 'Bundle 2',
       });
 
       await new Promise(resolve => setTimeout(resolve, 1)); // Small delay
@@ -631,11 +636,11 @@ describe('AssetBundleFactory', () => {
       await factory.createBundle({
         bundleType: BundleType.UI,
         bundleId: 'bundle3',
-        bundleName: 'Bundle 3'
+        bundleName: 'Bundle 3',
       });
 
       const stats = factory.getCreationStatistics();
-      
+
       expect(stats.totalCreated).toBe(3);
       expect(stats.successRate).toBe(100);
       expect(stats.averageCreationTime).toBeGreaterThanOrEqual(0);
@@ -647,7 +652,7 @@ describe('AssetBundleFactory', () => {
       await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'valid',
-        bundleName: 'Valid Bundle'
+        bundleName: 'Valid Bundle',
       });
 
       // Try to create an invalid bundle (this will fail)
@@ -655,7 +660,7 @@ describe('AssetBundleFactory', () => {
         await factory.createBundle({
           bundleType: 'invalid' as BundleType,
           bundleId: 'invalid',
-          bundleName: 'Invalid Bundle'
+          bundleName: 'Invalid Bundle',
         });
       } catch (error) {
         // Expected to fail
@@ -673,7 +678,7 @@ describe('AssetBundleFactory', () => {
       await factory.createBundle({
         bundleType: BundleType.SCENE,
         bundleId: 'test',
-        bundleName: 'Test Bundle'
+        bundleName: 'Test Bundle',
       });
 
       factory.setBundleFactoryMetadata({ test: 'value' });
@@ -706,11 +711,11 @@ describe('AssetBundleFactory', () => {
       const invalidOptions: BundleCreationOptions = {
         bundleType: 'invalid' as BundleType,
         bundleId: 'invalid',
-        bundleName: 'Invalid Bundle'
+        bundleName: 'Invalid Bundle',
       };
 
       await expect(factory.createBundle(invalidOptions)).rejects.toThrow();
-      
+
       const stats = factory.getBundleFactoryStatistics();
       expect(stats.validationFailures).toBeGreaterThan(0);
     });
@@ -718,19 +723,19 @@ describe('AssetBundleFactory', () => {
     it('should handle configuration validation errors', async () => {
       // Create a fresh factory to ensure clean statistics
       const testFactory = new AssetBundleFactory('test-validation-factory');
-      
+
       const invalidConfig = {
         bundleId: '', // Invalid empty ID
         bundleName: 'Test Invalid Bundle',
         bundleType: BundleType.SCENE,
         priority: AssetPriority.NORMAL,
         preload: true,
-        cache: true
+        cache: true,
       };
 
       const isValid = await testFactory.validateBundleConfig(invalidConfig);
       expect(isValid).toBe(false);
-      
+
       const stats = testFactory.getBundleFactoryStatistics();
       expect(stats.validationFailures).toBe(1);
     });
@@ -742,7 +747,7 @@ describe('AssetBundleFactory', () => {
         .setBundleFactoryConfig(factory.getBundleFactoryConfig())
         .setBundleFactoryMetadata({ test: 'value' })
         .clearBundleFactory();
-      
+
       expect(result).toBe(factory);
     });
   });
