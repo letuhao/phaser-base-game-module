@@ -1,51 +1,70 @@
-import Phaser from 'phaser';
+import { BaseGame, BaseGameConfig } from './BaseGame';
 import { Levis2025R3WheelScene } from '../scenes/Levis2025R3WheelScene';
 import { logger } from '../core';
 
 export class Game {
-  private game: Phaser.Game;
+  private baseGame: BaseGame;
 
   constructor() {
-    logger.debug('Game', 'unknown', 'constructor', 'Initializing Phaser game configuration');
+    logger.debug('Game', 'constructor', 'Initializing minimal game with asset system');
 
-    const config: Phaser.Types.Core.GameConfig = {
-      type: Phaser.AUTO,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      parent: 'game-container',
-      backgroundColor: '#1a1a2e',
-      scene: [Levis2025R3WheelScene],
-      physics: {
-        default: 'arcade',
-        arcade: {
-          gravity: { x: 0, y: 0 },
-          debug: false,
+    // Create base game configuration
+    const baseGameConfig: BaseGameConfig = {
+      gameId: 'levis-2025-r3-wheel-game',
+      phaserConfig: {
+        backgroundColor: '#1a1a2e',
+        physics: {
+          default: 'arcade',
+          arcade: {
+            gravity: { x: 0, y: 0 },
+            debug: false,
+          },
         },
-      },
-      scale: {
-        mode: Phaser.Scale.RESIZE,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: window.innerWidth,
-        height: window.innerHeight,
       },
     };
 
-    logger.info('Game', 'constructor', 'Creating Phaser game instance', {
-      width: config.width,
-      height: config.height,
-      scaleMode: config.scale?.mode,
+    // Create base game
+    this.baseGame = new BaseGame(baseGameConfig);
+    
+    // Add the scene - the scene handles its own asset loading
+    const scene = new Levis2025R3WheelScene();
+    this.baseGame.addScene(scene);
+
+    logger.info('Game', 'constructor', 'Game initialized successfully', {
+      sceneKey: 'Levis2025R3WheelScene',
+      gameId: baseGameConfig.gameId,
     });
+  }
 
-    this.game = new Phaser.Game(config);
+  /**
+   * Start the game
+   */
+  async start(): Promise<void> {
+    try {
+      logger.info('Game', 'start', 'Starting game');
+      
+      // Start the scene - asset loading is handled by the scene
+      this.baseGame.startScene('Levis2025R3WheelScene');
+      
+      logger.info('Game', 'start', 'Game started successfully');
+    } catch (error) {
+      logger.error('Game', 'start', 'Failed to start game', { error });
+      throw error;
+    }
+  }
 
-    logger.debug('Game', 'unknown', 'constructor', 'Phaser game instance created successfully');
+  /**
+   * Get the base game instance
+   */
+  getBaseGame(): BaseGame {
+    return this.baseGame;
   }
 
   destroy(): void {
-    if (this.game) {
-      logger.info('Game', 'destroy', 'destroy', 'Destroying Phaser game instance');
-      this.game.destroy(true);
-      logger.debug('Game', 'destroy', 'destroy', 'Phaser game instance destroyed successfully');
+    if (this.baseGame) {
+      logger.info('Game', 'destroy', 'Destroying game');
+      this.baseGame.destroy();
+      logger.debug('Game', 'destroy', 'Game destroyed successfully');
     }
   }
 }

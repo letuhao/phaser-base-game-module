@@ -1,6 +1,6 @@
 /**
  * Game State Constants Index
- * 
+ *
  * Centralized exports for all game state related constants.
  */
 

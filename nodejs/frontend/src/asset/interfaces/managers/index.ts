@@ -4,6 +4,7 @@
  * Centralized export for all asset manager interfaces
  */
 
+// IAssetManager moved to root interfaces folder
 export type { IAssetCacheManager } from './IAssetCacheManager';
 export type { IAssetPoolManager } from './IAssetPoolManager';
 export type { IAssetValidationManager } from './IAssetValidationManager';

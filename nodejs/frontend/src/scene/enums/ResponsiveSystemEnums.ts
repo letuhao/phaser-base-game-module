@@ -1,6 +1,6 @@
 /**
  * Responsive System Enums
- * 
+ *
  * Centralized enum definitions for responsive system.
  * Replaces string literals with type-safe enums following coding rules.
  */

@@ -1,46 +1,79 @@
 /**
  * Asset Manager Interface
  *
- * Defines asset management functionality including caching, pooling, and lifecycle management.
+ * Defines the main asset manager that orchestrates asset loading, caching, and management.
  */
 
 import type { IAsset } from './IAsset';
 import type { IAssetBundle } from './IAssetBundle';
-import type { IAssetLoader } from './IAssetLoader';
+import type { IAssetFactory } from './factories/IAssetFactory';
+import type { IAssetBundleFactory } from './factories/IAssetBundleFactory';
 import type { IAssetCacheManager } from './managers/IAssetCacheManager';
 import type { IAssetPoolManager } from './managers/IAssetPoolManager';
 import type { IAssetValidationManager } from './managers/IAssetValidationManager';
 import type { IAssetStatisticsManager } from './managers/IAssetStatisticsManager';
 import type { AssetType, AssetPriority } from './IAsset';
 import type { BundleType } from './IAssetBundle';
-// ManagerOperation is imported from centralized enums but not used in this file
-
-// ManagerOperation is now imported from centralized enums
 
 /**
- * Manager configuration
+ * Asset manager configuration
  */
-export interface ManagerConfig {
+export interface AssetManagerConfig {
   enableCaching: boolean;
   enablePooling: boolean;
   enableValidation: boolean;
   enableStatistics: boolean;
-  autoCleanup: boolean;
-  cleanupInterval: number;
-  metadata?: Record<string, any>;
+  maxCacheSize: number;
+  maxPoolSize: number;
+  defaultTimeout: number;
+  retryAttempts: number;
+  retryDelay: number;
+  metadata?: Record<string, unknown>;
 }
 
 /**
- * Manager statistics
+ * Asset loading options
  */
-export interface ManagerStatistics {
+export interface AssetLoadingOptions {
+  priority?: AssetPriority;
+  timeout?: number;
+  retryAttempts?: number;
+  retryDelay?: number;
+  validate?: boolean;
+  cache?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Bundle loading options
+ */
+export interface BundleLoadingOptions {
+  timeout?: number;
+  retryAttempts?: number;
+  retryDelay?: number;
+  validate?: boolean;
+  cache?: boolean;
+  loadAssets?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Asset manager statistics
+ */
+export interface AssetManagerStatistics {
   totalAssets: number;
   loadedAssets: number;
   failedAssets: number;
+  cachedAssets: number;
   totalBundles: number;
   loadedBundles: number;
-  totalSize: number;
-  lastCleanupTime: number;
+  failedBundles: number;
+  cachedBundles: number;
+  totalLoadTime: number;
+  averageLoadTime: number;
+  cacheHitRate: number;
+  successRate: number;
+  lastUpdateTime: number;
 }
 
 /**
@@ -50,10 +83,13 @@ export interface IAssetManager {
   readonly managerId: string;
 
   /** Manager configuration */
-  managerConfig: ManagerConfig;
+  managerConfig: AssetManagerConfig;
 
-  /** Asset loader */
-  assetLoader: IAssetLoader;
+  /** Asset factory */
+  assetFactory: IAssetFactory;
+
+  /** Bundle factory */
+  bundleFactory: IAssetBundleFactory;
 
   /** Cache manager */
   cacheManager: IAssetCacheManager;
@@ -67,23 +103,17 @@ export interface IAssetManager {
   /** Statistics manager */
   statisticsManager: IAssetStatisticsManager;
 
-  /** Managed assets */
-  managedAssets: Map<string, IAsset>;
-
-  /** Asset bundles */
-  assetBundles: Map<string, IAssetBundle>;
-
-  /** Manager statistics */
-  managerStatistics: ManagerStatistics;
-
   /** Manager metadata */
-  managerMetadata: Record<string, any>;
+  managerMetadata: Record<string, unknown>;
 
   /** Set manager configuration */
-  setManagerConfig(config: ManagerConfig): this;
+  setManagerConfig(config: AssetManagerConfig): this;
 
-  /** Set asset loader */
-  setAssetLoader(loader: IAssetLoader): this;
+  /** Set asset factory */
+  setAssetFactory(factory: IAssetFactory): this;
+
+  /** Set bundle factory */
+  setBundleFactory(factory: IAssetBundleFactory): this;
 
   /** Set cache manager */
   setCacheManager(manager: IAssetCacheManager): this;
@@ -98,13 +128,16 @@ export interface IAssetManager {
   setStatisticsManager(manager: IAssetStatisticsManager): this;
 
   /** Set manager metadata */
-  setManagerMetadata(metadata: Record<string, any>): this;
+  setManagerMetadata(metadata: Record<string, unknown>): this;
 
   /** Get manager configuration */
-  getManagerConfig(): ManagerConfig;
+  getManagerConfig(): AssetManagerConfig;
 
-  /** Get asset loader */
-  getAssetLoader(): IAssetLoader;
+  /** Get asset factory */
+  getAssetFactory(): IAssetFactory;
+
+  /** Get bundle factory */
+  getBundleFactory(): IAssetBundleFactory;
 
   /** Get cache manager */
   getCacheManager(): IAssetCacheManager;
@@ -118,26 +151,41 @@ export interface IAssetManager {
   /** Get statistics manager */
   getStatisticsManager(): IAssetStatisticsManager;
 
-  /** Get managed assets */
-  getManagedAssets(): Map<string, IAsset>;
-
-  /** Get asset bundles */
-  getAssetBundles(): Map<string, IAssetBundle>;
-
-  /** Get manager statistics */
-  getManagerStatistics(): ManagerStatistics;
-
   /** Get manager metadata */
-  getManagerMetadata(): Record<string, any>;
+  getManagerMetadata(): Record<string, unknown>;
 
-  /** Register asset */
-  registerAsset(asset: IAsset): this;
+  /** Load asset */
+  loadAsset(assetKey: string, options?: AssetLoadingOptions): Promise<IAsset | null>;
 
-  /** Unregister asset */
-  unregisterAsset(assetKey: string): this;
+  /** Load assets by type */
+  loadAssetsByType(assetType: AssetType, options?: AssetLoadingOptions): Promise<IAsset[]>;
 
-  /** Get asset by key */
+  /** Load assets by priority */
+  loadAssetsByPriority(priority: AssetPriority, options?: AssetLoadingOptions): Promise<IAsset[]>;
+
+  /** Load bundle */
+  loadBundle(bundleId: string, options?: BundleLoadingOptions): Promise<IAssetBundle | null>;
+
+  /** Load bundles by type */
+  loadBundlesByType(bundleType: BundleType, options?: BundleLoadingOptions): Promise<IAssetBundle[]>;
+
+  /** Unload asset */
+  unloadAsset(assetKey: string): Promise<boolean>;
+
+  /** Unload bundle */
+  unloadBundle(bundleId: string): Promise<boolean>;
+
+  /** Get asset */
   getAsset(assetKey: string): IAsset | null;
+
+  /** Get bundle */
+  getBundle(bundleId: string): IAssetBundle | null;
+
+  /** Get all assets */
+  getAllAssets(): IAsset[];
+
+  /** Get all bundles */
+  getAllBundles(): IAssetBundle[];
 
   /** Get assets by type */
   getAssetsByType(assetType: AssetType): IAsset[];
@@ -145,83 +193,32 @@ export interface IAssetManager {
   /** Get assets by priority */
   getAssetsByPriority(priority: AssetPriority): IAsset[];
 
-  /** Load asset */
-  loadAsset(assetKey: string): Promise<IAsset | null>;
-
-  /** Load assets */
-  loadAssets(assetKeys: string[]): Promise<IAsset[]>;
-
-  /** Unload asset */
-  unloadAsset(assetKey: string): Promise<boolean>;
-
-  /** Unload assets */
-  unloadAssets(assetKeys: string[]): Promise<boolean>;
-
-  /** Cache asset */
-  cacheAsset(asset: IAsset): Promise<boolean>;
-
-  /** Uncache asset */
-  uncacheAsset(assetKey: string): Promise<boolean>;
-
-  /** Get cached asset */
-  getCachedAsset(assetKey: string): Promise<IAsset | null>;
-
-  /** Register bundle */
-  registerBundle(bundle: IAssetBundle): this;
-
-  /** Unregister bundle */
-  unregisterBundle(bundleId: string): this;
-
-  /** Get bundle by ID */
-  getBundle(bundleId: string): IAssetBundle | null;
-
   /** Get bundles by type */
   getBundlesByType(bundleType: BundleType): IAssetBundle[];
-
-  /** Load bundle */
-  loadBundle(bundleId: string): Promise<IAssetBundle | null>;
-
-  /** Load bundles */
-  loadBundles(bundleIds: string[]): Promise<IAssetBundle[]>;
-
-  /** Unload bundle */
-  unloadBundle(bundleId: string): Promise<boolean>;
-
-  /** Unload bundles */
-  unloadBundles(bundleIds: string[]): Promise<boolean>;
-
-  /** Check if asset exists */
-  hasAsset(assetKey: string): boolean;
 
   /** Check if asset is loaded */
   isAssetLoaded(assetKey: string): boolean;
 
-  /** Check if asset is cached */
-  isAssetCached(assetKey: string): Promise<boolean>;
-
-  /** Check if bundle exists */
-  hasBundle(bundleId: string): boolean;
-
   /** Check if bundle is loaded */
   isBundleLoaded(bundleId: string): boolean;
 
+  /** Check if asset is cached */
+  isAssetCached(assetKey: string): boolean;
+
+  /** Check if bundle is cached */
+  isBundleCached(bundleId: string): boolean;
+
   /** Validate asset */
-  validateAsset(asset: IAsset): Promise<boolean>;
+  validateAsset(asset: IAsset): boolean;
 
   /** Validate bundle */
-  validateBundle(bundle: IAssetBundle): Promise<boolean>;
+  validateBundle(bundle: IAssetBundle): boolean;
 
-  /** Optimize cache */
-  optimizeCache(): Promise<this>;
+  /** Get manager statistics */
+  getManagerStatistics(): AssetManagerStatistics;
 
-  /** Cleanup cache */
-  cleanupCache(): Promise<this>;
-
-  /** Clear all assets */
-  clearAllAssets(): Promise<this>;
-
-  /** Clear all bundles */
-  clearAllBundles(): Promise<this>;
+  /** Clear manager */
+  clearManager(): this;
 
   /** Update manager */
   updateManager(deltaTime: number): void;

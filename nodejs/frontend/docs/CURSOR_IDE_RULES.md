@@ -113,6 +113,13 @@ This document provides Cursor IDE-compatible rules for the Phaser Base Game Modu
       "pattern": "export\\s+(enum|interface)\\s+\\w+",
       "severity": "warning",
       "message": "Duplicate enums and interfaces across systems are forbidden. Use shared enums/interfaces from src/shared/ folder instead of duplicating definitions."
+    },
+    {
+      "name": "Require Statement Prohibition",
+      "description": "Prohibit CommonJS require() statements - use ES6 imports instead",
+      "pattern": "require\\s*\\([^)]+\\)",
+      "severity": "error",
+      "message": "CommonJS require() statements are forbidden in browser environments. Use ES6 import statements instead. Replace 'const { ClassName } = require(\"./path\")' with 'import { ClassName } from \"./path\"' at the top of the file."
     }
   ],
   "filePatterns": [
@@ -166,6 +173,7 @@ This document provides Cursor IDE-compatible rules for the Phaser Base Game Modu
 - **String Literal Prohibition**: No string literals in type definitions
 - **Any Type Prohibition**: No 'any' type usage
 - **Type Safety**: No casting to 'any'
+- **Require Statement Prohibition**: No CommonJS require() statements
 
 ### Important Rules (Warning Level)
 - **Magic Number/String Prohibition**: Use constants instead

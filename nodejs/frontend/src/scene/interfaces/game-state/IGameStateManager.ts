@@ -1,9 +1,9 @@
 /**
  * Game State Manager Interface
- * 
+ *
  * Orchestrates the entire game flow and manages complex state transitions.
  * Handles the coordination between scenes, events, and game logic systems.
- * 
+ *
  * Features:
  * - Game flow orchestration
  * - State transition management
@@ -16,7 +16,7 @@
 import type { IButtonClickEvent } from '../button/IButtonClickEventHandler';
 import type { IGameLogicEvent } from '../game-logic/IGameLogicHandler';
 import type { SceneState, SceneType } from '../../enums/SceneEnums';
-import type { 
+import type {
   TransitionStatus,
   EventState,
   ConditionType,
@@ -27,7 +27,7 @@ import type {
   GameFlowSource,
   GameFlowTargetType,
   SeverityLevel,
-  ComplexityLevel
+  ComplexityLevel,
 } from '../../enums/GameStateEnums';
 // Constants will be used in implementations
 // import { GAME_STATE_TIMEOUTS, GAME_STATE_RETRY_COUNTS } from '../../constants/GameStateConstants';
@@ -41,26 +41,26 @@ export enum GameFlowState {
   GAME_START = 'game_start',
   GAME_INITIALIZING = 'game_initializing',
   GAME_READY = 'game_ready',
-  
+
   // Scene management states
   SCENE_CREATING = 'scene_creating',
   SCENE_LOADING = 'scene_loading',
   SCENE_LOADING_FINISHED = 'scene_loading_finished',
   SCENE_ACTIVE = 'scene_active',
   SCENE_TRANSITIONING = 'scene_transitioning',
-  
+
   // Event management states
   EVENT_STARTING = 'event_starting',
   EVENT_PROCESSING = 'event_processing',
   EVENT_FINISHED = 'event_finished',
   EVENT_WAITING = 'event_waiting',
-  
+
   // Game control states
   GAME_PAUSED = 'game_paused',
   GAME_RESUMED = 'game_resumed',
   GAME_SAVING = 'game_saving',
   GAME_LOADING = 'game_loading',
-  
+
   // Terminal states
   GAME_OVER = 'game_over',
   GAME_VICTORY = 'game_victory',
@@ -81,7 +81,7 @@ export enum GameFlowEventType {
   SCENE_DEACTIVATE = 'scene_deactivate',
   SCENE_TRANSITION_START = 'scene_transition_start',
   SCENE_TRANSITION_COMPLETE = 'scene_transition_complete',
-  
+
   // Game events
   EVENT_START_REQUEST = 'event_start_request',
   EVENT_START = 'event_start',
@@ -89,12 +89,12 @@ export enum GameFlowEventType {
   EVENT_COMPLETE = 'event_complete',
   EVENT_CANCEL = 'event_cancel',
   EVENT_ERROR = 'event_error',
-  
+
   // Button click events
   BUTTON_CLICK_RECEIVED = 'button_click_received',
   BUTTON_CLICK_PROCESSING = 'button_click_processing',
   BUTTON_CLICK_COMPLETE = 'button_click_complete',
-  
+
   // System events
   SYSTEM_INITIALIZE = 'system_initialize',
   SYSTEM_READY = 'system_ready',
@@ -338,20 +338,28 @@ export interface IGameStateManager {
     conditions?: ITransitionCondition[],
     actions?: ITransitionAction[]
   ): Promise<IGameStateTransition>;
-  
+
   executeStateTransition(transitionId: string): Promise<boolean>;
   cancelStateTransition(transitionId: string): Promise<boolean>;
   getPendingTransitions(): IGameStateTransition[];
 
   // Scene flow management
-  requestSceneCreation(sceneId: string, sceneType: SceneType, metadata?: ISceneMetadata): Promise<string>;
+  requestSceneCreation(
+    sceneId: string,
+    sceneType: SceneType,
+    metadata?: ISceneMetadata
+  ): Promise<string>;
   requestSceneLoading(sceneId: string, dependencies?: string[]): Promise<string>;
   requestSceneActivation(sceneId: string): Promise<string>;
   requestSceneTransition(fromSceneId: string, toSceneId: string): Promise<string>;
   getActiveScenes(): IActiveScene[];
 
   // Event flow management
-  requestEventStart(eventId: string, eventType: GameFlowEventType, priority?: GameFlowPriority): Promise<string>;
+  requestEventStart(
+    eventId: string,
+    eventType: GameFlowEventType,
+    priority?: GameFlowPriority
+  ): Promise<string>;
   requestEventProcessing(eventId: string, progress?: number): Promise<void>;
   requestEventCompletion(eventId: string, result?: unknown): Promise<void>;
   getActiveEvents(): IActiveEvent[];

@@ -1,10 +1,10 @@
 /**
  * Button-Game Logic Bridge Interface
- * 
+ *
  * Bridges button click events with game logic systems.
  * Translates button interactions into meaningful game actions
  * and coordinates between input handling and game mechanics.
- * 
+ *
  * Features:
  * - Button-to-action mapping
  * - Context-aware action resolution
@@ -14,11 +14,11 @@
  */
 
 import type { IButtonClickEvent } from '../button/IButtonClickEventHandler';
-import type { 
-  IGameLogicEvent, 
-  IGameLogicResult, 
+import type {
+  IGameLogicEvent,
+  IGameLogicResult,
   IGameLogicHandler,
-  GameLogicActionType 
+  GameLogicActionType,
 } from './IGameLogicHandler';
 
 // ============================================================================
@@ -88,7 +88,17 @@ export interface ISceneActionContext {
 
 export interface IActionCondition {
   readonly conditionId: string;
-  readonly conditionType: 'player_level' | 'item_owned' | 'achievement_unlocked' | 'game_state' | 'asset_loaded' | 'gameobject_active' | 'layout_breakpoint' | 'unit_available' | 'scene_active' | 'custom';
+  readonly conditionType:
+    | 'player_level'
+    | 'item_owned'
+    | 'achievement_unlocked'
+    | 'game_state'
+    | 'asset_loaded'
+    | 'gameobject_active'
+    | 'layout_breakpoint'
+    | 'unit_available'
+    | 'scene_active'
+    | 'custom';
   readonly target: string;
   readonly operator: 'equals' | 'greater_than' | 'less_than' | 'contains' | 'exists' | 'not_exists';
   readonly value: any;
@@ -115,7 +125,12 @@ export interface IActionCost {
 
 export interface IActionEffect {
   readonly effectId: string;
-  readonly effectType: 'stat_change' | 'item_grant' | 'currency_change' | 'state_change' | 'ui_change';
+  readonly effectType:
+    | 'stat_change'
+    | 'item_grant'
+    | 'currency_change'
+    | 'state_change'
+    | 'ui_change';
   readonly target: string;
   readonly value: any;
   readonly duration?: number;
@@ -249,7 +264,10 @@ export interface IButtonGameLogicBridge {
 
   // Action resolution
   resolveAction(buttonEvent: IButtonClickEvent): Promise<IActionResolution>;
-  resolveActionWithContext(buttonEvent: IButtonClickEvent, context: IActionContext): Promise<IActionResolution>;
+  resolveActionWithContext(
+    buttonEvent: IButtonClickEvent,
+    context: IActionContext
+  ): Promise<IActionResolution>;
   validateAction(action: IGameLogicEvent): Promise<boolean>;
   executeAction(action: IGameLogicEvent): Promise<IGameLogicResult>;
 
@@ -264,7 +282,10 @@ export interface IButtonGameLogicBridge {
   removeContext(contextId: string): void;
 
   // Dynamic mapping
-  createDynamicMapping(buttonEvent: IButtonClickEvent, action: GameLogicActionType): IButtonActionMapping;
+  createDynamicMapping(
+    buttonEvent: IButtonClickEvent,
+    action: GameLogicActionType
+  ): IButtonActionMapping;
   updateMapping(mappingId: string, updates: Partial<IButtonActionMapping>): void;
   enableMapping(mappingId: string): void;
   disableMapping(mappingId: string): void;
@@ -292,7 +313,10 @@ export interface IButtonGameLogicBridge {
   // Utility methods
   isActionAvailable(actionType: GameLogicActionType, context: IActionContext): Promise<boolean>;
   getAvailableActions(context: IActionContext): Promise<GameLogicActionType[]>;
-  getActionCost(actionType: GameLogicActionType, context: IActionContext): Promise<IActionCost | null>;
+  getActionCost(
+    actionType: GameLogicActionType,
+    context: IActionContext
+  ): Promise<IActionCost | null>;
 }
 
 // ============================================================================

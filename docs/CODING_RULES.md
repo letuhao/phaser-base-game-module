@@ -23,6 +23,8 @@ This document defines the coding rules and standards for the Phaser Base Game Mo
 | **13** | **System Documentation Rules** | Document system progression, usage, and structure |
 | **14** | **Documentation File Organization** | Place documentation files in system docs folders |
 | **15** | **Enum/Interface Single Responsibility** | Prevent duplicate enums/interfaces across systems |
+| **16** | **Interface Dependency Inversion** | Force use of interfaces in properties and parameters |
+| **17** | **Require Statement Prohibition** | Prohibit CommonJS require() statements in browser environments |
 
 ## 🏗️ Architecture Principles
 
@@ -1418,12 +1420,258 @@ export interface IMixedInterface {
 - [ ] **Enums/interfaces follow single responsibility principle**
 - [ ] **No duplicate enums/interfaces across systems**
 - [ ] **Shared enums/interfaces used consistently**
+- [ ] **Use interfaces instead of concrete classes in properties and parameters**
+- [ ] **Follow Dependency Inversion Principle (SOLID)**
 - [ ] Proper logging implemented
 - [ ] Error handling comprehensive
 - [ ] Design patterns correctly applied
 - [ ] Tests cover all scenarios
 - [ ] Code follows naming conventions
 - [ ] No `any` types in public APIs
+
+### 16. **Interface Dependency Inversion** 🔄
+
+#### ❌ **FORBIDDEN - Using Concrete Classes in Properties and Parameters**
+```typescript
+// ❌ FORBIDDEN - Concrete class in property declaration
+export class MyClass {
+  private assetManager: AssetManager; // Should use IAssetManager
+  private sceneLoader: SceneAssetConfigLoader; // Should use ISceneAssetLoader
+  private gameObject: GameObject; // Should use IGameObject
+}
+
+// ❌ FORBIDDEN - Concrete class in method parameters
+export function processAsset(manager: AssetManager): void {
+  // Should use IAssetManager
+}
+
+export function loadScene(loader: SceneAssetConfigLoader): void {
+  // Should use ISceneAssetLoader
+}
+
+// ❌ FORBIDDEN - Concrete class in constructor parameters
+export class GameService {
+  constructor(
+    private assetManager: AssetManager, // Should use IAssetManager
+    private sceneLoader: SceneAssetConfigLoader // Should use ISceneAssetLoader
+  ) {}
+}
+```
+
+#### ✅ **CORRECT - Use Interfaces in Properties and Parameters**
+```typescript
+// ✅ CORRECT - Interface in property declaration
+export class MyClass {
+  private assetManager: IAssetManager;
+  private sceneLoader: ISceneAssetLoader;
+  private gameObject: IGameObject;
+}
+
+// ✅ CORRECT - Interface in method parameters
+export function processAsset(manager: IAssetManager): void {
+  // Implementation
+}
+
+export function loadScene(loader: ISceneAssetLoader): void {
+  // Implementation
+}
+
+// ✅ CORRECT - Interface in constructor parameters
+export class GameService {
+  constructor(
+    private assetManager: IAssetManager,
+    private sceneLoader: ISceneAssetLoader
+  ) {}
+}
+```
+
+#### ✅ **CORRECT - Concrete Classes Only in Implementation**
+```typescript
+// ✅ CORRECT - Concrete class only when creating instances
+export class GameService {
+  private assetManager: IAssetManager; // Interface for property
+  
+  constructor() {
+    // Concrete class only for instantiation
+    this.assetManager = new AssetManager('game-asset-manager');
+  }
+}
+
+// ✅ CORRECT - Factory pattern with interfaces
+export class AssetManagerFactory {
+  public static createAssetManager(id: string): IAssetManager {
+    return new AssetManager(id); // Concrete class only in factory
+  }
+}
+```
+
+#### 📋 **Dependency Inversion Principle Benefits**
+- **Loose Coupling**: Classes depend on abstractions, not concretions
+- **Testability**: Easy to mock interfaces for unit testing
+- **Flexibility**: Can swap implementations without changing dependent code
+- **Maintainability**: Changes to concrete classes don't affect interface consumers
+- **SOLID Compliance**: Follows Dependency Inversion Principle
+
+#### 🔄 **Interface Naming Conventions**
+```typescript
+// ✅ CORRECT - Interface naming patterns
+interface IAssetManager { }           // I prefix for interfaces
+interface ISceneAssetLoader { }       // I prefix for interfaces
+interface IGameObject { }             // I prefix for interfaces
+interface IUnit { }                   // I prefix for interfaces
+interface ILayout { }                 // I prefix for interfaces
+
+// ✅ CORRECT - Concrete class naming patterns
+class AssetManager implements IAssetManager { }     // No I prefix
+class SceneAssetConfigLoader implements ISceneAssetLoader { }
+class GameObject implements IGameObject { }
+```
+
+#### ⚠️ **Exception Cases**
+```typescript
+// ✅ CORRECT - Built-in types and primitives are allowed
+export class MyClass {
+  private logger: Logger; // Logger is a utility class, not a domain class
+  private config: string; // Primitive types are allowed
+  private count: number;  // Primitive types are allowed
+}
+
+// ✅ CORRECT - Third-party library classes (when no interface available)
+export class MyClass {
+  private phaserGame: Phaser.Game; // Third-party library class
+  private scene: Phaser.Scene;     // Third-party library class
+}
+```
+
+### 17. **Require Statement Prohibition** 🚫
+
+#### ❌ **FORBIDDEN - Using CommonJS require() Statements**
+```typescript
+// ❌ FORBIDDEN - CommonJS require() in browser environment
+export class AssetManager {
+  private initializeSubManagers(): void {
+    const { AssetFactory } = require('./AssetFactory');
+    const { AssetBundleFactory } = require('./AssetBundleFactory');
+    // This will cause "require is not defined" error in browser
+  }
+}
+
+// ❌ FORBIDDEN - Dynamic require() calls
+export class MyClass {
+  private loadModule(moduleName: string): any {
+    return require(moduleName); // Browser doesn't support require()
+  }
+}
+
+// ❌ FORBIDDEN - Conditional require() statements
+export class ConditionalLoader {
+  private loadAsset(): void {
+    if (someCondition) {
+      const { AssetLoader } = require('./AssetLoader'); // Error in browser
+    }
+  }
+}
+```
+
+#### ✅ **CORRECT - Use ES6 Import Statements**
+```typescript
+// ✅ CORRECT - ES6 imports at the top of the file
+import { AssetFactory } from './AssetFactory';
+import { AssetBundleFactory } from './AssetBundleFactory';
+
+export class AssetManager {
+  private initializeSubManagers(): void {
+    // Use imported classes directly
+    this.assetFactory = new AssetFactory('default-asset-factory');
+    this.bundleFactory = new AssetBundleFactory('default-bundle-factory');
+  }
+}
+
+// ✅ CORRECT - Import all needed classes at the top
+import { AssetFactory } from './AssetFactory';
+import { AssetBundleFactory } from './AssetBundleFactory';
+import { Logger } from '../../core/Logger';
+
+export class MyClass {
+  private assetFactory: AssetFactory;
+  private bundleFactory: AssetBundleFactory;
+  private logger: Logger;
+
+  constructor() {
+    this.assetFactory = new AssetFactory('factory-id');
+    this.bundleFactory = new AssetBundleFactory('bundle-factory-id');
+    this.logger = Logger.getInstance();
+  }
+}
+```
+
+#### 🔄 **Migration from require() to import**
+```typescript
+// ❌ BEFORE - CommonJS style
+export class OldClass {
+  private loadDependencies(): void {
+    const { Dependency1 } = require('./Dependency1');
+    const { Dependency2 } = require('./Dependency2');
+    const { Dependency3 } = require('./Dependency3');
+  }
+}
+
+// ✅ AFTER - ES6 style
+import { Dependency1 } from './Dependency1';
+import { Dependency2 } from './Dependency2';
+import { Dependency3 } from './Dependency3';
+
+export class NewClass {
+  private loadDependencies(): void {
+    // Dependencies are already imported and available
+    const dep1 = new Dependency1();
+    const dep2 = new Dependency2();
+    const dep3 = new Dependency3();
+  }
+}
+```
+
+#### 📋 **ES6 Import Benefits**
+- **Browser Compatibility**: Works in all modern browsers
+- **Static Analysis**: TypeScript can analyze imports at compile time
+- **Tree Shaking**: Bundlers can eliminate unused imports
+- **Type Safety**: Full TypeScript support for imported modules
+- **Performance**: Faster loading and better optimization
+- **Standards Compliance**: Follows modern JavaScript/TypeScript standards
+
+#### ⚠️ **Exception Cases**
+```typescript
+// ✅ CORRECT - Node.js environment (backend only)
+// This is only allowed in Node.js backend code, not frontend
+export class BackendService {
+  private loadConfig(): void {
+    const config = require('./config.json'); // Only in Node.js
+  }
+}
+
+// ✅ CORRECT - Dynamic imports (ES2020)
+export class DynamicLoader {
+  private async loadModule(moduleName: string): Promise<any> {
+    const module = await import(`./modules/${moduleName}`);
+    return module;
+  }
+}
+```
+
+#### 🔍 **Common Patterns to Avoid**
+```typescript
+// ❌ FORBIDDEN - These patterns cause browser errors
+const { ClassName } = require('./path');           // Use import instead
+const module = require('module-name');             // Use import instead
+const config = require('./config.json');           // Use import instead
+const { func1, func2 } = require('./utils');       // Use import instead
+
+// ✅ CORRECT - Use these patterns instead
+import { ClassName } from './path';
+import module from 'module-name';
+import config from './config.json';
+import { func1, func2 } from './utils';
+```
 
 ## 🚀 Best Practices Summary
 
@@ -1443,12 +1691,14 @@ export interface IMixedInterface {
 14. **Organize documentation files** - Place in system docs folders
 15. **Enforce single responsibility** - Each enum/interface has one purpose
 16. **Prevent duplication** - Use shared enums/interfaces across systems
-17. **Follow design patterns** - Implement SOLID principles
-18. **Handle errors properly** - Never ignore exceptions
-19. **Write comprehensive tests** - Cover all scenarios
-20. **Use type safety** - Leverage TypeScript's type system
-21. **Follow naming conventions** - Be consistent
-22. **Document your code** - Use JSDoc comments
+17. **Use interfaces in dependencies** - Force interface usage in properties and parameters
+18. **Prohibit require() statements** - Use ES6 imports instead of CommonJS require()
+19. **Follow design patterns** - Implement SOLID principles
+20. **Handle errors properly** - Never ignore exceptions
+21. **Write comprehensive tests** - Cover all scenarios
+22. **Use type safety** - Leverage TypeScript's type system
+23. **Follow naming conventions** - Be consistent
+24. **Document your code** - Use JSDoc comments
 
 ## 📚 Additional Resources
 

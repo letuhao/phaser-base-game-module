@@ -6,6 +6,7 @@
 
 export type { ISceneAssetConfig } from './ISceneAssetConfig';
 export type { ISceneAssetLoader } from './ISceneAssetLoader';
+export type { ISceneAssetConfigData, ISceneAssetConfigDataExtended } from './ISceneAssetConfigData';
 
 export { SceneLoadingPhase, SceneLoadingState } from './ISceneAssetLoader';
 
@@ -15,6 +16,8 @@ export { SceneLoadingPhase, SceneLoadingState } from './ISceneAssetLoader';
 export const SCENE_ASSET_INTERFACES = {
   ISceneAssetConfig: 'ISceneAssetConfig',
   ISceneAssetLoader: 'ISceneAssetLoader',
+  ISceneAssetConfigData: 'ISceneAssetConfigData',
+  ISceneAssetConfigDataExtended: 'ISceneAssetConfigDataExtended',
 } as const;
 
 export type SceneAssetInterface =

@@ -23,6 +23,13 @@
     }
   },
   "include": ["src", "index.html"],
-  "exclude": ["src/abstract/configs/example-configs.ts", "src/abstract/configs/scene-loader-examples.ts"],
+  "exclude": [
+    "src/abstract/configs/example-configs.ts", 
+    "src/abstract/configs/scene-loader-examples.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/tests/**",
+    "**/test/**"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -7,7 +7,8 @@
 import type { IAsset } from '../IAsset';
 import type { IAssetBundle } from '../IAssetBundle';
 import type { IAssetManager } from '../IAssetManager';
-import type { ISceneAssetConfig } from './ISceneAssetConfig';
+
+import type { ISceneAssetConfigData } from './ISceneAssetConfigData';
 import type { AssetType, AssetPriority } from '../IAsset';
 import type { BundleType } from '../IAssetBundle';
 import type { SceneAssetProgress, SceneAssetValidation } from './ISceneAssetConfig';
@@ -70,7 +71,7 @@ export interface ISceneAssetLoader {
   assetManager: IAssetManager;
 
   /** Scene asset configuration */
-  sceneAssetConfig: ISceneAssetConfig;
+  sceneAssetConfig: ISceneAssetConfigData;
 
   /** Loading progress */
   loadingProgress: SceneAssetProgress;
@@ -94,7 +95,7 @@ export interface ISceneAssetLoader {
   setAssetManager(manager: IAssetManager): this;
 
   /** Set scene asset configuration */
-  setSceneAssetConfig(config: ISceneAssetConfig): this;
+  setSceneAssetConfig(config: ISceneAssetConfigData): this;
 
   /** Set loading progress */
   setLoadingProgress(progress: SceneAssetProgress): this;
@@ -118,7 +119,13 @@ export interface ISceneAssetLoader {
   getAssetManager(): IAssetManager;
 
   /** Get scene asset configuration */
-  getSceneAssetConfig(): ISceneAssetConfig;
+  getSceneAssetConfig(): ISceneAssetConfigData;
+
+  /** Get loader ID */
+  getLoaderId(): string;
+
+  /** Get scene ID */
+  getSceneId(): string;
 
   /** Get loading progress */
   getLoadingProgress(): SceneAssetProgress;

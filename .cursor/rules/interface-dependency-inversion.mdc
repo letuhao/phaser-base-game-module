@@ -1,0 +1,121 @@
+---
+name: Interface Dependency Inversion Rule
+description: Force use of interfaces in properties and parameters - concrete classes are not allowed
+pattern: "(private|public|protected)\\s+\\w+\\s*:\\s*[A-Z]\\w+(?<!Interface|I\\w+)\\s*[;=]|function\\s+\\w+\\s*\\([^)]*:\\s*[A-Z]\\w+(?<!Interface|I\\w+)\\s*[,)]"
+severity: error
+message: "Use interfaces instead of concrete classes in properties and parameters. This enforces the Dependency Inversion Principle (SOLID). Replace concrete class types with their corresponding interfaces (e.g., AssetManager -> IAssetManager, SceneAssetConfigLoader -> ISceneAssetLoader)."
+---
+
+# Interface Dependency Inversion Rule
+
+## ❌ FORBIDDEN - Using Concrete Classes in Properties and Parameters
+```typescript
+// ❌ FORBIDDEN - Concrete class in property declaration
+export class MyClass {
+  private assetManager: AssetManager; // Should use IAssetManager
+  private sceneLoader: SceneAssetConfigLoader; // Should use ISceneAssetLoader
+  private gameObject: GameObject; // Should use IGameObject
+}
+
+// ❌ FORBIDDEN - Concrete class in method parameters
+export function processAsset(manager: AssetManager): void {
+  // Should use IAssetManager
+}
+
+export function loadScene(loader: SceneAssetConfigLoader): void {
+  // Should use ISceneAssetLoader
+}
+
+// ❌ FORBIDDEN - Concrete class in constructor parameters
+export class GameService {
+  constructor(
+    private assetManager: AssetManager, // Should use IAssetManager
+    private sceneLoader: SceneAssetConfigLoader // Should use ISceneAssetLoader
+  ) {}
+}
+```
+
+## ✅ CORRECT - Use Interfaces in Properties and Parameters
+```typescript
+// ✅ CORRECT - Interface in property declaration
+export class MyClass {
+  private assetManager: IAssetManager;
+  private sceneLoader: ISceneAssetLoader;
+  private gameObject: IGameObject;
+}
+
+// ✅ CORRECT - Interface in method parameters
+export function processAsset(manager: IAssetManager): void {
+  // Implementation
+}
+
+export function loadScene(loader: ISceneAssetLoader): void {
+  // Implementation
+}
+
+// ✅ CORRECT - Interface in constructor parameters
+export class GameService {
+  constructor(
+    private assetManager: IAssetManager,
+    private sceneLoader: ISceneAssetLoader
+  ) {}
+}
+```
+
+## ✅ CORRECT - Concrete Classes Only in Implementation
+```typescript
+// ✅ CORRECT - Concrete class only when creating instances
+export class GameService {
+  private assetManager: IAssetManager; // Interface for property
+  
+  constructor() {
+    // Concrete class only for instantiation
+    this.assetManager = new AssetManager('game-asset-manager');
+  }
+}
+
+// ✅ CORRECT - Factory pattern with interfaces
+export class AssetManagerFactory {
+  public static createAssetManager(id: string): IAssetManager {
+    return new AssetManager(id); // Concrete class only in factory
+  }
+}
+```
+
+## Dependency Inversion Principle Benefits
+- **Loose Coupling**: Classes depend on abstractions, not concretions
+- **Testability**: Easy to mock interfaces for unit testing
+- **Flexibility**: Can swap implementations without changing dependent code
+- **Maintainability**: Changes to concrete classes don't affect interface consumers
+- **SOLID Compliance**: Follows Dependency Inversion Principle
+
+## Interface Naming Conventions
+```typescript
+// ✅ CORRECT - Interface naming patterns
+interface IAssetManager { }           // I prefix for interfaces
+interface ISceneAssetLoader { }       // I prefix for interfaces
+interface IGameObject { }             // I prefix for interfaces
+interface IUnit { }                   // I prefix for interfaces
+interface ILayout { }                 // I prefix for interfaces
+
+// ✅ CORRECT - Concrete class naming patterns
+class AssetManager implements IAssetManager { }     // No I prefix
+class SceneAssetConfigLoader implements ISceneAssetLoader { }
+class GameObject implements IGameObject { }
+```
+
+## Exception Cases
+```typescript
+// ✅ CORRECT - Built-in types and primitives are allowed
+export class MyClass {
+  private logger: Logger; // Logger is a utility class, not a domain class
+  private config: string; // Primitive types are allowed
+  private count: number;  // Primitive types are allowed
+}
+
+// ✅ CORRECT - Third-party library classes (when no interface available)
+export class MyClass {
+  private phaserGame: Phaser.Game; // Third-party library class
+  private scene: Phaser.Scene;     // Third-party library class
+}
+```

@@ -1,0 +1,129 @@
+# Require Statement Prohibition Rule
+
+## ❌ FORBIDDEN - Using CommonJS require() Statements
+```typescript
+// ❌ FORBIDDEN - CommonJS require() in browser environment
+export class AssetManager {
+  private initializeSubManagers(): void {
+    const { AssetFactory } = require('./AssetFactory');
+    const { AssetBundleFactory } = require('./AssetBundleFactory');
+    // This will cause "require is not defined" error in browser
+  }
+}
+
+// ❌ FORBIDDEN - Dynamic require() calls
+export class MyClass {
+  private loadModule(moduleName: string): any {
+    return require(moduleName); // Browser doesn't support require()
+  }
+}
+
+// ❌ FORBIDDEN - Conditional require() statements
+export class ConditionalLoader {
+  private loadAsset(): void {
+    if (someCondition) {
+      const { AssetLoader } = require('./AssetLoader'); // Error in browser
+    }
+  }
+}
+```
+
+## ✅ CORRECT - Use ES6 Import Statements
+```typescript
+// ✅ CORRECT - ES6 imports at the top of the file
+import { AssetFactory } from './AssetFactory';
+import { AssetBundleFactory } from './AssetBundleFactory';
+
+export class AssetManager {
+  private initializeSubManagers(): void {
+    // Use imported classes directly
+    this.assetFactory = new AssetFactory('default-asset-factory');
+    this.bundleFactory = new AssetBundleFactory('default-bundle-factory');
+  }
+}
+
+// ✅ CORRECT - Import all needed classes at the top
+import { AssetFactory } from './AssetFactory';
+import { AssetBundleFactory } from './AssetBundleFactory';
+import { Logger } from '../../core/Logger';
+
+export class MyClass {
+  private assetFactory: AssetFactory;
+  private bundleFactory: AssetBundleFactory;
+  private logger: Logger;
+
+  constructor() {
+    this.assetFactory = new AssetFactory('factory-id');
+    this.bundleFactory = new AssetBundleFactory('bundle-factory-id');
+    this.logger = Logger.getInstance();
+  }
+}
+```
+
+## Migration from require() to import
+```typescript
+// ❌ BEFORE - CommonJS style
+export class OldClass {
+  private loadDependencies(): void {
+    const { Dependency1 } = require('./Dependency1');
+    const { Dependency2 } = require('./Dependency2');
+    const { Dependency3 } = require('./Dependency3');
+  }
+}
+
+// ✅ AFTER - ES6 style
+import { Dependency1 } from './Dependency1';
+import { Dependency2 } from './Dependency2';
+import { Dependency3 } from './Dependency3';
+
+export class NewClass {
+  private loadDependencies(): void {
+    // Dependencies are already imported and available
+    const dep1 = new Dependency1();
+    const dep2 = new Dependency2();
+    const dep3 = new Dependency3();
+  }
+}
+```
+
+## ES6 Import Benefits
+- **Browser Compatibility**: Works in all modern browsers
+- **Static Analysis**: TypeScript can analyze imports at compile time
+- **Tree Shaking**: Bundlers can eliminate unused imports
+- **Type Safety**: Full TypeScript support for imported modules
+- **Performance**: Faster loading and better optimization
+- **Standards Compliance**: Follows modern JavaScript/TypeScript standards
+
+## Exception Cases
+```typescript
+// ✅ CORRECT - Node.js environment (backend only)
+// This is only allowed in Node.js backend code, not frontend
+export class BackendService {
+  private loadConfig(): void {
+    const config = require('./config.json'); // Only in Node.js
+  }
+}
+
+// ✅ CORRECT - Dynamic imports (ES2020)
+export class DynamicLoader {
+  private async loadModule(moduleName: string): Promise<any> {
+    const module = await import(`./modules/${moduleName}`);
+    return module;
+  }
+}
+```
+
+## Common Patterns to Avoid
+```typescript
+// ❌ FORBIDDEN - These patterns cause browser errors
+const { ClassName } = require('./path');           // Use import instead
+const module = require('module-name');             // Use import instead
+const config = require('./config.json');           // Use import instead
+const { func1, func2 } = require('./utils');       // Use import instead
+
+// ✅ CORRECT - Use these patterns instead
+import { ClassName } from './path';
+import module from 'module-name';
+import config from './config.json';
+import { func1, func2 } from './utils';
+```

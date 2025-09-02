@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
@@ -14,7 +14,12 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:coverage:watch": "jest --coverage --watch"
+    "test:coverage:watch": "jest --coverage --watch",
+    "test:build": "tsc --project tsconfig.test.json",
+    "test:type-check": "tsc --noEmit --project tsconfig.test.json",
+    "integration:verify": "ts-node src/integration/verify-loading-logic.ts",
+    "integration:test": "jest src/integration/AssetLoadingIntegration.test.ts",
+    "integration:manual": "ts-node src/integration/manual-loading-test.ts"
   },
   "dependencies": {
     "phaser": "^3.90.0"

@@ -1,6 +1,6 @@
 /**
  * Game State System Enums
- * 
+ *
  * Centralized enum definitions for game state management system.
  * Replaces string literals with type-safe enums following coding rules.
  */

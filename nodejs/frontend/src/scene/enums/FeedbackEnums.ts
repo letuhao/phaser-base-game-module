@@ -1,6 +1,6 @@
 /**
  * Feedback System Enums
- * 
+ *
  * Centralized enum definitions for feedback and visual effects.
  * Replaces string literals with type-safe enums following coding rules.
  */

@@ -1,6 +1,6 @@
 /**
  * Game State System Interfaces Index
- * 
+ *
  * Centralized exports for all game state management interfaces that handle
  * game flow orchestration, state transitions, and complex game logic coordination.
  */
@@ -46,16 +46,10 @@ export type {
 } from './IGameStateManager';
 
 // Game flow definition interfaces
-export type {
-  IGameFlowBuilderConfig,
-} from './IGameFlowDefinitions';
+export type { IGameFlowBuilderConfig } from './IGameFlowDefinitions';
 
 // Enums
-export {
-  GameFlowState,
-  GameFlowEventType,
-  GameFlowPriority,
-} from './IGameStateManager';
+export { GameFlowState, GameFlowEventType, GameFlowPriority } from './IGameStateManager';
 
 // Predefined flow definitions
 export {
@@ -77,29 +71,16 @@ export const GAME_STATE_INTERFACES = {
 // Game state categories for organization
 export const GAME_STATE_CATEGORIES = {
   // Core game state
-  CORE_STATE: [
-    'IGameStateManager',
-  ],
-  
+  CORE_STATE: ['IGameStateManager'],
+
   // Flow management
-  FLOW_MANAGEMENT: [
-    'IGameFlowDefinition',
-    'IGameFlowStep',
-    'IGameFlowResult',
-  ],
-  
+  FLOW_MANAGEMENT: ['IGameFlowDefinition', 'IGameFlowStep', 'IGameFlowResult'],
+
   // State transitions
-  STATE_TRANSITIONS: [
-    'IGameStateTransition',
-    'ITransitionCondition',
-    'ITransitionAction',
-  ],
-  
+  STATE_TRANSITIONS: ['IGameStateTransition', 'ITransitionCondition', 'ITransitionAction'],
+
   // All game state interfaces
-  ALL_GAME_STATE: [
-    'IGameStateManager',
-    'IGameFlowBuilder',
-  ],
+  ALL_GAME_STATE: ['IGameStateManager', 'IGameFlowBuilder'],
 } as const;
 
 // Game flow states
@@ -108,26 +89,26 @@ export const GAME_FLOW_STATES = {
   GAME_START: 'game_start',
   GAME_INITIALIZING: 'game_initializing',
   GAME_READY: 'game_ready',
-  
+
   // Scene management states
   SCENE_CREATING: 'scene_creating',
   SCENE_LOADING: 'scene_loading',
   SCENE_LOADING_FINISHED: 'scene_loading_finished',
   SCENE_ACTIVE: 'scene_active',
   SCENE_TRANSITIONING: 'scene_transitioning',
-  
+
   // Event management states
   EVENT_STARTING: 'event_starting',
   EVENT_PROCESSING: 'event_processing',
   EVENT_FINISHED: 'event_finished',
   EVENT_WAITING: 'event_waiting',
-  
+
   // Game control states
   GAME_PAUSED: 'game_paused',
   GAME_RESUMED: 'game_resumed',
   GAME_SAVING: 'game_saving',
   GAME_LOADING: 'game_loading',
-  
+
   // Terminal states
   GAME_OVER: 'game_over',
   GAME_VICTORY: 'game_victory',
@@ -149,7 +130,7 @@ export const GAME_FLOW_EVENT_TYPES = {
   SCENE_DEACTIVATE: 'scene_deactivate',
   SCENE_TRANSITION_START: 'scene_transition_start',
   SCENE_TRANSITION_COMPLETE: 'scene_transition_complete',
-  
+
   // Game events
   EVENT_START_REQUEST: 'event_start_request',
   EVENT_START: 'event_start',
@@ -157,12 +138,12 @@ export const GAME_FLOW_EVENT_TYPES = {
   EVENT_COMPLETE: 'event_complete',
   EVENT_CANCEL: 'event_cancel',
   EVENT_ERROR: 'event_error',
-  
+
   // Button click events
   BUTTON_CLICK_RECEIVED: 'button_click_received',
   BUTTON_CLICK_PROCESSING: 'button_click_processing',
   BUTTON_CLICK_COMPLETE: 'button_click_complete',
-  
+
   // System events
   SYSTEM_INITIALIZE: 'system_initialize',
   SYSTEM_READY: 'system_ready',

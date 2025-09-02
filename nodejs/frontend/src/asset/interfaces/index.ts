@@ -13,6 +13,13 @@ export type { IAssetBundle } from './IAssetBundle';
 export type { IAssetLoader } from './IAssetLoader';
 export type { IAssetManager } from './IAssetManager';
 
+// Configuration data interfaces
+export type { IAssetConfigData, IAssetConfigDataExtended } from './IAssetConfigData';
+export type {
+  IAssetBundleConfigData,
+  IAssetBundleConfigDataExtended,
+} from './IAssetBundleConfigData';
+
 // Manager interfaces
 export * from './managers';
 
@@ -42,6 +49,10 @@ export {
 
 export type { ISceneAssetConfig } from './scene/ISceneAssetConfig';
 export type { ISceneAssetLoader } from './scene/ISceneAssetLoader';
+export type {
+  ISceneAssetConfigData,
+  ISceneAssetConfigDataExtended,
+} from './scene/ISceneAssetConfigData';
 
 export { SceneLoadingPhase, SceneLoadingState } from './scene/ISceneAssetLoader';
 

@@ -1,10 +1,10 @@
 /**
  * Game Logic Handler Interface
- * 
+ *
  * Bridges button click events with game logic systems.
  * Handles game state changes, player actions, and business logic
  * triggered by button interactions.
- * 
+ *
  * Features:
  * - Game state management
  * - Player action processing
@@ -19,7 +19,7 @@ import type { IGameObject } from '../../../game-object/interfaces/IGameObject';
 import type { IAsset } from '../../../asset/interfaces/IAsset';
 import type { IUnit } from '../../../unit/interfaces/IUnit';
 import type { ILayout } from '../../../layout/interfaces/ILayout';
-import type { 
+import type {
   GameLogicTargetType,
   GameStatus,
   GraphicsQuality,
@@ -33,7 +33,7 @@ import type {
   SeverityLevel,
   WarningSeverityLevel,
   ViolationType,
-  WarningType
+  WarningType,
 } from '../../enums/GameStateEnums';
 
 // ============================================================================
@@ -70,31 +70,31 @@ export enum GameLogicActionType {
   PAUSE = 'pause',
   RESUME = 'resume',
   RESTART = 'restart',
-  
+
   // Asset system actions
   LOAD_ASSET = 'load_asset',
   UNLOAD_ASSET = 'unload_asset',
   CACHE_ASSET = 'cache_asset',
   VALIDATE_ASSET = 'validate_asset',
-  
+
   // Game object actions
   CREATE_GAMEOBJECT = 'create_gameobject',
   DESTROY_GAMEOBJECT = 'destroy_gameobject',
   UPDATE_GAMEOBJECT = 'update_gameobject',
   ANIMATE_GAMEOBJECT = 'animate_gameobject',
   TRANSFORM_GAMEOBJECT = 'transform_gameobject',
-  
+
   // Layout system actions
   UPDATE_LAYOUT = 'update_layout',
   APPLY_THEME = 'apply_theme',
   CHANGE_BREAKPOINT = 'change_breakpoint',
   RESPONSIVE_UPDATE = 'responsive_update',
-  
+
   // Unit system actions
   CALCULATE_UNIT = 'calculate_unit',
   CONVERT_UNIT = 'convert_unit',
   VALIDATE_UNIT = 'validate_unit',
-  
+
   // Scene system actions
   TRANSITION_SCENE = 'transition_scene',
   LOAD_SCENE = 'load_scene',
