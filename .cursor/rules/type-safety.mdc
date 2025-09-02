@@ -1,0 +1,92 @@
+---
+description: Enforce strict type safety and avoid casting to 'any'
+globs:
+alwaysApply: true
+---
+
+# Type Safety Rule
+
+## ✅ CORRECT - Use Proper Type Safety
+```typescript
+// ✅ CORRECT - Define interfaces for all data structures
+export interface IUnitConfig {
+  readonly id: string;
+  readonly name: string;
+  readonly unitType: UnitType;
+  readonly isActive: boolean;
+  readonly metadata?: Record<string, unknown>;
+}
+
+// ✅ CORRECT - Use interfaces in function parameters
+export function createUnit(config: IUnitConfig): IUnit {
+  // Implementation
+}
+
+// ✅ CORRECT - Use unknown for truly unknown types
+function processUnknownData(data: unknown): number {
+  if (typeof data === 'object' && data !== null && 'value' in data) {
+    return (data as { value: number }).value;
+  }
+  return 0;
+}
+
+// ✅ CORRECT - Use Record<string, unknown> instead of Record<string, any>
+interface IConfig {
+  data: IUnitConfig;
+  metadata: Record<string, unknown>;
+}
+```
+
+## ❌ FORBIDDEN - Using 'any' Type
+```typescript
+// ❌ FORBIDDEN - Using any type
+function processData(data: any): any {
+  return data.someProperty;
+}
+
+// ❌ FORBIDDEN - Untyped parameters
+function calculate(input: any): number {
+  return input.value;
+}
+
+// ❌ FORBIDDEN - Any in interfaces
+interface IConfig {
+  data: any; // Should be properly typed
+  metadata: Record<string, any>; // Should use unknown
+}
+
+// ❌ FORBIDDEN - Casting to any
+const result = (someValue as any).someProperty;
+```
+
+## Type Safety Guidelines
+```typescript
+// ✅ CORRECT - Always define proper types
+export interface IGameState {
+  readonly gameId: string;
+  readonly status: GameStatus;
+  readonly level: number;
+  readonly score: number;
+  readonly timeElapsed: number;
+  readonly timeRemaining?: number;
+  readonly difficulty: string;
+  readonly settings: IGameSettings;
+}
+
+// ✅ CORRECT - Use enums for type-safe values
+export enum GameStatus {
+  PLAYING = 'playing',
+  PAUSED = 'paused',
+  GAME_OVER = 'game_over',
+  VICTORY = 'victory',
+  LOADING = 'loading'
+}
+
+// ✅ CORRECT - Use type guards for runtime type checking
+function isGameState(obj: unknown): obj is IGameState {
+  return typeof obj === 'object' && 
+         obj !== null && 
+         'gameId' in obj && 
+         'status' in obj;
+}
+```

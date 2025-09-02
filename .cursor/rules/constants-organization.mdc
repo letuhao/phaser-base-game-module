@@ -1,0 +1,94 @@
+---
+description: Constants must be defined in dedicated constants folders
+globs:
+alwaysApply: true
+---
+
+# Constants Organization Rule
+
+## ✅ CORRECT - Constants in Dedicated Constants Folders
+```typescript
+// ✅ CORRECT - Constants in dedicated constants folders
+// src/unit/constants/UnitSystemConstants.ts
+export const UNIT_CONSTANTS = {
+  DEFAULT_SIZE: 100,
+  MIN_SIZE: 1,
+  MAX_SIZE: 10000
+} as const;
+
+// src/game-object/constants/GameObjectConstants.ts
+export const GAME_OBJECT_CONSTANTS = {
+  DEFAULT_POSITION: { x: 0, y: 0 },
+  DEFAULT_SCALE: { x: 1, y: 1 },
+  MAX_CHILDREN: 1000
+} as const;
+
+// src/scene/constants/SceneConstants.ts
+export const SCENE_CONSTANTS = {
+  DEFAULT_WIDTH: 1200,
+  DEFAULT_HEIGHT: 800,
+  MAX_ELEMENTS: 500
+} as const;
+```
+
+## ✅ CORRECT - Constants Folder Structure
+```
+src/
+├── unit/
+│   └── constants/
+│       ├── UnitSystemConstants.ts
+│       ├── SizeConstants.ts
+│       ├── PositionConstants.ts
+│       └── index.ts
+├── game-object/
+│   └── constants/
+│       ├── GameObjectConstants.ts
+│       ├── EffectConstants.ts
+│       ├── AudioConstants.ts
+│       └── index.ts
+├── scene/
+│   └── constants/
+│       ├── SceneConstants.ts
+│       ├── TransitionConstants.ts
+│       └── index.ts
+└── layout/
+    └── constants/
+        ├── LayoutConstants.ts
+        ├── StyleConstants.ts
+        └── index.ts
+```
+
+## ❌ FORBIDDEN - Constants Outside Constants Folders
+```typescript
+// ❌ FORBIDDEN - Constants defined outside constants folders
+// src/unit/classes/UnitCalculator.ts
+export const DEFAULT_SIZE = 100; // Should be in constants folder
+
+export class UnitCalculator {
+  // Implementation
+}
+
+// ❌ FORBIDDEN - Constants in interface files
+// src/unit/interfaces/IUnit.ts
+export const MAX_UNITS = 1000; // Should be in constants folder
+
+export interface IUnit {
+  // Interface definition
+}
+```
+
+## Constants Organization Guidelines
+```typescript
+// Group related constants
+export const PERFORMANCE_CONSTANTS = {
+  MAX_CALCULATION_HISTORY: 100,
+  ERROR_THRESHOLD: 0.1,
+  TIMEOUT_MS: 5000
+} as const;
+
+export const VALIDATION_CONSTANTS = {
+  MAX_ERRORS: 10,
+  STRICT_MODE: true,
+  AUTO_VALIDATE: true
+} as const;
+```

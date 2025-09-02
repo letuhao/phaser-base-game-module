@@ -1,0 +1,120 @@
+---
+description: Interfaces must be defined in dedicated interface folders
+globs:
+alwaysApply: true
+---
+
+# Interface Organization Rule
+
+## ✅ CORRECT - Interfaces in Dedicated Interface Folders
+```typescript
+// ✅ CORRECT - Interfaces in dedicated interface folders
+// src/unit/interfaces/IUnit.ts
+export interface IUnit {
+  readonly id: string;
+  readonly unitType: UnitType;
+  calculate(): number;
+}
+
+// src/game-object/interfaces/IGameObject.ts
+export interface IGameObject {
+  readonly id: string;
+  readonly gameObjectType: GameObjectType;
+  update(): void;
+}
+
+// src/scene/interfaces/ISceneManager.ts
+export interface ISceneManager {
+  readonly id: string;
+  createScene(config: ISceneConfig): IScene;
+}
+```
+
+## ✅ CORRECT - Interface Folder Structure
+```
+src/
+├── unit/
+│   └── interfaces/
+│       ├── IUnit.ts
+│       ├── IUnitStrategy.ts
+│       ├── IUnitFactory.ts
+│       └── index.ts
+├── game-object/
+│   └── interfaces/
+│       ├── IGameObject.ts
+│       ├── effects/
+│       │   ├── IEffect.ts
+│       │   └── index.ts
+│       ├── audio/
+│       │   ├── IAudioObject.ts
+│       │   └── index.ts
+│       └── index.ts
+├── scene/
+│   └── interfaces/
+│       ├── ISceneManager.ts
+│       ├── ISceneConfig.ts
+│       ├── managers/
+│       │   ├── ISceneElementManager.ts
+│       │   └── index.ts
+│       └── index.ts
+└── layout/
+    └── interfaces/
+        ├── IStyle.ts
+        ├── ILayout.ts
+        └── index.ts
+```
+
+## ❌ FORBIDDEN - Interfaces Outside Interface Folders
+```typescript
+// ❌ FORBIDDEN - Interfaces defined outside interface folders
+// src/unit/classes/UnitCalculator.ts
+export interface IUnitConfig {  // Should be in interfaces folder
+  readonly id: string;
+}
+
+export class UnitCalculator {
+  // Implementation
+}
+```
+
+## ✅ CORRECT - Import Interfaces from Interface Files
+```typescript
+// ✅ CORRECT - Import interfaces from dedicated interface files
+// src/unit/classes/UnitCalculator.ts
+import { IUnitConfig } from '../interfaces/IUnitConfig';
+import { IUnit } from '../interfaces/IUnit';
+
+export class UnitCalculator {
+  public createUnit(config: IUnitConfig): IUnit {
+    // Implementation
+  }
+}
+```
+
+## Interface Index Files
+```typescript
+// ✅ CORRECT - Interface index files for easy imports
+// src/unit/interfaces/index.ts
+export * from './IUnit';
+export * from './IUnitStrategy';
+export * from './IUnitFactory';
+
+// Usage
+import { IUnit, IUnitStrategy } from '../interfaces';
+```
+
+## Interface Naming Conventions
+```typescript
+// ✅ CORRECT - Interface naming conventions
+export interface IUnit {           // I prefix for interfaces
+  readonly id: string;             // readonly for immutable properties
+  readonly unitType: UnitType;     // Use enums for type safety
+  calculate(): number;             // Methods without implementation
+}
+
+export interface IUnitStrategy {   // Strategy pattern interface
+  calculate(input: IStrategyInput, context: UnitContext): number;
+  canHandle(input: IStrategyInput): boolean;
+  getPriority(): number;
+}
+```

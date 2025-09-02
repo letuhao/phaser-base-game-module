@@ -16,6 +16,21 @@
 import type { IButtonClickEvent } from '../button/IButtonClickEventHandler';
 import type { IGameLogicEvent } from '../game-logic/IGameLogicHandler';
 import type { SceneState, SceneType } from '../../enums/SceneEnums';
+import type { 
+  TransitionStatus,
+  EventState,
+  ConditionType,
+  FlowConditionType,
+  ComparisonOperator,
+  TransitionActionType,
+  FlowStepType,
+  GameFlowSource,
+  GameFlowTargetType,
+  SeverityLevel,
+  ComplexityLevel
+} from '../../enums/GameStateEnums';
+// Constants will be used in implementations
+// import { GAME_STATE_TIMEOUTS, GAME_STATE_RETRY_COUNTS } from '../../constants/GameStateConstants';
 
 // ============================================================================
 // GAME STATE ENUMS
@@ -121,7 +136,7 @@ export interface IGameStateTransition {
   readonly actions: ITransitionAction[];
   readonly timeout?: number;
   readonly timestamp: Date;
-  readonly status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'cancelled';
+  readonly status: TransitionStatus;
 }
 
 export interface IActiveScene {
@@ -137,7 +152,7 @@ export interface IActiveEvent {
   readonly eventId: string;
   readonly eventType: GameFlowEventType;
   readonly priority: GameFlowPriority;
-  readonly state: 'starting' | 'processing' | 'completing' | 'completed' | 'failed';
+  readonly state: EventState;
   readonly progress: number;
   readonly dependencies: string[];
   readonly metadata: IEventMetadata;
@@ -171,7 +186,7 @@ export interface IEventMetadata {
   readonly estimatedDuration: number;
   readonly actualDuration?: number;
   readonly errorMessages: string[];
-  readonly customData: Record<string, any>;
+  readonly customData: Record<string, unknown>;
 }
 
 export interface IGameStatePerformance {
@@ -190,18 +205,18 @@ export interface IGameStatePerformance {
 
 export interface ITransitionCondition {
   readonly conditionId: string;
-  readonly conditionType: 'scene_state' | 'event_state' | 'system_ready' | 'time_elapsed' | 'system_check' | 'custom';
+  readonly conditionType: ConditionType;
   readonly target: string;
-  readonly operator: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'contains' | 'exists';
-  readonly value: any;
+  readonly operator: ComparisonOperator;
+  readonly value: unknown;
   readonly required: boolean;
 }
 
 export interface ITransitionAction {
   readonly actionId: string;
-  readonly actionType: 'scene_action' | 'event_action' | 'system_action' | 'custom_action';
+  readonly actionType: TransitionActionType;
   readonly target: string;
-  readonly parameters: Record<string, any>;
+  readonly parameters: Record<string, unknown>;
   readonly async: boolean;
   readonly timeout?: number;
   readonly retryCount?: number;
@@ -215,7 +230,7 @@ export interface IGameFlowEvent {
   readonly eventId: string;
   readonly eventType: GameFlowEventType;
   readonly priority: GameFlowPriority;
-  readonly source: 'button_click' | 'scene_system' | 'event_system' | 'game_logic' | 'external';
+  readonly source: GameFlowSource;
   readonly target: IGameFlowTarget;
   readonly context: IGameFlowContext;
   readonly data: IGameFlowEventData;
@@ -224,7 +239,7 @@ export interface IGameFlowEvent {
 
 export interface IGameFlowTarget {
   readonly targetId: string;
-  readonly targetType: 'scene' | 'event' | 'system' | 'game_object' | 'button';
+  readonly targetType: GameFlowTargetType;
   readonly targetName: string;
   readonly targetState?: string;
 }
@@ -313,7 +328,7 @@ export interface IGameStateManager {
   getGameState(): IGameFlowState;
   updateGameState(updates: Partial<IGameFlowState>): Promise<void>;
   saveGameState(): Promise<void>;
-  loadGameState(saveData: any): Promise<void>;
+  loadGameState(saveData: unknown): Promise<void>;
 
   // State transitions
   requestStateTransition(
@@ -338,13 +353,13 @@ export interface IGameStateManager {
   // Event flow management
   requestEventStart(eventId: string, eventType: GameFlowEventType, priority?: GameFlowPriority): Promise<string>;
   requestEventProcessing(eventId: string, progress?: number): Promise<void>;
-  requestEventCompletion(eventId: string, result?: any): Promise<void>;
+  requestEventCompletion(eventId: string, result?: unknown): Promise<void>;
   getActiveEvents(): IActiveEvent[];
 
   // Button click flow integration
   processButtonClickFlow(buttonEvent: IButtonClickEvent): Promise<IGameFlowEvent>;
   processGameLogicFlow(gameLogicEvent: IGameLogicEvent): Promise<IGameFlowEvent>;
-  processCustomFlow(eventType: GameFlowEventType, data: any): Promise<IGameFlowEvent>;
+  processCustomFlow(eventType: GameFlowEventType, data: unknown): Promise<IGameFlowEvent>;
 
   // Event handling
   addEventListener(eventType: GameFlowEventType, listener: IGameFlowEventListener): void;
@@ -385,9 +400,9 @@ export interface IGameFlowDefinition {
 export interface IGameFlowStep {
   readonly stepId: string;
   readonly stepName: string;
-  readonly stepType: 'scene_action' | 'event_action' | 'state_transition' | 'wait_condition' | 'system_action' | 'custom_action';
+  readonly stepType: FlowStepType;
   readonly target: string;
-  readonly parameters: Record<string, any>;
+  readonly parameters: Record<string, unknown>;
   readonly dependencies: string[];
   readonly timeout?: number;
   readonly retryCount?: number;
@@ -398,10 +413,10 @@ export interface IGameFlowStep {
 
 export interface IGameFlowCondition {
   readonly conditionId: string;
-  readonly conditionType: 'state_check' | 'scene_check' | 'event_check' | 'time_check' | 'system_check' | 'custom';
+  readonly conditionType: FlowConditionType;
   readonly target: string;
-  readonly operator: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'contains' | 'exists';
-  readonly value: any;
+  readonly operator: ComparisonOperator;
+  readonly value: unknown;
   readonly required: boolean;
 }
 
@@ -412,7 +427,7 @@ export interface IGameFlowMetadata {
   readonly lastModified: Date;
   readonly tags: string[];
   readonly estimatedDuration: number;
-  readonly complexity: 'simple' | 'moderate' | 'complex' | 'expert';
+  readonly complexity: ComplexityLevel;
 }
 
 export interface IGameFlowResult {
@@ -486,9 +501,9 @@ export interface IGameStateErrorMetrics {
 export interface IGameStateError {
   readonly errorId: string;
   readonly errorType: string;
-  readonly severity: 'low' | 'medium' | 'high' | 'critical';
+  readonly severity: SeverityLevel;
   readonly message: string;
-  readonly context: Record<string, any>;
+  readonly context: Record<string, unknown>;
   readonly timestamp: Date;
   readonly recoverable: boolean;
 }

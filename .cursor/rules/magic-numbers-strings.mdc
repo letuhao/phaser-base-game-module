@@ -1,0 +1,81 @@
+---
+description: Prohibit magic numbers and strings - use constants instead
+globs:
+alwaysApply: true
+---
+
+# Magic Number/String Prohibition Rule
+
+## ❌ FORBIDDEN - Magic Numbers/Strings
+```typescript
+// ❌ FORBIDDEN - Magic numbers in code
+function calculateArea(width: number, height: number): number {
+  return width * height * 0.5; // What does 0.5 mean?
+}
+
+// ❌ FORBIDDEN - Magic strings in code
+function processType(type: string): void {
+  if (type === 'admin') { // What does 'admin' mean?
+    // Process admin
+  }
+}
+
+// ❌ FORBIDDEN - Hardcoded values
+const maxRetries = 3; // Should be in constants
+const timeoutMs = 5000; // Should be in constants
+const defaultTheme = 'dark'; // Should be in constants
+```
+
+## ✅ CORRECT - Define Constants
+```typescript
+// ✅ CORRECT - Define constants for all magic values
+// src/system/constants/SystemConstants.ts
+export const CALCULATION_CONSTANTS = {
+  AREA_MULTIPLIER: 0.5,
+  PERIMETER_MULTIPLIER: 2.0,
+  VOLUME_MULTIPLIER: 1.0
+} as const;
+
+export const USER_TYPE_CONSTANTS = {
+  ADMIN: 'admin',
+  USER: 'user',
+  GUEST: 'guest',
+  MODERATOR: 'moderator'
+} as const;
+
+export const SYSTEM_CONSTANTS = {
+  MAX_RETRIES: 3,
+  TIMEOUT_MS: 5000,
+  DEFAULT_THEME: 'dark',
+  CACHE_SIZE: 1000
+} as const;
+
+// ✅ CORRECT - Use constants in code
+import { CALCULATION_CONSTANTS, USER_TYPE_CONSTANTS, SYSTEM_CONSTANTS } from '../constants';
+
+function calculateArea(width: number, height: number): number {
+  return width * height * CALCULATION_CONSTANTS.AREA_MULTIPLIER;
+}
+
+function processType(type: string): void {
+  if (type === USER_TYPE_CONSTANTS.ADMIN) {
+    // Process admin
+  }
+}
+```
+
+## Constants Organization
+```typescript
+// Group related constants
+export const PERFORMANCE_CONSTANTS = {
+  MAX_CALCULATION_HISTORY: 100,
+  ERROR_THRESHOLD: 0.1,
+  TIMEOUT_MS: 5000
+} as const;
+
+export const VALIDATION_CONSTANTS = {
+  MAX_ERRORS: 10,
+  STRICT_MODE: true,
+  AUTO_VALIDATE: true
+} as const;
+```

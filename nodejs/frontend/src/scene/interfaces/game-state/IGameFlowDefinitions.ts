@@ -7,18 +7,30 @@
  * Your Flow: game start → scene 1 create → scene 1 loading → scene 1 loading finish → event 1 start → event 1 processing → event 1 finish
  */
 
-import type { 
-  IGameFlowDefinition, 
-  IGameFlowStep, 
-  IGameFlowCondition, 
+import type {
+  IGameFlowDefinition,
+  IGameFlowStep,
+  IGameFlowCondition,
   IGameFlowMetadata
 } from './IGameStateManager';
-import { 
+import {
   GameFlowState,
   GameFlowEventType,
   GameFlowPriority
 } from './IGameStateManager';
 import { SceneType, SceneState } from '../../enums/SceneEnums';
+import { 
+  FlowStepType,
+  FlowConditionType,
+  ComparisonOperator,
+  ComplexityLevel
+} from '../../enums/GameStateEnums';
+import { 
+  GAME_STATE_TIMEOUTS, 
+  GAME_STATE_RETRY_COUNTS, 
+  GAME_STATE_PROGRESS,
+  GAME_STATE_DURATIONS 
+} from '../../constants/GameStateConstants';
 
 // ============================================================================
 // YOUR SPECIFIC FLOW DEFINITION
@@ -36,7 +48,7 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     {
       stepId: 'game_start',
       stepName: 'Initialize Game',
-      stepType: 'state_transition',
+      stepType: FlowStepType.STATE_TRANSITION,
       target: 'GAME_START',
       parameters: {
         state: GameFlowState.GAME_START,
@@ -44,8 +56,8 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
         priority: GameFlowPriority.CRITICAL
       },
       dependencies: [],
-      timeout: 5000,
-      retryCount: 3,
+      timeout: GAME_STATE_TIMEOUTS.GAME_START_TIMEOUT,
+      retryCount: GAME_STATE_RETRY_COUNTS.GAME_START_RETRY,
       onSuccess: ['scene_1_create'],
       onFailure: ['game_error'],
       onTimeout: ['game_error']
@@ -53,7 +65,7 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     {
       stepId: 'scene_1_create',
       stepName: 'Create Scene 1',
-      stepType: 'scene_action',
+      stepType: FlowStepType.SCENE_ACTION,
       target: 'scene_1',
       parameters: {
         sceneType: SceneType.GAME_SCENE,
@@ -62,8 +74,8 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
         requiredSystems: ['asset_system', 'game_object_system', 'layout_system']
       },
       dependencies: ['game_start'],
-      timeout: 10000,
-      retryCount: 2,
+      timeout: GAME_STATE_TIMEOUTS.SCENE_CREATE_TIMEOUT,
+      retryCount: GAME_STATE_RETRY_COUNTS.SCENE_CREATE_RETRY,
       onSuccess: ['scene_1_loading'],
       onFailure: ['scene_create_error'],
       onTimeout: ['scene_create_timeout']
@@ -71,16 +83,16 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     {
       stepId: 'scene_1_loading',
       stepName: 'Load Scene 1 Assets',
-      stepType: 'scene_action',
+      stepType: FlowStepType.SCENE_ACTION,
       target: 'scene_1',
       parameters: {
         action: 'load_assets',
-        loadProgress: 0,
-        estimatedLoadTime: 5000
+        loadProgress: GAME_STATE_PROGRESS.LOAD_PROGRESS_START,
+        estimatedLoadTime: GAME_STATE_DURATIONS.SCENE_LOAD_ESTIMATED
       },
       dependencies: ['scene_1_create'],
-      timeout: 15000,
-      retryCount: 2,
+      timeout: GAME_STATE_TIMEOUTS.SCENE_LOAD_TIMEOUT,
+      retryCount: GAME_STATE_RETRY_COUNTS.SCENE_LOAD_RETRY,
       onSuccess: ['scene_1_loading_finish'],
       onFailure: ['scene_load_error'],
       onTimeout: ['scene_load_timeout']
@@ -88,16 +100,16 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     {
       stepId: 'scene_1_loading_finish',
       stepName: 'Complete Scene 1 Loading',
-      stepType: 'scene_action',
+      stepType: FlowStepType.SCENE_ACTION,
       target: 'scene_1',
       parameters: {
         action: 'complete_loading',
-        loadProgress: 100,
+        loadProgress: GAME_STATE_PROGRESS.LOAD_PROGRESS_COMPLETE,
         activateScene: true
       },
       dependencies: ['scene_1_loading'],
-      timeout: 2000,
-      retryCount: 1,
+      timeout: GAME_STATE_TIMEOUTS.SCENE_ACTIVATION_TIMEOUT,
+      retryCount: GAME_STATE_RETRY_COUNTS.SCENE_ACTIVATION_RETRY,
       onSuccess: ['event_1_start'],
       onFailure: ['scene_activation_error'],
       onTimeout: ['scene_activation_timeout']
@@ -105,17 +117,17 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     {
       stepId: 'event_1_start',
       stepName: 'Start Event 1',
-      stepType: 'event_action',
+      stepType: FlowStepType.EVENT_ACTION,
       target: 'event_1',
       parameters: {
         eventType: GameFlowEventType.EVENT_START,
         priority: GameFlowPriority.HIGH,
         eventName: 'Main Game Event',
-        estimatedDuration: 10000
+        estimatedDuration: GAME_STATE_DURATIONS.EVENT_PROCESSING_ESTIMATED
       },
       dependencies: ['scene_1_loading_finish'],
-      timeout: 5000,
-      retryCount: 2,
+      timeout: GAME_STATE_TIMEOUTS.EVENT_START_TIMEOUT,
+      retryCount: GAME_STATE_RETRY_COUNTS.EVENT_START_RETRY,
       onSuccess: ['event_1_processing'],
       onFailure: ['event_start_error'],
       onTimeout: ['event_start_timeout']
@@ -123,7 +135,7 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     {
       stepId: 'event_1_processing',
       stepName: 'Process Event 1',
-      stepType: 'event_action',
+      stepType: FlowStepType.EVENT_ACTION,
       target: 'event_1',
       parameters: {
         action: 'process_event',
@@ -140,7 +152,7 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     {
       stepId: 'event_1_finish',
       stepName: 'Complete Event 1',
-      stepType: 'event_action',
+      stepType: FlowStepType.EVENT_ACTION,
       target: 'event_1',
       parameters: {
         action: 'complete_event',
@@ -159,49 +171,49 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
   conditions: [
     {
       conditionId: 'game_initialized',
-      conditionType: 'state_check',
+      conditionType: FlowConditionType.STATE_CHECK,
       target: 'game_state',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: GameFlowState.GAME_READY,
       required: true
     },
     {
       conditionId: 'scene_1_created',
-      conditionType: 'scene_check',
+      conditionType: FlowConditionType.SCENE_CHECK,
       target: 'scene_1',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: SceneState.INITIALIZING,
       required: true
     },
     {
       conditionId: 'scene_1_loaded',
-      conditionType: 'scene_check',
+      conditionType: FlowConditionType.SCENE_CHECK,
       target: 'scene_1',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: SceneState.ACTIVE,
       required: true
     },
     {
       conditionId: 'event_1_started',
-      conditionType: 'event_check',
+      conditionType: FlowConditionType.EVENT_CHECK,
       target: 'event_1',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: 'starting',
       required: true
     },
     {
       conditionId: 'event_1_processing',
-      conditionType: 'event_check',
+      conditionType: FlowConditionType.EVENT_CHECK,
       target: 'event_1',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: 'processing',
       required: true
     },
     {
       conditionId: 'event_1_completed',
-      conditionType: 'event_check',
+      conditionType: FlowConditionType.EVENT_CHECK,
       target: 'event_1',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: 'completed',
       required: true
     }
@@ -213,7 +225,7 @@ export const GAME_START_TO_EVENT_COMPLETE_FLOW: IGameFlowDefinition = {
     lastModified: new Date(),
     tags: ['game_start', 'scene_loading', 'event_processing', 'main_flow'],
     estimatedDuration: 45000, // 45 seconds
-    complexity: 'moderate'
+    complexity: ComplexityLevel.MODERATE
   }
 };
 
@@ -233,7 +245,7 @@ export const SCENE_TRANSITION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'prepare_transition',
       stepName: 'Prepare Scene Transition',
-      stepType: 'scene_action',
+      stepType: FlowStepType.SCENE_ACTION,
       target: 'current_scene',
       parameters: {
         action: 'prepare_transition',
@@ -249,7 +261,7 @@ export const SCENE_TRANSITION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'unload_current_scene',
       stepName: 'Unload Current Scene',
-      stepType: 'scene_action',
+      stepType: FlowStepType.SCENE_ACTION,
       target: 'current_scene',
       parameters: {
         action: 'unload',
@@ -265,7 +277,7 @@ export const SCENE_TRANSITION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'load_target_scene',
       stepName: 'Load Target Scene',
-      stepType: 'scene_action',
+      stepType: FlowStepType.SCENE_ACTION,
       target: 'target_scene',
       parameters: {
         action: 'load',
@@ -281,7 +293,7 @@ export const SCENE_TRANSITION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'activate_target_scene',
       stepName: 'Activate Target Scene',
-      stepType: 'scene_action',
+      stepType: FlowStepType.SCENE_ACTION,
       target: 'target_scene',
       parameters: {
         action: 'activate',
@@ -298,17 +310,17 @@ export const SCENE_TRANSITION_FLOW: IGameFlowDefinition = {
   conditions: [
     {
       conditionId: 'current_scene_ready',
-      conditionType: 'scene_check',
+      conditionType: FlowConditionType.SCENE_CHECK,
       target: 'current_scene',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: SceneState.ACTIVE,
       required: true
     },
     {
       conditionId: 'target_scene_loaded',
-      conditionType: 'scene_check',
+      conditionType: FlowConditionType.SCENE_CHECK,
       target: 'target_scene',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: SceneState.LOADING,
       required: true
     }
@@ -320,7 +332,7 @@ export const SCENE_TRANSITION_FLOW: IGameFlowDefinition = {
     lastModified: new Date(),
     tags: ['scene_transition', 'scene_management', 'ui_flow'],
     estimatedDuration: 25000, // 25 seconds
-    complexity: 'simple'
+    complexity: ComplexityLevel.SIMPLE
   }
 };
 
@@ -336,7 +348,7 @@ export const BUTTON_CLICK_PROCESSING_FLOW: IGameFlowDefinition = {
     {
       stepId: 'receive_button_click',
       stepName: 'Receive Button Click',
-      stepType: 'custom_action',
+      stepType: FlowStepType.CUSTOM_ACTION,
       target: 'button_click_handler',
       parameters: {
         action: 'receive_click',
@@ -352,7 +364,7 @@ export const BUTTON_CLICK_PROCESSING_FLOW: IGameFlowDefinition = {
     {
       stepId: 'validate_button_click',
       stepName: 'Validate Button Click',
-      stepType: 'custom_action',
+      stepType: FlowStepType.CUSTOM_ACTION,
       target: 'button_click_handler',
       parameters: {
         action: 'validate_click',
@@ -368,7 +380,7 @@ export const BUTTON_CLICK_PROCESSING_FLOW: IGameFlowDefinition = {
     {
       stepId: 'process_game_logic',
       stepName: 'Process Game Logic',
-      stepType: 'event_action',
+      stepType: FlowStepType.EVENT_ACTION,
       target: 'game_logic_handler',
       parameters: {
         action: 'process_action',
@@ -384,7 +396,7 @@ export const BUTTON_CLICK_PROCESSING_FLOW: IGameFlowDefinition = {
     {
       stepId: 'update_game_state',
       stepName: 'Update Game State',
-      stepType: 'state_transition',
+      stepType: FlowStepType.STATE_TRANSITION,
       target: 'game_state',
       parameters: {
         action: 'update_state',
@@ -400,7 +412,7 @@ export const BUTTON_CLICK_PROCESSING_FLOW: IGameFlowDefinition = {
     {
       stepId: 'provide_feedback',
       stepName: 'Provide User Feedback',
-      stepType: 'custom_action',
+      stepType: FlowStepType.CUSTOM_ACTION,
       target: 'feedback_system',
       parameters: {
         action: 'provide_feedback',
@@ -418,17 +430,17 @@ export const BUTTON_CLICK_PROCESSING_FLOW: IGameFlowDefinition = {
   conditions: [
     {
       conditionId: 'button_click_valid',
-      conditionType: 'custom',
+      conditionType: FlowConditionType.CUSTOM,
       target: 'button_click',
-      operator: 'exists',
+      operator: ComparisonOperator.EXISTS,
       value: true,
       required: true
     },
     {
       conditionId: 'game_logic_ready',
-      conditionType: 'system_check',
+      conditionType: FlowConditionType.SYSTEM_CHECK,
       target: 'game_logic_system',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: 'ready',
       required: true
     }
@@ -440,7 +452,7 @@ export const BUTTON_CLICK_PROCESSING_FLOW: IGameFlowDefinition = {
     lastModified: new Date(),
     tags: ['button_click', 'game_logic', 'user_interaction', 'feedback'],
     estimatedDuration: 8000, // 8 seconds
-    complexity: 'simple'
+    complexity: ComplexityLevel.SIMPLE
   }
 };
 
@@ -456,7 +468,7 @@ export const GAME_INITIALIZATION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'initialize_core_systems',
       stepName: 'Initialize Core Systems',
-      stepType: 'system_action',
+      stepType: FlowStepType.SYSTEM_ACTION,
       target: 'core_systems',
       parameters: {
         systems: ['asset_system', 'game_object_system', 'layout_system', 'unit_system'],
@@ -472,7 +484,7 @@ export const GAME_INITIALIZATION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'initialize_scene_system',
       stepName: 'Initialize Scene System',
-      stepType: 'system_action',
+      stepType: FlowStepType.SYSTEM_ACTION,
       target: 'scene_system',
       parameters: {
         action: 'initialize',
@@ -488,7 +500,7 @@ export const GAME_INITIALIZATION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'initialize_game_logic',
       stepName: 'Initialize Game Logic System',
-      stepType: 'system_action',
+      stepType: FlowStepType.SYSTEM_ACTION,
       target: 'game_logic_system',
       parameters: {
         action: 'initialize',
@@ -504,7 +516,7 @@ export const GAME_INITIALIZATION_FLOW: IGameFlowDefinition = {
     {
       stepId: 'initialize_game_state',
       stepName: 'Initialize Game State Manager',
-      stepType: 'state_transition',
+      stepType: FlowStepType.STATE_TRANSITION,
       target: 'game_state_manager',
       parameters: {
         action: 'initialize',
@@ -521,9 +533,9 @@ export const GAME_INITIALIZATION_FLOW: IGameFlowDefinition = {
   conditions: [
     {
       conditionId: 'all_systems_ready',
-      conditionType: 'system_check',
+      conditionType: FlowConditionType.SYSTEM_CHECK,
       target: 'all_systems',
-      operator: 'equals',
+      operator: ComparisonOperator.EQUALS,
       value: 'ready',
       required: true
     }
@@ -535,7 +547,7 @@ export const GAME_INITIALIZATION_FLOW: IGameFlowDefinition = {
     lastModified: new Date(),
     tags: ['initialization', 'system_startup', 'game_ready'],
     estimatedDuration: 30000, // 30 seconds
-    complexity: 'complex'
+    complexity: ComplexityLevel.COMPLEX
   }
 };
 

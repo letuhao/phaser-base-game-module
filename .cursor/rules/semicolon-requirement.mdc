@@ -1,0 +1,57 @@
+---
+description: Require semicolons at end of statements
+globs:
+alwaysApply: true
+---
+
+# Semicolon Requirement Rule
+
+## ✅ CORRECT - Always Use Semicolons
+```typescript
+// ✅ CORRECT - Semicolons at end of all statements
+export class MyClass {
+  private readonly logger: Logger = Logger.getInstance();
+  
+  public doSomething(): void {
+    const result = this.calculate();
+    this.logger.info('MyClass', 'doSomething', 'Operation completed');
+    return result;
+  }
+  
+  private calculate(): number {
+    const value = 42;
+    return value * 2;
+  }
+}
+
+// ✅ CORRECT - Semicolons in variable declarations
+const myVariable = 'hello';
+let myNumber = 123;
+const myObject = { key: 'value' };
+```
+
+## ❌ FORBIDDEN - Missing Semicolons
+```typescript
+// ❌ FORBIDDEN - Missing semicolons
+export class MyClass {
+  private readonly logger = Logger.getInstance() // Missing semicolon
+  
+  public doSomething(): void {
+    const result = this.calculate() // Missing semicolon
+    this.logger.info('MyClass', 'doSomething', 'Operation completed') // Missing semicolon
+    return result // Missing semicolon
+  }
+}
+
+// ❌ FORBIDDEN - Inconsistent semicolon usage
+const myVariable = 'hello' // Missing semicolon
+let myNumber = 123; // Has semicolon (inconsistent)
+```
+
+## Semicolon Guidelines
+- Always use semicolons at the end of statements
+- Use semicolons after variable declarations
+- Use semicolons after function calls
+- Use semicolons after return statements
+- Be consistent throughout the codebase
+- Follow C# style as preferred by the project

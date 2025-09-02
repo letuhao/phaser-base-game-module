@@ -1,0 +1,101 @@
+---
+description: Enums must be defined in dedicated enum folders
+globs:
+alwaysApply: true
+---
+
+# Enum Organization Rule
+
+## ✅ CORRECT - Enums in Dedicated Enum Folders
+```typescript
+// ✅ CORRECT - Enums in dedicated enum folders
+// src/unit/enums/UnitEnums.ts
+export enum SizeUnit {
+  PIXEL = 'pixel',
+  PARENT_WIDTH = 'parent-width',
+  VIEWPORT_WIDTH = 'viewport-width',
+  AUTO = 'auto'
+}
+
+export enum UnitType {
+  SIZE = 'size',
+  POSITION = 'position',
+  SCALE = 'scale'
+}
+
+// src/game-object/enums/GameObjectEnums.ts
+export enum GameObjectType {
+  SPRITE = 'sprite',
+  CONTAINER = 'container',
+  TEXT = 'text'
+}
+
+// src/scene/enums/SceneEnums.ts
+export enum SceneEventType {
+  SCENE_CREATED = 'scene_created',
+  SCENE_DESTROYED = 'scene_destroyed'
+}
+```
+
+## ✅ CORRECT - Enum Folder Structure
+```
+src/
+├── unit/
+│   └── enums/
+│       ├── UnitEnums.ts
+│       ├── SizeEnums.ts
+│       └── index.ts
+├── game-object/
+│   └── enums/
+│       ├── GameObjectEnums.ts
+│       ├── EffectEnums.ts
+│       ├── AudioEnums.ts
+│       └── index.ts
+├── scene/
+│   └── enums/
+│       ├── SceneEnums.ts
+│       └── index.ts
+└── layout/
+    └── enums/
+        ├── LayoutEnums.ts
+        └── index.ts
+```
+
+## ❌ FORBIDDEN - Enums in Interface Files
+```typescript
+// ❌ FORBIDDEN - Enums defined in interface files
+// src/unit/interfaces/IUnit.ts
+export interface IUnit {
+  readonly unitType: UnitType;
+}
+
+// ❌ FORBIDDEN - Enum defined in same file as interface
+export enum UnitType {
+  SIZE = 'size',
+  POSITION = 'position'
+}
+```
+
+## ✅ CORRECT - Import Enums from Enum Files
+```typescript
+// ✅ CORRECT - Import enums from dedicated enum files
+// src/unit/interfaces/IUnit.ts
+import { UnitType } from '../enums/UnitEnums';
+
+export interface IUnit {
+  readonly id: string;
+  readonly unitType: UnitType;
+  calculate(): number;
+}
+```
+
+## Enum Index Files
+```typescript
+// ✅ CORRECT - Enum index files for easy imports
+// src/unit/enums/index.ts
+export * from './UnitEnums';
+export * from './SizeEnums';
+
+// Usage
+import { UnitType, SizeUnit } from '../enums';
+```

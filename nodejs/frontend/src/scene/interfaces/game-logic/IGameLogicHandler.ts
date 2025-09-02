@@ -19,6 +19,22 @@ import type { IGameObject } from '../../../game-object/interfaces/IGameObject';
 import type { IAsset } from '../../../asset/interfaces/IAsset';
 import type { IUnit } from '../../../unit/interfaces/IUnit';
 import type { ILayout } from '../../../layout/interfaces/ILayout';
+import type { 
+  GameLogicTargetType,
+  GameStatus,
+  GraphicsQuality,
+  GameLogicEffectType,
+  GameLogicConditionType,
+  ComparisonOperator,
+  ItemType,
+  ItemRarity,
+  StateChangeType,
+  NotificationType,
+  SeverityLevel,
+  WarningSeverityLevel,
+  ViolationType,
+  WarningType
+} from '../../enums/GameStateEnums';
 
 // ============================================================================
 // GAME LOGIC EVENT TYPES
@@ -104,14 +120,14 @@ export interface IGameLogicEvent {
 
 export interface IGameLogicTarget {
   readonly targetId: string;
-  readonly targetType: 'game_object' | 'ui_element' | 'scene' | 'asset' | 'layout' | 'unit' | 'system';
+  readonly targetType: GameLogicTargetType;
   readonly gameObject?: IGameObject;
   readonly asset?: IAsset;
   readonly layout?: ILayout;
   readonly unit?: IUnit;
   readonly sceneId?: string;
   readonly systemId?: string;
-  readonly properties: Record<string, any>;
+  readonly properties: Record<string, unknown>;
 }
 
 export interface IGameLogicContext {
@@ -170,7 +186,7 @@ export interface IGameLogicSceneContext {
 
 export interface IGameLogicParameters {
   readonly action: string;
-  readonly value?: any;
+  readonly value?: unknown;
   readonly cost?: IGameCost;
   readonly requirements?: IGameRequirements;
   readonly effects?: IGameEffect[];
@@ -181,7 +197,7 @@ export interface IGameLogicMetadata {
   readonly priority: number;
   readonly category: string;
   readonly tags: string[];
-  readonly customData: Record<string, any>;
+  readonly customData: Record<string, unknown>;
 }
 
 // ============================================================================
@@ -190,7 +206,7 @@ export interface IGameLogicMetadata {
 
 export interface IGameState {
   readonly gameId: string;
-  readonly status: 'playing' | 'paused' | 'game_over' | 'victory' | 'loading';
+  readonly status: GameStatus;
   readonly level: number;
   readonly score: number;
   readonly timeElapsed: number;
@@ -216,7 +232,7 @@ export interface IPlayerState {
 export interface IGameSettings {
   readonly soundEnabled: boolean;
   readonly musicEnabled: boolean;
-  readonly graphicsQuality: 'low' | 'medium' | 'high' | 'ultra';
+  readonly graphicsQuality: GraphicsQuality;
   readonly controls: Record<string, string>;
   readonly accessibility: IAccessibilitySettings;
 }
@@ -251,30 +267,30 @@ export interface IGameRequirements {
 
 export interface IGameEffect {
   readonly effectId: string;
-  readonly effectType: 'stat_change' | 'ability_unlock' | 'item_grant' | 'currency_change' | 'state_change';
+  readonly effectType: GameLogicEffectType;
   readonly target: string;
-  readonly value: any;
+  readonly value: unknown;
   readonly duration?: number;
   readonly permanent: boolean;
 }
 
 export interface IGameCondition {
   readonly conditionId: string;
-  readonly conditionType: 'comparison' | 'existence' | 'custom';
+  readonly conditionType: GameLogicConditionType;
   readonly target: string;
-  readonly operator: 'equals' | 'greater_than' | 'less_than' | 'contains' | 'exists';
-  readonly value: any;
+  readonly operator: ComparisonOperator;
+  readonly value: unknown;
 }
 
 export interface IGameItem {
   readonly itemId: string;
   readonly name: string;
   readonly description: string;
-  readonly type: 'weapon' | 'armor' | 'consumable' | 'material' | 'tool' | 'misc';
-  readonly rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  readonly type: ItemType;
+  readonly rarity: ItemRarity;
   readonly quantity: number;
   readonly maxStack: number;
-  readonly properties: Record<string, any>;
+  readonly properties: Record<string, unknown>;
 }
 
 export interface IPlayerStatistics {
@@ -307,16 +323,16 @@ export interface IGameLogicResult {
 
 export interface IGameStateChange {
   readonly changeId: string;
-  readonly changeType: 'player_state' | 'game_state' | 'inventory' | 'currency' | 'achievement';
+  readonly changeType: StateChangeType;
   readonly target: string;
-  readonly oldValue: any;
-  readonly newValue: any;
+  readonly oldValue: unknown;
+  readonly newValue: unknown;
   readonly timestamp: Date;
 }
 
 export interface IGameNotification {
   readonly notificationId: string;
-  readonly type: 'info' | 'success' | 'warning' | 'error' | 'achievement';
+  readonly type: NotificationType;
   readonly title: string;
   readonly message: string;
   readonly icon?: string;
@@ -328,19 +344,19 @@ export interface IGameLogicError {
   readonly errorId: string;
   readonly code: string;
   readonly message: string;
-  readonly severity: 'low' | 'medium' | 'high' | 'critical';
+  readonly severity: SeverityLevel;
   readonly recoverable: boolean;
   readonly timestamp: Date;
-  readonly context: Record<string, any>;
+  readonly context: Record<string, unknown>;
 }
 
 export interface IGameLogicWarning {
   readonly warningId: string;
   readonly code: string;
   readonly message: string;
-  readonly severity: 'low' | 'medium' | 'high';
+  readonly severity: WarningSeverityLevel;
   readonly timestamp: Date;
-  readonly context: Record<string, any>;
+  readonly context: Record<string, unknown>;
 }
 
 export interface IGameLogicResultMetadata {
@@ -381,7 +397,7 @@ export interface IGameLogicHandler {
   updateGameState(changes: IGameStateChange[]): Promise<void>;
   updatePlayerState(changes: IGameStateChange[]): Promise<void>;
   saveGameState(): Promise<void>;
-  loadGameState(saveData: any): Promise<void>;
+  loadGameState(saveData: unknown): Promise<void>;
 
   // Event handling
   addEventListener(eventType: GameLogicEventType, listener: IGameLogicEventListener): void;
@@ -473,17 +489,17 @@ export interface IGameRuleResult {
 export interface IGameRuleViolation {
   readonly ruleId: string;
   readonly ruleName: string;
-  readonly violationType: 'hard' | 'soft';
+  readonly violationType: ViolationType;
   readonly message: string;
-  readonly severity: 'low' | 'medium' | 'high' | 'critical';
-  readonly context: Record<string, any>;
+  readonly severity: SeverityLevel;
+  readonly context: Record<string, unknown>;
 }
 
 export interface IGameRuleWarning {
   readonly ruleId: string;
   readonly ruleName: string;
-  readonly warningType: 'performance' | 'balance' | 'experience';
+  readonly warningType: WarningType;
   readonly message: string;
-  readonly severity: 'low' | 'medium' | 'high';
-  readonly context: Record<string, any>;
+  readonly severity: WarningSeverityLevel;
+  readonly context: Record<string, unknown>;
 }
